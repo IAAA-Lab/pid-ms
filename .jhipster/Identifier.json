@@ -1,0 +1,42 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "namespace",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "localId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "versionId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "beginLifespanVersion",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "endLifespanVersion",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "alternateId",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170802154634",
+    "javadoc": "Entity Identifier",
+    "entityTableName": "identifier",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

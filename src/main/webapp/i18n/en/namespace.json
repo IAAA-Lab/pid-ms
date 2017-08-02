@@ -1,0 +1,54 @@
+{
+    "pidmsApp": {
+        "namespace" : {
+            "home": {
+                "title": "Namespaces",
+                "createLabel": "Create a new Namespace",
+                "createOrEditLabel": "Create or edit a Namespace"
+            },
+            "created": "A new Namespace is created with identifier {{ param }}",
+            "updated": "A Namespace is updated with identifier {{ param }}",
+            "deleted": "A Namespace is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Namespace {{ id }}?"
+            },
+            "detail": {
+                "title": "Namespace"
+            },
+            "namespace": "Namespace",
+            "title": "Title",
+            "restricted": "Restricted",
+            "renewalPolicy": "Renewal Policy",
+            "processStatus": "Process Status",
+            "itemStatus": "Item Status",
+            "lastChangeDate": "Last Change Date",
+            "registrationDate": "Registration Date",
+            "lastRevisionDate": "Last Revision Date",
+            "nextRenewalDate": "Next Renewal Date",
+            "annullationDate": "Annullation Date",
+            "methodType": "Method Type",
+            "type": "Type",
+            "endpointLocation": "Endpoint Location",
+            "srsName": "Srs Name",
+            "schemaUri": "Schema Uri",
+            "schemaUriGML": "Schema Uri GML",
+            "schemaUriBase": "Schema Uri Base",
+            "schemaPrefix": "Schema Prefix",
+            "featureType": "Feature Type",
+            "geometryProperty": "Geometry Property",
+            "beginLifespanVersionProperty": "Begin Lifespan Version Property",
+            "featuresThreshold": "Features Threshold",
+            "resolverProxyMode": "Resolver Proxy Mode",
+            "hitsRequest": "Hits Request",
+            "factorK": "Factor K",
+            "xpath": "Xpath",
+            "nameItem": "Name Item",
+            "maxNumRequest": "Max Num Request",
+            "minX": "Min X",
+            "minY": "Min Y",
+            "maxX": "Max X",
+            "maxY": "Max Y",
+            "owner": "Owner"
+        }
+    }
+}

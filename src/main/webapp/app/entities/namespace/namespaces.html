@@ -1,0 +1,124 @@
+<div>
+    <h2 data-translate="pidmsApp.namespace.home.title">Namespaces</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="namespace.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span  data-translate="pidmsApp.namespace.home.createLabel">
+                        Create new Namespace
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span data-translate="global.field.id">ID</span></th>
+                    <th><span data-translate="pidmsApp.namespace.namespace">Namespace</span></th>
+                    <th><span data-translate="pidmsApp.namespace.title">Title</span></th>
+                    <th><span data-translate="pidmsApp.namespace.restricted">Restricted</span></th>
+                    <th><span data-translate="pidmsApp.namespace.renewalPolicy">Renewal Policy</span></th>
+                    <th><span data-translate="pidmsApp.namespace.processStatus">Process Status</span></th>
+                    <th><span data-translate="pidmsApp.namespace.itemStatus">Item Status</span></th>
+                    <th><span data-translate="pidmsApp.namespace.lastChangeDate">Last Change Date</span></th>
+                    <th><span data-translate="pidmsApp.namespace.registrationDate">Registration Date</span></th>
+                    <th><span data-translate="pidmsApp.namespace.lastRevisionDate">Last Revision Date</span></th>
+                    <th><span data-translate="pidmsApp.namespace.nextRenewalDate">Next Renewal Date</span></th>
+                    <th><span data-translate="pidmsApp.namespace.annullationDate">Annullation Date</span></th>
+                    <th><span data-translate="pidmsApp.namespace.methodType">Method Type</span></th>
+                    <th><span data-translate="pidmsApp.namespace.type">Type</span></th>
+                    <th><span data-translate="pidmsApp.namespace.endpointLocation">Endpoint Location</span></th>
+                    <th><span data-translate="pidmsApp.namespace.srsName">Srs Name</span></th>
+                    <th><span data-translate="pidmsApp.namespace.schemaUri">Schema Uri</span></th>
+                    <th><span data-translate="pidmsApp.namespace.schemaUriGML">Schema Uri GML</span></th>
+                    <th><span data-translate="pidmsApp.namespace.schemaUriBase">Schema Uri Base</span></th>
+                    <th><span data-translate="pidmsApp.namespace.schemaPrefix">Schema Prefix</span></th>
+                    <th><span data-translate="pidmsApp.namespace.featureType">Feature Type</span></th>
+                    <th><span data-translate="pidmsApp.namespace.geometryProperty">Geometry Property</span></th>
+                    <th><span data-translate="pidmsApp.namespace.beginLifespanVersionProperty">Begin Lifespan Version Property</span></th>
+                    <th><span data-translate="pidmsApp.namespace.featuresThreshold">Features Threshold</span></th>
+                    <th><span data-translate="pidmsApp.namespace.resolverProxyMode">Resolver Proxy Mode</span></th>
+                    <th><span data-translate="pidmsApp.namespace.hitsRequest">Hits Request</span></th>
+                    <th><span data-translate="pidmsApp.namespace.factorK">Factor K</span></th>
+                    <th><span data-translate="pidmsApp.namespace.xpath">Xpath</span></th>
+                    <th><span data-translate="pidmsApp.namespace.nameItem">Name Item</span></th>
+                    <th><span data-translate="pidmsApp.namespace.maxNumRequest">Max Num Request</span></th>
+                    <th><span data-translate="pidmsApp.namespace.minX">Min X</span></th>
+                    <th><span data-translate="pidmsApp.namespace.minY">Min Y</span></th>
+                    <th><span data-translate="pidmsApp.namespace.maxX">Max X</span></th>
+                    <th><span data-translate="pidmsApp.namespace.maxY">Max Y</span></th>
+                    <th><span data-translate="pidmsApp.namespace.owner">Owner</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="namespace in vm.namespaces track by namespace.id">
+                    <td><a ui-sref="namespace-detail({id:namespace.id})">{{namespace.id}}</a></td>
+                    <td>{{namespace.namespace}}</td>
+                    <td>{{namespace.title}}</td>
+                    <td>{{namespace.restricted}}</td>
+                    <td data-translate="{{'pidmsApp.RenewalPolicy.' + namespace.renewalPolicy}}">{{namespace.renewalPolicy}}</td>
+                    <td data-translate="{{'pidmsApp.ProcessStatus.' + namespace.processStatus}}">{{namespace.processStatus}}</td>
+                    <td data-translate="{{'pidmsApp.ItemStatus.' + namespace.itemStatus}}">{{namespace.itemStatus}}</td>
+                    <td>{{namespace.lastChangeDate | date:'medium'}}</td>
+                    <td>{{namespace.registrationDate | date:'medium'}}</td>
+                    <td>{{namespace.lastRevisionDate | date:'medium'}}</td>
+                    <td>{{namespace.nextRenewalDate | date:'medium'}}</td>
+                    <td>{{namespace.annullationDate | date:'medium'}}</td>
+                    <td data-translate="{{'pidmsApp.MethodType.' + namespace.methodType}}">{{namespace.methodType}}</td>
+                    <td data-translate="{{'pidmsApp.SourceType.' + namespace.type}}">{{namespace.type}}</td>
+                    <td>{{namespace.endpointLocation}}</td>
+                    <td>{{namespace.srsName}}</td>
+                    <td>{{namespace.schemaUri}}</td>
+                    <td>{{namespace.schemaUriGML}}</td>
+                    <td>{{namespace.schemaUriBase}}</td>
+                    <td>{{namespace.schemaPrefix}}</td>
+                    <td>{{namespace.featureType}}</td>
+                    <td>{{namespace.geometryProperty}}</td>
+                    <td>{{namespace.beginLifespanVersionProperty}}</td>
+                    <td>{{namespace.featuresThreshold}}</td>
+                    <td>{{namespace.resolverProxyMode}}</td>
+                    <td>{{namespace.hitsRequest}}</td>
+                    <td>{{namespace.factorK}}</td>
+                    <td>{{namespace.xpath}}</td>
+                    <td>{{namespace.nameItem}}</td>
+                    <td>{{namespace.maxNumRequest}}</td>
+                    <td>{{namespace.minX}}</td>
+                    <td>{{namespace.minY}}</td>
+                    <td>{{namespace.maxX}}</td>
+                    <td>{{namespace.maxY}}</td>
+                    <td>
+                        <a ui-sref="group-detail({id:namespace.ownerId})">{{namespace.ownerId}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="namespace-detail({id:namespace.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="namespace.edit({id:namespace.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="namespace.delete({id:namespace.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

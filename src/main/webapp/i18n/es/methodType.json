@@ -1,0 +1,9 @@
+{
+    "pidmsApp": {
+        "MethodType" : {
+            "null": "",
+            "GET": "GET",
+            "POST": "POST"
+        }
+    }
+}

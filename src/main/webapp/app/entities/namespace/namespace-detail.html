@@ -1,0 +1,155 @@
+
+<div>
+    <h2><span data-translate="pidmsApp.namespace.detail.title">Namespace</span> {{vm.namespace.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="pidmsApp.namespace.namespace">Namespace</span></dt>
+        <dd>
+            <span>{{vm.namespace.namespace}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.title">Title</span></dt>
+        <dd>
+            <span>{{vm.namespace.title}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.restricted">Restricted</span></dt>
+        <dd>
+            <span>{{vm.namespace.restricted}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.renewalPolicy">Renewal Policy</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.RenewalPolicy.' + vm.namespace.renewalPolicy}}">{{vm.namespace.renewalPolicy}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.processStatus">Process Status</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.ProcessStatus.' + vm.namespace.processStatus}}">{{vm.namespace.processStatus}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.itemStatus">Item Status</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.ItemStatus.' + vm.namespace.itemStatus}}">{{vm.namespace.itemStatus}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.lastChangeDate">Last Change Date</span></dt>
+        <dd>
+            <span>{{vm.namespace.lastChangeDate | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.registrationDate">Registration Date</span></dt>
+        <dd>
+            <span>{{vm.namespace.registrationDate | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.lastRevisionDate">Last Revision Date</span></dt>
+        <dd>
+            <span>{{vm.namespace.lastRevisionDate | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.nextRenewalDate">Next Renewal Date</span></dt>
+        <dd>
+            <span>{{vm.namespace.nextRenewalDate | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.annullationDate">Annullation Date</span></dt>
+        <dd>
+            <span>{{vm.namespace.annullationDate | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.methodType">Method Type</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.MethodType.' + vm.namespace.methodType}}">{{vm.namespace.methodType}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.type">Type</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.SourceType.' + vm.namespace.type}}">{{vm.namespace.type}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.endpointLocation">Endpoint Location</span></dt>
+        <dd>
+            <span>{{vm.namespace.endpointLocation}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.srsName">Srs Name</span></dt>
+        <dd>
+            <span>{{vm.namespace.srsName}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.schemaUri">Schema Uri</span></dt>
+        <dd>
+            <span>{{vm.namespace.schemaUri}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.schemaUriGML">Schema Uri GML</span></dt>
+        <dd>
+            <span>{{vm.namespace.schemaUriGML}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.schemaUriBase">Schema Uri Base</span></dt>
+        <dd>
+            <span>{{vm.namespace.schemaUriBase}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.schemaPrefix">Schema Prefix</span></dt>
+        <dd>
+            <span>{{vm.namespace.schemaPrefix}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.featureType">Feature Type</span></dt>
+        <dd>
+            <span>{{vm.namespace.featureType}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.geometryProperty">Geometry Property</span></dt>
+        <dd>
+            <span>{{vm.namespace.geometryProperty}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.beginLifespanVersionProperty">Begin Lifespan Version Property</span></dt>
+        <dd>
+            <span>{{vm.namespace.beginLifespanVersionProperty}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.featuresThreshold">Features Threshold</span></dt>
+        <dd>
+            <span>{{vm.namespace.featuresThreshold}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.resolverProxyMode">Resolver Proxy Mode</span></dt>
+        <dd>
+            <span>{{vm.namespace.resolverProxyMode}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.hitsRequest">Hits Request</span></dt>
+        <dd>
+            <span>{{vm.namespace.hitsRequest}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.factorK">Factor K</span></dt>
+        <dd>
+            <span>{{vm.namespace.factorK}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.xpath">Xpath</span></dt>
+        <dd>
+            <span>{{vm.namespace.xpath}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.nameItem">Name Item</span></dt>
+        <dd>
+            <span>{{vm.namespace.nameItem}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.maxNumRequest">Max Num Request</span></dt>
+        <dd>
+            <span>{{vm.namespace.maxNumRequest}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.minX">Min X</span></dt>
+        <dd>
+            <span>{{vm.namespace.minX}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.minY">Min Y</span></dt>
+        <dd>
+            <span>{{vm.namespace.minY}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.maxX">Max X</span></dt>
+        <dd>
+            <span>{{vm.namespace.maxX}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.maxY">Max Y</span></dt>
+        <dd>
+            <span>{{vm.namespace.maxY}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.owner">Owner</span></dt>
+        <dd>
+            <a ui-sref="group-detail({id:vm.namespace.ownerId})">{{vm.namespace.ownerId}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="namespace-detail.edit({id:vm.namespace.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

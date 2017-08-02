@@ -1,0 +1,43 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "timestamp",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "ProcessStatus",
+            "fieldValues": "PENDING_PREPARING_HARVEST,PREPARING_HARVEST,PENDING_HARVEST,HARVEST,PENDING_TRANSFERRING_HARVEST,TRANSFERRING_HARVEST,PENDING_VALIDATION_BY_ID,VALIDATION_BY_ID,PENDING_TRANSFERRING_VALIDATION_BY_ID,TRANSFERRING_VALIDATION_BY_ID,PENDING_VALIDATION_END,VALIDATION_END,VALIDATION_BEGIN,NONE",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "TaskStatus",
+            "fieldValues": "IN_QUEUE,EXECUTING,DONE,ERROR",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "numErrors",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        }
+    ],
+    "changelogDate": "20170802155452",
+    "javadoc": "Entity Task",
+    "entityTableName": "task",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

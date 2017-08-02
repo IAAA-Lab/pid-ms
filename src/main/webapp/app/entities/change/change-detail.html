@@ -1,0 +1,63 @@
+
+<div>
+    <h2><span data-translate="pidmsApp.change.detail.title">Change</span> {{vm.change.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="pidmsApp.change.timestamp">Timestamp</span></dt>
+        <dd>
+            <span>{{vm.change.timestamp | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.change.action">Action</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.ChangeAction.' + vm.change.action}}">{{vm.change.action}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.change.feature">Feature</span></dt>
+        <dd>
+            <span>{{vm.change.feature}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.change.namespace">Namespace</span></dt>
+        <dd>
+            <span>{{vm.change.namespace}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.change.localId">Local Id</span></dt>
+        <dd>
+            <span>{{vm.change.localId}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.change.versionId">Version Id</span></dt>
+        <dd>
+            <span>{{vm.change.versionId}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.change.beginLifespanVersion">Begin Lifespan Version</span></dt>
+        <dd>
+            <span>{{vm.change.beginLifespanVersion | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.change.endLifespanVersion">End Lifespan Version</span></dt>
+        <dd>
+            <span>{{vm.change.endLifespanVersion | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.change.alternateId">Alternate Id</span></dt>
+        <dd>
+            <span>{{vm.change.alternateId}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.change.type">Type</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.ResourceType.' + vm.change.type}}">{{vm.change.type}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.change.locator">Locator</span></dt>
+        <dd>
+            <span>{{vm.change.locator}}</span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="change-detail.edit({id:vm.change.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

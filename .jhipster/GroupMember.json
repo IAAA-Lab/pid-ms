@@ -1,0 +1,33 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "group",
+            "otherEntityName": "group",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "capacity",
+            "fieldType": "Capacity",
+            "fieldValues": "ADMIN,EDITOR,MEMBER",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20170802150522",
+    "javadoc": "When a group member is created a user joins to a group with a role",
+    "entityTableName": "group_member",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

@@ -1,0 +1,12 @@
+{
+    "pidmsApp": {
+        "ChangeAction" : {
+            "null": "",
+            "ISSUED": "ISSUED",
+            "CANCELLED": "CANCELLED",
+            "INCONSISTENT": "INCONSISTENT",
+            "NOT_FOUND": "NOT_FOUND",
+            "UNCHANGED": "UNCHANGED"
+        }
+    }
+}

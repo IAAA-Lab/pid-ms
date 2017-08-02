@@ -1,0 +1,64 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "timestamp",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "action",
+            "fieldType": "ChangeAction",
+            "fieldValues": "ISSUED,CANCELLED,INCONSISTENT,NOT_FOUND,UNCHANGED"
+        },
+        {
+            "fieldName": "feature",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "namespace",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "localId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "versionId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "beginLifespanVersion",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "endLifespanVersion",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "alternateId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "type",
+            "fieldType": "ResourceType",
+            "fieldValues": "DATASET,SPATIAL_OBJECT"
+        },
+        {
+            "fieldName": "locator",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170802160033",
+    "javadoc": "Entity Change",
+    "entityTableName": "change",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

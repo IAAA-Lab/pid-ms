@@ -1,0 +1,224 @@
+/**
+ * Usage:
+ *
+ * Recreate entiteis
+ *
+ *    jhipster import-jdl src/main/jdl/pidms.jh --force
+ *
+ * Deleted entities must be removed by hand from the codebase. Handle with care!
+ *
+ */
+
+/**
+ * A Group is he owner of a set of namespaces.
+ */
+
+entity Group {
+    name String required
+    organization Boolean
+}
+
+relationship OneToMany {
+    Group{member} to GroupMember{group}
+}
+
+/**
+ * When a group member is created a user joins to a group with a role
+ */
+
+entity GroupMember {
+	capacity Capacity required
+}
+
+relationship ManyToOne {
+	GroupMember{user} to User
+}
+
+enum Capacity {
+    ADMIN,      // Can add and modify group members; can make namespaces public or private; can transfer namespaces
+    EDITOR,     // Can add and modify private namespaces
+    MEMBER      // Can view namespaces private to the group
+}
+
+/**
+ * Entity Namespace
+ */
+entity Namespace {
+	namespace String required
+    title String // if empty same as "name"
+    restricted Boolean required
+    renewalPolicy RenewalPolicy required
+
+    // Registration
+    processStatus ProcessStatus
+    itemStatus ItemStatus
+    lastChangeDate Instant
+    registrationDate Instant
+    lastRevisionDate Instant
+    nextRenewalDate Instant
+    annullationDate Instant
+
+    // Source
+	methodType MethodType
+    type SourceType
+    endpointLocation String
+    srsName String
+    schemaUri String
+    schemaUriGML String
+    schemaUriBase String
+    schemaPrefix String
+    featureType String
+    geometryProperty String
+    beginLifespanVersionProperty String
+    featuresThreshold Integer
+    resolverProxyMode Boolean
+    hitsRequest Boolean
+    factorK Integer
+	xpath String
+    nameItem String
+    maxNumRequest Integer min(0)
+
+    // Source bounding box
+    minX Double
+    minY Double
+    maxX Double
+    maxY Double
+}
+
+relationship OneToMany {
+	Group{namespace} to Namespace{owner}
+}
+
+enum RenewalPolicy {
+	NONE,
+    CONTINUOUS,
+    ONE_MINUTE,
+    DAILY,
+    MONTHLY,
+    YEARLY
+}
+
+enum MethodType {
+    GET, POST
+}
+
+enum SourceType {
+	WFS
+}
+
+/**
+ * Entity Task
+ */
+
+entity Task {
+    timestamp Instant required
+    type ProcessStatus required
+    status TaskStatus required
+    numErrors Integer min(0)
+}
+
+enum TaskStatus {
+    IN_QUEUE,
+    EXECUTING,
+    DONE,
+    ERROR
+}
+
+enum ProcessStatus {
+    PENDING_PREPARING_HARVEST,
+    PREPARING_HARVEST,
+    PENDING_HARVEST,
+    HARVEST,
+    PENDING_TRANSFERRING_HARVEST,
+    TRANSFERRING_HARVEST,
+    PENDING_VALIDATION_BY_ID,
+    VALIDATION_BY_ID,
+    PENDING_TRANSFERRING_VALIDATION_BY_ID,
+    TRANSFERRING_VALIDATION_BY_ID,
+    PENDING_VALIDATION_END,
+    VALIDATION_END,
+    VALIDATION_BEGIN,
+    NONE
+}
+
+/**
+ * Entity Change
+ */
+
+entity Change {
+    timestamp Instant
+    action ChangeAction
+    feature String
+
+    // Identifier
+    namespace String required // same as Namespace.namespace
+    localId String required //
+    versionId String
+    beginLifespanVersion Instant
+    endLifespanVersion Instant
+    alternateId String // if empty same as "localId"
+
+    // Resource
+    type ResourceType
+    locator String
+}
+
+enum ChangeAction {
+    ISSUED, CANCELLED, INCONSISTENT, NOT_FOUND, UNCHANGED
+}
+
+enum ResourceType {
+	DATASET, SPATIAL_OBJECT
+}
+
+/**
+ * Entity PersistentIdentifier
+ */
+
+entity PersistentIdentifier {
+
+    external String required
+    feature String required
+    resolverProxyMode Boolean
+
+    // Identifier
+    namespace String required // same as Namespace.namespace
+    localId String required //
+    versionId String
+    beginLifespanVersion Instant
+    endLifespanVersion Instant
+    alternateId String // if empty same as "localId"
+
+    // Resource
+    type ResourceType
+    locator String
+
+    // Registration
+    processStatus ProcessStatus
+    itemStatus ItemStatus
+    lastChangeDate Instant
+    registrationDate Instant
+    lastRevisionDate Instant
+    nextRenewalDate Instant
+    annullationDate Instant
+}
+
+enum ItemStatus {
+	ISSUED,
+	LAPSED,
+	RETIRED,
+	PENDING_VALIDATION,
+	ANNULLED,
+	PENDING_RETIREMENT,
+	NEW,
+	VALIDATED,
+	PENDING_ANNULLATION
+}
+
+/**
+ * Service options
+ */
+
+dto all with mapstruct
+service all with serviceImpl
+

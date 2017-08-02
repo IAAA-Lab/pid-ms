@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Added the entity Namespace.
+    -->
+    <changeSet id="20170802153709-1" author="jhipster">
+        <createTable tableName="namespace">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="namespace" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="title" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="jhi_restricted" type="boolean">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="renewal_policy" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="process_status" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="item_status" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="last_change_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="registration_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="last_revision_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="next_renewal_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="annullation_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="method_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="jhi_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="endpoint_location" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="srs_name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="schema_uri" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="schema_uri_gml" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="schema_uri_base" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="schema_prefix" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="feature_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="geometry_property" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="begin_lifespan_version_property" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="features_threshold" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="resolver_proxy_mode" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="hits_request" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="factor_k" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="xpath" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="name_item" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="max_num_request" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="min_x" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="min_y" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="max_x" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="max_y" type="double">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="owner_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        <dropDefaultValue tableName="namespace" columnName="last_change_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="namespace" columnName="registration_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="namespace" columnName="last_revision_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="namespace" columnName="next_renewal_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="namespace" columnName="annullation_date" columnDataType="datetime"/>
+        
+    </changeSet>
+</databaseChangeLog>

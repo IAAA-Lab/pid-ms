@@ -1,0 +1,91 @@
+
+<div>
+    <h2><span data-translate="pidmsApp.persistentIdentifier.detail.title">Persistent Identifier</span> {{vm.persistentIdentifier.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="pidmsApp.persistentIdentifier.external">External</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.external}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.feature">Feature</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.feature}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.resolverProxyMode">Resolver Proxy Mode</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.resolverProxyMode}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.namespace">Namespace</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.namespace}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.localId">Local Id</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.localId}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.versionId">Version Id</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.versionId}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.beginLifespanVersion">Begin Lifespan Version</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.beginLifespanVersion | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.endLifespanVersion">End Lifespan Version</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.endLifespanVersion | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.alternateId">Alternate Id</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.alternateId}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.type">Type</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.ResourceType.' + vm.persistentIdentifier.type}}">{{vm.persistentIdentifier.type}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.locator">Locator</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.locator}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.processStatus">Process Status</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.ProcessStatus.' + vm.persistentIdentifier.processStatus}}">{{vm.persistentIdentifier.processStatus}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.itemStatus">Item Status</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.ItemStatus.' + vm.persistentIdentifier.itemStatus}}">{{vm.persistentIdentifier.itemStatus}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.lastChangeDate">Last Change Date</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.lastChangeDate | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.registrationDate">Registration Date</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.registrationDate | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.lastRevisionDate">Last Revision Date</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.lastRevisionDate | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.nextRenewalDate">Next Renewal Date</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.nextRenewalDate | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.persistentIdentifier.annullationDate">Annullation Date</span></dt>
+        <dd>
+            <span>{{vm.persistentIdentifier.annullationDate | date:'medium'}}</span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="persistent-identifier-detail.edit({id:vm.persistentIdentifier.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

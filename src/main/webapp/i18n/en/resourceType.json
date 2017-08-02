@@ -1,0 +1,9 @@
+{
+    "pidmsApp": {
+        "ResourceType" : {
+            "null": "",
+            "DATASET": "DATASET",
+            "SPATIAL_OBJECT": "SPATIAL_OBJECT"
+        }
+    }
+}

@@ -1,0 +1,256 @@
+package es.unizar.iaaa.pid.service.dto;
+
+
+import java.time.Instant;
+import javax.validation.constraints.*;
+import java.io.Serializable;
+import java.util.Objects;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+
+/**
+ * A DTO for the PersistentIdentifier entity.
+ */
+public class PersistentIdentifierDTO implements Serializable {
+
+    private Long id;
+
+    @NotNull
+    private String external;
+
+    @NotNull
+    private String feature;
+
+    private Boolean resolverProxyMode;
+
+    @NotNull
+    private String namespace;
+
+    @NotNull
+    private String localId;
+
+    private String versionId;
+
+    private Instant beginLifespanVersion;
+
+    private Instant endLifespanVersion;
+
+    private String alternateId;
+
+    private ResourceType type;
+
+    private String locator;
+
+    private ProcessStatus processStatus;
+
+    private ItemStatus itemStatus;
+
+    private Instant lastChangeDate;
+
+    private Instant registrationDate;
+
+    private Instant lastRevisionDate;
+
+    private Instant nextRenewalDate;
+
+    private Instant annullationDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getExternal() {
+        return external;
+    }
+
+    public void setExternal(String external) {
+        this.external = external;
+    }
+
+    public String getFeature() {
+        return feature;
+    }
+
+    public void setFeature(String feature) {
+        this.feature = feature;
+    }
+
+    public Boolean isResolverProxyMode() {
+        return resolverProxyMode;
+    }
+
+    public void setResolverProxyMode(Boolean resolverProxyMode) {
+        this.resolverProxyMode = resolverProxyMode;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
+    public String getLocalId() {
+        return localId;
+    }
+
+    public void setLocalId(String localId) {
+        this.localId = localId;
+    }
+
+    public String getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(String versionId) {
+        this.versionId = versionId;
+    }
+
+    public Instant getBeginLifespanVersion() {
+        return beginLifespanVersion;
+    }
+
+    public void setBeginLifespanVersion(Instant beginLifespanVersion) {
+        this.beginLifespanVersion = beginLifespanVersion;
+    }
+
+    public Instant getEndLifespanVersion() {
+        return endLifespanVersion;
+    }
+
+    public void setEndLifespanVersion(Instant endLifespanVersion) {
+        this.endLifespanVersion = endLifespanVersion;
+    }
+
+    public String getAlternateId() {
+        return alternateId;
+    }
+
+    public void setAlternateId(String alternateId) {
+        this.alternateId = alternateId;
+    }
+
+    public ResourceType getType() {
+        return type;
+    }
+
+    public void setType(ResourceType type) {
+        this.type = type;
+    }
+
+    public String getLocator() {
+        return locator;
+    }
+
+    public void setLocator(String locator) {
+        this.locator = locator;
+    }
+
+    public ProcessStatus getProcessStatus() {
+        return processStatus;
+    }
+
+    public void setProcessStatus(ProcessStatus processStatus) {
+        this.processStatus = processStatus;
+    }
+
+    public ItemStatus getItemStatus() {
+        return itemStatus;
+    }
+
+    public void setItemStatus(ItemStatus itemStatus) {
+        this.itemStatus = itemStatus;
+    }
+
+    public Instant getLastChangeDate() {
+        return lastChangeDate;
+    }
+
+    public void setLastChangeDate(Instant lastChangeDate) {
+        this.lastChangeDate = lastChangeDate;
+    }
+
+    public Instant getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Instant registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public Instant getLastRevisionDate() {
+        return lastRevisionDate;
+    }
+
+    public void setLastRevisionDate(Instant lastRevisionDate) {
+        this.lastRevisionDate = lastRevisionDate;
+    }
+
+    public Instant getNextRenewalDate() {
+        return nextRenewalDate;
+    }
+
+    public void setNextRenewalDate(Instant nextRenewalDate) {
+        this.nextRenewalDate = nextRenewalDate;
+    }
+
+    public Instant getAnnullationDate() {
+        return annullationDate;
+    }
+
+    public void setAnnullationDate(Instant annullationDate) {
+        this.annullationDate = annullationDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        PersistentIdentifierDTO persistentIdentifierDTO = (PersistentIdentifierDTO) o;
+        if(persistentIdentifierDTO.getId() == null || getId() == null) {
+            return false;
+        }
+        return Objects.equals(getId(), persistentIdentifierDTO.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "PersistentIdentifierDTO{" +
+            "id=" + getId() +
+            ", external='" + getExternal() + "'" +
+            ", feature='" + getFeature() + "'" +
+            ", resolverProxyMode='" + isResolverProxyMode() + "'" +
+            ", namespace='" + getNamespace() + "'" +
+            ", localId='" + getLocalId() + "'" +
+            ", versionId='" + getVersionId() + "'" +
+            ", beginLifespanVersion='" + getBeginLifespanVersion() + "'" +
+            ", endLifespanVersion='" + getEndLifespanVersion() + "'" +
+            ", alternateId='" + getAlternateId() + "'" +
+            ", type='" + getType() + "'" +
+            ", locator='" + getLocator() + "'" +
+            ", processStatus='" + getProcessStatus() + "'" +
+            ", itemStatus='" + getItemStatus() + "'" +
+            ", lastChangeDate='" + getLastChangeDate() + "'" +
+            ", registrationDate='" + getRegistrationDate() + "'" +
+            ", lastRevisionDate='" + getLastRevisionDate() + "'" +
+            ", nextRenewalDate='" + getNextRenewalDate() + "'" +
+            ", annullationDate='" + getAnnullationDate() + "'" +
+            "}";
+    }
+}

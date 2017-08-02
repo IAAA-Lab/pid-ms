@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Added the entity PersistentIdentifier.
+    -->
+    <changeSet id="20170802162142-1" author="jhipster">
+        <createTable tableName="persistent_identifier">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="jhi_external" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="feature" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="resolver_proxy_mode" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="namespace" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="local_id" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="version_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="begin_lifespan_version" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="end_lifespan_version" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="alternate_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="jhi_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="locator" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="process_status" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="item_status" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="last_change_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="registration_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="last_revision_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="next_renewal_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="annullation_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        <dropDefaultValue tableName="persistent_identifier" columnName="begin_lifespan_version" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="end_lifespan_version" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="last_change_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="registration_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="last_revision_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="next_renewal_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="annullation_date" columnDataType="datetime"/>
+        
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,31 @@
+{
+    "pidmsApp": {
+        "change" : {
+            "home": {
+                "title": "Changes",
+                "createLabel": "Crear nuevo Change",
+                "createOrEditLabel": "Crear o editar Change"
+            },
+            "created": "Un nuevo Change ha sido creado con el identificador {{ param }}",
+            "updated": "Un Change ha sido actualizado con el identificador {{ param }}",
+            "deleted": "Un Change ha sido eliminado con el identificador {{ param }}",
+            "delete": {
+                "question": "¿Seguro que quiere eliminar Change {{ id }}?"
+            },
+            "detail": {
+                "title": "Change"
+            },
+            "timestamp": "Timestamp",
+            "action": "Action",
+            "feature": "Feature",
+            "namespace": "Namespace",
+            "localId": "Local Id",
+            "versionId": "Version Id",
+            "beginLifespanVersion": "Begin Lifespan Version",
+            "endLifespanVersion": "End Lifespan Version",
+            "alternateId": "Alternate Id",
+            "type": "Type",
+            "locator": "Locator"
+        }
+    }
+}

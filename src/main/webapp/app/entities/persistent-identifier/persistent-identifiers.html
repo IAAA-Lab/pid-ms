@@ -1,0 +1,90 @@
+<div>
+    <h2 data-translate="pidmsApp.persistentIdentifier.home.title">Persistent Identifiers</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="persistent-identifier.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span  data-translate="pidmsApp.persistentIdentifier.home.createLabel">
+                        Create new Persistent Identifier
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span data-translate="global.field.id">ID</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.external">External</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.feature">Feature</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.resolverProxyMode">Resolver Proxy Mode</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.namespace">Namespace</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.localId">Local Id</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.versionId">Version Id</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.beginLifespanVersion">Begin Lifespan Version</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.endLifespanVersion">End Lifespan Version</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.alternateId">Alternate Id</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.type">Type</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.locator">Locator</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.processStatus">Process Status</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.itemStatus">Item Status</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.lastChangeDate">Last Change Date</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.registrationDate">Registration Date</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.lastRevisionDate">Last Revision Date</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.nextRenewalDate">Next Renewal Date</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.annullationDate">Annullation Date</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="persistentIdentifier in vm.persistentIdentifiers track by persistentIdentifier.id">
+                    <td><a ui-sref="persistent-identifier-detail({id:persistentIdentifier.id})">{{persistentIdentifier.id}}</a></td>
+                    <td>{{persistentIdentifier.external}}</td>
+                    <td>{{persistentIdentifier.feature}}</td>
+                    <td>{{persistentIdentifier.resolverProxyMode}}</td>
+                    <td>{{persistentIdentifier.namespace}}</td>
+                    <td>{{persistentIdentifier.localId}}</td>
+                    <td>{{persistentIdentifier.versionId}}</td>
+                    <td>{{persistentIdentifier.beginLifespanVersion | date:'medium'}}</td>
+                    <td>{{persistentIdentifier.endLifespanVersion | date:'medium'}}</td>
+                    <td>{{persistentIdentifier.alternateId}}</td>
+                    <td data-translate="{{'pidmsApp.ResourceType.' + persistentIdentifier.type}}">{{persistentIdentifier.type}}</td>
+                    <td>{{persistentIdentifier.locator}}</td>
+                    <td data-translate="{{'pidmsApp.ProcessStatus.' + persistentIdentifier.processStatus}}">{{persistentIdentifier.processStatus}}</td>
+                    <td data-translate="{{'pidmsApp.ItemStatus.' + persistentIdentifier.itemStatus}}">{{persistentIdentifier.itemStatus}}</td>
+                    <td>{{persistentIdentifier.lastChangeDate | date:'medium'}}</td>
+                    <td>{{persistentIdentifier.registrationDate | date:'medium'}}</td>
+                    <td>{{persistentIdentifier.lastRevisionDate | date:'medium'}}</td>
+                    <td>{{persistentIdentifier.nextRenewalDate | date:'medium'}}</td>
+                    <td>{{persistentIdentifier.annullationDate | date:'medium'}}</td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="persistent-identifier-detail({id:persistentIdentifier.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="persistent-identifier.edit({id:persistentIdentifier.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="persistent-identifier.delete({id:persistentIdentifier.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

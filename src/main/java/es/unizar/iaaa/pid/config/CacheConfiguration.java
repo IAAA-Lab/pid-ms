@@ -43,6 +43,14 @@ public class CacheConfiguration {
             cm.createCache(es.unizar.iaaa.pid.domain.User.class.getName(), jcacheConfiguration);
             cm.createCache(es.unizar.iaaa.pid.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(es.unizar.iaaa.pid.domain.User.class.getName() + ".authorities", jcacheConfiguration);
+            cm.createCache(es.unizar.iaaa.pid.domain.GroupMember.class.getName(), jcacheConfiguration);
+            cm.createCache(es.unizar.iaaa.pid.domain.Group.class.getName(), jcacheConfiguration);
+            cm.createCache(es.unizar.iaaa.pid.domain.Group.class.getName() + ".members", jcacheConfiguration);
+            cm.createCache(es.unizar.iaaa.pid.domain.Group.class.getName() + ".namespaces", jcacheConfiguration);
+            cm.createCache(es.unizar.iaaa.pid.domain.Namespace.class.getName(), jcacheConfiguration);
+            cm.createCache(es.unizar.iaaa.pid.domain.Task.class.getName(), jcacheConfiguration);
+            cm.createCache(es.unizar.iaaa.pid.domain.Change.class.getName(), jcacheConfiguration);
+            cm.createCache(es.unizar.iaaa.pid.domain.PersistentIdentifier.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }
