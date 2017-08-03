@@ -35,7 +35,7 @@
         })
         .state('change-detail', {
             parent: 'change',
-            url: '/change/{id}',
+            url: '/{id}',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.change.detail.title'

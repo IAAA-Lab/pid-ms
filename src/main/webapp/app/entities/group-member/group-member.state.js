@@ -34,7 +34,7 @@
         })
         .state('group-member-detail', {
             parent: 'group-member',
-            url: '/group-member/{id}',
+            url: '/{id}',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.groupMember.detail.title'

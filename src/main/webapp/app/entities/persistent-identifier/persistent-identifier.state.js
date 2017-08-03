@@ -36,7 +36,7 @@
         })
         .state('persistent-identifier-detail', {
             parent: 'persistent-identifier',
-            url: '/persistent-identifier/{id}',
+            url: '/{id}',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.persistentIdentifier.detail.title'

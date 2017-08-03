@@ -38,7 +38,7 @@
         })
         .state('namespace-detail', {
             parent: 'namespace',
-            url: '/namespace/{id}',
+            url: '/{id}',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.namespace.detail.title'
