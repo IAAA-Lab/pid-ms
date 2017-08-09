@@ -5,13 +5,14 @@
         .module('pidmsApp')
         .controller('OrganizationController', OrganizationController);
 
-    OrganizationController.$inject = ['Organization'];
+    OrganizationController.$inject = ['Organization', 'Principal'];
 
-    function OrganizationController(Organization) {
+    function OrganizationController(Organization, Principal) {
 
         var vm = this;
 
         vm.organizations = [];
+        vm.isAuthenticated = Principal.isAuthenticated;
 
         loadAll();
 

@@ -1,10 +1,12 @@
-<div>
+<div ng-switch="vm.isAuthenticated()">
     <h2 data-translate="pidmsApp.persistentIdentifier.home.title">Persistent Identifiers</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 no-padding-left">
-                <button class="btn btn-primary" ui-sref="persistent-identifier.new" >
+                <button class="btn btn-primary"
+                        ui-sref="persistent-identifier.new"
+                        ng-switch-when="true">
                     <span class="glyphicon glyphicon-plus"></span>
                     <span  data-translate="pidmsApp.persistentIdentifier.home.createLabel">
                         Create new Persistent Identifier
@@ -71,13 +73,15 @@
                             </button>
                             <button type="submit"
                                     ui-sref="persistent-identifier.edit({id:persistentIdentifier.id})"
-                                    class="btn btn-primary btn-sm">
+                                    class="btn btn-primary btn-sm"
+                                    ng-switch-when="true">
                                 <span class="glyphicon glyphicon-pencil"></span>
                                 <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
                             </button>
                             <button type="submit"
                                     ui-sref="persistent-identifier.delete({id:persistentIdentifier.id})"
-                                    class="btn btn-danger btn-sm">
+                                    class="btn btn-danger btn-sm"
+                                    ng-switch-when="true">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
                                 <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
                             </button>

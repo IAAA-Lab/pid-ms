@@ -13,7 +13,7 @@
             parent: 'entity',
             url: '/change',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.change.home.title'
             },
             views: {
@@ -35,9 +35,9 @@
         })
         .state('change-detail', {
             parent: 'change',
-            url: '/change/{id}',
+            url: '/{id}',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.change.detail.title'
             },
             views: {

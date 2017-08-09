@@ -5,13 +5,14 @@
         .module('pidmsApp')
         .controller('PersistentIdentifierController', PersistentIdentifierController);
 
-    PersistentIdentifierController.$inject = ['PersistentIdentifier'];
+    PersistentIdentifierController.$inject = ['PersistentIdentifier', 'Principal'];
 
-    function PersistentIdentifierController(PersistentIdentifier) {
+    function PersistentIdentifierController(PersistentIdentifier, Principal) {
 
         var vm = this;
 
         vm.persistentIdentifiers = [];
+        vm.isAuthenticated = Principal.isAuthenticated;
 
         loadAll();
 

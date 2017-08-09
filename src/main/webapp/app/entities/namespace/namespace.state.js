@@ -13,7 +13,7 @@
             parent: 'entity',
             url: '/namespace',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.namespace.home.title'
             },
             views: {
@@ -39,9 +39,9 @@
         })
         .state('namespace-detail', {
             parent: 'namespace',
-            url: '/namespace/{id}',
+            url: '/{id}',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.namespace.detail.title'
             },
             views: {

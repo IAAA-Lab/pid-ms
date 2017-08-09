@@ -5,13 +5,14 @@
         .module('pidmsApp')
         .controller('TaskController', TaskController);
 
-    TaskController.$inject = ['Task'];
+    TaskController.$inject = ['Task', 'Principal'];
 
-    function TaskController(Task) {
+    function TaskController(Task, Principal) {
 
         var vm = this;
 
         vm.tasks = [];
+        vm.isAuthenticated = Principal.isAuthenticated;
 
         loadAll();
 

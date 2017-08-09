@@ -5,13 +5,14 @@
         .module('pidmsApp')
         .controller('TaskDetailController', TaskDetailController);
 
-    TaskDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Task'];
+    TaskDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Task', 'Principal'];
 
-    function TaskDetailController($scope, $rootScope, $stateParams, previousState, entity, Task) {
+    function TaskDetailController($scope, $rootScope, $stateParams, previousState, entity, Task, Principal) {
         var vm = this;
 
         vm.task = entity;
-        vm.previousState = previousState.name;
+        vm.isAuthenticated = Principal.isAuthenticated;
+        vm.previousState = previousState.name + '(' + JSON.stringify(previousState.params) + ')'
 
         var unsubscribe = $rootScope.$on('pidmsApp:taskUpdate', function(event, result) {
             vm.task = result;

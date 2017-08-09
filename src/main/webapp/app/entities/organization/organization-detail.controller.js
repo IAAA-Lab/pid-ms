@@ -5,13 +5,14 @@
         .module('pidmsApp')
         .controller('OrganizationDetailController', OrganizationDetailController);
 
-    OrganizationDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Organization', 'OrganizationMember', 'Namespace'];
+    OrganizationDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Organization', 'OrganizationMember', 'Namespace', 'Principal'];
 
-    function OrganizationDetailController($scope, $rootScope, $stateParams, previousState, entity, Organization, OrganizationMember, Namespace) {
+    function OrganizationDetailController($scope, $rootScope, $stateParams, previousState, entity, Organization, OrganizationMember, Namespace, Principal) {
         var vm = this;
 
+        vm.isAuthenticated = Principal.isAuthenticated;
         vm.organization = entity;
-        vm.previousState = previousState.name;
+        vm.previousState = previousState.name + '(' + JSON.stringify(previousState.params) + ')'
 
         var unsubscribe = $rootScope.$on('pidmsApp:organizationUpdate', function(event, result) {
             vm.organization = result;

@@ -13,7 +13,7 @@
             parent: 'entity',
             url: '/persistent-identifier',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.persistentIdentifier.home.title'
             },
             views: {
@@ -36,9 +36,9 @@
         })
         .state('persistent-identifier-detail', {
             parent: 'persistent-identifier',
-            url: '/persistent-identifier/{id}',
+            url: '/{id}',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.persistentIdentifier.detail.title'
             },
             views: {

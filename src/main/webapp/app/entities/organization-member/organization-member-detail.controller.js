@@ -11,7 +11,7 @@
         var vm = this;
 
         vm.organizationMember = entity;
-        vm.previousState = previousState.name;
+        vm.previousState = previousState.name + '(' + JSON.stringify(previousState.params) + ')'
 
         var unsubscribe = $rootScope.$on('pidmsApp:organizationMemberUpdate', function(event, result) {
             vm.organizationMember = result;

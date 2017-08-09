@@ -13,7 +13,7 @@
             parent: 'entity',
             url: '/task',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.task.home.title'
             },
             views: {
@@ -35,9 +35,9 @@
         })
         .state('task-detail', {
             parent: 'task',
-            url: '/task/{id}',
+            url: '/{id}',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.task.detail.title'
             },
             views: {

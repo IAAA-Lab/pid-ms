@@ -1,5 +1,5 @@
 
-<div>
+<div ng-switch="vm.isAuthenticated()">
     <h2><span data-translate="pidmsApp.task.detail.title">Task</span> {{vm.task.id}}</h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
@@ -28,7 +28,10 @@
         <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
     </button>
 
-    <button type="button" ui-sref="task-detail.edit({id:vm.task.id})" class="btn btn-primary">
+    <button type="button"
+            ui-sref="task-detail.edit({id:vm.task.id})"
+            class="btn btn-primary"
+            ng-switch-when="true">
         <span class="glyphicon glyphicon-pencil"></span>
         <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
     </button>

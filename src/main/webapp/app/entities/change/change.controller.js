@@ -5,13 +5,15 @@
         .module('pidmsApp')
         .controller('ChangeController', ChangeController);
 
-    ChangeController.$inject = ['Change'];
+    ChangeController.$inject = ['Change', 'Principal'];
 
-    function ChangeController(Change) {
+    function ChangeController(Change, Principal) {
 
         var vm = this;
 
         vm.changes = [];
+        vm.isAuthenticated = Principal.isAuthenticated;
+
 
         loadAll();
 

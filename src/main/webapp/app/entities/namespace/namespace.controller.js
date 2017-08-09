@@ -5,13 +5,14 @@
         .module('pidmsApp')
         .controller('NamespaceController', NamespaceController);
 
-    NamespaceController.$inject = ['Namespace'];
+    NamespaceController.$inject = ['Namespace', 'Principal'];
 
-    function NamespaceController(Namespace) {
+    function NamespaceController(Namespace, Principal) {
 
         var vm = this;
 
         vm.namespaces = [];
+        vm.isAuthenticated = Principal.isAuthenticated;
 
         loadAll();
 
