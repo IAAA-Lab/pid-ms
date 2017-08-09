@@ -1,7 +1,8 @@
 package es.unizar.iaaa.pid.service;
 
 import es.unizar.iaaa.pid.service.dto.TaskDTO;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface for managing Task.
@@ -19,9 +20,10 @@ public interface TaskService {
     /**
      *  Get all the tasks.
      *
+     *  @param pageable the pagination information
      *  @return the list of entities
      */
-    List<TaskDTO> findAll();
+    Page<TaskDTO> findAll(Pageable pageable);
 
     /**
      *  Get the "id" task.

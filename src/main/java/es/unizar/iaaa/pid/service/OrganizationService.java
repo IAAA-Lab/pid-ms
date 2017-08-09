@@ -1,7 +1,8 @@
 package es.unizar.iaaa.pid.service;
 
 import es.unizar.iaaa.pid.service.dto.OrganizationDTO;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface for managing Organization.
@@ -19,9 +20,10 @@ public interface OrganizationService {
     /**
      *  Get all the organizations.
      *
+     *  @param pageable the pagination information
      *  @return the list of entities
      */
-    List<OrganizationDTO> findAll();
+    Page<OrganizationDTO> findAll(Pageable pageable);
 
     /**
      *  Get the "id" organization.

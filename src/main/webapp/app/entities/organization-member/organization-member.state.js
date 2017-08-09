@@ -11,7 +11,7 @@
         $stateProvider
         .state('organization-member', {
             parent: 'entity',
-            url: '/organization-member',
+            url: '/organization-member?page&sort&search',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.organizationMember.home.title'
@@ -23,7 +23,27 @@
                     controllerAs: 'vm'
                 }
             },
+            params: {
+                page: {
+                    value: '1',
+                    squash: true
+                },
+                sort: {
+                    value: 'id,asc',
+                    squash: true
+                },
+                search: null
+            },
             resolve: {
+                pagingParams: ['$stateParams', 'PaginationUtil', function ($stateParams, PaginationUtil) {
+                    return {
+                        page: PaginationUtil.parsePage($stateParams.page),
+                        sort: $stateParams.sort,
+                        predicate: PaginationUtil.parsePredicate($stateParams.sort),
+                        ascending: PaginationUtil.parseAscending($stateParams.sort),
+                        search: $stateParams.search
+                    };
+                }],
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('organizationMember');
                     $translatePartialLoader.addPart('capacity');
@@ -34,7 +54,7 @@
         })
         .state('organization-member-detail', {
             parent: 'organization-member',
-            url: '/organization-member/{id}',
+            url: '/{id}',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.organizationMember.detail.title'

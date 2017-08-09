@@ -169,6 +169,6 @@
     "javadoc": "Entity Namespace",
     "entityTableName": "namespace",
     "dto": "mapstruct",
-    "pagination": "no",
+    "pagination": "pager",
     "service": "serviceImpl"
 }

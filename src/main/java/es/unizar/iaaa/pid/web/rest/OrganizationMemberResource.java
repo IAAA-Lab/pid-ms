@@ -3,10 +3,16 @@ package es.unizar.iaaa.pid.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import es.unizar.iaaa.pid.service.OrganizationMemberService;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
+import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
+import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,13 +85,16 @@ public class OrganizationMemberResource {
     /**
      * GET  /organization-members : get all the organizationMembers.
      *
+     * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of organizationMembers in body
      */
     @GetMapping("/organization-members")
     @Timed
-    public List<OrganizationMemberDTO> getAllOrganizationMembers() {
-        log.debug("REST request to get all OrganizationMembers");
-        return organizationMemberService.findAll();
+    public ResponseEntity<List<OrganizationMemberDTO>> getAllOrganizationMembers(@ApiParam Pageable pageable) {
+        log.debug("REST request to get a page of OrganizationMembers");
+        Page<OrganizationMemberDTO> page = organizationMemberService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/organization-members");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**

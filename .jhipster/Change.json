@@ -59,6 +59,6 @@
     "javadoc": "Entity Change",
     "entityTableName": "change",
     "dto": "mapstruct",
-    "pagination": "no",
+    "pagination": "pager",
     "service": "serviceImpl"
 }

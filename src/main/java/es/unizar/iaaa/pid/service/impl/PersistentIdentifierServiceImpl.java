@@ -7,12 +7,11 @@ import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
 import es.unizar.iaaa.pid.service.mapper.PersistentIdentifierMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing PersistentIdentifier.
@@ -49,15 +48,15 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierServ
     /**
      *  Get all the persistentIdentifiers.
      *
+     *  @param pageable the pagination information
      *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
-    public List<PersistentIdentifierDTO> findAll() {
+    public Page<PersistentIdentifierDTO> findAll(Pageable pageable) {
         log.debug("Request to get all PersistentIdentifiers");
-        return persistentIdentifierRepository.findAll().stream()
-            .map(persistentIdentifierMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+        return persistentIdentifierRepository.findAll(pageable)
+            .map(persistentIdentifierMapper::toDto);
     }
 
     /**

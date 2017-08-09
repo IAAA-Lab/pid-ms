@@ -19,12 +19,12 @@
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr>
-                    <th><span data-translate="global.field.id">ID</span></th>
-                    <th><span data-translate="pidmsApp.task.timestamp">Timestamp</span></th>
-                    <th><span data-translate="pidmsApp.task.type">Type</span></th>
-                    <th><span data-translate="pidmsApp.task.status">Status</span></th>
-                    <th><span data-translate="pidmsApp.task.numErrors">Num Errors</span></th>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="timestamp"><span data-translate="pidmsApp.task.timestamp">Timestamp</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="type"><span data-translate="pidmsApp.task.type">Type</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="status"><span data-translate="pidmsApp.task.status">Status</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="numErrors"><span data-translate="pidmsApp.task.numErrors">Num Errors</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -63,4 +63,8 @@
             </tbody>
         </table>
     </div>
+    <div class="text-center">
+        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
+    </div>
+    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
 </div>

@@ -1,7 +1,8 @@
 package es.unizar.iaaa.pid.service;
 
 import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface for managing PersistentIdentifier.
@@ -19,9 +20,10 @@ public interface PersistentIdentifierService {
     /**
      *  Get all the persistentIdentifiers.
      *
+     *  @param pageable the pagination information
      *  @return the list of entities
      */
-    List<PersistentIdentifierDTO> findAll();
+    Page<PersistentIdentifierDTO> findAll(Pageable pageable);
 
     /**
      *  Get the "id" persistentIdentifier.

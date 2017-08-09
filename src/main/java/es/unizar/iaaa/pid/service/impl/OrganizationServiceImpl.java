@@ -7,12 +7,11 @@ import es.unizar.iaaa.pid.service.dto.OrganizationDTO;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing Organization.
@@ -49,15 +48,15 @@ public class OrganizationServiceImpl implements OrganizationService{
     /**
      *  Get all the organizations.
      *
+     *  @param pageable the pagination information
      *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
-    public List<OrganizationDTO> findAll() {
+    public Page<OrganizationDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Organizations");
-        return organizationRepository.findAll().stream()
-            .map(organizationMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+        return organizationRepository.findAll(pageable)
+            .map(organizationMapper::toDto);
     }
 
     /**

@@ -1,7 +1,8 @@
 package es.unizar.iaaa.pid.service;
 
 import es.unizar.iaaa.pid.service.dto.ChangeDTO;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface for managing Change.
@@ -19,9 +20,10 @@ public interface ChangeService {
     /**
      *  Get all the changes.
      *
+     *  @param pageable the pagination information
      *  @return the list of entities
      */
-    List<ChangeDTO> findAll();
+    Page<ChangeDTO> findAll(Pageable pageable);
 
     /**
      *  Get the "id" change.

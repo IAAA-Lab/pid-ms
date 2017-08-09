@@ -226,4 +226,5 @@ enum ItemStatus {
 
 dto all with mapstruct
 service all with serviceImpl
+paginate all with pager
 

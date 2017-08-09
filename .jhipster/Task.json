@@ -38,6 +38,6 @@
     "javadoc": "Entity Task",
     "entityTableName": "task",
     "dto": "mapstruct",
-    "pagination": "no",
+    "pagination": "pager",
     "service": "serviceImpl"
 }

@@ -1,7 +1,8 @@
 package es.unizar.iaaa.pid.service;
 
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface for managing Namespace.
@@ -19,9 +20,10 @@ public interface NamespaceService {
     /**
      *  Get all the namespaces.
      *
+     *  @param pageable the pagination information
      *  @return the list of entities
      */
-    List<NamespaceDTO> findAll();
+    Page<NamespaceDTO> findAll(Pageable pageable);
 
     /**
      *  Get the "id" namespace.

@@ -7,12 +7,11 @@ import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMemberMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing OrganizationMember.
@@ -49,15 +48,15 @@ public class OrganizationMemberServiceImpl implements OrganizationMemberService{
     /**
      *  Get all the organizationMembers.
      *
+     *  @param pageable the pagination information
      *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
-    public List<OrganizationMemberDTO> findAll() {
+    public Page<OrganizationMemberDTO> findAll(Pageable pageable) {
         log.debug("Request to get all OrganizationMembers");
-        return organizationMemberRepository.findAll().stream()
-            .map(organizationMemberMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+        return organizationMemberRepository.findAll(pageable)
+            .map(organizationMemberMapper::toDto);
     }
 
     /**
