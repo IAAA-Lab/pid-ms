@@ -30,8 +30,8 @@ public class Change implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "jhi_timestamp")
-    private Instant timestamp;
+    @Column(name = "change_timestamp")
+    private Instant changeTimestamp;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "action")
@@ -61,8 +61,8 @@ public class Change implements Serializable {
     private String alternateId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "jhi_type")
-    private ResourceType type;
+    @Column(name = "resource_type")
+    private ResourceType resourceType;
 
     @Column(name = "locator")
     private String locator;
@@ -75,17 +75,17 @@ public class Change implements Serializable {
         this.id = id;
     }
 
-    public Instant getTimestamp() {
-        return timestamp;
+    public Instant getChangeTimestamp() {
+        return changeTimestamp;
     }
 
-    public Change timestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public Change changeTimestamp(Instant changeTimestamp) {
+        this.changeTimestamp = changeTimestamp;
         return this;
     }
 
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public void setChangeTimestamp(Instant changeTimestamp) {
+        this.changeTimestamp = changeTimestamp;
     }
 
     public ChangeAction getAction() {
@@ -192,17 +192,17 @@ public class Change implements Serializable {
         this.alternateId = alternateId;
     }
 
-    public ResourceType getType() {
-        return type;
+    public ResourceType getResourceType() {
+        return resourceType;
     }
 
-    public Change type(ResourceType type) {
-        this.type = type;
+    public Change resourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
         return this;
     }
 
-    public void setType(ResourceType type) {
-        this.type = type;
+    public void setResourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
     }
 
     public String getLocator() {
@@ -242,7 +242,7 @@ public class Change implements Serializable {
     public String toString() {
         return "Change{" +
             "id=" + getId() +
-            ", timestamp='" + getTimestamp() + "'" +
+            ", changeTimestamp='" + getChangeTimestamp() + "'" +
             ", action='" + getAction() + "'" +
             ", feature='" + getFeature() + "'" +
             ", namespace='" + getNamespace() + "'" +
@@ -251,7 +251,7 @@ public class Change implements Serializable {
             ", beginLifespanVersion='" + getBeginLifespanVersion() + "'" +
             ", endLifespanVersion='" + getEndLifespanVersion() + "'" +
             ", alternateId='" + getAlternateId() + "'" +
-            ", type='" + getType() + "'" +
+            ", resourceType='" + getResourceType() + "'" +
             ", locator='" + getLocator() + "'" +
             "}";
     }

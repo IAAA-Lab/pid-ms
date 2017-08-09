@@ -27,6 +27,7 @@
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('namespace');
                     $translatePartialLoader.addPart('renewalPolicy');
+                    $translatePartialLoader.addPart('namespaceStatus');
                     $translatePartialLoader.addPart('processStatus');
                     $translatePartialLoader.addPart('itemStatus');
                     $translatePartialLoader.addPart('methodType');
@@ -38,7 +39,7 @@
         })
         .state('namespace-detail', {
             parent: 'namespace',
-            url: '/{id}',
+            url: '/namespace/{id}',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.namespace.detail.title'
@@ -54,6 +55,7 @@
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('namespace');
                     $translatePartialLoader.addPart('renewalPolicy');
+                    $translatePartialLoader.addPart('namespaceStatus');
                     $translatePartialLoader.addPart('processStatus');
                     $translatePartialLoader.addPart('itemStatus');
                     $translatePartialLoader.addPart('methodType');
@@ -116,8 +118,9 @@
                             return {
                                 namespace: null,
                                 title: null,
-                                restricted: false,
+                                publicNamespace: false,
                                 renewalPolicy: null,
+                                namespaceStatus: null,
                                 processStatus: null,
                                 itemStatus: null,
                                 lastChangeDate: null,
@@ -126,7 +129,7 @@
                                 nextRenewalDate: null,
                                 annullationDate: null,
                                 methodType: null,
-                                type: null,
+                                sourceType: null,
                                 endpointLocation: null,
                                 srsName: null,
                                 schemaUri: null,

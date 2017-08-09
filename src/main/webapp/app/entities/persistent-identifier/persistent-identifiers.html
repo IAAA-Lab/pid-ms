@@ -19,7 +19,7 @@
             <thead>
                 <tr>
                     <th><span data-translate="global.field.id">ID</span></th>
-                    <th><span data-translate="pidmsApp.persistentIdentifier.external">External</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.externalUrn">External Urn</span></th>
                     <th><span data-translate="pidmsApp.persistentIdentifier.feature">Feature</span></th>
                     <th><span data-translate="pidmsApp.persistentIdentifier.resolverProxyMode">Resolver Proxy Mode</span></th>
                     <th><span data-translate="pidmsApp.persistentIdentifier.namespace">Namespace</span></th>
@@ -28,7 +28,7 @@
                     <th><span data-translate="pidmsApp.persistentIdentifier.beginLifespanVersion">Begin Lifespan Version</span></th>
                     <th><span data-translate="pidmsApp.persistentIdentifier.endLifespanVersion">End Lifespan Version</span></th>
                     <th><span data-translate="pidmsApp.persistentIdentifier.alternateId">Alternate Id</span></th>
-                    <th><span data-translate="pidmsApp.persistentIdentifier.type">Type</span></th>
+                    <th><span data-translate="pidmsApp.persistentIdentifier.resourceType">Resource Type</span></th>
                     <th><span data-translate="pidmsApp.persistentIdentifier.locator">Locator</span></th>
                     <th><span data-translate="pidmsApp.persistentIdentifier.processStatus">Process Status</span></th>
                     <th><span data-translate="pidmsApp.persistentIdentifier.itemStatus">Item Status</span></th>
@@ -43,7 +43,7 @@
             <tbody>
                 <tr ng-repeat="persistentIdentifier in vm.persistentIdentifiers track by persistentIdentifier.id">
                     <td><a ui-sref="persistent-identifier-detail({id:persistentIdentifier.id})">{{persistentIdentifier.id}}</a></td>
-                    <td>{{persistentIdentifier.external}}</td>
+                    <td>{{persistentIdentifier.externalUrn}}</td>
                     <td>{{persistentIdentifier.feature}}</td>
                     <td>{{persistentIdentifier.resolverProxyMode}}</td>
                     <td>{{persistentIdentifier.namespace}}</td>
@@ -52,7 +52,7 @@
                     <td>{{persistentIdentifier.beginLifespanVersion | date:'medium'}}</td>
                     <td>{{persistentIdentifier.endLifespanVersion | date:'medium'}}</td>
                     <td>{{persistentIdentifier.alternateId}}</td>
-                    <td data-translate="{{'pidmsApp.ResourceType.' + persistentIdentifier.type}}">{{persistentIdentifier.type}}</td>
+                    <td data-translate="{{'pidmsApp.ResourceType.' + persistentIdentifier.resourceType}}">{{persistentIdentifier.resourceType}}</td>
                     <td>{{persistentIdentifier.locator}}</td>
                     <td data-translate="{{'pidmsApp.ProcessStatus.' + persistentIdentifier.processStatus}}">{{persistentIdentifier.processStatus}}</td>
                     <td data-translate="{{'pidmsApp.ItemStatus.' + persistentIdentifier.itemStatus}}">{{persistentIdentifier.itemStatus}}</td>

@@ -12,7 +12,7 @@
                                  baseTableName="namespace"
                                  constraintName="fk_namespace_owner_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="jhi_group"/>
+                                 referencedTableName="organization"/>
 
     </changeSet>
 </databaseChangeLog>

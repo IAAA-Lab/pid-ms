@@ -29,12 +29,16 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="jhi_restricted" type="boolean">
+            <column name="public_namespace" type="boolean">
                 <constraints nullable="false" />
             </column>
 
             <column name="renewal_policy" type="varchar(255)">
                 <constraints nullable="false" />
+            </column>
+
+            <column name="namespace_status" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
 
             <column name="process_status" type="varchar(255)">
@@ -69,7 +73,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="jhi_type" type="varchar(255)">
+            <column name="source_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 

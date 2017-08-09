@@ -1,0 +1,36 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "member",
+            "otherEntityName": "organizationMember",
+            "otherEntityRelationshipName": "organization"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "namespace",
+            "otherEntityName": "namespace",
+            "otherEntityRelationshipName": "owner"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "title",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170808131639",
+    "javadoc": "An Organization is the owner of a set of namespaces.",
+    "entityTableName": "organization",
+    "dto": "mapstruct",
+    "pagination": "no",
+    "service": "serviceImpl"
+}

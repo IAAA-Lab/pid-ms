@@ -15,7 +15,7 @@
             "detail": {
                 "title": "Persistent Identifier"
             },
-            "external": "External",
+            "externalUrn": "External Urn",
             "feature": "Feature",
             "resolverProxyMode": "Resolver Proxy Mode",
             "namespace": "Namespace",
@@ -24,7 +24,7 @@
             "beginLifespanVersion": "Begin Lifespan Version",
             "endLifespanVersion": "End Lifespan Version",
             "alternateId": "Alternate Id",
-            "type": "Type",
+            "resourceType": "Resource Type",
             "locator": "Locator",
             "processStatus": "Process Status",
             "itemStatus": "Item Status",

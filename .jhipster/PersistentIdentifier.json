@@ -3,7 +3,7 @@
     "relationships": [],
     "fields": [
         {
-            "fieldName": "external",
+            "fieldName": "externalUrn",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"
@@ -51,7 +51,7 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "type",
+            "fieldName": "resourceType",
             "fieldType": "ResourceType",
             "fieldValues": "DATASET,SPATIAL_OBJECT"
         },

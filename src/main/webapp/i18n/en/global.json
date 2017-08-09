@@ -13,6 +13,8 @@
                 "task": "Task",
                 "change": "Change",
                 "persistentIdentifier": "Persistent Identifier",
+                "organization": "Organization",
+                "organizationMember": "Organization Member",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

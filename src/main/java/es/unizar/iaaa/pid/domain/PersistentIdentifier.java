@@ -33,8 +33,8 @@ public class PersistentIdentifier implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "jhi_external", nullable = false)
-    private String external;
+    @Column(name = "external_urn", nullable = false)
+    private String externalUrn;
 
     @NotNull
     @Column(name = "feature", nullable = false)
@@ -64,8 +64,8 @@ public class PersistentIdentifier implements Serializable {
     private String alternateId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "jhi_type")
-    private ResourceType type;
+    @Column(name = "resource_type")
+    private ResourceType resourceType;
 
     @Column(name = "locator")
     private String locator;
@@ -101,17 +101,17 @@ public class PersistentIdentifier implements Serializable {
         this.id = id;
     }
 
-    public String getExternal() {
-        return external;
+    public String getExternalUrn() {
+        return externalUrn;
     }
 
-    public PersistentIdentifier external(String external) {
-        this.external = external;
+    public PersistentIdentifier externalUrn(String externalUrn) {
+        this.externalUrn = externalUrn;
         return this;
     }
 
-    public void setExternal(String external) {
-        this.external = external;
+    public void setExternalUrn(String externalUrn) {
+        this.externalUrn = externalUrn;
     }
 
     public String getFeature() {
@@ -218,17 +218,17 @@ public class PersistentIdentifier implements Serializable {
         this.alternateId = alternateId;
     }
 
-    public ResourceType getType() {
-        return type;
+    public ResourceType getResourceType() {
+        return resourceType;
     }
 
-    public PersistentIdentifier type(ResourceType type) {
-        this.type = type;
+    public PersistentIdentifier resourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
         return this;
     }
 
-    public void setType(ResourceType type) {
-        this.type = type;
+    public void setResourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
     }
 
     public String getLocator() {
@@ -359,7 +359,7 @@ public class PersistentIdentifier implements Serializable {
     public String toString() {
         return "PersistentIdentifier{" +
             "id=" + getId() +
-            ", external='" + getExternal() + "'" +
+            ", externalUrn='" + getExternalUrn() + "'" +
             ", feature='" + getFeature() + "'" +
             ", resolverProxyMode='" + isResolverProxyMode() + "'" +
             ", namespace='" + getNamespace() + "'" +
@@ -368,7 +368,7 @@ public class PersistentIdentifier implements Serializable {
             ", beginLifespanVersion='" + getBeginLifespanVersion() + "'" +
             ", endLifespanVersion='" + getEndLifespanVersion() + "'" +
             ", alternateId='" + getAlternateId() + "'" +
-            ", type='" + getType() + "'" +
+            ", resourceType='" + getResourceType() + "'" +
             ", locator='" + getLocator() + "'" +
             ", processStatus='" + getProcessStatus() + "'" +
             ", itemStatus='" + getItemStatus() + "'" +

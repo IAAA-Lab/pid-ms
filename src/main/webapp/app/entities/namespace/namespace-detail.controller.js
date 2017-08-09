@@ -5,9 +5,9 @@
         .module('pidmsApp')
         .controller('NamespaceDetailController', NamespaceDetailController);
 
-    NamespaceDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Namespace', 'Group'];
+    NamespaceDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Namespace', 'Organization'];
 
-    function NamespaceDetailController($scope, $rootScope, $stateParams, previousState, entity, Namespace, Group) {
+    function NamespaceDetailController($scope, $rootScope, $stateParams, previousState, entity, Namespace, Organization) {
         var vm = this;
 
         vm.namespace = entity;

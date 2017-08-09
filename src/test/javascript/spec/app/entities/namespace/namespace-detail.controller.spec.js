@@ -4,7 +4,7 @@ describe('Controller Tests', function() {
 
     describe('Namespace Management Detail Controller', function() {
         var $scope, $rootScope;
-        var MockEntity, MockPreviousState, MockNamespace, MockGroup;
+        var MockEntity, MockPreviousState, MockNamespace, MockOrganization;
         var createController;
 
         beforeEach(inject(function($injector) {
@@ -13,7 +13,7 @@ describe('Controller Tests', function() {
             MockEntity = jasmine.createSpy('MockEntity');
             MockPreviousState = jasmine.createSpy('MockPreviousState');
             MockNamespace = jasmine.createSpy('MockNamespace');
-            MockGroup = jasmine.createSpy('MockGroup');
+            MockOrganization = jasmine.createSpy('MockOrganization');
             
 
             var locals = {
@@ -22,7 +22,7 @@ describe('Controller Tests', function() {
                 'entity': MockEntity,
                 'previousState': MockPreviousState,
                 'Namespace': MockNamespace,
-                'Group': MockGroup
+                'Organization': MockOrganization
             };
             createController = function() {
                 $injector.get('$controller')("NamespaceDetailController", locals);

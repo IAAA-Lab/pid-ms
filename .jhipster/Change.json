@@ -3,7 +3,7 @@
     "relationships": [],
     "fields": [
         {
-            "fieldName": "timestamp",
+            "fieldName": "changeTimestamp",
             "fieldType": "Instant"
         },
         {
@@ -46,7 +46,7 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "type",
+            "fieldName": "resourceType",
             "fieldType": "ResourceType",
             "fieldValues": "DATASET,SPATIAL_OBJECT"
         },

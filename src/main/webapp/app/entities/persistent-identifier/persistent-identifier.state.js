@@ -36,7 +36,7 @@
         })
         .state('persistent-identifier-detail', {
             parent: 'persistent-identifier',
-            url: '/{id}',
+            url: '/persistent-identifier/{id}',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.persistentIdentifier.detail.title'
@@ -110,7 +110,7 @@
                     resolve: {
                         entity: function () {
                             return {
-                                external: null,
+                                externalUrn: null,
                                 feature: null,
                                 resolverProxyMode: null,
                                 namespace: null,
@@ -119,7 +119,7 @@
                                 beginLifespanVersion: null,
                                 endLifespanVersion: null,
                                 alternateId: null,
-                                type: null,
+                                resourceType: null,
                                 locator: null,
                                 processStatus: null,
                                 itemStatus: null,

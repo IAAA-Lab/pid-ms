@@ -35,7 +35,7 @@
         })
         .state('task-detail', {
             parent: 'task',
-            url: '/{id}',
+            url: '/task/{id}',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.task.detail.title'

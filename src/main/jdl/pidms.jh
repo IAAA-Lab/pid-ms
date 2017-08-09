@@ -10,28 +10,28 @@
  */
 
 /**
- * A Group is he owner of a set of namespaces.
+ * An Organization is the owner of a set of namespaces.
  */
 
-entity Group {
+entity Organization {
     name String required
-    organization Boolean
+    title String // if empty same as "name"
 }
 
 relationship OneToMany {
-    Group{member} to GroupMember{group}
+    Organization{member} to OrganizationMember{organization}
 }
 
 /**
  * When a group member is created a user joins to a group with a role
  */
 
-entity GroupMember {
+entity OrganizationMember {
 	capacity Capacity required
 }
 
 relationship ManyToOne {
-	GroupMember{user} to User
+	OrganizationMember{user} to User
 }
 
 enum Capacity {
@@ -46,8 +46,9 @@ enum Capacity {
 entity Namespace {
 	namespace String required
     title String // if empty same as "name"
-    restricted Boolean required
+    publicNamespace Boolean required
     renewalPolicy RenewalPolicy required
+    namespaceStatus NamespaceStatus
 
     // Registration
     processStatus ProcessStatus
@@ -60,7 +61,7 @@ entity Namespace {
 
     // Source
 	methodType MethodType
-    type SourceType
+    sourceType SourceType
     endpointLocation String
     srsName String
     schemaUri String
@@ -86,7 +87,7 @@ entity Namespace {
 }
 
 relationship OneToMany {
-	Group{namespace} to Namespace{owner}
+	Organization{namespace} to Namespace{owner}
 }
 
 enum RenewalPolicy {
@@ -104,6 +105,10 @@ enum MethodType {
 
 enum SourceType {
 	WFS
+}
+
+enum NamespaceStatus {
+    STOP, GO
 }
 
 /**
@@ -146,7 +151,7 @@ enum ProcessStatus {
  */
 
 entity Change {
-    timestamp Instant
+    changeTimestamp Instant
     action ChangeAction
     feature String
 
@@ -159,7 +164,7 @@ entity Change {
     alternateId String // if empty same as "localId"
 
     // Resource
-    type ResourceType
+    resourceType ResourceType
     locator String
 }
 
@@ -177,7 +182,7 @@ enum ResourceType {
 
 entity PersistentIdentifier {
 
-    external String required
+    externalUrn String required
     feature String required
     resolverProxyMode Boolean
 
@@ -190,7 +195,7 @@ entity PersistentIdentifier {
     alternateId String // if empty same as "localId"
 
     // Resource
-    type ResourceType
+    resourceType ResourceType
     locator String
 
     // Registration

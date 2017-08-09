@@ -45,8 +45,8 @@ import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 @SpringBootTest(classes = PidmsApp.class)
 public class PersistentIdentifierResourceIntTest {
 
-    private static final String DEFAULT_EXTERNAL = "AAAAAAAAAA";
-    private static final String UPDATED_EXTERNAL = "BBBBBBBBBB";
+    private static final String DEFAULT_EXTERNAL_URN = "AAAAAAAAAA";
+    private static final String UPDATED_EXTERNAL_URN = "BBBBBBBBBB";
 
     private static final String DEFAULT_FEATURE = "AAAAAAAAAA";
     private static final String UPDATED_FEATURE = "BBBBBBBBBB";
@@ -72,8 +72,8 @@ public class PersistentIdentifierResourceIntTest {
     private static final String DEFAULT_ALTERNATE_ID = "AAAAAAAAAA";
     private static final String UPDATED_ALTERNATE_ID = "BBBBBBBBBB";
 
-    private static final ResourceType DEFAULT_TYPE = ResourceType.DATASET;
-    private static final ResourceType UPDATED_TYPE = ResourceType.SPATIAL_OBJECT;
+    private static final ResourceType DEFAULT_RESOURCE_TYPE = ResourceType.DATASET;
+    private static final ResourceType UPDATED_RESOURCE_TYPE = ResourceType.SPATIAL_OBJECT;
 
     private static final String DEFAULT_LOCATOR = "AAAAAAAAAA";
     private static final String UPDATED_LOCATOR = "BBBBBBBBBB";
@@ -142,7 +142,7 @@ public class PersistentIdentifierResourceIntTest {
      */
     public static PersistentIdentifier createEntity(EntityManager em) {
         PersistentIdentifier persistentIdentifier = new PersistentIdentifier()
-            .external(DEFAULT_EXTERNAL)
+            .externalUrn(DEFAULT_EXTERNAL_URN)
             .feature(DEFAULT_FEATURE)
             .resolverProxyMode(DEFAULT_RESOLVER_PROXY_MODE)
             .namespace(DEFAULT_NAMESPACE)
@@ -151,7 +151,7 @@ public class PersistentIdentifierResourceIntTest {
             .beginLifespanVersion(DEFAULT_BEGIN_LIFESPAN_VERSION)
             .endLifespanVersion(DEFAULT_END_LIFESPAN_VERSION)
             .alternateId(DEFAULT_ALTERNATE_ID)
-            .type(DEFAULT_TYPE)
+            .resourceType(DEFAULT_RESOURCE_TYPE)
             .locator(DEFAULT_LOCATOR)
             .processStatus(DEFAULT_PROCESS_STATUS)
             .itemStatus(DEFAULT_ITEM_STATUS)
@@ -184,7 +184,7 @@ public class PersistentIdentifierResourceIntTest {
         List<PersistentIdentifier> persistentIdentifierList = persistentIdentifierRepository.findAll();
         assertThat(persistentIdentifierList).hasSize(databaseSizeBeforeCreate + 1);
         PersistentIdentifier testPersistentIdentifier = persistentIdentifierList.get(persistentIdentifierList.size() - 1);
-        assertThat(testPersistentIdentifier.getExternal()).isEqualTo(DEFAULT_EXTERNAL);
+        assertThat(testPersistentIdentifier.getExternalUrn()).isEqualTo(DEFAULT_EXTERNAL_URN);
         assertThat(testPersistentIdentifier.getFeature()).isEqualTo(DEFAULT_FEATURE);
         assertThat(testPersistentIdentifier.isResolverProxyMode()).isEqualTo(DEFAULT_RESOLVER_PROXY_MODE);
         assertThat(testPersistentIdentifier.getNamespace()).isEqualTo(DEFAULT_NAMESPACE);
@@ -193,7 +193,7 @@ public class PersistentIdentifierResourceIntTest {
         assertThat(testPersistentIdentifier.getBeginLifespanVersion()).isEqualTo(DEFAULT_BEGIN_LIFESPAN_VERSION);
         assertThat(testPersistentIdentifier.getEndLifespanVersion()).isEqualTo(DEFAULT_END_LIFESPAN_VERSION);
         assertThat(testPersistentIdentifier.getAlternateId()).isEqualTo(DEFAULT_ALTERNATE_ID);
-        assertThat(testPersistentIdentifier.getType()).isEqualTo(DEFAULT_TYPE);
+        assertThat(testPersistentIdentifier.getResourceType()).isEqualTo(DEFAULT_RESOURCE_TYPE);
         assertThat(testPersistentIdentifier.getLocator()).isEqualTo(DEFAULT_LOCATOR);
         assertThat(testPersistentIdentifier.getProcessStatus()).isEqualTo(DEFAULT_PROCESS_STATUS);
         assertThat(testPersistentIdentifier.getItemStatus()).isEqualTo(DEFAULT_ITEM_STATUS);
@@ -226,10 +226,10 @@ public class PersistentIdentifierResourceIntTest {
 
     @Test
     @Transactional
-    public void checkExternalIsRequired() throws Exception {
+    public void checkExternalUrnIsRequired() throws Exception {
         int databaseSizeBeforeTest = persistentIdentifierRepository.findAll().size();
         // set the field null
-        persistentIdentifier.setExternal(null);
+        persistentIdentifier.setExternalUrn(null);
 
         // Create the PersistentIdentifier, which fails.
         PersistentIdentifierDTO persistentIdentifierDTO = persistentIdentifierMapper.toDto(persistentIdentifier);
@@ -311,7 +311,7 @@ public class PersistentIdentifierResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(persistentIdentifier.getId().intValue())))
-            .andExpect(jsonPath("$.[*].external").value(hasItem(DEFAULT_EXTERNAL.toString())))
+            .andExpect(jsonPath("$.[*].externalUrn").value(hasItem(DEFAULT_EXTERNAL_URN.toString())))
             .andExpect(jsonPath("$.[*].feature").value(hasItem(DEFAULT_FEATURE.toString())))
             .andExpect(jsonPath("$.[*].resolverProxyMode").value(hasItem(DEFAULT_RESOLVER_PROXY_MODE.booleanValue())))
             .andExpect(jsonPath("$.[*].namespace").value(hasItem(DEFAULT_NAMESPACE.toString())))
@@ -320,7 +320,7 @@ public class PersistentIdentifierResourceIntTest {
             .andExpect(jsonPath("$.[*].beginLifespanVersion").value(hasItem(DEFAULT_BEGIN_LIFESPAN_VERSION.toString())))
             .andExpect(jsonPath("$.[*].endLifespanVersion").value(hasItem(DEFAULT_END_LIFESPAN_VERSION.toString())))
             .andExpect(jsonPath("$.[*].alternateId").value(hasItem(DEFAULT_ALTERNATE_ID.toString())))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].resourceType").value(hasItem(DEFAULT_RESOURCE_TYPE.toString())))
             .andExpect(jsonPath("$.[*].locator").value(hasItem(DEFAULT_LOCATOR.toString())))
             .andExpect(jsonPath("$.[*].processStatus").value(hasItem(DEFAULT_PROCESS_STATUS.toString())))
             .andExpect(jsonPath("$.[*].itemStatus").value(hasItem(DEFAULT_ITEM_STATUS.toString())))
@@ -342,7 +342,7 @@ public class PersistentIdentifierResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(persistentIdentifier.getId().intValue()))
-            .andExpect(jsonPath("$.external").value(DEFAULT_EXTERNAL.toString()))
+            .andExpect(jsonPath("$.externalUrn").value(DEFAULT_EXTERNAL_URN.toString()))
             .andExpect(jsonPath("$.feature").value(DEFAULT_FEATURE.toString()))
             .andExpect(jsonPath("$.resolverProxyMode").value(DEFAULT_RESOLVER_PROXY_MODE.booleanValue()))
             .andExpect(jsonPath("$.namespace").value(DEFAULT_NAMESPACE.toString()))
@@ -351,7 +351,7 @@ public class PersistentIdentifierResourceIntTest {
             .andExpect(jsonPath("$.beginLifespanVersion").value(DEFAULT_BEGIN_LIFESPAN_VERSION.toString()))
             .andExpect(jsonPath("$.endLifespanVersion").value(DEFAULT_END_LIFESPAN_VERSION.toString()))
             .andExpect(jsonPath("$.alternateId").value(DEFAULT_ALTERNATE_ID.toString()))
-            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
+            .andExpect(jsonPath("$.resourceType").value(DEFAULT_RESOURCE_TYPE.toString()))
             .andExpect(jsonPath("$.locator").value(DEFAULT_LOCATOR.toString()))
             .andExpect(jsonPath("$.processStatus").value(DEFAULT_PROCESS_STATUS.toString()))
             .andExpect(jsonPath("$.itemStatus").value(DEFAULT_ITEM_STATUS.toString()))
@@ -380,7 +380,7 @@ public class PersistentIdentifierResourceIntTest {
         // Update the persistentIdentifier
         PersistentIdentifier updatedPersistentIdentifier = persistentIdentifierRepository.findOne(persistentIdentifier.getId());
         updatedPersistentIdentifier
-            .external(UPDATED_EXTERNAL)
+            .externalUrn(UPDATED_EXTERNAL_URN)
             .feature(UPDATED_FEATURE)
             .resolverProxyMode(UPDATED_RESOLVER_PROXY_MODE)
             .namespace(UPDATED_NAMESPACE)
@@ -389,7 +389,7 @@ public class PersistentIdentifierResourceIntTest {
             .beginLifespanVersion(UPDATED_BEGIN_LIFESPAN_VERSION)
             .endLifespanVersion(UPDATED_END_LIFESPAN_VERSION)
             .alternateId(UPDATED_ALTERNATE_ID)
-            .type(UPDATED_TYPE)
+            .resourceType(UPDATED_RESOURCE_TYPE)
             .locator(UPDATED_LOCATOR)
             .processStatus(UPDATED_PROCESS_STATUS)
             .itemStatus(UPDATED_ITEM_STATUS)
@@ -409,7 +409,7 @@ public class PersistentIdentifierResourceIntTest {
         List<PersistentIdentifier> persistentIdentifierList = persistentIdentifierRepository.findAll();
         assertThat(persistentIdentifierList).hasSize(databaseSizeBeforeUpdate);
         PersistentIdentifier testPersistentIdentifier = persistentIdentifierList.get(persistentIdentifierList.size() - 1);
-        assertThat(testPersistentIdentifier.getExternal()).isEqualTo(UPDATED_EXTERNAL);
+        assertThat(testPersistentIdentifier.getExternalUrn()).isEqualTo(UPDATED_EXTERNAL_URN);
         assertThat(testPersistentIdentifier.getFeature()).isEqualTo(UPDATED_FEATURE);
         assertThat(testPersistentIdentifier.isResolverProxyMode()).isEqualTo(UPDATED_RESOLVER_PROXY_MODE);
         assertThat(testPersistentIdentifier.getNamespace()).isEqualTo(UPDATED_NAMESPACE);
@@ -418,7 +418,7 @@ public class PersistentIdentifierResourceIntTest {
         assertThat(testPersistentIdentifier.getBeginLifespanVersion()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION);
         assertThat(testPersistentIdentifier.getEndLifespanVersion()).isEqualTo(UPDATED_END_LIFESPAN_VERSION);
         assertThat(testPersistentIdentifier.getAlternateId()).isEqualTo(UPDATED_ALTERNATE_ID);
-        assertThat(testPersistentIdentifier.getType()).isEqualTo(UPDATED_TYPE);
+        assertThat(testPersistentIdentifier.getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
         assertThat(testPersistentIdentifier.getLocator()).isEqualTo(UPDATED_LOCATOR);
         assertThat(testPersistentIdentifier.getProcessStatus()).isEqualTo(UPDATED_PROCESS_STATUS);
         assertThat(testPersistentIdentifier.getItemStatus()).isEqualTo(UPDATED_ITEM_STATUS);

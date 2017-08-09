@@ -4,9 +4,9 @@
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span data-translate="pidmsApp.change.timestamp">Timestamp</span></dt>
+        <dt><span data-translate="pidmsApp.change.changeTimestamp">Change Timestamp</span></dt>
         <dd>
-            <span>{{vm.change.timestamp | date:'medium'}}</span>
+            <span>{{vm.change.changeTimestamp | date:'medium'}}</span>
         </dd>
         <dt><span data-translate="pidmsApp.change.action">Action</span></dt>
         <dd>
@@ -40,9 +40,9 @@
         <dd>
             <span>{{vm.change.alternateId}}</span>
         </dd>
-        <dt><span data-translate="pidmsApp.change.type">Type</span></dt>
+        <dt><span data-translate="pidmsApp.change.resourceType">Resource Type</span></dt>
         <dd>
-            <span data-translate="{{'pidmsApp.ResourceType.' + vm.change.type}}">{{vm.change.type}}</span>
+            <span data-translate="{{'pidmsApp.ResourceType.' + vm.change.resourceType}}">{{vm.change.resourceType}}</span>
         </dd>
         <dt><span data-translate="pidmsApp.change.locator">Locator</span></dt>
         <dd>

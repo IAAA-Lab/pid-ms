@@ -44,8 +44,8 @@ import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 @SpringBootTest(classes = PidmsApp.class)
 public class ChangeResourceIntTest {
 
-    private static final Instant DEFAULT_TIMESTAMP = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_TIMESTAMP = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final Instant DEFAULT_CHANGE_TIMESTAMP = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CHANGE_TIMESTAMP = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final ChangeAction DEFAULT_ACTION = ChangeAction.ISSUED;
     private static final ChangeAction UPDATED_ACTION = ChangeAction.CANCELLED;
@@ -71,8 +71,8 @@ public class ChangeResourceIntTest {
     private static final String DEFAULT_ALTERNATE_ID = "AAAAAAAAAA";
     private static final String UPDATED_ALTERNATE_ID = "BBBBBBBBBB";
 
-    private static final ResourceType DEFAULT_TYPE = ResourceType.DATASET;
-    private static final ResourceType UPDATED_TYPE = ResourceType.SPATIAL_OBJECT;
+    private static final ResourceType DEFAULT_RESOURCE_TYPE = ResourceType.DATASET;
+    private static final ResourceType UPDATED_RESOURCE_TYPE = ResourceType.SPATIAL_OBJECT;
 
     private static final String DEFAULT_LOCATOR = "AAAAAAAAAA";
     private static final String UPDATED_LOCATOR = "BBBBBBBBBB";
@@ -120,7 +120,7 @@ public class ChangeResourceIntTest {
      */
     public static Change createEntity(EntityManager em) {
         Change change = new Change()
-            .timestamp(DEFAULT_TIMESTAMP)
+            .changeTimestamp(DEFAULT_CHANGE_TIMESTAMP)
             .action(DEFAULT_ACTION)
             .feature(DEFAULT_FEATURE)
             .namespace(DEFAULT_NAMESPACE)
@@ -129,7 +129,7 @@ public class ChangeResourceIntTest {
             .beginLifespanVersion(DEFAULT_BEGIN_LIFESPAN_VERSION)
             .endLifespanVersion(DEFAULT_END_LIFESPAN_VERSION)
             .alternateId(DEFAULT_ALTERNATE_ID)
-            .type(DEFAULT_TYPE)
+            .resourceType(DEFAULT_RESOURCE_TYPE)
             .locator(DEFAULT_LOCATOR);
         return change;
     }
@@ -155,7 +155,7 @@ public class ChangeResourceIntTest {
         List<Change> changeList = changeRepository.findAll();
         assertThat(changeList).hasSize(databaseSizeBeforeCreate + 1);
         Change testChange = changeList.get(changeList.size() - 1);
-        assertThat(testChange.getTimestamp()).isEqualTo(DEFAULT_TIMESTAMP);
+        assertThat(testChange.getChangeTimestamp()).isEqualTo(DEFAULT_CHANGE_TIMESTAMP);
         assertThat(testChange.getAction()).isEqualTo(DEFAULT_ACTION);
         assertThat(testChange.getFeature()).isEqualTo(DEFAULT_FEATURE);
         assertThat(testChange.getNamespace()).isEqualTo(DEFAULT_NAMESPACE);
@@ -164,7 +164,7 @@ public class ChangeResourceIntTest {
         assertThat(testChange.getBeginLifespanVersion()).isEqualTo(DEFAULT_BEGIN_LIFESPAN_VERSION);
         assertThat(testChange.getEndLifespanVersion()).isEqualTo(DEFAULT_END_LIFESPAN_VERSION);
         assertThat(testChange.getAlternateId()).isEqualTo(DEFAULT_ALTERNATE_ID);
-        assertThat(testChange.getType()).isEqualTo(DEFAULT_TYPE);
+        assertThat(testChange.getResourceType()).isEqualTo(DEFAULT_RESOURCE_TYPE);
         assertThat(testChange.getLocator()).isEqualTo(DEFAULT_LOCATOR);
     }
 
@@ -237,7 +237,7 @@ public class ChangeResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(change.getId().intValue())))
-            .andExpect(jsonPath("$.[*].timestamp").value(hasItem(DEFAULT_TIMESTAMP.toString())))
+            .andExpect(jsonPath("$.[*].changeTimestamp").value(hasItem(DEFAULT_CHANGE_TIMESTAMP.toString())))
             .andExpect(jsonPath("$.[*].action").value(hasItem(DEFAULT_ACTION.toString())))
             .andExpect(jsonPath("$.[*].feature").value(hasItem(DEFAULT_FEATURE.toString())))
             .andExpect(jsonPath("$.[*].namespace").value(hasItem(DEFAULT_NAMESPACE.toString())))
@@ -246,7 +246,7 @@ public class ChangeResourceIntTest {
             .andExpect(jsonPath("$.[*].beginLifespanVersion").value(hasItem(DEFAULT_BEGIN_LIFESPAN_VERSION.toString())))
             .andExpect(jsonPath("$.[*].endLifespanVersion").value(hasItem(DEFAULT_END_LIFESPAN_VERSION.toString())))
             .andExpect(jsonPath("$.[*].alternateId").value(hasItem(DEFAULT_ALTERNATE_ID.toString())))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].resourceType").value(hasItem(DEFAULT_RESOURCE_TYPE.toString())))
             .andExpect(jsonPath("$.[*].locator").value(hasItem(DEFAULT_LOCATOR.toString())));
     }
 
@@ -261,7 +261,7 @@ public class ChangeResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(change.getId().intValue()))
-            .andExpect(jsonPath("$.timestamp").value(DEFAULT_TIMESTAMP.toString()))
+            .andExpect(jsonPath("$.changeTimestamp").value(DEFAULT_CHANGE_TIMESTAMP.toString()))
             .andExpect(jsonPath("$.action").value(DEFAULT_ACTION.toString()))
             .andExpect(jsonPath("$.feature").value(DEFAULT_FEATURE.toString()))
             .andExpect(jsonPath("$.namespace").value(DEFAULT_NAMESPACE.toString()))
@@ -270,7 +270,7 @@ public class ChangeResourceIntTest {
             .andExpect(jsonPath("$.beginLifespanVersion").value(DEFAULT_BEGIN_LIFESPAN_VERSION.toString()))
             .andExpect(jsonPath("$.endLifespanVersion").value(DEFAULT_END_LIFESPAN_VERSION.toString()))
             .andExpect(jsonPath("$.alternateId").value(DEFAULT_ALTERNATE_ID.toString()))
-            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
+            .andExpect(jsonPath("$.resourceType").value(DEFAULT_RESOURCE_TYPE.toString()))
             .andExpect(jsonPath("$.locator").value(DEFAULT_LOCATOR.toString()));
     }
 
@@ -292,7 +292,7 @@ public class ChangeResourceIntTest {
         // Update the change
         Change updatedChange = changeRepository.findOne(change.getId());
         updatedChange
-            .timestamp(UPDATED_TIMESTAMP)
+            .changeTimestamp(UPDATED_CHANGE_TIMESTAMP)
             .action(UPDATED_ACTION)
             .feature(UPDATED_FEATURE)
             .namespace(UPDATED_NAMESPACE)
@@ -301,7 +301,7 @@ public class ChangeResourceIntTest {
             .beginLifespanVersion(UPDATED_BEGIN_LIFESPAN_VERSION)
             .endLifespanVersion(UPDATED_END_LIFESPAN_VERSION)
             .alternateId(UPDATED_ALTERNATE_ID)
-            .type(UPDATED_TYPE)
+            .resourceType(UPDATED_RESOURCE_TYPE)
             .locator(UPDATED_LOCATOR);
         ChangeDTO changeDTO = changeMapper.toDto(updatedChange);
 
@@ -314,7 +314,7 @@ public class ChangeResourceIntTest {
         List<Change> changeList = changeRepository.findAll();
         assertThat(changeList).hasSize(databaseSizeBeforeUpdate);
         Change testChange = changeList.get(changeList.size() - 1);
-        assertThat(testChange.getTimestamp()).isEqualTo(UPDATED_TIMESTAMP);
+        assertThat(testChange.getChangeTimestamp()).isEqualTo(UPDATED_CHANGE_TIMESTAMP);
         assertThat(testChange.getAction()).isEqualTo(UPDATED_ACTION);
         assertThat(testChange.getFeature()).isEqualTo(UPDATED_FEATURE);
         assertThat(testChange.getNamespace()).isEqualTo(UPDATED_NAMESPACE);
@@ -323,7 +323,7 @@ public class ChangeResourceIntTest {
         assertThat(testChange.getBeginLifespanVersion()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION);
         assertThat(testChange.getEndLifespanVersion()).isEqualTo(UPDATED_END_LIFESPAN_VERSION);
         assertThat(testChange.getAlternateId()).isEqualTo(UPDATED_ALTERNATE_ID);
-        assertThat(testChange.getType()).isEqualTo(UPDATED_TYPE);
+        assertThat(testChange.getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
         assertThat(testChange.getLocator()).isEqualTo(UPDATED_LOCATOR);
     }
 

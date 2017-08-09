@@ -12,6 +12,8 @@ import java.util.Objects;
 
 import es.unizar.iaaa.pid.domain.enumeration.RenewalPolicy;
 
+import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
+
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
@@ -44,13 +46,17 @@ public class Namespace implements Serializable {
     private String title;
 
     @NotNull
-    @Column(name = "jhi_restricted", nullable = false)
-    private Boolean restricted;
+    @Column(name = "public_namespace", nullable = false)
+    private Boolean publicNamespace;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "renewal_policy", nullable = false)
     private RenewalPolicy renewalPolicy;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "namespace_status")
+    private NamespaceStatus namespaceStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "process_status")
@@ -80,8 +86,8 @@ public class Namespace implements Serializable {
     private MethodType methodType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "jhi_type")
-    private SourceType type;
+    @Column(name = "source_type")
+    private SourceType sourceType;
 
     @Column(name = "endpoint_location")
     private String endpointLocation;
@@ -145,7 +151,7 @@ public class Namespace implements Serializable {
     private Double maxY;
 
     @ManyToOne
-    private Group owner;
+    private Organization owner;
 
     public Long getId() {
         return id;
@@ -181,17 +187,17 @@ public class Namespace implements Serializable {
         this.title = title;
     }
 
-    public Boolean isRestricted() {
-        return restricted;
+    public Boolean isPublicNamespace() {
+        return publicNamespace;
     }
 
-    public Namespace restricted(Boolean restricted) {
-        this.restricted = restricted;
+    public Namespace publicNamespace(Boolean publicNamespace) {
+        this.publicNamespace = publicNamespace;
         return this;
     }
 
-    public void setRestricted(Boolean restricted) {
-        this.restricted = restricted;
+    public void setPublicNamespace(Boolean publicNamespace) {
+        this.publicNamespace = publicNamespace;
     }
 
     public RenewalPolicy getRenewalPolicy() {
@@ -205,6 +211,19 @@ public class Namespace implements Serializable {
 
     public void setRenewalPolicy(RenewalPolicy renewalPolicy) {
         this.renewalPolicy = renewalPolicy;
+    }
+
+    public NamespaceStatus getNamespaceStatus() {
+        return namespaceStatus;
+    }
+
+    public Namespace namespaceStatus(NamespaceStatus namespaceStatus) {
+        this.namespaceStatus = namespaceStatus;
+        return this;
+    }
+
+    public void setNamespaceStatus(NamespaceStatus namespaceStatus) {
+        this.namespaceStatus = namespaceStatus;
     }
 
     public ProcessStatus getProcessStatus() {
@@ -311,17 +330,17 @@ public class Namespace implements Serializable {
         this.methodType = methodType;
     }
 
-    public SourceType getType() {
-        return type;
+    public SourceType getSourceType() {
+        return sourceType;
     }
 
-    public Namespace type(SourceType type) {
-        this.type = type;
+    public Namespace sourceType(SourceType sourceType) {
+        this.sourceType = sourceType;
         return this;
     }
 
-    public void setType(SourceType type) {
-        this.type = type;
+    public void setSourceType(SourceType sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getEndpointLocation() {
@@ -584,17 +603,17 @@ public class Namespace implements Serializable {
         this.maxY = maxY;
     }
 
-    public Group getOwner() {
+    public Organization getOwner() {
         return owner;
     }
 
-    public Namespace owner(Group group) {
-        this.owner = group;
+    public Namespace owner(Organization organization) {
+        this.owner = organization;
         return this;
     }
 
-    public void setOwner(Group group) {
-        this.owner = group;
+    public void setOwner(Organization organization) {
+        this.owner = organization;
     }
 
     @Override
@@ -623,8 +642,9 @@ public class Namespace implements Serializable {
             "id=" + getId() +
             ", namespace='" + getNamespace() + "'" +
             ", title='" + getTitle() + "'" +
-            ", restricted='" + isRestricted() + "'" +
+            ", publicNamespace='" + isPublicNamespace() + "'" +
             ", renewalPolicy='" + getRenewalPolicy() + "'" +
+            ", namespaceStatus='" + getNamespaceStatus() + "'" +
             ", processStatus='" + getProcessStatus() + "'" +
             ", itemStatus='" + getItemStatus() + "'" +
             ", lastChangeDate='" + getLastChangeDate() + "'" +
@@ -633,7 +653,7 @@ public class Namespace implements Serializable {
             ", nextRenewalDate='" + getNextRenewalDate() + "'" +
             ", annullationDate='" + getAnnullationDate() + "'" +
             ", methodType='" + getMethodType() + "'" +
-            ", type='" + getType() + "'" +
+            ", sourceType='" + getSourceType() + "'" +
             ", endpointLocation='" + getEndpointLocation() + "'" +
             ", srsName='" + getSrsName() + "'" +
             ", schemaUri='" + getSchemaUri() + "'" +

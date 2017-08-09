@@ -35,7 +35,7 @@
         })
         .state('change-detail', {
             parent: 'change',
-            url: '/{id}',
+            url: '/change/{id}',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.change.detail.title'
@@ -108,7 +108,7 @@
                     resolve: {
                         entity: function () {
                             return {
-                                timestamp: null,
+                                changeTimestamp: null,
                                 action: null,
                                 feature: null,
                                 namespace: null,
@@ -117,7 +117,7 @@
                                 beginLifespanVersion: null,
                                 endLifespanVersion: null,
                                 alternateId: null,
-                                type: null,
+                                resourceType: null,
                                 locator: null,
                                 id: null
                             };

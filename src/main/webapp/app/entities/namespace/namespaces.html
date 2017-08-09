@@ -21,8 +21,9 @@
                     <th><span data-translate="global.field.id">ID</span></th>
                     <th><span data-translate="pidmsApp.namespace.namespace">Namespace</span></th>
                     <th><span data-translate="pidmsApp.namespace.title">Title</span></th>
-                    <th><span data-translate="pidmsApp.namespace.restricted">Restricted</span></th>
+                    <th><span data-translate="pidmsApp.namespace.publicNamespace">Public Namespace</span></th>
                     <th><span data-translate="pidmsApp.namespace.renewalPolicy">Renewal Policy</span></th>
+                    <th><span data-translate="pidmsApp.namespace.namespaceStatus">Namespace Status</span></th>
                     <th><span data-translate="pidmsApp.namespace.processStatus">Process Status</span></th>
                     <th><span data-translate="pidmsApp.namespace.itemStatus">Item Status</span></th>
                     <th><span data-translate="pidmsApp.namespace.lastChangeDate">Last Change Date</span></th>
@@ -31,7 +32,7 @@
                     <th><span data-translate="pidmsApp.namespace.nextRenewalDate">Next Renewal Date</span></th>
                     <th><span data-translate="pidmsApp.namespace.annullationDate">Annullation Date</span></th>
                     <th><span data-translate="pidmsApp.namespace.methodType">Method Type</span></th>
-                    <th><span data-translate="pidmsApp.namespace.type">Type</span></th>
+                    <th><span data-translate="pidmsApp.namespace.sourceType">Source Type</span></th>
                     <th><span data-translate="pidmsApp.namespace.endpointLocation">Endpoint Location</span></th>
                     <th><span data-translate="pidmsApp.namespace.srsName">Srs Name</span></th>
                     <th><span data-translate="pidmsApp.namespace.schemaUri">Schema Uri</span></th>
@@ -61,8 +62,9 @@
                     <td><a ui-sref="namespace-detail({id:namespace.id})">{{namespace.id}}</a></td>
                     <td>{{namespace.namespace}}</td>
                     <td>{{namespace.title}}</td>
-                    <td>{{namespace.restricted}}</td>
+                    <td>{{namespace.publicNamespace}}</td>
                     <td data-translate="{{'pidmsApp.RenewalPolicy.' + namespace.renewalPolicy}}">{{namespace.renewalPolicy}}</td>
+                    <td data-translate="{{'pidmsApp.NamespaceStatus.' + namespace.namespaceStatus}}">{{namespace.namespaceStatus}}</td>
                     <td data-translate="{{'pidmsApp.ProcessStatus.' + namespace.processStatus}}">{{namespace.processStatus}}</td>
                     <td data-translate="{{'pidmsApp.ItemStatus.' + namespace.itemStatus}}">{{namespace.itemStatus}}</td>
                     <td>{{namespace.lastChangeDate | date:'medium'}}</td>
@@ -71,7 +73,7 @@
                     <td>{{namespace.nextRenewalDate | date:'medium'}}</td>
                     <td>{{namespace.annullationDate | date:'medium'}}</td>
                     <td data-translate="{{'pidmsApp.MethodType.' + namespace.methodType}}">{{namespace.methodType}}</td>
-                    <td data-translate="{{'pidmsApp.SourceType.' + namespace.type}}">{{namespace.type}}</td>
+                    <td data-translate="{{'pidmsApp.SourceType.' + namespace.sourceType}}">{{namespace.sourceType}}</td>
                     <td>{{namespace.endpointLocation}}</td>
                     <td>{{namespace.srsName}}</td>
                     <td>{{namespace.schemaUri}}</td>
@@ -93,7 +95,7 @@
                     <td>{{namespace.maxX}}</td>
                     <td>{{namespace.maxY}}</td>
                     <td>
-                        <a ui-sref="group-detail({id:namespace.ownerId})">{{namespace.ownerId}}</a>
+                        <a ui-sref="organization-detail({id:namespace.ownerId})">{{namespace.ownerId}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

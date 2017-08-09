@@ -14,12 +14,12 @@
                     ng-model="vm.change.id" readonly />
         </div>
         <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.change.timestamp" for="field_timestamp">Timestamp</label>
+            <label class="control-label" data-translate="pidmsApp.change.changeTimestamp" for="field_changeTimestamp">Change Timestamp</label>
                 <div class="input-group">
-                    <input id="field_timestamp" type="text" class="form-control" name="timestamp" datetime-picker="{{dateformat}}" ng-model="vm.change.timestamp" is-open="vm.datePickerOpenStatus.timestamp"
+                    <input id="field_changeTimestamp" type="text" class="form-control" name="changeTimestamp" datetime-picker="{{dateformat}}" ng-model="vm.change.changeTimestamp" is-open="vm.datePickerOpenStatus.changeTimestamp"
                     />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('timestamp')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('changeTimestamp')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
         </div>
@@ -96,8 +96,8 @@
                     />
         </div>
         <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.change.type" for="field_type">Type</label>
-            <select class="form-control" name="type" ng-model="vm.change.type" id="field_type">
+            <label class="control-label" data-translate="pidmsApp.change.resourceType" for="field_resourceType">Resource Type</label>
+            <select class="form-control" name="resourceType" ng-model="vm.change.resourceType" id="field_resourceType">
                 <option value="DATASET" data-translate="pidmsApp.ResourceType.DATASET">DATASET</option>
                 <option value="SPATIAL_OBJECT" data-translate="pidmsApp.ResourceType.SPATIAL_OBJECT">SPATIAL_OBJECT</option>
             </select>

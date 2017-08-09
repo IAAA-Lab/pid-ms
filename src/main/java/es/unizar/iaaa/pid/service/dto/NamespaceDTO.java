@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 import es.unizar.iaaa.pid.domain.enumeration.RenewalPolicy;
+import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.MethodType;
@@ -26,10 +27,12 @@ public class NamespaceDTO implements Serializable {
     private String title;
 
     @NotNull
-    private Boolean restricted;
+    private Boolean publicNamespace;
 
     @NotNull
     private RenewalPolicy renewalPolicy;
+
+    private NamespaceStatus namespaceStatus;
 
     private ProcessStatus processStatus;
 
@@ -47,7 +50,7 @@ public class NamespaceDTO implements Serializable {
 
     private MethodType methodType;
 
-    private SourceType type;
+    private SourceType sourceType;
 
     private String endpointLocation;
 
@@ -116,12 +119,12 @@ public class NamespaceDTO implements Serializable {
         this.title = title;
     }
 
-    public Boolean isRestricted() {
-        return restricted;
+    public Boolean isPublicNamespace() {
+        return publicNamespace;
     }
 
-    public void setRestricted(Boolean restricted) {
-        this.restricted = restricted;
+    public void setPublicNamespace(Boolean publicNamespace) {
+        this.publicNamespace = publicNamespace;
     }
 
     public RenewalPolicy getRenewalPolicy() {
@@ -130,6 +133,14 @@ public class NamespaceDTO implements Serializable {
 
     public void setRenewalPolicy(RenewalPolicy renewalPolicy) {
         this.renewalPolicy = renewalPolicy;
+    }
+
+    public NamespaceStatus getNamespaceStatus() {
+        return namespaceStatus;
+    }
+
+    public void setNamespaceStatus(NamespaceStatus namespaceStatus) {
+        this.namespaceStatus = namespaceStatus;
     }
 
     public ProcessStatus getProcessStatus() {
@@ -196,12 +207,12 @@ public class NamespaceDTO implements Serializable {
         this.methodType = methodType;
     }
 
-    public SourceType getType() {
-        return type;
+    public SourceType getSourceType() {
+        return sourceType;
     }
 
-    public void setType(SourceType type) {
-        this.type = type;
+    public void setSourceType(SourceType sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getEndpointLocation() {
@@ -368,8 +379,8 @@ public class NamespaceDTO implements Serializable {
         return ownerId;
     }
 
-    public void setOwnerId(Long groupId) {
-        this.ownerId = groupId;
+    public void setOwnerId(Long organizationId) {
+        this.ownerId = organizationId;
     }
 
     @Override
@@ -399,8 +410,9 @@ public class NamespaceDTO implements Serializable {
             "id=" + getId() +
             ", namespace='" + getNamespace() + "'" +
             ", title='" + getTitle() + "'" +
-            ", restricted='" + isRestricted() + "'" +
+            ", publicNamespace='" + isPublicNamespace() + "'" +
             ", renewalPolicy='" + getRenewalPolicy() + "'" +
+            ", namespaceStatus='" + getNamespaceStatus() + "'" +
             ", processStatus='" + getProcessStatus() + "'" +
             ", itemStatus='" + getItemStatus() + "'" +
             ", lastChangeDate='" + getLastChangeDate() + "'" +
@@ -409,7 +421,7 @@ public class NamespaceDTO implements Serializable {
             ", nextRenewalDate='" + getNextRenewalDate() + "'" +
             ", annullationDate='" + getAnnullationDate() + "'" +
             ", methodType='" + getMethodType() + "'" +
-            ", type='" + getType() + "'" +
+            ", sourceType='" + getSourceType() + "'" +
             ", endpointLocation='" + getEndpointLocation() + "'" +
             ", srsName='" + getSrsName() + "'" +
             ", schemaUri='" + getSchemaUri() + "'" +

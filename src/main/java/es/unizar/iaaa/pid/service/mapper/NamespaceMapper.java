@@ -8,7 +8,7 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity Namespace and its DTO NamespaceDTO.
  */
-@Mapper(componentModel = "spring", uses = {GroupMapper.class, })
+@Mapper(componentModel = "spring", uses = {OrganizationMapper.class, })
 public interface NamespaceMapper extends EntityMapper <NamespaceDTO, Namespace> {
 
     @Mapping(source = "owner.id", target = "ownerId")

@@ -1,0 +1,31 @@
+
+<div>
+    <h2><span data-translate="pidmsApp.organizationMember.detail.title">Organization Member</span> {{vm.organizationMember.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="pidmsApp.organizationMember.capacity">Capacity</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.Capacity.' + vm.organizationMember.capacity}}">{{vm.organizationMember.capacity}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.organizationMember.user">User</span></dt>
+        <dd>
+            {{vm.organizationMember.userId}}
+        </dd>
+        <dt><span data-translate="pidmsApp.organizationMember.organization">Organization</span></dt>
+        <dd>
+            <a ui-sref="organization-detail({id:vm.organizationMember.organizationId})">{{vm.organizationMember.organizationId}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="organization-member-detail.edit({id:vm.organizationMember.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>
