@@ -11,6 +11,7 @@ import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +35,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import es.unizar.iaaa.pid.domain.enumeration.RenewalPolicy;
+import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.MethodType;
+import es.unizar.iaaa.pid.domain.enumeration.SourceType;
 /**
  * Test class for the NamespaceResource REST controller.
  *

@@ -1,12 +1,13 @@
 package es.unizar.iaaa.pid.service.dto;
 
 
-import java.time.Instant;
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.util.Objects;
 import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
 import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.Objects;
 
 /**
  * A DTO for the Change entity.
@@ -38,6 +39,8 @@ public class ChangeDTO implements Serializable {
     private ResourceType resourceType;
 
     private String locator;
+
+    private Long taskId;
 
     public Long getId() {
         return id;
@@ -133,6 +136,14 @@ public class ChangeDTO implements Serializable {
 
     public void setLocator(String locator) {
         this.locator = locator;
+    }
+
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     @Override

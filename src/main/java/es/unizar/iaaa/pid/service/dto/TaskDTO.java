@@ -1,12 +1,14 @@
 package es.unizar.iaaa.pid.service.dto;
 
 
-import java.time.Instant;
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.util.Objects;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.domain.enumeration.TaskStatus;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.Objects;
 
 /**
  * A DTO for the Task entity.
@@ -26,6 +28,8 @@ public class TaskDTO implements Serializable {
 
     @Min(value = 0)
     private Integer numErrors;
+
+    private Long namespaceId;
 
     public Long getId() {
         return id;
@@ -65,6 +69,14 @@ public class TaskDTO implements Serializable {
 
     public void setNumErrors(Integer numErrors) {
         this.numErrors = numErrors;
+    }
+
+    public Long getNamespaceId() {
+        return namespaceId;
+    }
+
+    public void setNamespaceId(Long namespaceId) {
+        this.namespaceId = namespaceId;
     }
 
     @Override

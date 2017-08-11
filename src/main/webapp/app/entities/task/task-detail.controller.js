@@ -5,9 +5,9 @@
         .module('pidmsApp')
         .controller('TaskDetailController', TaskDetailController);
 
-    TaskDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Task', 'Principal'];
+    TaskDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Task', 'Namespace', 'Principal'];
 
-    function TaskDetailController($scope, $rootScope, $stateParams, previousState, entity, Task, Principal) {
+    function TaskDetailController($scope, $rootScope, $stateParams, previousState, entity, Task, Namespace, Principal) {
         var vm = this;
 
         vm.task = entity;

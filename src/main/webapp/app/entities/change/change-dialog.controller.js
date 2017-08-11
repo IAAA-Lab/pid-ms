@@ -5,9 +5,9 @@
         .module('pidmsApp')
         .controller('ChangeDialogController', ChangeDialogController);
 
-    ChangeDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Change'];
+    ChangeDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Change', 'Task'];
 
-    function ChangeDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Change) {
+    function ChangeDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Change, Task) {
         var vm = this;
 
         vm.change = entity;
@@ -15,6 +15,7 @@
         vm.datePickerOpenStatus = {};
         vm.openCalendar = openCalendar;
         vm.save = save;
+        vm.tasks = Task.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

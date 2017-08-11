@@ -78,7 +78,6 @@ public interface NamespaceMapper extends EntityMapper <NamespaceDTO, Namespace> 
         @Mapping(source = "annullationDate", target = "registration.annullationDate")
     })
     Namespace toEntity(NamespaceDTO namespaceDTO);
-
     default Namespace fromId(Long id) {
         if (id == null) {
             return null;

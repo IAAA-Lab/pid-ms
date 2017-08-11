@@ -13,6 +13,7 @@ import es.unizar.iaaa.pid.service.PersistentIdentifierService;
 import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
 import es.unizar.iaaa.pid.service.mapper.PersistentIdentifierMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +37,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 /**
  * Test class for the PersistentIdentifierResource REST controller.
  *

@@ -1,18 +1,17 @@
 package es.unizar.iaaa.pid.domain;
 
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.TaskStatus;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
-
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-
-import es.unizar.iaaa.pid.domain.enumeration.TaskStatus;
 
 /**
  * Entity Task
@@ -47,6 +46,9 @@ public class Task implements Serializable {
     @Min(value = 0)
     @Column(name = "num_errors")
     private Integer numErrors;
+
+    @ManyToOne
+    private Namespace namespace;
 
     public Long getId() {
         return id;
@@ -106,6 +108,19 @@ public class Task implements Serializable {
 
     public void setNumErrors(Integer numErrors) {
         this.numErrors = numErrors;
+    }
+
+    public Namespace getNamespace() {
+        return namespace;
+    }
+
+    public Task namespace(Namespace namespace) {
+        this.namespace = namespace;
+        return this;
+    }
+
+    public void setNamespace(Namespace namespace) {
+        this.namespace = namespace;
     }
 
     @Override

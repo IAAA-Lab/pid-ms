@@ -60,6 +60,9 @@ public class Change implements Serializable {
     @Embedded
     private Resource resource;
 
+    @ManyToOne
+    private Task task;
+
     public Long getId() {
         return id;
     }
@@ -196,6 +199,19 @@ public class Change implements Serializable {
 
     public void setResource(Resource resource) {
         this.resource = resource;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public Change task(Task task) {
+        this.task = task;
+        return this;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     @Override

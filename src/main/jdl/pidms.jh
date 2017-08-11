@@ -146,6 +146,11 @@ enum ProcessStatus {
     NONE
 }
 
+relationship ManyToOne {
+	Task{namespace} to Namespace
+}
+
+
 /**
  * Entity Change
  */
@@ -174,6 +179,10 @@ enum ChangeAction {
 
 enum ResourceType {
 	DATASET, SPATIAL_OBJECT
+}
+
+relationship ManyToOne {
+	Change{task} to Task
 }
 
 /**

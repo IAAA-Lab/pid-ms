@@ -25,7 +25,8 @@
             "endLifespanVersion": "End Lifespan Version",
             "alternateId": "Alternate Id",
             "resourceType": "Resource Type",
-            "locator": "Locator"
+            "locator": "Locator",
+            "task": "Task"
         }
     }
 }

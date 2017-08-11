@@ -32,6 +32,7 @@
                     <th jh-sort-by="alternateId"><span data-translate="pidmsApp.change.alternateId">Alternate Id</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="resourceType"><span data-translate="pidmsApp.change.resourceType">Resource Type</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="locator"><span data-translate="pidmsApp.change.locator">Locator</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="taskId"><span data-translate="pidmsApp.change.task">Task</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -49,6 +50,9 @@
                     <td>{{change.alternateId}}</td>
                     <td data-translate="{{'pidmsApp.ResourceType.' + change.resourceType}}">{{change.resourceType}}</td>
                     <td>{{change.locator}}</td>
+                    <td>
+                        <a ui-sref="task-detail({id:change.taskId})">{{change.taskId}}</a>
+                    </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"

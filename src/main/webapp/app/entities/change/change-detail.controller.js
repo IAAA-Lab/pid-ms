@@ -5,9 +5,9 @@
         .module('pidmsApp')
         .controller('ChangeDetailController', ChangeDetailController);
 
-    ChangeDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Change', 'Principal'];
+    ChangeDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Change', 'Task', 'Principal'];
 
-    function ChangeDetailController($scope, $rootScope, $stateParams, previousState, entity, Change, Principal) {
+    function ChangeDetailController($scope, $rootScope, $stateParams, previousState, entity, Change, Task, Principal) {
         var vm = this;
 
         vm.isAuthenticated = Principal.isAuthenticated;
