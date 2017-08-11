@@ -1,14 +1,15 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import es.unizar.iaaa.pid.PidmsApp;
-
 import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Resource;
+import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 import es.unizar.iaaa.pid.repository.ChangeRepository;
 import es.unizar.iaaa.pid.service.ChangeService;
 import es.unizar.iaaa.pid.service.dto.ChangeDTO;
 import es.unizar.iaaa.pid.service.mapper.ChangeMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,9 +33,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 /**
  * Test class for the ChangeResource REST controller.
  *
@@ -119,6 +117,10 @@ public class ChangeResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static Change createEntity(EntityManager em) {
+        Resource resource = new Resource()
+            .resourceType(DEFAULT_RESOURCE_TYPE)
+            .locator(DEFAULT_LOCATOR);
+
         Change change = new Change()
             .changeTimestamp(DEFAULT_CHANGE_TIMESTAMP)
             .action(DEFAULT_ACTION)
@@ -129,8 +131,7 @@ public class ChangeResourceIntTest {
             .beginLifespanVersion(DEFAULT_BEGIN_LIFESPAN_VERSION)
             .endLifespanVersion(DEFAULT_END_LIFESPAN_VERSION)
             .alternateId(DEFAULT_ALTERNATE_ID)
-            .resourceType(DEFAULT_RESOURCE_TYPE)
-            .locator(DEFAULT_LOCATOR);
+            .resource(resource);
         return change;
     }
 
@@ -164,8 +165,8 @@ public class ChangeResourceIntTest {
         assertThat(testChange.getBeginLifespanVersion()).isEqualTo(DEFAULT_BEGIN_LIFESPAN_VERSION);
         assertThat(testChange.getEndLifespanVersion()).isEqualTo(DEFAULT_END_LIFESPAN_VERSION);
         assertThat(testChange.getAlternateId()).isEqualTo(DEFAULT_ALTERNATE_ID);
-        assertThat(testChange.getResourceType()).isEqualTo(DEFAULT_RESOURCE_TYPE);
-        assertThat(testChange.getLocator()).isEqualTo(DEFAULT_LOCATOR);
+        assertThat(testChange.getResource().getResourceType()).isEqualTo(DEFAULT_RESOURCE_TYPE);
+        assertThat(testChange.getResource().getLocator()).isEqualTo(DEFAULT_LOCATOR);
     }
 
     @Test
@@ -301,6 +302,7 @@ public class ChangeResourceIntTest {
             .beginLifespanVersion(UPDATED_BEGIN_LIFESPAN_VERSION)
             .endLifespanVersion(UPDATED_END_LIFESPAN_VERSION)
             .alternateId(UPDATED_ALTERNATE_ID)
+            .getResource()
             .resourceType(UPDATED_RESOURCE_TYPE)
             .locator(UPDATED_LOCATOR);
         ChangeDTO changeDTO = changeMapper.toDto(updatedChange);
@@ -323,8 +325,8 @@ public class ChangeResourceIntTest {
         assertThat(testChange.getBeginLifespanVersion()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION);
         assertThat(testChange.getEndLifespanVersion()).isEqualTo(UPDATED_END_LIFESPAN_VERSION);
         assertThat(testChange.getAlternateId()).isEqualTo(UPDATED_ALTERNATE_ID);
-        assertThat(testChange.getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
-        assertThat(testChange.getLocator()).isEqualTo(UPDATED_LOCATOR);
+        assertThat(testChange.getResource().getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
+        assertThat(testChange.getResource().getLocator()).isEqualTo(UPDATED_LOCATOR);
     }
 
     @Test

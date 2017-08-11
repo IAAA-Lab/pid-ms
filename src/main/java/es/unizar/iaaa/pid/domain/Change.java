@@ -1,18 +1,15 @@
 package es.unizar.iaaa.pid.domain;
 
+import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
-
-import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
-
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 
 /**
  * Entity Change
@@ -60,12 +57,8 @@ public class Change implements Serializable {
     @Column(name = "alternate_id")
     private String alternateId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "resource_type")
-    private ResourceType resourceType;
-
-    @Column(name = "locator")
-    private String locator;
+    @Embedded
+    private Resource resource;
 
     public Long getId() {
         return id;
@@ -192,30 +185,17 @@ public class Change implements Serializable {
         this.alternateId = alternateId;
     }
 
-    public ResourceType getResourceType() {
-        return resourceType;
+    public Resource getResource() {
+        return resource;
     }
 
-    public Change resourceType(ResourceType resourceType) {
-        this.resourceType = resourceType;
+    public Change resource(Resource resource) {
+        this.resource = resource;
         return this;
     }
 
-    public void setResourceType(ResourceType resourceType) {
-        this.resourceType = resourceType;
-    }
-
-    public String getLocator() {
-        return locator;
-    }
-
-    public Change locator(String locator) {
-        this.locator = locator;
-        return this;
-    }
-
-    public void setLocator(String locator) {
-        this.locator = locator;
+    public void setResource(Resource resource) {
+        this.resource = resource;
     }
 
     @Override
@@ -251,8 +231,7 @@ public class Change implements Serializable {
             ", beginLifespanVersion='" + getBeginLifespanVersion() + "'" +
             ", endLifespanVersion='" + getEndLifespanVersion() + "'" +
             ", alternateId='" + getAlternateId() + "'" +
-            ", resourceType='" + getResourceType() + "'" +
-            ", locator='" + getLocator() + "'" +
+            ", resource='" + getResource() + "'" +
             "}";
     }
 }

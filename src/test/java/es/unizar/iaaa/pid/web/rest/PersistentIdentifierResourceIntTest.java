@@ -1,14 +1,18 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import es.unizar.iaaa.pid.PidmsApp;
-
+import es.unizar.iaaa.pid.domain.Identifier;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
+import es.unizar.iaaa.pid.domain.Registration;
+import es.unizar.iaaa.pid.domain.Resource;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 import es.unizar.iaaa.pid.repository.PersistentIdentifierRepository;
 import es.unizar.iaaa.pid.service.PersistentIdentifierService;
 import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
 import es.unizar.iaaa.pid.service.mapper.PersistentIdentifierMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,10 +36,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 /**
  * Test class for the PersistentIdentifierResource REST controller.
  *
@@ -141,18 +141,11 @@ public class PersistentIdentifierResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static PersistentIdentifier createEntity(EntityManager em) {
-        PersistentIdentifier persistentIdentifier = new PersistentIdentifier()
-            .externalUrn(DEFAULT_EXTERNAL_URN)
-            .feature(DEFAULT_FEATURE)
-            .resolverProxyMode(DEFAULT_RESOLVER_PROXY_MODE)
-            .namespace(DEFAULT_NAMESPACE)
-            .localId(DEFAULT_LOCAL_ID)
-            .versionId(DEFAULT_VERSION_ID)
-            .beginLifespanVersion(DEFAULT_BEGIN_LIFESPAN_VERSION)
-            .endLifespanVersion(DEFAULT_END_LIFESPAN_VERSION)
-            .alternateId(DEFAULT_ALTERNATE_ID)
+        Resource resource = new Resource()
             .resourceType(DEFAULT_RESOURCE_TYPE)
-            .locator(DEFAULT_LOCATOR)
+            .locator(DEFAULT_LOCATOR);
+
+        Registration registration = new Registration()
             .processStatus(DEFAULT_PROCESS_STATUS)
             .itemStatus(DEFAULT_ITEM_STATUS)
             .lastChangeDate(DEFAULT_LAST_CHANGE_DATE)
@@ -160,6 +153,23 @@ public class PersistentIdentifierResourceIntTest {
             .lastRevisionDate(DEFAULT_LAST_REVISION_DATE)
             .nextRenewalDate(DEFAULT_NEXT_RENEWAL_DATE)
             .annullationDate(DEFAULT_ANNULLATION_DATE);
+
+        Identifier identifier = new Identifier()
+            .namespace(DEFAULT_NAMESPACE)
+            .localId(DEFAULT_LOCAL_ID)
+            .versionId(DEFAULT_VERSION_ID)
+            .beginLifespanVersion(DEFAULT_BEGIN_LIFESPAN_VERSION)
+            .endLifespanVersion(DEFAULT_END_LIFESPAN_VERSION)
+            .alternateId(DEFAULT_ALTERNATE_ID);
+
+        PersistentIdentifier persistentIdentifier = new PersistentIdentifier()
+            .externalUrn(DEFAULT_EXTERNAL_URN)
+            .feature(DEFAULT_FEATURE)
+            .resolverProxyMode(DEFAULT_RESOLVER_PROXY_MODE)
+            .identifier(identifier)
+            .resource(resource)
+            .registration(registration);
+
         return persistentIdentifier;
     }
 
@@ -187,21 +197,21 @@ public class PersistentIdentifierResourceIntTest {
         assertThat(testPersistentIdentifier.getExternalUrn()).isEqualTo(DEFAULT_EXTERNAL_URN);
         assertThat(testPersistentIdentifier.getFeature()).isEqualTo(DEFAULT_FEATURE);
         assertThat(testPersistentIdentifier.isResolverProxyMode()).isEqualTo(DEFAULT_RESOLVER_PROXY_MODE);
-        assertThat(testPersistentIdentifier.getNamespace()).isEqualTo(DEFAULT_NAMESPACE);
-        assertThat(testPersistentIdentifier.getLocalId()).isEqualTo(DEFAULT_LOCAL_ID);
-        assertThat(testPersistentIdentifier.getVersionId()).isEqualTo(DEFAULT_VERSION_ID);
-        assertThat(testPersistentIdentifier.getBeginLifespanVersion()).isEqualTo(DEFAULT_BEGIN_LIFESPAN_VERSION);
-        assertThat(testPersistentIdentifier.getEndLifespanVersion()).isEqualTo(DEFAULT_END_LIFESPAN_VERSION);
-        assertThat(testPersistentIdentifier.getAlternateId()).isEqualTo(DEFAULT_ALTERNATE_ID);
-        assertThat(testPersistentIdentifier.getResourceType()).isEqualTo(DEFAULT_RESOURCE_TYPE);
-        assertThat(testPersistentIdentifier.getLocator()).isEqualTo(DEFAULT_LOCATOR);
-        assertThat(testPersistentIdentifier.getProcessStatus()).isEqualTo(DEFAULT_PROCESS_STATUS);
-        assertThat(testPersistentIdentifier.getItemStatus()).isEqualTo(DEFAULT_ITEM_STATUS);
-        assertThat(testPersistentIdentifier.getLastChangeDate()).isEqualTo(DEFAULT_LAST_CHANGE_DATE);
-        assertThat(testPersistentIdentifier.getRegistrationDate()).isEqualTo(DEFAULT_REGISTRATION_DATE);
-        assertThat(testPersistentIdentifier.getLastRevisionDate()).isEqualTo(DEFAULT_LAST_REVISION_DATE);
-        assertThat(testPersistentIdentifier.getNextRenewalDate()).isEqualTo(DEFAULT_NEXT_RENEWAL_DATE);
-        assertThat(testPersistentIdentifier.getAnnullationDate()).isEqualTo(DEFAULT_ANNULLATION_DATE);
+        assertThat(testPersistentIdentifier.getIdentifier().getNamespace()).isEqualTo(DEFAULT_NAMESPACE);
+        assertThat(testPersistentIdentifier.getIdentifier().getLocalId()).isEqualTo(DEFAULT_LOCAL_ID);
+        assertThat(testPersistentIdentifier.getIdentifier().getVersionId()).isEqualTo(DEFAULT_VERSION_ID);
+        assertThat(testPersistentIdentifier.getIdentifier().getBeginLifespanVersion()).isEqualTo(DEFAULT_BEGIN_LIFESPAN_VERSION);
+        assertThat(testPersistentIdentifier.getIdentifier().getEndLifespanVersion()).isEqualTo(DEFAULT_END_LIFESPAN_VERSION);
+        assertThat(testPersistentIdentifier.getIdentifier().getAlternateId()).isEqualTo(DEFAULT_ALTERNATE_ID);
+        assertThat(testPersistentIdentifier.getResource().getResourceType()).isEqualTo(DEFAULT_RESOURCE_TYPE);
+        assertThat(testPersistentIdentifier.getResource().getLocator()).isEqualTo(DEFAULT_LOCATOR);
+        assertThat(testPersistentIdentifier.getRegistration().getProcessStatus()).isEqualTo(DEFAULT_PROCESS_STATUS);
+        assertThat(testPersistentIdentifier.getRegistration().getItemStatus()).isEqualTo(DEFAULT_ITEM_STATUS);
+        assertThat(testPersistentIdentifier.getRegistration().getLastChangeDate()).isEqualTo(DEFAULT_LAST_CHANGE_DATE);
+        assertThat(testPersistentIdentifier.getRegistration().getRegistrationDate()).isEqualTo(DEFAULT_REGISTRATION_DATE);
+        assertThat(testPersistentIdentifier.getRegistration().getLastRevisionDate()).isEqualTo(DEFAULT_LAST_REVISION_DATE);
+        assertThat(testPersistentIdentifier.getRegistration().getNextRenewalDate()).isEqualTo(DEFAULT_NEXT_RENEWAL_DATE);
+        assertThat(testPersistentIdentifier.getRegistration().getAnnullationDate()).isEqualTo(DEFAULT_ANNULLATION_DATE);
     }
 
     @Test
@@ -267,7 +277,7 @@ public class PersistentIdentifierResourceIntTest {
     public void checkNamespaceIsRequired() throws Exception {
         int databaseSizeBeforeTest = persistentIdentifierRepository.findAll().size();
         // set the field null
-        persistentIdentifier.setNamespace(null);
+        persistentIdentifier.getIdentifier().setNamespace(null);
 
         // Create the PersistentIdentifier, which fails.
         PersistentIdentifierDTO persistentIdentifierDTO = persistentIdentifierMapper.toDto(persistentIdentifier);
@@ -286,7 +296,7 @@ public class PersistentIdentifierResourceIntTest {
     public void checkLocalIdIsRequired() throws Exception {
         int databaseSizeBeforeTest = persistentIdentifierRepository.findAll().size();
         // set the field null
-        persistentIdentifier.setLocalId(null);
+        persistentIdentifier.getIdentifier().setLocalId(null);
 
         // Create the PersistentIdentifier, which fails.
         PersistentIdentifierDTO persistentIdentifierDTO = persistentIdentifierMapper.toDto(persistentIdentifier);
@@ -383,14 +393,19 @@ public class PersistentIdentifierResourceIntTest {
             .externalUrn(UPDATED_EXTERNAL_URN)
             .feature(UPDATED_FEATURE)
             .resolverProxyMode(UPDATED_RESOLVER_PROXY_MODE)
+            .getResource()
+            .resourceType(UPDATED_RESOURCE_TYPE)
+            .locator(UPDATED_LOCATOR);
+
+        updatedPersistentIdentifier.getIdentifier()
             .namespace(UPDATED_NAMESPACE)
             .localId(UPDATED_LOCAL_ID)
             .versionId(UPDATED_VERSION_ID)
             .beginLifespanVersion(UPDATED_BEGIN_LIFESPAN_VERSION)
             .endLifespanVersion(UPDATED_END_LIFESPAN_VERSION)
-            .alternateId(UPDATED_ALTERNATE_ID)
-            .resourceType(UPDATED_RESOURCE_TYPE)
-            .locator(UPDATED_LOCATOR)
+            .alternateId(UPDATED_ALTERNATE_ID);
+
+        updatedPersistentIdentifier.getRegistration()
             .processStatus(UPDATED_PROCESS_STATUS)
             .itemStatus(UPDATED_ITEM_STATUS)
             .lastChangeDate(UPDATED_LAST_CHANGE_DATE)
@@ -398,6 +413,7 @@ public class PersistentIdentifierResourceIntTest {
             .lastRevisionDate(UPDATED_LAST_REVISION_DATE)
             .nextRenewalDate(UPDATED_NEXT_RENEWAL_DATE)
             .annullationDate(UPDATED_ANNULLATION_DATE);
+
         PersistentIdentifierDTO persistentIdentifierDTO = persistentIdentifierMapper.toDto(updatedPersistentIdentifier);
 
         restPersistentIdentifierMockMvc.perform(put("/api/persistent-identifiers")
@@ -412,21 +428,21 @@ public class PersistentIdentifierResourceIntTest {
         assertThat(testPersistentIdentifier.getExternalUrn()).isEqualTo(UPDATED_EXTERNAL_URN);
         assertThat(testPersistentIdentifier.getFeature()).isEqualTo(UPDATED_FEATURE);
         assertThat(testPersistentIdentifier.isResolverProxyMode()).isEqualTo(UPDATED_RESOLVER_PROXY_MODE);
-        assertThat(testPersistentIdentifier.getNamespace()).isEqualTo(UPDATED_NAMESPACE);
-        assertThat(testPersistentIdentifier.getLocalId()).isEqualTo(UPDATED_LOCAL_ID);
-        assertThat(testPersistentIdentifier.getVersionId()).isEqualTo(UPDATED_VERSION_ID);
-        assertThat(testPersistentIdentifier.getBeginLifespanVersion()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION);
-        assertThat(testPersistentIdentifier.getEndLifespanVersion()).isEqualTo(UPDATED_END_LIFESPAN_VERSION);
-        assertThat(testPersistentIdentifier.getAlternateId()).isEqualTo(UPDATED_ALTERNATE_ID);
-        assertThat(testPersistentIdentifier.getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
-        assertThat(testPersistentIdentifier.getLocator()).isEqualTo(UPDATED_LOCATOR);
-        assertThat(testPersistentIdentifier.getProcessStatus()).isEqualTo(UPDATED_PROCESS_STATUS);
-        assertThat(testPersistentIdentifier.getItemStatus()).isEqualTo(UPDATED_ITEM_STATUS);
-        assertThat(testPersistentIdentifier.getLastChangeDate()).isEqualTo(UPDATED_LAST_CHANGE_DATE);
-        assertThat(testPersistentIdentifier.getRegistrationDate()).isEqualTo(UPDATED_REGISTRATION_DATE);
-        assertThat(testPersistentIdentifier.getLastRevisionDate()).isEqualTo(UPDATED_LAST_REVISION_DATE);
-        assertThat(testPersistentIdentifier.getNextRenewalDate()).isEqualTo(UPDATED_NEXT_RENEWAL_DATE);
-        assertThat(testPersistentIdentifier.getAnnullationDate()).isEqualTo(UPDATED_ANNULLATION_DATE);
+        assertThat(testPersistentIdentifier.getIdentifier().getNamespace()).isEqualTo(UPDATED_NAMESPACE);
+        assertThat(testPersistentIdentifier.getIdentifier().getLocalId()).isEqualTo(UPDATED_LOCAL_ID);
+        assertThat(testPersistentIdentifier.getIdentifier().getVersionId()).isEqualTo(UPDATED_VERSION_ID);
+        assertThat(testPersistentIdentifier.getIdentifier().getBeginLifespanVersion()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION);
+        assertThat(testPersistentIdentifier.getIdentifier().getEndLifespanVersion()).isEqualTo(UPDATED_END_LIFESPAN_VERSION);
+        assertThat(testPersistentIdentifier.getIdentifier().getAlternateId()).isEqualTo(UPDATED_ALTERNATE_ID);
+        assertThat(testPersistentIdentifier.getResource().getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
+        assertThat(testPersistentIdentifier.getResource().getLocator()).isEqualTo(UPDATED_LOCATOR);
+        assertThat(testPersistentIdentifier.getRegistration().getProcessStatus()).isEqualTo(UPDATED_PROCESS_STATUS);
+        assertThat(testPersistentIdentifier.getRegistration().getItemStatus()).isEqualTo(UPDATED_ITEM_STATUS);
+        assertThat(testPersistentIdentifier.getRegistration().getLastChangeDate()).isEqualTo(UPDATED_LAST_CHANGE_DATE);
+        assertThat(testPersistentIdentifier.getRegistration().getRegistrationDate()).isEqualTo(UPDATED_REGISTRATION_DATE);
+        assertThat(testPersistentIdentifier.getRegistration().getLastRevisionDate()).isEqualTo(UPDATED_LAST_REVISION_DATE);
+        assertThat(testPersistentIdentifier.getRegistration().getNextRenewalDate()).isEqualTo(UPDATED_NEXT_RENEWAL_DATE);
+        assertThat(testPersistentIdentifier.getRegistration().getAnnullationDate()).isEqualTo(UPDATED_ANNULLATION_DATE);
     }
 
     @Test
