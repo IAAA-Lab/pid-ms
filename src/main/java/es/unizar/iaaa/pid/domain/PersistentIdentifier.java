@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Entity PersistentIdentifier
@@ -25,9 +26,8 @@ public class PersistentIdentifier implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
+    @Column(name = "id", columnDefinition = "uuid")
+    private UUID id;
 
     // This field is derived
     @NotNull
@@ -50,11 +50,11 @@ public class PersistentIdentifier implements Serializable {
     @Embedded
     private Resource resource;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -172,11 +172,11 @@ public class PersistentIdentifier implements Serializable {
             "}";
     }
 
-    public String computeExternalFromIdentifier() {
-        return computeExternalFromIdentifier(identifier);
+    private String computeExternalUrnFromIdentifier() {
+        return computeExternalUrnFromIdentifier(identifier);
     }
 
-    public static String computeExternalFromIdentifier(Identifier identifier) {
+    private static String computeExternalUrnFromIdentifier(Identifier identifier) {
         return BASE +
             SEPARATOR +
             computeShortFromIdentifier(identifier);
@@ -196,5 +196,24 @@ public class PersistentIdentifier implements Serializable {
             sb.append(identifier.getVersionId());
         }
         return sb.toString();
+    }
+
+    private UUID computeIdFromExternal() {
+        return UUID.nameUUIDFromBytes(getExternalUrn().getBytes());
+    }
+
+    static public UUID computeSurrogateFromIdentifier(Identifier identifier) {
+        return computeIdFromExternal(computeExternalUrnFromIdentifier(identifier));
+    }
+
+    private static UUID computeIdFromExternal(String external) {
+        return UUID.nameUUIDFromBytes(external.getBytes());
+    }
+
+    public void autoId() {
+        String externalUrn = computeExternalUrnFromIdentifier(identifier);
+        UUID id = UUID.nameUUIDFromBytes(externalUrn.getBytes());
+        setExternalUrn(externalUrn);
+        setId(id);
     }
 }

@@ -32,10 +32,12 @@ import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -47,8 +49,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = PidmsApp.class)
 public class PersistentIdentifierResourceIntTest {
 
-    private static final String DEFAULT_EXTERNAL_URN = "AAAAAAAAAA";
-    private static final String UPDATED_EXTERNAL_URN = "BBBBBBBBBB";
+    private static final String DEFAULT_ID = "0403a1e9-359d-3a62-b937-baddd0bf612f";
+    private static final String UPDATED_ID = "0403a1e9-359d-3a62-b937-baddd0bf612f";
+
+    private static final String DEFAULT_EXTERNAL_URN = "urn:inspire:ES:/AAAAAAAAAA/AAAAAAAAAA/AAAAAAAAAA";
+    private static final String UPDATED_EXTERNAL_URN = "urn:inspire:ES:/BBBBBBBBBB/BBBBBBBBBB/BBBBBBBBBB";
 
     private static final String DEFAULT_FEATURE = "AAAAAAAAAA";
     private static final String UPDATED_FEATURE = "BBBBBBBBBB";
@@ -100,6 +105,10 @@ public class PersistentIdentifierResourceIntTest {
 
     private static final Instant DEFAULT_ANNULLATION_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_ANNULLATION_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final UUID UUID_1 = UUID.nameUUIDFromBytes("1".getBytes());
+    private static final UUID UUID_2 = UUID.nameUUIDFromBytes("2".getBytes());
+    private static final UUID UUID_42 = UUID.nameUUIDFromBytes("42".getBytes());
 
     @Autowired
     private PersistentIdentifierRepository persistentIdentifierRepository;
@@ -165,7 +174,6 @@ public class PersistentIdentifierResourceIntTest {
             .alternateId(DEFAULT_ALTERNATE_ID);
 
         PersistentIdentifier persistentIdentifier = new PersistentIdentifier()
-            .externalUrn(DEFAULT_EXTERNAL_URN)
             .feature(DEFAULT_FEATURE)
             .resolverProxyMode(DEFAULT_RESOLVER_PROXY_MODE)
             .identifier(identifier)
@@ -222,7 +230,7 @@ public class PersistentIdentifierResourceIntTest {
         int databaseSizeBeforeCreate = persistentIdentifierRepository.findAll().size();
 
         // Create the PersistentIdentifier with an existing ID
-        persistentIdentifier.setId(1L);
+        persistentIdentifier.autoId();
         PersistentIdentifierDTO persistentIdentifierDTO = persistentIdentifierMapper.toDto(persistentIdentifier);
 
         // An entity with an existing ID cannot be created, so this API call must fail
@@ -234,25 +242,6 @@ public class PersistentIdentifierResourceIntTest {
         // Validate the Alice in the database
         List<PersistentIdentifier> persistentIdentifierList = persistentIdentifierRepository.findAll();
         assertThat(persistentIdentifierList).hasSize(databaseSizeBeforeCreate);
-    }
-
-    @Test
-    @Transactional
-    public void checkExternalUrnIsRequired() throws Exception {
-        int databaseSizeBeforeTest = persistentIdentifierRepository.findAll().size();
-        // set the field null
-        persistentIdentifier.setExternalUrn(null);
-
-        // Create the PersistentIdentifier, which fails.
-        PersistentIdentifierDTO persistentIdentifierDTO = persistentIdentifierMapper.toDto(persistentIdentifier);
-
-        restPersistentIdentifierMockMvc.perform(post("/api/persistent-identifiers")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(persistentIdentifierDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<PersistentIdentifier> persistentIdentifierList = persistentIdentifierRepository.findAll();
-        assertThat(persistentIdentifierList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -316,13 +305,14 @@ public class PersistentIdentifierResourceIntTest {
     @Transactional
     public void getAllPersistentIdentifiers() throws Exception {
         // Initialize the database
+        persistentIdentifier.autoId();
         persistentIdentifierRepository.saveAndFlush(persistentIdentifier);
 
         // Get all the persistentIdentifierList
         restPersistentIdentifierMockMvc.perform(get("/api/persistent-identifiers?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(persistentIdentifier.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(DEFAULT_ID.toString())))
             .andExpect(jsonPath("$.[*].externalUrn").value(hasItem(DEFAULT_EXTERNAL_URN.toString())))
             .andExpect(jsonPath("$.[*].feature").value(hasItem(DEFAULT_FEATURE.toString())))
             .andExpect(jsonPath("$.[*].resolverProxyMode").value(hasItem(DEFAULT_RESOLVER_PROXY_MODE.booleanValue())))
@@ -347,13 +337,14 @@ public class PersistentIdentifierResourceIntTest {
     @Transactional
     public void getPersistentIdentifier() throws Exception {
         // Initialize the database
+        persistentIdentifier.autoId();
         persistentIdentifierRepository.saveAndFlush(persistentIdentifier);
 
         // Get the persistentIdentifier
         restPersistentIdentifierMockMvc.perform(get("/api/persistent-identifiers/{id}", persistentIdentifier.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(persistentIdentifier.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(persistentIdentifier.getId().toString()))
             .andExpect(jsonPath("$.externalUrn").value(DEFAULT_EXTERNAL_URN.toString()))
             .andExpect(jsonPath("$.feature").value(DEFAULT_FEATURE.toString()))
             .andExpect(jsonPath("$.resolverProxyMode").value(DEFAULT_RESOLVER_PROXY_MODE.booleanValue()))
@@ -378,7 +369,7 @@ public class PersistentIdentifierResourceIntTest {
     @Transactional
     public void getNonExistingPersistentIdentifier() throws Exception {
         // Get the persistentIdentifier
-        restPersistentIdentifierMockMvc.perform(get("/api/persistent-identifiers/{id}", Long.MAX_VALUE))
+        restPersistentIdentifierMockMvc.perform(get("/api/persistent-identifiers/{id}", UUID_1))
             .andExpect(status().isNotFound());
     }
 
@@ -386,13 +377,13 @@ public class PersistentIdentifierResourceIntTest {
     @Transactional
     public void updatePersistentIdentifier() throws Exception {
         // Initialize the database
+        persistentIdentifier.autoId();
         persistentIdentifierRepository.saveAndFlush(persistentIdentifier);
         int databaseSizeBeforeUpdate = persistentIdentifierRepository.findAll().size();
 
         // Update the persistentIdentifier
         PersistentIdentifier updatedPersistentIdentifier = persistentIdentifierRepository.findOne(persistentIdentifier.getId());
         updatedPersistentIdentifier
-            .externalUrn(UPDATED_EXTERNAL_URN)
             .feature(UPDATED_FEATURE)
             .resolverProxyMode(UPDATED_RESOLVER_PROXY_MODE)
             .getResource()
@@ -400,9 +391,6 @@ public class PersistentIdentifierResourceIntTest {
             .locator(UPDATED_LOCATOR);
 
         updatedPersistentIdentifier.getIdentifier()
-            .namespace(UPDATED_NAMESPACE)
-            .localId(UPDATED_LOCAL_ID)
-            .versionId(UPDATED_VERSION_ID)
             .beginLifespanVersion(UPDATED_BEGIN_LIFESPAN_VERSION)
             .endLifespanVersion(UPDATED_END_LIFESPAN_VERSION)
             .alternateId(UPDATED_ALTERNATE_ID);
@@ -416,6 +404,8 @@ public class PersistentIdentifierResourceIntTest {
             .nextRenewalDate(UPDATED_NEXT_RENEWAL_DATE)
             .annullationDate(UPDATED_ANNULLATION_DATE);
 
+        updatedPersistentIdentifier.autoId();
+
         PersistentIdentifierDTO persistentIdentifierDTO = persistentIdentifierMapper.toDto(updatedPersistentIdentifier);
 
         restPersistentIdentifierMockMvc.perform(put("/api/persistent-identifiers")
@@ -427,12 +417,8 @@ public class PersistentIdentifierResourceIntTest {
         List<PersistentIdentifier> persistentIdentifierList = persistentIdentifierRepository.findAll();
         assertThat(persistentIdentifierList).hasSize(databaseSizeBeforeUpdate);
         PersistentIdentifier testPersistentIdentifier = persistentIdentifierList.get(persistentIdentifierList.size() - 1);
-        assertThat(testPersistentIdentifier.getExternalUrn()).isEqualTo(UPDATED_EXTERNAL_URN);
         assertThat(testPersistentIdentifier.getFeature()).isEqualTo(UPDATED_FEATURE);
         assertThat(testPersistentIdentifier.isResolverProxyMode()).isEqualTo(UPDATED_RESOLVER_PROXY_MODE);
-        assertThat(testPersistentIdentifier.getIdentifier().getNamespace()).isEqualTo(UPDATED_NAMESPACE);
-        assertThat(testPersistentIdentifier.getIdentifier().getLocalId()).isEqualTo(UPDATED_LOCAL_ID);
-        assertThat(testPersistentIdentifier.getIdentifier().getVersionId()).isEqualTo(UPDATED_VERSION_ID);
         assertThat(testPersistentIdentifier.getIdentifier().getBeginLifespanVersion()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION);
         assertThat(testPersistentIdentifier.getIdentifier().getEndLifespanVersion()).isEqualTo(UPDATED_END_LIFESPAN_VERSION);
         assertThat(testPersistentIdentifier.getIdentifier().getAlternateId()).isEqualTo(UPDATED_ALTERNATE_ID);
@@ -445,6 +431,12 @@ public class PersistentIdentifierResourceIntTest {
         assertThat(testPersistentIdentifier.getRegistration().getLastRevisionDate()).isEqualTo(UPDATED_LAST_REVISION_DATE);
         assertThat(testPersistentIdentifier.getRegistration().getNextRenewalDate()).isEqualTo(UPDATED_NEXT_RENEWAL_DATE);
         assertThat(testPersistentIdentifier.getRegistration().getAnnullationDate()).isEqualTo(UPDATED_ANNULLATION_DATE);
+
+        // Must be invariant
+        assertThat(testPersistentIdentifier.getExternalUrn()).isEqualTo(DEFAULT_EXTERNAL_URN);
+        assertThat(testPersistentIdentifier.getIdentifier().getNamespace()).isEqualTo(DEFAULT_NAMESPACE);
+        assertThat(testPersistentIdentifier.getIdentifier().getLocalId()).isEqualTo(DEFAULT_LOCAL_ID);
+        assertThat(testPersistentIdentifier.getIdentifier().getVersionId()).isEqualTo(DEFAULT_VERSION_ID);
     }
 
     @Test
@@ -470,6 +462,7 @@ public class PersistentIdentifierResourceIntTest {
     @Transactional
     public void deletePersistentIdentifier() throws Exception {
         // Initialize the database
+        persistentIdentifier.autoId();
         persistentIdentifierRepository.saveAndFlush(persistentIdentifier);
         int databaseSizeBeforeDelete = persistentIdentifierRepository.findAll().size();
 
@@ -488,11 +481,11 @@ public class PersistentIdentifierResourceIntTest {
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(PersistentIdentifier.class);
         PersistentIdentifier persistentIdentifier1 = new PersistentIdentifier();
-        persistentIdentifier1.setId(1L);
+        persistentIdentifier1.setId(UUID_1);
         PersistentIdentifier persistentIdentifier2 = new PersistentIdentifier();
         persistentIdentifier2.setId(persistentIdentifier1.getId());
         assertThat(persistentIdentifier1).isEqualTo(persistentIdentifier2);
-        persistentIdentifier2.setId(2L);
+        persistentIdentifier2.setId(UUID_2);
         assertThat(persistentIdentifier1).isNotEqualTo(persistentIdentifier2);
         persistentIdentifier1.setId(null);
         assertThat(persistentIdentifier1).isNotEqualTo(persistentIdentifier2);
@@ -503,12 +496,12 @@ public class PersistentIdentifierResourceIntTest {
     public void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(PersistentIdentifierDTO.class);
         PersistentIdentifierDTO persistentIdentifierDTO1 = new PersistentIdentifierDTO();
-        persistentIdentifierDTO1.setId(1L);
+        persistentIdentifierDTO1.setId(UUID_1);
         PersistentIdentifierDTO persistentIdentifierDTO2 = new PersistentIdentifierDTO();
         assertThat(persistentIdentifierDTO1).isNotEqualTo(persistentIdentifierDTO2);
         persistentIdentifierDTO2.setId(persistentIdentifierDTO1.getId());
         assertThat(persistentIdentifierDTO1).isEqualTo(persistentIdentifierDTO2);
-        persistentIdentifierDTO2.setId(2L);
+        persistentIdentifierDTO2.setId(UUID_2);
         assertThat(persistentIdentifierDTO1).isNotEqualTo(persistentIdentifierDTO2);
         persistentIdentifierDTO1.setId(null);
         assertThat(persistentIdentifierDTO1).isNotEqualTo(persistentIdentifierDTO2);
@@ -517,7 +510,7 @@ public class PersistentIdentifierResourceIntTest {
     @Test
     @Transactional
     public void testEntityFromId() {
-        assertThat(persistentIdentifierMapper.fromId(42L).getId()).isEqualTo(42);
+        assertThat(persistentIdentifierMapper.fromId(UUID_42).getId()).isEqualTo(UUID_42);
         assertThat(persistentIdentifierMapper.fromId(null)).isNull();
     }
 }

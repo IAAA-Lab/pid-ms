@@ -1,8 +1,8 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.repository.PersistentIdentifierRepository;
+import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
 import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
 import es.unizar.iaaa.pid.service.mapper.PersistentIdentifierMapper;
 import org.slf4j.Logger;
@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 
 /**
@@ -41,6 +43,7 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
     public PersistentIdentifierDTO save(PersistentIdentifierDTO persistentIdentifierDTO) {
         log.debug("Request to save PersistentIdentifier : {}", persistentIdentifierDTO);
         PersistentIdentifier persistentIdentifier = persistentIdentifierMapper.toEntity(persistentIdentifierDTO);
+        persistentIdentifier.autoId();
         persistentIdentifier = persistentIdentifierRepository.save(persistentIdentifier);
         return persistentIdentifierMapper.toDto(persistentIdentifier);
     }
@@ -67,7 +70,7 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
      */
     @Override
     @Transactional(readOnly = true)
-    public PersistentIdentifierDTO findOne(Long id) {
+    public PersistentIdentifierDTO findOne(UUID id) {
         log.debug("Request to get PersistentIdentifier : {}", id);
         PersistentIdentifier persistentIdentifier = persistentIdentifierRepository.findOne(id);
         return persistentIdentifierMapper.toDto(persistentIdentifier);
@@ -79,7 +82,7 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
      *  @param id the id of the entity
      */
     @Override
-    public void delete(Long id) {
+    public void delete(UUID id) {
         log.debug("Request to delete PersistentIdentifier : {}", id);
         persistentIdentifierRepository.delete(id);
     }

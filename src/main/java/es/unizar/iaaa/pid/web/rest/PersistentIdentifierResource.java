@@ -2,11 +2,11 @@ package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
+import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
 import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
-import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
-import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * REST controller for managing PersistentIdentifier.
@@ -105,7 +105,7 @@ public class PersistentIdentifierResource {
      */
     @GetMapping("/persistent-identifiers/{id}")
     @Timed
-    public ResponseEntity<PersistentIdentifierDTO> getPersistentIdentifier(@PathVariable Long id) {
+    public ResponseEntity<PersistentIdentifierDTO> getPersistentIdentifier(@PathVariable UUID id) {
         log.debug("REST request to get PersistentIdentifier : {}", id);
         PersistentIdentifierDTO persistentIdentifierDTO = persistentIdentifierService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(persistentIdentifierDTO));
@@ -119,7 +119,7 @@ public class PersistentIdentifierResource {
      */
     @DeleteMapping("/persistent-identifiers/{id}")
     @Timed
-    public ResponseEntity<Void> deletePersistentIdentifier(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePersistentIdentifier(@PathVariable UUID id) {
         log.debug("REST request to delete PersistentIdentifier : {}", id);
         persistentIdentifierService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();

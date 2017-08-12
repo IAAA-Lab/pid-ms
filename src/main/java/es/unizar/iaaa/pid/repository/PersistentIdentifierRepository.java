@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -18,10 +19,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface PersistentIdentifierRepository extends JpaRepository<PersistentIdentifier,Long> {
-
-    // The id was UUID
-    Long deleteById(Long uuid);
+public interface PersistentIdentifierRepository extends JpaRepository<PersistentIdentifier,UUID> {
 
     Iterable<PersistentIdentifier> findByIdentifierNamespaceAndRegistrationProcessStatus(String namespace, ProcessStatus processStatus);
 

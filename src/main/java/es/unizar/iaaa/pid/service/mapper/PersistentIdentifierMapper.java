@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.UUID;
+
 /**
  * Mapper for the entity PersistentIdentifier and its DTO PersistentIdentifierDTO.
  */
@@ -50,7 +52,7 @@ public interface PersistentIdentifierMapper extends EntityMapper <PersistentIden
     })
     PersistentIdentifier toEntity(PersistentIdentifierDTO persistentIdentifierDTO);
 
-    default PersistentIdentifier fromId(Long id) {
+    default PersistentIdentifier fromId(UUID id) {
         if (id == null) {
             return null;
         }

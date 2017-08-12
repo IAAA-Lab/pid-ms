@@ -4,6 +4,8 @@ import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.UUID;
+
 /**
  * Service Interface for managing PersistentIdentifier.
  */
@@ -31,12 +33,12 @@ public interface PersistentIdentifierDTOService {
      *  @param id the id of the entity
      *  @return the entity
      */
-    PersistentIdentifierDTO findOne(Long id);
+    PersistentIdentifierDTO findOne(UUID id);
 
     /**
      *  Delete the "id" persistentIdentifier.
      *
      *  @param id the id of the entity
      */
-    void delete(Long id);
+    void delete(UUID id);
 }
