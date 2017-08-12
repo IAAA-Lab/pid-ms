@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 /**
  * Service Interface for managing Organization.
  */
-public interface OrganizationService {
+public interface OrganizationDTOService {
 
     /**
      * Save a organization.

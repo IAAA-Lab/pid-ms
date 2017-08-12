@@ -9,7 +9,7 @@ import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 import es.unizar.iaaa.pid.repository.PersistentIdentifierRepository;
-import es.unizar.iaaa.pid.service.PersistentIdentifierService;
+import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
 import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
 import es.unizar.iaaa.pid.service.mapper.PersistentIdentifierMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
@@ -38,9 +38,6 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 /**
  * Test class for the PersistentIdentifierResource REST controller.
  *
@@ -111,7 +108,7 @@ public class PersistentIdentifierResourceIntTest {
     private PersistentIdentifierMapper persistentIdentifierMapper;
 
     @Autowired
-    private PersistentIdentifierService persistentIdentifierService;
+    private PersistentIdentifierDTOService persistentIdentifierService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;

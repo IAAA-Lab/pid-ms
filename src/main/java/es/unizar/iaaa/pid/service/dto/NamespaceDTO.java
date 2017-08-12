@@ -1,18 +1,13 @@
 package es.unizar.iaaa.pid.service.dto;
 
 
-import java.time.Instant;
-import javax.validation.constraints.*;
+import es.unizar.iaaa.pid.domain.enumeration.*;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.Instant;
 import java.util.Objects;
-import es.unizar.iaaa.pid.domain.enumeration.RenewalPolicy;
-import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
-import es.unizar.iaaa.pid.domain.enumeration.MethodType;
-import es.unizar.iaaa.pid.domain.enumeration.SourceType;
 
 /**
  * A DTO for the Namespace entity.
@@ -94,6 +89,8 @@ public class NamespaceDTO implements Serializable {
     private Double maxY;
 
     private Long ownerId;
+
+    private Integer version;
 
     public Long getId() {
         return id;
@@ -383,6 +380,14 @@ public class NamespaceDTO implements Serializable {
         this.ownerId = organizationId;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -442,6 +447,7 @@ public class NamespaceDTO implements Serializable {
             ", minY='" + getMinY() + "'" +
             ", maxX='" + getMaxX() + "'" +
             ", maxY='" + getMaxY() + "'" +
+            ", version='" + getVersion() + "'" +
             "}";
     }
 }

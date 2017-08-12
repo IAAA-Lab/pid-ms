@@ -1,6 +1,6 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.NamespaceService;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.repository.NamespaceRepository;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class NamespaceServiceImpl implements NamespaceService{
+public class NamespaceServiceImpl implements NamespaceDTOService {
 
     private final Logger log = LoggerFactory.getLogger(NamespaceServiceImpl.class);
 

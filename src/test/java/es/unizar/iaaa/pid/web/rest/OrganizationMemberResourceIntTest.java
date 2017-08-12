@@ -4,7 +4,7 @@ import es.unizar.iaaa.pid.PidmsApp;
 
 import es.unizar.iaaa.pid.domain.OrganizationMember;
 import es.unizar.iaaa.pid.repository.OrganizationMemberRepository;
-import es.unizar.iaaa.pid.service.OrganizationMemberService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMemberMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
@@ -51,7 +51,7 @@ public class OrganizationMemberResourceIntTest {
     private OrganizationMemberMapper organizationMemberMapper;
 
     @Autowired
-    private OrganizationMemberService organizationMemberService;
+    private OrganizationMemberDTOService organizationMemberService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;

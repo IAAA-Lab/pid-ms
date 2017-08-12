@@ -2,11 +2,12 @@ package es.unizar.iaaa.pid.web.rest;
 
 import es.unizar.iaaa.pid.PidmsApp;
 import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Identifier;
 import es.unizar.iaaa.pid.domain.Resource;
 import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
 import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 import es.unizar.iaaa.pid.repository.ChangeRepository;
-import es.unizar.iaaa.pid.service.ChangeService;
+import es.unizar.iaaa.pid.service.ChangeDTOService;
 import es.unizar.iaaa.pid.service.dto.ChangeDTO;
 import es.unizar.iaaa.pid.service.mapper.ChangeMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
@@ -82,7 +83,7 @@ public class ChangeResourceIntTest {
     private ChangeMapper changeMapper;
 
     @Autowired
-    private ChangeService changeService;
+    private ChangeDTOService changeService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -121,17 +122,21 @@ public class ChangeResourceIntTest {
             .resourceType(DEFAULT_RESOURCE_TYPE)
             .locator(DEFAULT_LOCATOR);
 
-        Change change = new Change()
-            .changeTimestamp(DEFAULT_CHANGE_TIMESTAMP)
-            .action(DEFAULT_ACTION)
-            .feature(DEFAULT_FEATURE)
+        Identifier identifier = new Identifier()
             .namespace(DEFAULT_NAMESPACE)
             .localId(DEFAULT_LOCAL_ID)
             .versionId(DEFAULT_VERSION_ID)
             .beginLifespanVersion(DEFAULT_BEGIN_LIFESPAN_VERSION)
             .endLifespanVersion(DEFAULT_END_LIFESPAN_VERSION)
-            .alternateId(DEFAULT_ALTERNATE_ID)
+            .alternateId(DEFAULT_ALTERNATE_ID);
+
+        Change change = new Change()
+            .changeTimestamp(DEFAULT_CHANGE_TIMESTAMP)
+            .action(DEFAULT_ACTION)
+            .feature(DEFAULT_FEATURE)
+            .identifier(identifier)
             .resource(resource);
+
         return change;
     }
 
@@ -159,12 +164,12 @@ public class ChangeResourceIntTest {
         assertThat(testChange.getChangeTimestamp()).isEqualTo(DEFAULT_CHANGE_TIMESTAMP);
         assertThat(testChange.getAction()).isEqualTo(DEFAULT_ACTION);
         assertThat(testChange.getFeature()).isEqualTo(DEFAULT_FEATURE);
-        assertThat(testChange.getNamespace()).isEqualTo(DEFAULT_NAMESPACE);
-        assertThat(testChange.getLocalId()).isEqualTo(DEFAULT_LOCAL_ID);
-        assertThat(testChange.getVersionId()).isEqualTo(DEFAULT_VERSION_ID);
-        assertThat(testChange.getBeginLifespanVersion()).isEqualTo(DEFAULT_BEGIN_LIFESPAN_VERSION);
-        assertThat(testChange.getEndLifespanVersion()).isEqualTo(DEFAULT_END_LIFESPAN_VERSION);
-        assertThat(testChange.getAlternateId()).isEqualTo(DEFAULT_ALTERNATE_ID);
+        assertThat(testChange.getIdentifier().getNamespace()).isEqualTo(DEFAULT_NAMESPACE);
+        assertThat(testChange.getIdentifier().getLocalId()).isEqualTo(DEFAULT_LOCAL_ID);
+        assertThat(testChange.getIdentifier().getVersionId()).isEqualTo(DEFAULT_VERSION_ID);
+        assertThat(testChange.getIdentifier().getBeginLifespanVersion()).isEqualTo(DEFAULT_BEGIN_LIFESPAN_VERSION);
+        assertThat(testChange.getIdentifier().getEndLifespanVersion()).isEqualTo(DEFAULT_END_LIFESPAN_VERSION);
+        assertThat(testChange.getIdentifier().getAlternateId()).isEqualTo(DEFAULT_ALTERNATE_ID);
         assertThat(testChange.getResource().getResourceType()).isEqualTo(DEFAULT_RESOURCE_TYPE);
         assertThat(testChange.getResource().getLocator()).isEqualTo(DEFAULT_LOCATOR);
     }
@@ -194,7 +199,7 @@ public class ChangeResourceIntTest {
     public void checkNamespaceIsRequired() throws Exception {
         int databaseSizeBeforeTest = changeRepository.findAll().size();
         // set the field null
-        change.setNamespace(null);
+        change.getIdentifier().setNamespace(null);
 
         // Create the Change, which fails.
         ChangeDTO changeDTO = changeMapper.toDto(change);
@@ -213,7 +218,7 @@ public class ChangeResourceIntTest {
     public void checkLocalIdIsRequired() throws Exception {
         int databaseSizeBeforeTest = changeRepository.findAll().size();
         // set the field null
-        change.setLocalId(null);
+        change.getIdentifier().setLocalId(null);
 
         // Create the Change, which fails.
         ChangeDTO changeDTO = changeMapper.toDto(change);
@@ -296,15 +301,19 @@ public class ChangeResourceIntTest {
             .changeTimestamp(UPDATED_CHANGE_TIMESTAMP)
             .action(UPDATED_ACTION)
             .feature(UPDATED_FEATURE)
+            .getResource()
+            .resourceType(UPDATED_RESOURCE_TYPE)
+            .locator(UPDATED_LOCATOR);
+
+        updatedChange
+            .getIdentifier()
             .namespace(UPDATED_NAMESPACE)
             .localId(UPDATED_LOCAL_ID)
             .versionId(UPDATED_VERSION_ID)
             .beginLifespanVersion(UPDATED_BEGIN_LIFESPAN_VERSION)
             .endLifespanVersion(UPDATED_END_LIFESPAN_VERSION)
-            .alternateId(UPDATED_ALTERNATE_ID)
-            .getResource()
-            .resourceType(UPDATED_RESOURCE_TYPE)
-            .locator(UPDATED_LOCATOR);
+            .alternateId(UPDATED_ALTERNATE_ID);
+
         ChangeDTO changeDTO = changeMapper.toDto(updatedChange);
 
         restChangeMockMvc.perform(put("/api/changes")
@@ -319,12 +328,12 @@ public class ChangeResourceIntTest {
         assertThat(testChange.getChangeTimestamp()).isEqualTo(UPDATED_CHANGE_TIMESTAMP);
         assertThat(testChange.getAction()).isEqualTo(UPDATED_ACTION);
         assertThat(testChange.getFeature()).isEqualTo(UPDATED_FEATURE);
-        assertThat(testChange.getNamespace()).isEqualTo(UPDATED_NAMESPACE);
-        assertThat(testChange.getLocalId()).isEqualTo(UPDATED_LOCAL_ID);
-        assertThat(testChange.getVersionId()).isEqualTo(UPDATED_VERSION_ID);
-        assertThat(testChange.getBeginLifespanVersion()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION);
-        assertThat(testChange.getEndLifespanVersion()).isEqualTo(UPDATED_END_LIFESPAN_VERSION);
-        assertThat(testChange.getAlternateId()).isEqualTo(UPDATED_ALTERNATE_ID);
+        assertThat(testChange.getIdentifier().getNamespace()).isEqualTo(UPDATED_NAMESPACE);
+        assertThat(testChange.getIdentifier().getLocalId()).isEqualTo(UPDATED_LOCAL_ID);
+        assertThat(testChange.getIdentifier().getVersionId()).isEqualTo(UPDATED_VERSION_ID);
+        assertThat(testChange.getIdentifier().getBeginLifespanVersion()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION);
+        assertThat(testChange.getIdentifier().getEndLifespanVersion()).isEqualTo(UPDATED_END_LIFESPAN_VERSION);
+        assertThat(testChange.getIdentifier().getAlternateId()).isEqualTo(UPDATED_ALTERNATE_ID);
         assertThat(testChange.getResource().getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
         assertThat(testChange.getResource().getLocator()).isEqualTo(UPDATED_LOCATOR);
     }

@@ -4,7 +4,7 @@ import es.unizar.iaaa.pid.PidmsApp;
 
 import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.repository.TaskRepository;
-import es.unizar.iaaa.pid.service.TaskService;
+import es.unizar.iaaa.pid.service.TaskDTOService;
 import es.unizar.iaaa.pid.service.dto.TaskDTO;
 import es.unizar.iaaa.pid.service.mapper.TaskMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
@@ -63,7 +63,7 @@ public class TaskResourceIntTest {
     private TaskMapper taskMapper;
 
     @Autowired
-    private TaskService taskService;
+    private TaskDTOService taskService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;

@@ -1,7 +1,7 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import es.unizar.iaaa.pid.service.PersistentIdentifierService;
+import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
 import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
 import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
@@ -34,9 +34,9 @@ public class PersistentIdentifierResource {
 
     private static final String ENTITY_NAME = "persistentIdentifier";
 
-    private final PersistentIdentifierService persistentIdentifierService;
+    private final PersistentIdentifierDTOService persistentIdentifierService;
 
-    public PersistentIdentifierResource(PersistentIdentifierService persistentIdentifierService) {
+    public PersistentIdentifierResource(PersistentIdentifierDTOService persistentIdentifierService) {
         this.persistentIdentifierService = persistentIdentifierService;
     }
 

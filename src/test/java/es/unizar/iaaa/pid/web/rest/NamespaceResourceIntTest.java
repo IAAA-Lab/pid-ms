@@ -5,9 +5,8 @@ import es.unizar.iaaa.pid.domain.BoundingBox;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.domain.Registration;
 import es.unizar.iaaa.pid.domain.Source;
-import es.unizar.iaaa.pid.domain.enumeration.*;
 import es.unizar.iaaa.pid.repository.NamespaceRepository;
-import es.unizar.iaaa.pid.service.NamespaceService;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
@@ -34,6 +33,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import es.unizar.iaaa.pid.domain.enumeration.RenewalPolicy;
@@ -159,6 +159,8 @@ public class NamespaceResourceIntTest {
     private static final BoundingBox UPDATED_BOUNDING_BOX = new BoundingBox().
         maxX(UPDATED_MAX_X).maxY(UPDATED_MAX_Y).minY(UPDATED_MIN_Y).minX(UPDATED_MIN_X);
 
+    private static final Integer DEFAULT_VERSION_ID = 1;
+
     @Autowired
     private NamespaceRepository namespaceRepository;
 
@@ -166,7 +168,7 @@ public class NamespaceResourceIntTest {
     private NamespaceMapper namespaceMapper;
 
     @Autowired
-    private NamespaceService namespaceService;
+    private NamespaceDTOService namespaceService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -238,7 +240,8 @@ public class NamespaceResourceIntTest {
             .renewalPolicy(DEFAULT_RENEWAL_POLICY)
             .namespaceStatus(DEFAULT_NAMESPACE_STATUS)
             .registration(registration)
-            .source(source);
+            .source(source)
+            .version(DEFAULT_VERSION_ID);
 
         return namespace;
     }
@@ -298,6 +301,7 @@ public class NamespaceResourceIntTest {
         assertThat(testNamespace.getSource().getBoundingBox().getMinY()).isEqualTo(DEFAULT_MIN_Y);
         assertThat(testNamespace.getSource().getBoundingBox().getMaxX()).isEqualTo(DEFAULT_MAX_X);
         assertThat(testNamespace.getSource().getBoundingBox().getMaxY()).isEqualTo(DEFAULT_MAX_Y);
+        assertThat(testNamespace.getVersion()).isEqualTo(DEFAULT_VERSION_ID);
     }
 
     @Test
@@ -381,7 +385,7 @@ public class NamespaceResourceIntTest {
     @Transactional
     public void getAllNamespaces() throws Exception {
         // Initialize the database
-        namespaceRepository.saveAndFlush(namespace);
+        namespace = namespaceRepository.saveAndFlush(namespace);
 
         // Get all the namespaceList
         restNamespaceMockMvc.perform(get("/api/namespaces?sort=id,desc"))
@@ -428,7 +432,7 @@ public class NamespaceResourceIntTest {
     @Transactional
     public void getNamespace() throws Exception {
         // Initialize the database
-        namespaceRepository.saveAndFlush(namespace);
+        namespace = namespaceRepository.saveAndFlush(namespace);
 
         // Get the namespace
         restNamespaceMockMvc.perform(get("/api/namespaces/{id}", namespace.getId()))
@@ -483,7 +487,7 @@ public class NamespaceResourceIntTest {
     @Transactional
     public void updateNamespace() throws Exception {
         // Initialize the database
-        namespaceRepository.saveAndFlush(namespace);
+        namespace = namespaceRepository.saveAndFlush(namespace);
         int databaseSizeBeforeUpdate = namespaceRepository.findAll().size();
 
         // Update the namespace
@@ -595,7 +599,7 @@ public class NamespaceResourceIntTest {
     @Transactional
     public void deleteNamespace() throws Exception {
         // Initialize the database
-        namespaceRepository.saveAndFlush(namespace);
+        namespace = namespaceRepository.saveAndFlush(namespace);
         int databaseSizeBeforeDelete = namespaceRepository.findAll().size();
 
         // Get the namespace

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 /**
  * Service Interface for managing OrganizationMember.
  */
-public interface OrganizationMemberService {
+public interface OrganizationMemberDTOService {
 
     /**
      * Save a organizationMember.

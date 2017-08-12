@@ -1,6 +1,6 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.OrganizationMemberService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.domain.OrganizationMember;
 import es.unizar.iaaa.pid.repository.OrganizationMemberRepository;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class OrganizationMemberServiceImpl implements OrganizationMemberService{
+public class OrganizationMemberServiceImpl implements OrganizationMemberDTOService {
 
     private final Logger log = LoggerFactory.getLogger(OrganizationMemberServiceImpl.class);
 

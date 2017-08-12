@@ -1,7 +1,7 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import es.unizar.iaaa.pid.service.NamespaceService;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
 import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
@@ -34,9 +34,9 @@ public class NamespaceResource {
 
     private static final String ENTITY_NAME = "namespace";
 
-    private final NamespaceService namespaceService;
+    private final NamespaceDTOService namespaceService;
 
-    public NamespaceResource(NamespaceService namespaceService) {
+    public NamespaceResource(NamespaceDTOService namespaceService) {
         this.namespaceService = namespaceService;
     }
 

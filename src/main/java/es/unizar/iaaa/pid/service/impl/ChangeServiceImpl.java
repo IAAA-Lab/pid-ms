@@ -1,8 +1,8 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.ChangeService;
 import es.unizar.iaaa.pid.domain.Change;
 import es.unizar.iaaa.pid.repository.ChangeRepository;
+import es.unizar.iaaa.pid.service.ChangeDTOService;
 import es.unizar.iaaa.pid.service.dto.ChangeDTO;
 import es.unizar.iaaa.pid.service.mapper.ChangeMapper;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class ChangeServiceImpl implements ChangeService{
+public class ChangeServiceImpl implements ChangeDTOService {
 
     private final Logger log = LoggerFactory.getLogger(ChangeServiceImpl.class);
 

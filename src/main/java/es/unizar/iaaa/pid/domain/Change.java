@@ -6,7 +6,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
@@ -37,25 +36,8 @@ public class Change implements Serializable {
     @Column(name = "feature")
     private String feature;
 
-    @NotNull
-    @Column(name = "namespace", nullable = false)
-    private String namespace;
-
-    @NotNull
-    @Column(name = "local_id", nullable = false)
-    private String localId;
-
-    @Column(name = "version_id")
-    private String versionId;
-
-    @Column(name = "begin_lifespan_version")
-    private Instant beginLifespanVersion;
-
-    @Column(name = "end_lifespan_version")
-    private Instant endLifespanVersion;
-
-    @Column(name = "alternate_id")
-    private String alternateId;
+    @Embedded
+    private Identifier identifier;
 
     @Embedded
     private Resource resource;
@@ -110,82 +92,17 @@ public class Change implements Serializable {
         this.feature = feature;
     }
 
-    public String getNamespace() {
-        return namespace;
+    public Identifier getIdentifier() {
+        return identifier;
     }
 
-    public Change namespace(String namespace) {
-        this.namespace = namespace;
+    public Change identifier(Identifier identifier) {
+        this.identifier = identifier;
         return this;
     }
 
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
-
-    public String getLocalId() {
-        return localId;
-    }
-
-    public Change localId(String localId) {
-        this.localId = localId;
-        return this;
-    }
-
-    public void setLocalId(String localId) {
-        this.localId = localId;
-    }
-
-    public String getVersionId() {
-        return versionId;
-    }
-
-    public Change versionId(String versionId) {
-        this.versionId = versionId;
-        return this;
-    }
-
-    public void setVersionId(String versionId) {
-        this.versionId = versionId;
-    }
-
-    public Instant getBeginLifespanVersion() {
-        return beginLifespanVersion;
-    }
-
-    public Change beginLifespanVersion(Instant beginLifespanVersion) {
-        this.beginLifespanVersion = beginLifespanVersion;
-        return this;
-    }
-
-    public void setBeginLifespanVersion(Instant beginLifespanVersion) {
-        this.beginLifespanVersion = beginLifespanVersion;
-    }
-
-    public Instant getEndLifespanVersion() {
-        return endLifespanVersion;
-    }
-
-    public Change endLifespanVersion(Instant endLifespanVersion) {
-        this.endLifespanVersion = endLifespanVersion;
-        return this;
-    }
-
-    public void setEndLifespanVersion(Instant endLifespanVersion) {
-        this.endLifespanVersion = endLifespanVersion;
-    }
-
-    public String getAlternateId() {
-        return alternateId;
-    }
-
-    public Change alternateId(String alternateId) {
-        this.alternateId = alternateId;
-        return this;
-    }
-
-    public void setAlternateId(String alternateId) {
-        this.alternateId = alternateId;
+    public void setIdentifier(Identifier identifier) {
+        this.identifier = identifier;
     }
 
     public Resource getResource() {
@@ -241,12 +158,7 @@ public class Change implements Serializable {
             ", changeTimestamp='" + getChangeTimestamp() + "'" +
             ", action='" + getAction() + "'" +
             ", feature='" + getFeature() + "'" +
-            ", namespace='" + getNamespace() + "'" +
-            ", localId='" + getLocalId() + "'" +
-            ", versionId='" + getVersionId() + "'" +
-            ", beginLifespanVersion='" + getBeginLifespanVersion() + "'" +
-            ", endLifespanVersion='" + getEndLifespanVersion() + "'" +
-            ", alternateId='" + getAlternateId() + "'" +
+            ", identifier='" + getIdentifier() + "'" +
             ", resource='" + getResource() + "'" +
             "}";
     }

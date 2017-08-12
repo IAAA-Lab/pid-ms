@@ -1,42 +1,117 @@
 package es.unizar.iaaa.pid.service;
 
-import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
+import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.domain.Registration;
+import es.unizar.iaaa.pid.domain.Task;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.repository.NamespaceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Service Interface for managing Namespace.
+ * Service class for managing namespaces.
  */
-public interface NamespaceService {
+@Service
+@Transactional
+public class NamespaceService {
 
-    /**
-     * Save a namespace.
-     *
-     * @param namespaceDTO the entity to save
-     * @return the persisted entity
-     */
-    NamespaceDTO save(NamespaceDTO namespaceDTO);
+    private final Logger log = LoggerFactory.getLogger(NamespaceService.class);
 
-    /**
-     *  Get all the namespaces.
-     *
-     *  @param pageable the pagination information
-     *  @return the list of entities
-     */
-    Page<NamespaceDTO> findAll(Pageable pageable);
+    private final NamespaceRepository namespaceRepository;
 
-    /**
-     *  Get the "id" namespace.
-     *
-     *  @param id the id of the entity
-     *  @return the entity
-     */
-    NamespaceDTO findOne(Long id);
+    private final TaskService taskService;
 
-    /**
-     *  Delete the "id" namespace.
-     *
-     *  @param id the id of the entity
-     */
-    void delete(Long id);
+    public NamespaceService(NamespaceRepository namespaceRepository, TaskService taskService) {
+        this.namespaceRepository = namespaceRepository;
+        this.taskService = taskService;
+    }
+
+    public Namespace findPendingProcess() {
+        return namespaceRepository.findFirstByRegistrationProcessStatus(ProcessStatus.PENDING_HARVEST);
+    }
+
+    public void createOrUpdateNamespace(Namespace namespace) {
+        namespaceRepository.save(namespace);
+        log.debug("Created Information for Namespace: {}", namespace);
+    }
+
+    public void deleteAll() {
+        namespaceRepository.deleteAll();
+    }
+
+    public List<Namespace> findAll() {
+        return namespaceRepository.findAll();
+    }
+
+    public Optional<Namespace> prepareForVerification(Instant now) {
+        return namespaceRepository
+            .findFirstByRegistrationProcessStatusAndRegistrationNextRenewalDateLessThan(ProcessStatus.NONE, now)
+            .map(namespace -> {
+                    namespace.getRegistration().setProcessStatus(ProcessStatus.PENDING_HARVEST);
+                    return namespace;
+                }
+                );
+    }
+
+    public List<Namespace> findPendingValidation() {
+        return namespaceRepository
+            .findByRegistrationItemStatusAndRegistrationProcessStatus(ItemStatus.PENDING_VALIDATION, ProcessStatus.NONE);
+    }
+
+    public List<Namespace> findLapsed(Instant now) {
+        return namespaceRepository
+            .findByRegistrationItemStatusAndRegistrationProcessStatusAndRegistrationNextRenewalDateLessThan(ItemStatus.ISSUED, ProcessStatus.NONE, now);
+    }
+
+    public List<Namespace> findByRegistrationProcessStatus(ProcessStatus status) {
+        return namespaceRepository.findByRegistrationProcessStatus(status);
+    }
+
+
+    public Task firstTask(Namespace namespace, ProcessStatus status, ItemStatus itemStatus, Instant now) {
+        Registration registration = namespace.getRegistration();
+        registration.setItemStatus(itemStatus);
+        registration.setProcessStatus(status);
+        registration.setLastChangeDate(now);
+        namespaceRepository.save(namespace);
+        return taskService.createOrUpdateTask(namespace, ProcessStatus.VALIDATION_BEGIN, now);
+    }
+
+    public Task nextTask(Namespace namespace, ProcessStatus status, Instant now) {
+        Registration registration = namespace.getRegistration();
+        registration.setProcessStatus(status);
+        registration.setLastChangeDate(now);
+        namespaceRepository.save(namespace);
+        return taskService.createOrUpdateTask(namespace, status, now);
+    }
+
+    public void doneTaskAndSetNextStep(Task task, Instant now, ProcessStatus nextStep) {
+        Namespace namespace = task.getNamespace();
+        Registration registration = namespace.getRegistration();
+        registration.setProcessStatus(nextStep);
+        registration.setLastChangeDate(now);
+        namespaceRepository.save(namespace);
+        taskService.done(task, now);
+    }
+
+
+    public void updateToDone(Task task, Instant now, Instant next) {
+        Namespace namespace = task.getNamespace();
+        Registration registration = namespace.getRegistration();
+        registration.setItemStatus(ItemStatus.ISSUED);
+        registration.setProcessStatus(ProcessStatus.NONE);
+        registration.setLastRevisionDate(now);
+        registration.setLastChangeDate(now);
+        registration.setNextRenewalDate(next);
+        namespaceRepository.save(namespace);
+        taskService.done(task, now);
+    }
 }

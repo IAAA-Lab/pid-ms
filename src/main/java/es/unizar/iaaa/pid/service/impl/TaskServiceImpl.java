@@ -1,6 +1,6 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.TaskService;
+import es.unizar.iaaa.pid.service.TaskDTOService;
 import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.repository.TaskRepository;
 import es.unizar.iaaa.pid.service.dto.TaskDTO;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class TaskServiceImpl implements TaskService{
+public class TaskServiceImpl implements TaskDTOService {
 
     private final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 

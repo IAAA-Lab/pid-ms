@@ -1,6 +1,6 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.PersistentIdentifierService;
+import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.repository.PersistentIdentifierRepository;
 import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class PersistentIdentifierServiceImpl implements PersistentIdentifierService{
+public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOService {
 
     private final Logger log = LoggerFactory.getLogger(PersistentIdentifierServiceImpl.class);
 

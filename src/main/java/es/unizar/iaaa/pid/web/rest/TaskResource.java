@@ -1,7 +1,7 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import es.unizar.iaaa.pid.service.TaskService;
+import es.unizar.iaaa.pid.service.TaskDTOService;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
 import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
 import es.unizar.iaaa.pid.service.dto.TaskDTO;
@@ -34,9 +34,9 @@ public class TaskResource {
 
     private static final String ENTITY_NAME = "task";
 
-    private final TaskService taskService;
+    private final TaskDTOService taskService;
 
-    public TaskResource(TaskService taskService) {
+    public TaskResource(TaskDTOService taskService) {
         this.taskService = taskService;
     }
 

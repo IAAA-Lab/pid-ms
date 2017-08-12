@@ -1,7 +1,7 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import es.unizar.iaaa.pid.service.OrganizationService;
+import es.unizar.iaaa.pid.service.OrganizationDTOService;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
 import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
 import es.unizar.iaaa.pid.service.dto.OrganizationDTO;
@@ -34,9 +34,9 @@ public class OrganizationResource {
 
     private static final String ENTITY_NAME = "organization";
 
-    private final OrganizationService organizationService;
+    private final OrganizationDTOService organizationService;
 
-    public OrganizationResource(OrganizationService organizationService) {
+    public OrganizationResource(OrganizationDTOService organizationService) {
         this.organizationService = organizationService;
     }
 

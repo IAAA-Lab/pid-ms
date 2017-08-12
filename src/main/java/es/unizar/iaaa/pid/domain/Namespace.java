@@ -56,6 +56,10 @@ public class Namespace implements Serializable {
     @ManyToOne
     private Organization owner;
 
+    @Version
+    @Column(name = "version_lock", nullable = false)
+    private Integer version;
+
     public Long getId() {
         return id;
     }
@@ -168,6 +172,21 @@ public class Namespace implements Serializable {
         this.owner = organization;
     }
 
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public Namespace version(Integer version) {
+        this.version = version;
+        return this;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -199,6 +218,7 @@ public class Namespace implements Serializable {
             ", namespaceStatus='" + getNamespaceStatus() + "'" +
             ", registration='" + getRegistration() + "'" +
             ", source='" + getSource() + "'" +
+            ", version='" + getVersion() + "'" +
             "}";
     }
 }
