@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Service class for managing Persistent Identifiers.
@@ -22,52 +23,53 @@ import java.util.List;
 @Transactional
 public class PersistentIdentifierService {
 
-    private final Logger log = LoggerFactory.getLogger(NamespaceService.class);
+    private final Logger log = LoggerFactory.getLogger(PersistentIdentifierService.class);
 
-    final PersistentIdentifierRepository pidRepository;
+    final PersistentIdentifierRepository persistentIdentifierRepository;
 
-    public PersistentIdentifierService(PersistentIdentifierRepository pidRepository) {
-        this.pidRepository = pidRepository;
+    public PersistentIdentifierService(PersistentIdentifierRepository persistentIdentifierRepository) {
+        this.persistentIdentifierRepository = persistentIdentifierRepository;
     }
 
-    // public PersistentIdentifier findByUUID(UUID uuid) {
-    //    return pidRepository.findOne(uuid);
-    //}
+    public PersistentIdentifier findByUUID(UUID uuid) {
+        return persistentIdentifierRepository.findOne(uuid);
+    }
 
     public void deleteAll() {
-        pidRepository.deleteAll();
+        persistentIdentifierRepository.deleteAll();
     }
 
     public void save(PersistentIdentifier pid) {
-        pidRepository.save(pid);
+        pid.autoId();
+        persistentIdentifierRepository.save(pid);
     }
 
-    // public void delete(UUID uuid) {
-    //    pidRepository.deleteById(uuid);
-    //}
+    public void delete(UUID uuid) {
+        persistentIdentifierRepository.delete(uuid);
+    }
 
     public Iterable<PersistentIdentifier> findByNamespaceInReviewProcess(String namespace) {
-        return pidRepository.findByIdentifierNamespaceAndRegistrationProcessStatus(namespace, ProcessStatus.PENDING_VALIDATION_BY_ID);
+        return persistentIdentifierRepository.findByIdentifierNamespaceAndRegistrationProcessStatus(namespace, ProcessStatus.PENDING_VALIDATION_BY_ID);
     }
 
     public void prepareForVerification(Namespace namespace) {
-        int num = pidRepository.prepareForVerification(ProcessStatus.NONE, namespace.getNamespace());
+        int num = persistentIdentifierRepository.prepareForVerification(ProcessStatus.NONE, namespace.getNamespace());
         log.info("Marked {} Persistent Identifiers of Namespace {} for verification", num, namespace.getNamespace());
     }
 
     public List<PersistentIdentifier> findByNamespaceValidated(Namespace namespace) {
-        return pidRepository.findByNamespaceValidated(namespace.getNamespace(), Arrays.asList(ItemStatus.NEW, ItemStatus.VALIDATED));
+        return persistentIdentifierRepository.findByNamespaceValidated(namespace.getNamespace(), Arrays.asList(ItemStatus.NEW, ItemStatus.VALIDATED));
     }
 
     public Page<PersistentIdentifier> findByNamespaceValidatedOrderById(Namespace namespace, Pageable pageable) {
-        return pidRepository.findByNamespaceValidatedOrderById(namespace.getNamespace(), Arrays.asList(ItemStatus.NEW, ItemStatus.VALIDATED),pageable);
+        return persistentIdentifierRepository.findByNamespaceValidatedOrderById(namespace.getNamespace(), Arrays.asList(ItemStatus.NEW, ItemStatus.VALIDATED),pageable);
     }
 
     public List<PersistentIdentifier> findByNamespaceIssued(Namespace namespace) {
-        return pidRepository.findByNamespaceValidated(namespace.getNamespace(), Arrays.asList(ItemStatus.ISSUED));
+        return persistentIdentifierRepository.findByNamespaceValidated(namespace.getNamespace(), Arrays.asList(ItemStatus.ISSUED));
     }
 
     public List<PersistentIdentifier> findByNamespaceLapsed(Namespace namespace) {
-        return pidRepository.findByNamespaceValidated(namespace.getNamespace(), Arrays.asList(ItemStatus.LAPSED));
+        return persistentIdentifierRepository.findByNamespaceValidated(namespace.getNamespace(), Arrays.asList(ItemStatus.LAPSED));
     }
 }

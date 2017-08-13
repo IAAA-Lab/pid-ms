@@ -113,3 +113,5 @@ jhipster:
 # ===================================================================
 
 application:
+    resolver:
+        metadata-base: http://pid.inspire.gob.es

@@ -8,6 +8,8 @@ import java.time.Instant;
 @Embeddable
 public class Identifier {
 
+    private static final String DEFAULT_NAMESPACE = "catalogo";
+
     @NotNull
     @Column(name = "namespace", nullable = false)
     private String namespace;
@@ -35,6 +37,11 @@ public class Identifier {
 
     public Identifier namespace(String namespace) {
         this.namespace = namespace;
+        return this;
+    }
+
+    public Identifier defaultNamespace() {
+        this.namespace = DEFAULT_NAMESPACE;
         return this;
     }
 
