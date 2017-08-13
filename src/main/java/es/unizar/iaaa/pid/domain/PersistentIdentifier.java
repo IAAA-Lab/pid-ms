@@ -176,7 +176,7 @@ public class PersistentIdentifier implements Serializable {
         return computeExternalUrnFromIdentifier(identifier);
     }
 
-    private static String computeExternalUrnFromIdentifier(Identifier identifier) {
+    public static String computeExternalUrnFromIdentifier(Identifier identifier) {
         return BASE +
             SEPARATOR +
             computeShortFromIdentifier(identifier);

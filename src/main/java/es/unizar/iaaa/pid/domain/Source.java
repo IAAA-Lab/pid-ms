@@ -316,6 +316,13 @@ public class Source {
         this.boundingBox = boundingBox;
     }
 
+    public String getQualifiedFeatureType() {
+        return schemaPrefix + ":" + featureType;
+    }
+
+    public String getQualifiedGeometryProperty() {
+        return schemaPrefix + ":" + geometryProperty;
+    }
 
     @Override
     public String toString() {

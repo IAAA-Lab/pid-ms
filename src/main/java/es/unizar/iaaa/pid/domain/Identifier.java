@@ -126,4 +126,15 @@ public class Identifier {
             "}";
     }
 
+    public boolean sameAs(Identifier remoteIdentifier) {
+        if (remoteIdentifier == null)
+            return false;
+        if (!namespace.equals(remoteIdentifier.namespace))
+            return false;
+        if (!localId.equals(remoteIdentifier.localId))
+            return false;
+        if (versionId != null)
+            return versionId.equals(remoteIdentifier.versionId);
+        return remoteIdentifier.versionId == null;
+    }
 }
