@@ -157,6 +157,11 @@ public class WFSValidatorById implements ValidatorById {
         changeService.createChange(change);
 
     }
+
+    public Instant parse(String formattedDate) {
+        return Instant.parse(formattedDate+"Z");
+    }
+
     private DateTime extractDateTime(Element element, String ns, String name) {
         String s = extractContent(element, ns, name);
         return s != null ? DateTime.parse(s) : null;

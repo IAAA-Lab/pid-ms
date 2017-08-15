@@ -89,7 +89,8 @@ public class TransferringHarvestTask extends AbstractTaskRunner {
                     .identifier(id)
                     .resource(change.getResource())
                     .registration(registration)
-                    .resolverProxyMode(resolverProxyMode);
+                    .resolverProxyMode(resolverProxyMode)
+                    .feature(change.getFeature());
                 persistentIdentifierService.save(pid);
             } else if (canUpdateExtingingPid(pid, change.getChangeTimestamp())) {
                 Registration registration = pid.getRegistration();

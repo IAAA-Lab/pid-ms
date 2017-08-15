@@ -45,7 +45,7 @@ public class Task implements Serializable {
 
     @Min(value = 0)
     @Column(name = "num_errors")
-    private Integer numErrors;
+    private Integer numErrors = 0;
 
     @ManyToOne
     private Namespace namespace;

@@ -157,6 +157,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
                     change.setTask(this.task);
                     change.setAction(ChangeAction.ISSUED);
                     change.setChangeTimestamp(Instant.now());
+                    change.setFeature(source.getFeatureType());
                     changeService.createChange(change);
                     debug("{} is FOUND ", PersistentIdentifier.computeExternalUrnFromIdentifier(identifier));
                     valid++;
@@ -264,7 +265,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         if (apx.iterate()) {
         	int pos = nav.getText();
         	if(pos != -1){
-        		beginLifespanVersion = Instant.parse(nav.toNormalizedString(pos));
+                beginLifespanVersion = parse(nav.toNormalizedString(pos));
         	}
         }
 
@@ -296,6 +297,10 @@ public class WFSSpatialHarvester implements SpatialHarvester {
             .versionId(versionId)
             .beginLifespanVersion(beginLifespanVersion)
             .alternateId(gmlId);
+    }
+
+    public Instant parse(String formattedDate) {
+        return Instant.parse(formattedDate+"Z");
     }
 
     private void log(String msg, Object... objects) {

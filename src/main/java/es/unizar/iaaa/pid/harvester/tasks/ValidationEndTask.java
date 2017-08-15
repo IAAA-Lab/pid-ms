@@ -42,10 +42,10 @@ public class ValidationEndTask extends AbstractTaskRunner {
         now = now();
         switch(namespace.getRenewalPolicy()) {
             case YEARLY:
-                renewal = now.plus(1, ChronoUnit.DAYS);
+                renewal = now.plus(365, ChronoUnit.DAYS);
                 break;
             case MONTHLY:
-                renewal = now.plus(1, ChronoUnit.MONTHS);
+                renewal = now.plus(30, ChronoUnit.DAYS);
                 break;
             case DAILY:
                 renewal = now.plus(1, ChronoUnit.DAYS);
