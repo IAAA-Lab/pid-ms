@@ -55,7 +55,7 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
     @Transactional(readOnly = true)
     public Page<NamespaceDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Namespaces");
-        return namespaceRepository.findAll(pageable)
+        return namespaceRepository.findAll(namespaceMapper.toPage(pageable))
             .map(namespaceMapper::toDto);
     }
 

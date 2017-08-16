@@ -1,9 +1,15 @@
 package es.unizar.iaaa.pid.service.mapper;
 
-import es.unizar.iaaa.pid.domain.*;
+import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
-import org.mapstruct.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Mapper for the entity Namespace and its DTO NamespaceDTO.
@@ -13,6 +19,7 @@ public interface NamespaceMapper extends EntityMapper <NamespaceDTO, Namespace> 
 
     @Mappings({
         @Mapping(source = "owner.id", target = "ownerId"),
+        @Mapping(source = "owner.title", target = "ownerTitle"),
         @Mapping(source = "source.methodType", target = "methodType"),
         @Mapping(source = "source.sourceType", target = "sourceType"),
         @Mapping(source = "source.endpointLocation", target = "endpointLocation"),
@@ -85,5 +92,70 @@ public interface NamespaceMapper extends EntityMapper <NamespaceDTO, Namespace> 
         Namespace namespace = new Namespace();
         namespace.setId(id);
         return namespace;
+    }
+
+    default Pageable toPage(final Pageable pageable) {
+        List<Sort.Order> mappedOrder = new ArrayList<>();
+
+        for(Sort.Order o: pageable.getSort()) {
+            switch(o.getProperty()) {
+                case "itemStatus":
+                    mappedOrder.add(o.withProperty("registration.itemStatus"));
+                    break;
+                case "sourceType":
+                    mappedOrder.add(o.withProperty("source.sourceType"));
+                    break;
+                case "endpointLocation":
+                    mappedOrder.add(o.withProperty("source.endpointLocation"));
+                    break;
+                case "ownerId":
+                    mappedOrder.add(o.withProperty("owner.title"));
+                    break;
+                default:
+                    mappedOrder.add(o);
+            }
+        }
+
+        return new Pageable() {
+            @Override
+            public int getPageNumber() {
+                return pageable.getPageNumber();
+            }
+
+            @Override
+            public int getPageSize() {
+                return pageable.getPageSize();
+            }
+
+            @Override
+            public int getOffset() {
+                return pageable.getOffset();
+            }
+
+            @Override
+            public Sort getSort() {
+                return new Sort(mappedOrder);
+            }
+
+            @Override
+            public Pageable next() {
+                return pageable.next();
+            }
+
+            @Override
+            public Pageable previousOrFirst() {
+                return pageable.previousOrFirst();
+            }
+
+            @Override
+            public Pageable first() {
+                return pageable.first();
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return pageable.hasPrevious();
+            }
+        };
     }
 }

@@ -16,26 +16,34 @@
         </div>
     </div>
     <br/>
+    <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <!--
                     <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    -->
                     <th jh-sort-by="namespace"><span data-translate="pidmsApp.namespace.namespace">Namespace</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <!--
                     <th jh-sort-by="title"><span data-translate="pidmsApp.namespace.title">Title</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="publicNamespace"><span data-translate="pidmsApp.namespace.publicNamespace">Public Namespace</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="renewalPolicy"><span data-translate="pidmsApp.namespace.renewalPolicy">Renewal Policy</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="namespaceStatus"><span data-translate="pidmsApp.namespace.namespaceStatus">Namespace Status</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="processStatus"><span data-translate="pidmsApp.namespace.processStatus">Process Status</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    -->
                     <th jh-sort-by="itemStatus"><span data-translate="pidmsApp.namespace.itemStatus">Item Status</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <!--
                     <th jh-sort-by="lastChangeDate"><span data-translate="pidmsApp.namespace.lastChangeDate">Last Change Date</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="registrationDate"><span data-translate="pidmsApp.namespace.registrationDate">Registration Date</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="lastRevisionDate"><span data-translate="pidmsApp.namespace.lastRevisionDate">Last Revision Date</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="nextRenewalDate"><span data-translate="pidmsApp.namespace.nextRenewalDate">Next Renewal Date</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="annullationDate"><span data-translate="pidmsApp.namespace.annullationDate">Annullation Date</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="methodType"><span data-translate="pidmsApp.namespace.methodType">Method Type</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    -->
                     <th jh-sort-by="sourceType"><span data-translate="pidmsApp.namespace.sourceType">Source Type</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="endpointLocation"><span data-translate="pidmsApp.namespace.endpointLocation">Endpoint Location</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <!--
                     <th jh-sort-by="srsName"><span data-translate="pidmsApp.namespace.srsName">Srs Name</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="schemaUri"><span data-translate="pidmsApp.namespace.schemaUri">Schema Uri</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="schemaUriGML"><span data-translate="pidmsApp.namespace.schemaUriGML">Schema Uri GML</span> <span class="glyphicon glyphicon-sort"></span></th>
@@ -55,28 +63,33 @@
                     <th jh-sort-by="minY"><span data-translate="pidmsApp.namespace.minY">Min Y</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="maxX"><span data-translate="pidmsApp.namespace.maxX">Max X</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="maxY"><span data-translate="pidmsApp.namespace.maxY">Max Y</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    -->
                     <th jh-sort-by="ownerId"><span data-translate="pidmsApp.namespace.owner">Owner</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="namespace in vm.namespaces track by namespace.id">
-                    <td><a ui-sref="namespace-detail({id:namespace.id})">{{namespace.id}}</a></td>
-                    <td>{{namespace.namespace}}</td>
+                    <td><a ui-sref="namespace-detail({id:namespace.id})">{{namespace.namespace}}</a></td>
+                    <!--
                     <td>{{namespace.title}}</td>
                     <td>{{namespace.publicNamespace}}</td>
                     <td data-translate="{{'pidmsApp.RenewalPolicy.' + namespace.renewalPolicy}}">{{namespace.renewalPolicy}}</td>
                     <td data-translate="{{'pidmsApp.NamespaceStatus.' + namespace.namespaceStatus}}">{{namespace.namespaceStatus}}</td>
                     <td data-translate="{{'pidmsApp.ProcessStatus.' + namespace.processStatus}}">{{namespace.processStatus}}</td>
+                    -->
                     <td data-translate="{{'pidmsApp.ItemStatus.' + namespace.itemStatus}}">{{namespace.itemStatus}}</td>
+                    <!--
                     <td>{{namespace.lastChangeDate | date:'medium'}}</td>
                     <td>{{namespace.registrationDate | date:'medium'}}</td>
                     <td>{{namespace.lastRevisionDate | date:'medium'}}</td>
                     <td>{{namespace.nextRenewalDate | date:'medium'}}</td>
                     <td>{{namespace.annullationDate | date:'medium'}}</td>
                     <td data-translate="{{'pidmsApp.MethodType.' + namespace.methodType}}">{{namespace.methodType}}</td>
+                    -->
                     <td data-translate="{{'pidmsApp.SourceType.' + namespace.sourceType}}">{{namespace.sourceType}}</td>
                     <td>{{namespace.endpointLocation}}</td>
+                    <!--
                     <td>{{namespace.srsName}}</td>
                     <td>{{namespace.schemaUri}}</td>
                     <td>{{namespace.schemaUriGML}}</td>
@@ -96,17 +109,12 @@
                     <td>{{namespace.minY}}</td>
                     <td>{{namespace.maxX}}</td>
                     <td>{{namespace.maxY}}</td>
+                    -->
                     <td>
-                        <a ui-sref="organization-detail({id:namespace.ownerId})">{{namespace.ownerId}}</a>
+                        <a ui-sref="organization-detail({id:namespace.ownerId})">{{namespace.ownerTitle}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
-                            <button type="submit"
-                                    ui-sref="namespace-detail({id:namespace.id})"
-                                    class="btn btn-info btn-sm">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                                <span class="hidden-sm-down" data-translate="entity.action.view"></span>
-                            </button>
                             <button type="submit"
                                     ui-sref="namespace.edit({id:namespace.id})"
                                     class="btn btn-primary btn-sm"
@@ -126,9 +134,6 @@
                 </tr>
             </tbody>
         </table>
-    </div>
-    <div class="text-center">
-        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
     </div>
     <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
 </div>

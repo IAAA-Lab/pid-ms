@@ -90,6 +90,8 @@ public class NamespaceDTO implements Serializable {
 
     private Long ownerId;
 
+    private String ownerTitle;
+
     private Integer version;
 
     public Long getId() {
@@ -376,8 +378,16 @@ public class NamespaceDTO implements Serializable {
         return ownerId;
     }
 
-    public void setOwnerId(Long organizationId) {
-        this.ownerId = organizationId;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public String getOwnerTitle() {
+        return ownerTitle;
+    }
+
+    public void setOwnerTitle(String ownerTitle) {
+        this.ownerTitle = ownerTitle;
     }
 
     public Integer getVersion() {
@@ -448,6 +458,8 @@ public class NamespaceDTO implements Serializable {
             ", maxX='" + getMaxX() + "'" +
             ", maxY='" + getMaxY() + "'" +
             ", version='" + getVersion() + "'" +
+            ", ownerId='" + getOwnerId() + "'" +
+            ", ownerName='" + getOwnerTitle() + "'" +
             "}";
     }
 }

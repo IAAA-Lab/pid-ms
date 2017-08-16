@@ -21,15 +21,15 @@
             "renewalPolicy": "Renewal Policy",
             "namespaceStatus": "Namespace Status",
             "processStatus": "Process Status",
-            "itemStatus": "Item Status",
+            "itemStatus": "Estado",
             "lastChangeDate": "Last Change Date",
             "registrationDate": "Registration Date",
             "lastRevisionDate": "Last Revision Date",
             "nextRenewalDate": "Next Renewal Date",
             "annullationDate": "Annullation Date",
             "methodType": "Method Type",
-            "sourceType": "Source Type",
-            "endpointLocation": "Endpoint Location",
+            "sourceType": "Tipo de fuente",
+            "endpointLocation": "Localización",
             "srsName": "Srs Name",
             "schemaUri": "Schema Uri",
             "schemaUriGML": "Schema Uri GML",
@@ -49,7 +49,7 @@
             "minY": "Min Y",
             "maxX": "Max X",
             "maxY": "Max Y",
-            "owner": "Owner"
+            "owner": "Propietario"
         }
     }
 }
