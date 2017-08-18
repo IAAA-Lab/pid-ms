@@ -1,4 +1,7 @@
-# pidms
+[![Build Status](https://travis-ci.org/IAAA-Lab/pid-ms.png)](https://travis-ci.org/IAAA-Lab/pid-ms)
+
+# INSPIRE PID Management System
+
 This application was generated using JHipster 4.6.2, you can find documentation and help at [https://jhipster.github.io/documentation-archive/v4.6.2](https://jhipster.github.io/documentation-archive/v4.6.2).
 
 ## Development
