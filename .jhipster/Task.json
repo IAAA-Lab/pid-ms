@@ -1,6 +1,13 @@
 {
     "fluentMethods": true,
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "namespace",
+            "otherEntityName": "namespace",
+            "otherEntityField": "id"
+        }
+    ],
     "fields": [
         {
             "fieldName": "timestamp",
@@ -38,6 +45,6 @@
     "javadoc": "Entity Task",
     "entityTableName": "task",
     "dto": "mapstruct",
-    "pagination": "no",
+    "pagination": "pager",
     "service": "serviceImpl"
 }

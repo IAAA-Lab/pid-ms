@@ -1,5 +1,5 @@
 
-<div>
+<div ng-switch="vm.isAuthenticated()">
     <h2><span data-translate="pidmsApp.namespace.detail.title">Namespace</span> {{vm.namespace.id}}</h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
@@ -12,13 +12,17 @@
         <dd>
             <span>{{vm.namespace.title}}</span>
         </dd>
-        <dt><span data-translate="pidmsApp.namespace.restricted">Restricted</span></dt>
+        <dt><span data-translate="pidmsApp.namespace.publicNamespace">Public Namespace</span></dt>
         <dd>
-            <span>{{vm.namespace.restricted}}</span>
+            <span>{{vm.namespace.publicNamespace}}</span>
         </dd>
         <dt><span data-translate="pidmsApp.namespace.renewalPolicy">Renewal Policy</span></dt>
         <dd>
             <span data-translate="{{'pidmsApp.RenewalPolicy.' + vm.namespace.renewalPolicy}}">{{vm.namespace.renewalPolicy}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.namespace.namespaceStatus">Namespace Status</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.NamespaceStatus.' + vm.namespace.namespaceStatus}}">{{vm.namespace.namespaceStatus}}</span>
         </dd>
         <dt><span data-translate="pidmsApp.namespace.processStatus">Process Status</span></dt>
         <dd>
@@ -52,9 +56,9 @@
         <dd>
             <span data-translate="{{'pidmsApp.MethodType.' + vm.namespace.methodType}}">{{vm.namespace.methodType}}</span>
         </dd>
-        <dt><span data-translate="pidmsApp.namespace.type">Type</span></dt>
+        <dt><span data-translate="pidmsApp.namespace.sourceType">Source Type</span></dt>
         <dd>
-            <span data-translate="{{'pidmsApp.SourceType.' + vm.namespace.type}}">{{vm.namespace.type}}</span>
+            <span data-translate="{{'pidmsApp.SourceType.' + vm.namespace.sourceType}}">{{vm.namespace.sourceType}}</span>
         </dd>
         <dt><span data-translate="pidmsApp.namespace.endpointLocation">Endpoint Location</span></dt>
         <dd>
@@ -138,7 +142,7 @@
         </dd>
         <dt><span data-translate="pidmsApp.namespace.owner">Owner</span></dt>
         <dd>
-            <a ui-sref="group-detail({id:vm.namespace.ownerId})">{{vm.namespace.ownerId}}</a>
+            <a ui-sref="organization-detail({id:vm.namespace.ownerId})">{{vm.namespace.ownerId}}</a>
         </dd>
     </dl>
 
@@ -148,7 +152,10 @@
         <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
     </button>
 
-    <button type="button" ui-sref="namespace-detail.edit({id:vm.namespace.id})" class="btn btn-primary">
+    <button type="button"
+            ui-sref="namespace-detail.edit({id:vm.namespace.id})"
+            class="btn btn-primary"
+            ng-switch-when="true">
         <span class="glyphicon glyphicon-pencil"></span>
         <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
     </button>

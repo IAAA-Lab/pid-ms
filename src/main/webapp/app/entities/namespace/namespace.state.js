@@ -11,9 +11,9 @@
         $stateProvider
         .state('namespace', {
             parent: 'entity',
-            url: '/namespace',
+            url: '/namespace?page&sort&search',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.namespace.home.title'
             },
             views: {
@@ -23,10 +23,31 @@
                     controllerAs: 'vm'
                 }
             },
+            params: {
+                page: {
+                    value: '1',
+                    squash: true
+                },
+                sort: {
+                    value: 'id,asc',
+                    squash: true
+                },
+                search: null
+            },
             resolve: {
+                pagingParams: ['$stateParams', 'PaginationUtil', function ($stateParams, PaginationUtil) {
+                    return {
+                        page: PaginationUtil.parsePage($stateParams.page),
+                        sort: $stateParams.sort,
+                        predicate: PaginationUtil.parsePredicate($stateParams.sort),
+                        ascending: PaginationUtil.parseAscending($stateParams.sort),
+                        search: $stateParams.search
+                    };
+                }],
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('namespace');
                     $translatePartialLoader.addPart('renewalPolicy');
+                    $translatePartialLoader.addPart('namespaceStatus');
                     $translatePartialLoader.addPart('processStatus');
                     $translatePartialLoader.addPart('itemStatus');
                     $translatePartialLoader.addPart('methodType');
@@ -38,9 +59,9 @@
         })
         .state('namespace-detail', {
             parent: 'namespace',
-            url: '/namespace/{id}',
+            url: '/{id}',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.namespace.detail.title'
             },
             views: {
@@ -54,6 +75,7 @@
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('namespace');
                     $translatePartialLoader.addPart('renewalPolicy');
+                    $translatePartialLoader.addPart('namespaceStatus');
                     $translatePartialLoader.addPart('processStatus');
                     $translatePartialLoader.addPart('itemStatus');
                     $translatePartialLoader.addPart('methodType');
@@ -116,8 +138,9 @@
                             return {
                                 namespace: null,
                                 title: null,
-                                restricted: false,
+                                publicNamespace: false,
                                 renewalPolicy: null,
+                                namespaceStatus: null,
                                 processStatus: null,
                                 itemStatus: null,
                                 lastChangeDate: null,
@@ -126,7 +149,7 @@
                                 nextRenewalDate: null,
                                 annullationDate: null,
                                 methodType: null,
-                                type: null,
+                                sourceType: null,
                                 endpointLocation: null,
                                 srsName: null,
                                 schemaUri: null,

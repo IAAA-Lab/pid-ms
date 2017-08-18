@@ -11,9 +11,9 @@
         $stateProvider
         .state('persistent-identifier', {
             parent: 'entity',
-            url: '/persistent-identifier',
+            url: '/persistent-identifier?page&sort&search',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.persistentIdentifier.home.title'
             },
             views: {
@@ -23,7 +23,27 @@
                     controllerAs: 'vm'
                 }
             },
+            params: {
+                page: {
+                    value: '1',
+                    squash: true
+                },
+                sort: {
+                    value: 'id,asc',
+                    squash: true
+                },
+                search: null
+            },
             resolve: {
+                pagingParams: ['$stateParams', 'PaginationUtil', function ($stateParams, PaginationUtil) {
+                    return {
+                        page: PaginationUtil.parsePage($stateParams.page),
+                        sort: $stateParams.sort,
+                        predicate: PaginationUtil.parsePredicate($stateParams.sort),
+                        ascending: PaginationUtil.parseAscending($stateParams.sort),
+                        search: $stateParams.search
+                    };
+                }],
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('persistentIdentifier');
                     $translatePartialLoader.addPart('resourceType');
@@ -36,9 +56,9 @@
         })
         .state('persistent-identifier-detail', {
             parent: 'persistent-identifier',
-            url: '/persistent-identifier/{id}',
+            url: '/{id}',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.persistentIdentifier.detail.title'
             },
             views: {
@@ -110,7 +130,7 @@
                     resolve: {
                         entity: function () {
                             return {
-                                external: null,
+                                externalUrn: null,
                                 feature: null,
                                 resolverProxyMode: null,
                                 namespace: null,
@@ -119,7 +139,7 @@
                                 beginLifespanVersion: null,
                                 endLifespanVersion: null,
                                 alternateId: null,
-                                type: null,
+                                resourceType: null,
                                 locator: null,
                                 processStatus: null,
                                 itemStatus: null,

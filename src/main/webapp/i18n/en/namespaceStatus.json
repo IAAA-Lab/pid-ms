@@ -1,0 +1,9 @@
+{
+    "pidmsApp": {
+        "NamespaceStatus" : {
+            "null": "",
+            "STOP": "STOP",
+            "GO": "GO"
+        }
+    }
+}

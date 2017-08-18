@@ -1,40 +1,52 @@
 package es.unizar.iaaa.pid.service;
 
-import es.unizar.iaaa.pid.service.dto.ChangeDTO;
+import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Task;
+import es.unizar.iaaa.pid.repository.ChangeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
- * Service Interface for managing Change.
+ * Service class for managing changes.
  */
-public interface ChangeService {
+@Service
+@Transactional
+public class ChangeService {
 
-    /**
-     * Save a change.
-     *
-     * @param changeDTO the entity to save
-     * @return the persisted entity
-     */
-    ChangeDTO save(ChangeDTO changeDTO);
+    private final Logger log = LoggerFactory.getLogger(ChangeService.class);
 
-    /**
-     *  Get all the changes.
-     *
-     *  @return the list of entities
-     */
-    List<ChangeDTO> findAll();
+    private final ChangeRepository changeRepository;
 
-    /**
-     *  Get the "id" change.
-     *
-     *  @param id the id of the entity
-     *  @return the entity
-     */
-    ChangeDTO findOne(Long id);
+    public ChangeService(ChangeRepository changeRepository) {
+        this.changeRepository = changeRepository;
+    }
 
-    /**
-     *  Delete the "id" change.
-     *
-     *  @param id the id of the entity
-     */
-    void delete(Long id);
+    public void createChange(Change change) {
+        changeRepository.save(change);
+        log.debug("Created Information for Change: {}", change);
+    }
+
+    public List<Change> findAll() {
+        return changeRepository.findAll();
+    }
+
+    public void deleteAll() {
+        changeRepository.deleteAll();;
+    }
+
+    public List<Change> findByTask(Task task) {
+        return changeRepository.findByTask(task);
+    }
+
+    public Page<Change> findByTaskOrderById(Task task, Pageable pageable) {
+        return changeRepository.findByTaskOrderById(task, pageable);
+    }
+
 }
+

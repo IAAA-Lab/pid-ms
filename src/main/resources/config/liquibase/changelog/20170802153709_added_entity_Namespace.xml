@@ -29,12 +29,16 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="jhi_restricted" type="boolean">
+            <column name="public_namespace" type="boolean">
                 <constraints nullable="false" />
             </column>
 
             <column name="renewal_policy" type="varchar(255)">
                 <constraints nullable="false" />
+            </column>
+
+            <column name="namespace_status" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
 
             <column name="process_status" type="varchar(255)">
@@ -69,7 +73,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="jhi_type" type="varchar(255)">
+            <column name="source_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
 
@@ -157,6 +161,10 @@
                 <constraints nullable="true" />
             </column>
 
+            <column name="version_lock" type="int">
+                <constraints nullable="false" />
+            </column>
+
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         <dropDefaultValue tableName="namespace" columnName="last_change_date" columnDataType="datetime"/>
@@ -164,6 +172,6 @@
         <dropDefaultValue tableName="namespace" columnName="last_revision_date" columnDataType="datetime"/>
         <dropDefaultValue tableName="namespace" columnName="next_renewal_date" columnDataType="datetime"/>
         <dropDefaultValue tableName="namespace" columnName="annullation_date" columnDataType="datetime"/>
-        
+
     </changeSet>
 </databaseChangeLog>

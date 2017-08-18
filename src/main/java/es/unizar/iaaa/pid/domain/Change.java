@@ -1,18 +1,14 @@
 package es.unizar.iaaa.pid.domain;
 
+import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
-
-import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
-
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 
 /**
  * Entity Change
@@ -30,8 +26,8 @@ public class Change implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "jhi_timestamp")
-    private Instant timestamp;
+    @Column(name = "change_timestamp")
+    private Instant changeTimestamp;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "action")
@@ -40,32 +36,14 @@ public class Change implements Serializable {
     @Column(name = "feature")
     private String feature;
 
-    @NotNull
-    @Column(name = "namespace", nullable = false)
-    private String namespace;
+    @Embedded
+    private Identifier identifier;
 
-    @NotNull
-    @Column(name = "local_id", nullable = false)
-    private String localId;
+    @Embedded
+    private Resource resource;
 
-    @Column(name = "version_id")
-    private String versionId;
-
-    @Column(name = "begin_lifespan_version")
-    private Instant beginLifespanVersion;
-
-    @Column(name = "end_lifespan_version")
-    private Instant endLifespanVersion;
-
-    @Column(name = "alternate_id")
-    private String alternateId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "jhi_type")
-    private ResourceType type;
-
-    @Column(name = "locator")
-    private String locator;
+    @ManyToOne
+    private Task task;
 
     public Long getId() {
         return id;
@@ -75,17 +53,17 @@ public class Change implements Serializable {
         this.id = id;
     }
 
-    public Instant getTimestamp() {
-        return timestamp;
+    public Instant getChangeTimestamp() {
+        return changeTimestamp;
     }
 
-    public Change timestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public Change changeTimestamp(Instant changeTimestamp) {
+        this.changeTimestamp = changeTimestamp;
         return this;
     }
 
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public void setChangeTimestamp(Instant changeTimestamp) {
+        this.changeTimestamp = changeTimestamp;
     }
 
     public ChangeAction getAction() {
@@ -114,108 +92,43 @@ public class Change implements Serializable {
         this.feature = feature;
     }
 
-    public String getNamespace() {
-        return namespace;
+    public Identifier getIdentifier() {
+        return identifier;
     }
 
-    public Change namespace(String namespace) {
-        this.namespace = namespace;
+    public Change identifier(Identifier identifier) {
+        this.identifier = identifier;
         return this;
     }
 
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
+    public void setIdentifier(Identifier identifier) {
+        this.identifier = identifier;
     }
 
-    public String getLocalId() {
-        return localId;
+    public Resource getResource() {
+        return resource;
     }
 
-    public Change localId(String localId) {
-        this.localId = localId;
+    public Change resource(Resource resource) {
+        this.resource = resource;
         return this;
     }
 
-    public void setLocalId(String localId) {
-        this.localId = localId;
+    public void setResource(Resource resource) {
+        this.resource = resource;
     }
 
-    public String getVersionId() {
-        return versionId;
+    public Task getTask() {
+        return task;
     }
 
-    public Change versionId(String versionId) {
-        this.versionId = versionId;
+    public Change task(Task task) {
+        this.task = task;
         return this;
     }
 
-    public void setVersionId(String versionId) {
-        this.versionId = versionId;
-    }
-
-    public Instant getBeginLifespanVersion() {
-        return beginLifespanVersion;
-    }
-
-    public Change beginLifespanVersion(Instant beginLifespanVersion) {
-        this.beginLifespanVersion = beginLifespanVersion;
-        return this;
-    }
-
-    public void setBeginLifespanVersion(Instant beginLifespanVersion) {
-        this.beginLifespanVersion = beginLifespanVersion;
-    }
-
-    public Instant getEndLifespanVersion() {
-        return endLifespanVersion;
-    }
-
-    public Change endLifespanVersion(Instant endLifespanVersion) {
-        this.endLifespanVersion = endLifespanVersion;
-        return this;
-    }
-
-    public void setEndLifespanVersion(Instant endLifespanVersion) {
-        this.endLifespanVersion = endLifespanVersion;
-    }
-
-    public String getAlternateId() {
-        return alternateId;
-    }
-
-    public Change alternateId(String alternateId) {
-        this.alternateId = alternateId;
-        return this;
-    }
-
-    public void setAlternateId(String alternateId) {
-        this.alternateId = alternateId;
-    }
-
-    public ResourceType getType() {
-        return type;
-    }
-
-    public Change type(ResourceType type) {
-        this.type = type;
-        return this;
-    }
-
-    public void setType(ResourceType type) {
-        this.type = type;
-    }
-
-    public String getLocator() {
-        return locator;
-    }
-
-    public Change locator(String locator) {
-        this.locator = locator;
-        return this;
-    }
-
-    public void setLocator(String locator) {
-        this.locator = locator;
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     @Override
@@ -242,17 +155,11 @@ public class Change implements Serializable {
     public String toString() {
         return "Change{" +
             "id=" + getId() +
-            ", timestamp='" + getTimestamp() + "'" +
+            ", changeTimestamp='" + getChangeTimestamp() + "'" +
             ", action='" + getAction() + "'" +
             ", feature='" + getFeature() + "'" +
-            ", namespace='" + getNamespace() + "'" +
-            ", localId='" + getLocalId() + "'" +
-            ", versionId='" + getVersionId() + "'" +
-            ", beginLifespanVersion='" + getBeginLifespanVersion() + "'" +
-            ", endLifespanVersion='" + getEndLifespanVersion() + "'" +
-            ", alternateId='" + getAlternateId() + "'" +
-            ", type='" + getType() + "'" +
-            ", locator='" + getLocator() + "'" +
+            ", identifier='" + getIdentifier() + "'" +
+            ", resource='" + getResource() + "'" +
             "}";
     }
 }

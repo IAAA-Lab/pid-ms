@@ -1,9 +1,16 @@
 {
     "fluentMethods": true,
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "task",
+            "otherEntityName": "task",
+            "otherEntityField": "id"
+        }
+    ],
     "fields": [
         {
-            "fieldName": "timestamp",
+            "fieldName": "changeTimestamp",
             "fieldType": "Instant"
         },
         {
@@ -46,7 +53,7 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "type",
+            "fieldName": "resourceType",
             "fieldType": "ResourceType",
             "fieldValues": "DATASET,SPATIAL_OBJECT"
         },
@@ -59,6 +66,6 @@
     "javadoc": "Entity Change",
     "entityTableName": "change",
     "dto": "mapstruct",
-    "pagination": "no",
+    "pagination": "pager",
     "service": "serviceImpl"
 }

@@ -5,9 +5,9 @@
         .module('pidmsApp')
         .controller('NamespaceDialogController', NamespaceDialogController);
 
-    NamespaceDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Namespace', 'Group'];
+    NamespaceDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Namespace', 'Organization'];
 
-    function NamespaceDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Namespace, Group) {
+    function NamespaceDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Namespace, Organization) {
         var vm = this;
 
         vm.namespace = entity;
@@ -15,7 +15,7 @@
         vm.datePickerOpenStatus = {};
         vm.openCalendar = openCalendar;
         vm.save = save;
-        vm.groups = Group.query();
+        vm.organizations = Organization.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

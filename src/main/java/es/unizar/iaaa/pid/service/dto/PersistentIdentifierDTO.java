@@ -1,23 +1,24 @@
 package es.unizar.iaaa.pid.service.dto;
 
 
-import java.time.Instant;
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.util.Objects;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A DTO for the PersistentIdentifier entity.
  */
 public class PersistentIdentifierDTO implements Serializable {
 
-    private Long id;
+    private UUID id;
 
-    @NotNull
-    private String external;
+    private String externalUrn;
 
     @NotNull
     private String feature;
@@ -38,7 +39,7 @@ public class PersistentIdentifierDTO implements Serializable {
 
     private String alternateId;
 
-    private ResourceType type;
+    private ResourceType resourceType;
 
     private String locator;
 
@@ -56,20 +57,20 @@ public class PersistentIdentifierDTO implements Serializable {
 
     private Instant annullationDate;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public String getExternal() {
-        return external;
+    public String getExternalUrn() {
+        return externalUrn;
     }
 
-    public void setExternal(String external) {
-        this.external = external;
+    public void setExternalUrn(String externalUrn) {
+        this.externalUrn = externalUrn;
     }
 
     public String getFeature() {
@@ -136,12 +137,12 @@ public class PersistentIdentifierDTO implements Serializable {
         this.alternateId = alternateId;
     }
 
-    public ResourceType getType() {
-        return type;
+    public ResourceType getResourceType() {
+        return resourceType;
     }
 
-    public void setType(ResourceType type) {
-        this.type = type;
+    public void setResourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
     }
 
     public String getLocator() {
@@ -233,7 +234,7 @@ public class PersistentIdentifierDTO implements Serializable {
     public String toString() {
         return "PersistentIdentifierDTO{" +
             "id=" + getId() +
-            ", external='" + getExternal() + "'" +
+            ", externalUrn='" + getExternalUrn() + "'" +
             ", feature='" + getFeature() + "'" +
             ", resolverProxyMode='" + isResolverProxyMode() + "'" +
             ", namespace='" + getNamespace() + "'" +
@@ -242,7 +243,7 @@ public class PersistentIdentifierDTO implements Serializable {
             ", beginLifespanVersion='" + getBeginLifespanVersion() + "'" +
             ", endLifespanVersion='" + getEndLifespanVersion() + "'" +
             ", alternateId='" + getAlternateId() + "'" +
-            ", type='" + getType() + "'" +
+            ", resourceType='" + getResourceType() + "'" +
             ", locator='" + getLocator() + "'" +
             ", processStatus='" + getProcessStatus() + "'" +
             ", itemStatus='" + getItemStatus() + "'" +

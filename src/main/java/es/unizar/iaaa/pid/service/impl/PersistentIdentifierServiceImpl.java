@@ -1,25 +1,26 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.PersistentIdentifierService;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.repository.PersistentIdentifierRepository;
+import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
 import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
 import es.unizar.iaaa.pid.service.mapper.PersistentIdentifierMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
+
 
 /**
  * Service Implementation for managing PersistentIdentifier.
  */
 @Service
 @Transactional
-public class PersistentIdentifierServiceImpl implements PersistentIdentifierService{
+public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOService {
 
     private final Logger log = LoggerFactory.getLogger(PersistentIdentifierServiceImpl.class);
 
@@ -42,6 +43,7 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierServ
     public PersistentIdentifierDTO save(PersistentIdentifierDTO persistentIdentifierDTO) {
         log.debug("Request to save PersistentIdentifier : {}", persistentIdentifierDTO);
         PersistentIdentifier persistentIdentifier = persistentIdentifierMapper.toEntity(persistentIdentifierDTO);
+        persistentIdentifier.autoId();
         persistentIdentifier = persistentIdentifierRepository.save(persistentIdentifier);
         return persistentIdentifierMapper.toDto(persistentIdentifier);
     }
@@ -49,15 +51,15 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierServ
     /**
      *  Get all the persistentIdentifiers.
      *
+     *  @param pageable the pagination information
      *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
-    public List<PersistentIdentifierDTO> findAll() {
+    public Page<PersistentIdentifierDTO> findAll(Pageable pageable) {
         log.debug("Request to get all PersistentIdentifiers");
-        return persistentIdentifierRepository.findAll().stream()
-            .map(persistentIdentifierMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+        return persistentIdentifierRepository.findAll(pageable)
+            .map(persistentIdentifierMapper::toDto);
     }
 
     /**
@@ -68,7 +70,7 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierServ
      */
     @Override
     @Transactional(readOnly = true)
-    public PersistentIdentifierDTO findOne(Long id) {
+    public PersistentIdentifierDTO findOne(UUID id) {
         log.debug("Request to get PersistentIdentifier : {}", id);
         PersistentIdentifier persistentIdentifier = persistentIdentifierRepository.findOne(id);
         return persistentIdentifierMapper.toDto(persistentIdentifier);
@@ -80,7 +82,7 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierServ
      *  @param id the id of the entity
      */
     @Override
-    public void delete(Long id) {
+    public void delete(UUID id) {
         log.debug("Request to delete PersistentIdentifier : {}", id);
         persistentIdentifierRepository.delete(id);
     }

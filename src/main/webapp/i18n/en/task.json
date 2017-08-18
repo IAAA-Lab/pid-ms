@@ -18,7 +18,8 @@
             "timestamp": "Timestamp",
             "type": "Type",
             "status": "Status",
-            "numErrors": "Num Errors"
+            "numErrors": "Num Errors",
+            "namespace": "Namespace"
         }
     }
 }

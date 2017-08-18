@@ -1,10 +1,12 @@
-<div>
+<div ng-switch="vm.isAuthenticated()">
     <h2 data-translate="pidmsApp.task.home.title">Tasks</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 no-padding-left">
-                <button class="btn btn-primary" ui-sref="task.new" >
+                <button class="btn btn-primary"
+                        ui-sref="task.new"
+                        ng-switch-when="true">
                     <span class="glyphicon glyphicon-plus"></span>
                     <span  data-translate="pidmsApp.task.home.createLabel">
                         Create new Task
@@ -17,12 +19,13 @@
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr>
-                    <th><span data-translate="global.field.id">ID</span></th>
-                    <th><span data-translate="pidmsApp.task.timestamp">Timestamp</span></th>
-                    <th><span data-translate="pidmsApp.task.type">Type</span></th>
-                    <th><span data-translate="pidmsApp.task.status">Status</span></th>
-                    <th><span data-translate="pidmsApp.task.numErrors">Num Errors</span></th>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="timestamp"><span data-translate="pidmsApp.task.timestamp">Timestamp</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="type"><span data-translate="pidmsApp.task.type">Type</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="status"><span data-translate="pidmsApp.task.status">Status</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="numErrors"><span data-translate="pidmsApp.task.numErrors">Num Errors</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="namespaceId"><span data-translate="pidmsApp.task.namespace">Namespace</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -33,6 +36,9 @@
                     <td data-translate="{{'pidmsApp.ProcessStatus.' + task.type}}">{{task.type}}</td>
                     <td data-translate="{{'pidmsApp.TaskStatus.' + task.status}}">{{task.status}}</td>
                     <td>{{task.numErrors}}</td>
+                    <td>
+                        <a ui-sref="namespace-detail({id:task.namespaceId})">{{task.namespaceId}}</a>
+                    </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"
@@ -43,13 +49,15 @@
                             </button>
                             <button type="submit"
                                     ui-sref="task.edit({id:task.id})"
-                                    class="btn btn-primary btn-sm">
+                                    class="btn btn-primary btn-sm"
+                                    ng-switch-when="true">
                                 <span class="glyphicon glyphicon-pencil"></span>
                                 <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
                             </button>
                             <button type="submit"
                                     ui-sref="task.delete({id:task.id})"
-                                    class="btn btn-danger btn-sm">
+                                    class="btn btn-danger btn-sm"
+                                    ng-switch-when="true">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
                                 <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
                             </button>
@@ -59,4 +67,8 @@
             </tbody>
         </table>
     </div>
+    <div class="text-center">
+        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
+    </div>
+    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
 </div>

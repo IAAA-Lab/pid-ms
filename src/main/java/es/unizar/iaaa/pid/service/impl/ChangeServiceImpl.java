@@ -1,25 +1,24 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.ChangeService;
 import es.unizar.iaaa.pid.domain.Change;
 import es.unizar.iaaa.pid.repository.ChangeRepository;
+import es.unizar.iaaa.pid.service.ChangeDTOService;
 import es.unizar.iaaa.pid.service.dto.ChangeDTO;
 import es.unizar.iaaa.pid.service.mapper.ChangeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing Change.
  */
 @Service
 @Transactional
-public class ChangeServiceImpl implements ChangeService{
+public class ChangeServiceImpl implements ChangeDTOService {
 
     private final Logger log = LoggerFactory.getLogger(ChangeServiceImpl.class);
 
@@ -49,15 +48,15 @@ public class ChangeServiceImpl implements ChangeService{
     /**
      *  Get all the changes.
      *
+     *  @param pageable the pagination information
      *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ChangeDTO> findAll() {
+    public Page<ChangeDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Changes");
-        return changeRepository.findAll().stream()
-            .map(changeMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+        return changeRepository.findAll(pageable)
+            .map(changeMapper::toDto);
     }
 
     /**

@@ -1,10 +1,12 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import es.unizar.iaaa.pid.PidmsApp;
-
+import es.unizar.iaaa.pid.domain.BoundingBox;
 import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.domain.Registration;
+import es.unizar.iaaa.pid.domain.Source;
 import es.unizar.iaaa.pid.repository.NamespaceRepository;
-import es.unizar.iaaa.pid.service.NamespaceService;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
@@ -31,9 +33,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import es.unizar.iaaa.pid.domain.enumeration.RenewalPolicy;
+import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.MethodType;
@@ -53,11 +57,14 @@ public class NamespaceResourceIntTest {
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
-    private static final Boolean DEFAULT_RESTRICTED = false;
-    private static final Boolean UPDATED_RESTRICTED = true;
+    private static final Boolean DEFAULT_PUBLIC_NAMESPACE = false;
+    private static final Boolean UPDATED_PUBLIC_NAMESPACE = true;
 
     private static final RenewalPolicy DEFAULT_RENEWAL_POLICY = RenewalPolicy.NONE;
     private static final RenewalPolicy UPDATED_RENEWAL_POLICY = RenewalPolicy.CONTINUOUS;
+
+    private static final NamespaceStatus DEFAULT_NAMESPACE_STATUS = NamespaceStatus.STOP;
+    private static final NamespaceStatus UPDATED_NAMESPACE_STATUS = NamespaceStatus.GO;
 
     private static final ProcessStatus DEFAULT_PROCESS_STATUS = ProcessStatus.PENDING_PREPARING_HARVEST;
     private static final ProcessStatus UPDATED_PROCESS_STATUS = ProcessStatus.PREPARING_HARVEST;
@@ -83,8 +90,8 @@ public class NamespaceResourceIntTest {
     private static final MethodType DEFAULT_METHOD_TYPE = MethodType.GET;
     private static final MethodType UPDATED_METHOD_TYPE = MethodType.POST;
 
-    private static final SourceType DEFAULT_TYPE = SourceType.WFS;
-    private static final SourceType UPDATED_TYPE = SourceType.WFS;
+    private static final SourceType DEFAULT_SOURCE_TYPE = SourceType.WFS;
+    private static final SourceType UPDATED_SOURCE_TYPE = SourceType.WFS;
 
     private static final String DEFAULT_ENDPOINT_LOCATION = "AAAAAAAAAA";
     private static final String UPDATED_ENDPOINT_LOCATION = "BBBBBBBBBB";
@@ -146,6 +153,14 @@ public class NamespaceResourceIntTest {
     private static final Double DEFAULT_MAX_Y = 1D;
     private static final Double UPDATED_MAX_Y = 2D;
 
+    private static final BoundingBox DEFAULT_BOUNDING_BOX = new BoundingBox().
+        maxX(DEFAULT_MAX_X).maxY(DEFAULT_MAX_Y).minY(DEFAULT_MIN_Y).minX(DEFAULT_MIN_X);
+
+    private static final BoundingBox UPDATED_BOUNDING_BOX = new BoundingBox().
+        maxX(UPDATED_MAX_X).maxY(UPDATED_MAX_Y).minY(UPDATED_MIN_Y).minX(UPDATED_MIN_X);
+
+    private static final Integer DEFAULT_VERSION_ID = 1;
+
     @Autowired
     private NamespaceRepository namespaceRepository;
 
@@ -153,7 +168,7 @@ public class NamespaceResourceIntTest {
     private NamespaceMapper namespaceMapper;
 
     @Autowired
-    private NamespaceService namespaceService;
+    private NamespaceDTOService namespaceService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -188,20 +203,9 @@ public class NamespaceResourceIntTest {
      * if they test an entity which requires the current entity.
      */
     public static Namespace createEntity(EntityManager em) {
-        Namespace namespace = new Namespace()
-            .namespace(DEFAULT_NAMESPACE)
-            .title(DEFAULT_TITLE)
-            .restricted(DEFAULT_RESTRICTED)
-            .renewalPolicy(DEFAULT_RENEWAL_POLICY)
-            .processStatus(DEFAULT_PROCESS_STATUS)
-            .itemStatus(DEFAULT_ITEM_STATUS)
-            .lastChangeDate(DEFAULT_LAST_CHANGE_DATE)
-            .registrationDate(DEFAULT_REGISTRATION_DATE)
-            .lastRevisionDate(DEFAULT_LAST_REVISION_DATE)
-            .nextRenewalDate(DEFAULT_NEXT_RENEWAL_DATE)
-            .annullationDate(DEFAULT_ANNULLATION_DATE)
+        Source source = new Source()
             .methodType(DEFAULT_METHOD_TYPE)
-            .type(DEFAULT_TYPE)
+            .sourceType(DEFAULT_SOURCE_TYPE)
             .endpointLocation(DEFAULT_ENDPOINT_LOCATION)
             .srsName(DEFAULT_SRS_NAME)
             .schemaUri(DEFAULT_SCHEMA_URI)
@@ -218,10 +222,27 @@ public class NamespaceResourceIntTest {
             .xpath(DEFAULT_XPATH)
             .nameItem(DEFAULT_NAME_ITEM)
             .maxNumRequest(DEFAULT_MAX_NUM_REQUEST)
-            .minX(DEFAULT_MIN_X)
-            .minY(DEFAULT_MIN_Y)
-            .maxX(DEFAULT_MAX_X)
-            .maxY(DEFAULT_MAX_Y);
+            .boundingBox(DEFAULT_BOUNDING_BOX);
+
+        Registration registration = new Registration()
+            .processStatus(DEFAULT_PROCESS_STATUS)
+            .itemStatus(DEFAULT_ITEM_STATUS)
+            .lastChangeDate(DEFAULT_LAST_CHANGE_DATE)
+            .registrationDate(DEFAULT_REGISTRATION_DATE)
+            .lastRevisionDate(DEFAULT_LAST_REVISION_DATE)
+            .nextRenewalDate(DEFAULT_NEXT_RENEWAL_DATE)
+            .annullationDate(DEFAULT_ANNULLATION_DATE);
+
+        Namespace namespace = new Namespace()
+            .namespace(DEFAULT_NAMESPACE)
+            .title(DEFAULT_TITLE)
+            .publicNamespace(DEFAULT_PUBLIC_NAMESPACE)
+            .renewalPolicy(DEFAULT_RENEWAL_POLICY)
+            .namespaceStatus(DEFAULT_NAMESPACE_STATUS)
+            .registration(registration)
+            .source(source)
+            .version(DEFAULT_VERSION_ID);
+
         return namespace;
     }
 
@@ -248,37 +269,39 @@ public class NamespaceResourceIntTest {
         Namespace testNamespace = namespaceList.get(namespaceList.size() - 1);
         assertThat(testNamespace.getNamespace()).isEqualTo(DEFAULT_NAMESPACE);
         assertThat(testNamespace.getTitle()).isEqualTo(DEFAULT_TITLE);
-        assertThat(testNamespace.isRestricted()).isEqualTo(DEFAULT_RESTRICTED);
+        assertThat(testNamespace.isPublicNamespace()).isEqualTo(DEFAULT_PUBLIC_NAMESPACE);
         assertThat(testNamespace.getRenewalPolicy()).isEqualTo(DEFAULT_RENEWAL_POLICY);
-        assertThat(testNamespace.getProcessStatus()).isEqualTo(DEFAULT_PROCESS_STATUS);
-        assertThat(testNamespace.getItemStatus()).isEqualTo(DEFAULT_ITEM_STATUS);
-        assertThat(testNamespace.getLastChangeDate()).isEqualTo(DEFAULT_LAST_CHANGE_DATE);
-        assertThat(testNamespace.getRegistrationDate()).isEqualTo(DEFAULT_REGISTRATION_DATE);
-        assertThat(testNamespace.getLastRevisionDate()).isEqualTo(DEFAULT_LAST_REVISION_DATE);
-        assertThat(testNamespace.getNextRenewalDate()).isEqualTo(DEFAULT_NEXT_RENEWAL_DATE);
-        assertThat(testNamespace.getAnnullationDate()).isEqualTo(DEFAULT_ANNULLATION_DATE);
-        assertThat(testNamespace.getMethodType()).isEqualTo(DEFAULT_METHOD_TYPE);
-        assertThat(testNamespace.getType()).isEqualTo(DEFAULT_TYPE);
-        assertThat(testNamespace.getEndpointLocation()).isEqualTo(DEFAULT_ENDPOINT_LOCATION);
-        assertThat(testNamespace.getSrsName()).isEqualTo(DEFAULT_SRS_NAME);
-        assertThat(testNamespace.getSchemaUri()).isEqualTo(DEFAULT_SCHEMA_URI);
-        assertThat(testNamespace.getSchemaUriGML()).isEqualTo(DEFAULT_SCHEMA_URI_GML);
-        assertThat(testNamespace.getSchemaUriBase()).isEqualTo(DEFAULT_SCHEMA_URI_BASE);
-        assertThat(testNamespace.getSchemaPrefix()).isEqualTo(DEFAULT_SCHEMA_PREFIX);
-        assertThat(testNamespace.getFeatureType()).isEqualTo(DEFAULT_FEATURE_TYPE);
-        assertThat(testNamespace.getGeometryProperty()).isEqualTo(DEFAULT_GEOMETRY_PROPERTY);
-        assertThat(testNamespace.getBeginLifespanVersionProperty()).isEqualTo(DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY);
-        assertThat(testNamespace.getFeaturesThreshold()).isEqualTo(DEFAULT_FEATURES_THRESHOLD);
-        assertThat(testNamespace.isResolverProxyMode()).isEqualTo(DEFAULT_RESOLVER_PROXY_MODE);
-        assertThat(testNamespace.isHitsRequest()).isEqualTo(DEFAULT_HITS_REQUEST);
-        assertThat(testNamespace.getFactorK()).isEqualTo(DEFAULT_FACTOR_K);
-        assertThat(testNamespace.getXpath()).isEqualTo(DEFAULT_XPATH);
-        assertThat(testNamespace.getNameItem()).isEqualTo(DEFAULT_NAME_ITEM);
-        assertThat(testNamespace.getMaxNumRequest()).isEqualTo(DEFAULT_MAX_NUM_REQUEST);
-        assertThat(testNamespace.getMinX()).isEqualTo(DEFAULT_MIN_X);
-        assertThat(testNamespace.getMinY()).isEqualTo(DEFAULT_MIN_Y);
-        assertThat(testNamespace.getMaxX()).isEqualTo(DEFAULT_MAX_X);
-        assertThat(testNamespace.getMaxY()).isEqualTo(DEFAULT_MAX_Y);
+        assertThat(testNamespace.getNamespaceStatus()).isEqualTo(DEFAULT_NAMESPACE_STATUS);
+        assertThat(testNamespace.getRegistration().getProcessStatus()).isEqualTo(DEFAULT_PROCESS_STATUS);
+        assertThat(testNamespace.getRegistration().getItemStatus()).isEqualTo(DEFAULT_ITEM_STATUS);
+        assertThat(testNamespace.getRegistration().getLastChangeDate()).isEqualTo(DEFAULT_LAST_CHANGE_DATE);
+        assertThat(testNamespace.getRegistration().getRegistrationDate()).isEqualTo(DEFAULT_REGISTRATION_DATE);
+        assertThat(testNamespace.getRegistration().getLastRevisionDate()).isEqualTo(DEFAULT_LAST_REVISION_DATE);
+        assertThat(testNamespace.getRegistration().getNextRenewalDate()).isEqualTo(DEFAULT_NEXT_RENEWAL_DATE);
+        assertThat(testNamespace.getRegistration().getAnnullationDate()).isEqualTo(DEFAULT_ANNULLATION_DATE);
+        assertThat(testNamespace.getSource().getMethodType()).isEqualTo(DEFAULT_METHOD_TYPE);
+        assertThat(testNamespace.getSource().getSourceType()).isEqualTo(DEFAULT_SOURCE_TYPE);
+        assertThat(testNamespace.getSource().getEndpointLocation()).isEqualTo(DEFAULT_ENDPOINT_LOCATION);
+        assertThat(testNamespace.getSource().getSrsName()).isEqualTo(DEFAULT_SRS_NAME);
+        assertThat(testNamespace.getSource().getSchemaUri()).isEqualTo(DEFAULT_SCHEMA_URI);
+        assertThat(testNamespace.getSource().getSchemaUriGML()).isEqualTo(DEFAULT_SCHEMA_URI_GML);
+        assertThat(testNamespace.getSource().getSchemaUriBase()).isEqualTo(DEFAULT_SCHEMA_URI_BASE);
+        assertThat(testNamespace.getSource().getSchemaPrefix()).isEqualTo(DEFAULT_SCHEMA_PREFIX);
+        assertThat(testNamespace.getSource().getFeatureType()).isEqualTo(DEFAULT_FEATURE_TYPE);
+        assertThat(testNamespace.getSource().getGeometryProperty()).isEqualTo(DEFAULT_GEOMETRY_PROPERTY);
+        assertThat(testNamespace.getSource().getBeginLifespanVersionProperty()).isEqualTo(DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY);
+        assertThat(testNamespace.getSource().getFeaturesThreshold()).isEqualTo(DEFAULT_FEATURES_THRESHOLD);
+        assertThat(testNamespace.getSource().isResolverProxyMode()).isEqualTo(DEFAULT_RESOLVER_PROXY_MODE);
+        assertThat(testNamespace.getSource().isHitsRequest()).isEqualTo(DEFAULT_HITS_REQUEST);
+        assertThat(testNamespace.getSource().getFactorK()).isEqualTo(DEFAULT_FACTOR_K);
+        assertThat(testNamespace.getSource().getXpath()).isEqualTo(DEFAULT_XPATH);
+        assertThat(testNamespace.getSource().getNameItem()).isEqualTo(DEFAULT_NAME_ITEM);
+        assertThat(testNamespace.getSource().getMaxNumRequest()).isEqualTo(DEFAULT_MAX_NUM_REQUEST);
+        assertThat(testNamespace.getSource().getBoundingBox().getMinX()).isEqualTo(DEFAULT_MIN_X);
+        assertThat(testNamespace.getSource().getBoundingBox().getMinY()).isEqualTo(DEFAULT_MIN_Y);
+        assertThat(testNamespace.getSource().getBoundingBox().getMaxX()).isEqualTo(DEFAULT_MAX_X);
+        assertThat(testNamespace.getSource().getBoundingBox().getMaxY()).isEqualTo(DEFAULT_MAX_Y);
+        assertThat(testNamespace.getVersion()).isEqualTo(DEFAULT_VERSION_ID);
     }
 
     @Test
@@ -322,10 +345,10 @@ public class NamespaceResourceIntTest {
 
     @Test
     @Transactional
-    public void checkRestrictedIsRequired() throws Exception {
+    public void checkPublicNamespaceIsRequired() throws Exception {
         int databaseSizeBeforeTest = namespaceRepository.findAll().size();
         // set the field null
-        namespace.setRestricted(null);
+        namespace.setPublicNamespace(null);
 
         // Create the Namespace, which fails.
         NamespaceDTO namespaceDTO = namespaceMapper.toDto(namespace);
@@ -362,7 +385,7 @@ public class NamespaceResourceIntTest {
     @Transactional
     public void getAllNamespaces() throws Exception {
         // Initialize the database
-        namespaceRepository.saveAndFlush(namespace);
+        namespace = namespaceRepository.saveAndFlush(namespace);
 
         // Get all the namespaceList
         restNamespaceMockMvc.perform(get("/api/namespaces?sort=id,desc"))
@@ -371,8 +394,9 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(namespace.getId().intValue())))
             .andExpect(jsonPath("$.[*].namespace").value(hasItem(DEFAULT_NAMESPACE.toString())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
-            .andExpect(jsonPath("$.[*].restricted").value(hasItem(DEFAULT_RESTRICTED.booleanValue())))
+            .andExpect(jsonPath("$.[*].publicNamespace").value(hasItem(DEFAULT_PUBLIC_NAMESPACE.booleanValue())))
             .andExpect(jsonPath("$.[*].renewalPolicy").value(hasItem(DEFAULT_RENEWAL_POLICY.toString())))
+            .andExpect(jsonPath("$.[*].namespaceStatus").value(hasItem(DEFAULT_NAMESPACE_STATUS.toString())))
             .andExpect(jsonPath("$.[*].processStatus").value(hasItem(DEFAULT_PROCESS_STATUS.toString())))
             .andExpect(jsonPath("$.[*].itemStatus").value(hasItem(DEFAULT_ITEM_STATUS.toString())))
             .andExpect(jsonPath("$.[*].lastChangeDate").value(hasItem(DEFAULT_LAST_CHANGE_DATE.toString())))
@@ -381,7 +405,7 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.[*].nextRenewalDate").value(hasItem(DEFAULT_NEXT_RENEWAL_DATE.toString())))
             .andExpect(jsonPath("$.[*].annullationDate").value(hasItem(DEFAULT_ANNULLATION_DATE.toString())))
             .andExpect(jsonPath("$.[*].methodType").value(hasItem(DEFAULT_METHOD_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].sourceType").value(hasItem(DEFAULT_SOURCE_TYPE.toString())))
             .andExpect(jsonPath("$.[*].endpointLocation").value(hasItem(DEFAULT_ENDPOINT_LOCATION.toString())))
             .andExpect(jsonPath("$.[*].srsName").value(hasItem(DEFAULT_SRS_NAME.toString())))
             .andExpect(jsonPath("$.[*].schemaUri").value(hasItem(DEFAULT_SCHEMA_URI.toString())))
@@ -408,7 +432,7 @@ public class NamespaceResourceIntTest {
     @Transactional
     public void getNamespace() throws Exception {
         // Initialize the database
-        namespaceRepository.saveAndFlush(namespace);
+        namespace = namespaceRepository.saveAndFlush(namespace);
 
         // Get the namespace
         restNamespaceMockMvc.perform(get("/api/namespaces/{id}", namespace.getId()))
@@ -417,8 +441,9 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.id").value(namespace.getId().intValue()))
             .andExpect(jsonPath("$.namespace").value(DEFAULT_NAMESPACE.toString()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
-            .andExpect(jsonPath("$.restricted").value(DEFAULT_RESTRICTED.booleanValue()))
+            .andExpect(jsonPath("$.publicNamespace").value(DEFAULT_PUBLIC_NAMESPACE.booleanValue()))
             .andExpect(jsonPath("$.renewalPolicy").value(DEFAULT_RENEWAL_POLICY.toString()))
+            .andExpect(jsonPath("$.namespaceStatus").value(DEFAULT_NAMESPACE_STATUS.toString()))
             .andExpect(jsonPath("$.processStatus").value(DEFAULT_PROCESS_STATUS.toString()))
             .andExpect(jsonPath("$.itemStatus").value(DEFAULT_ITEM_STATUS.toString()))
             .andExpect(jsonPath("$.lastChangeDate").value(DEFAULT_LAST_CHANGE_DATE.toString()))
@@ -427,7 +452,7 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.nextRenewalDate").value(DEFAULT_NEXT_RENEWAL_DATE.toString()))
             .andExpect(jsonPath("$.annullationDate").value(DEFAULT_ANNULLATION_DATE.toString()))
             .andExpect(jsonPath("$.methodType").value(DEFAULT_METHOD_TYPE.toString()))
-            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
+            .andExpect(jsonPath("$.sourceType").value(DEFAULT_SOURCE_TYPE.toString()))
             .andExpect(jsonPath("$.endpointLocation").value(DEFAULT_ENDPOINT_LOCATION.toString()))
             .andExpect(jsonPath("$.srsName").value(DEFAULT_SRS_NAME.toString()))
             .andExpect(jsonPath("$.schemaUri").value(DEFAULT_SCHEMA_URI.toString()))
@@ -462,25 +487,21 @@ public class NamespaceResourceIntTest {
     @Transactional
     public void updateNamespace() throws Exception {
         // Initialize the database
-        namespaceRepository.saveAndFlush(namespace);
+        namespace = namespaceRepository.saveAndFlush(namespace);
         int databaseSizeBeforeUpdate = namespaceRepository.findAll().size();
 
         // Update the namespace
         Namespace updatedNamespace = namespaceRepository.findOne(namespace.getId());
+
         updatedNamespace
             .namespace(UPDATED_NAMESPACE)
             .title(UPDATED_TITLE)
-            .restricted(UPDATED_RESTRICTED)
+            .publicNamespace(UPDATED_PUBLIC_NAMESPACE)
             .renewalPolicy(UPDATED_RENEWAL_POLICY)
-            .processStatus(UPDATED_PROCESS_STATUS)
-            .itemStatus(UPDATED_ITEM_STATUS)
-            .lastChangeDate(UPDATED_LAST_CHANGE_DATE)
-            .registrationDate(UPDATED_REGISTRATION_DATE)
-            .lastRevisionDate(UPDATED_LAST_REVISION_DATE)
-            .nextRenewalDate(UPDATED_NEXT_RENEWAL_DATE)
-            .annullationDate(UPDATED_ANNULLATION_DATE)
+            .namespaceStatus(UPDATED_NAMESPACE_STATUS)
+            .getSource()
             .methodType(UPDATED_METHOD_TYPE)
-            .type(UPDATED_TYPE)
+            .sourceType(UPDATED_SOURCE_TYPE)
             .endpointLocation(UPDATED_ENDPOINT_LOCATION)
             .srsName(UPDATED_SRS_NAME)
             .schemaUri(UPDATED_SCHEMA_URI)
@@ -497,10 +518,17 @@ public class NamespaceResourceIntTest {
             .xpath(UPDATED_XPATH)
             .nameItem(UPDATED_NAME_ITEM)
             .maxNumRequest(UPDATED_MAX_NUM_REQUEST)
-            .minX(UPDATED_MIN_X)
-            .minY(UPDATED_MIN_Y)
-            .maxX(UPDATED_MAX_X)
-            .maxY(UPDATED_MAX_Y);
+            .boundingBox(UPDATED_BOUNDING_BOX);
+
+        updatedNamespace.getRegistration()
+            .processStatus(UPDATED_PROCESS_STATUS)
+            .itemStatus(UPDATED_ITEM_STATUS)
+            .lastChangeDate(UPDATED_LAST_CHANGE_DATE)
+            .registrationDate(UPDATED_REGISTRATION_DATE)
+            .lastRevisionDate(UPDATED_LAST_REVISION_DATE)
+            .nextRenewalDate(UPDATED_NEXT_RENEWAL_DATE)
+            .annullationDate(UPDATED_ANNULLATION_DATE);
+
         NamespaceDTO namespaceDTO = namespaceMapper.toDto(updatedNamespace);
 
         restNamespaceMockMvc.perform(put("/api/namespaces")
@@ -514,37 +542,38 @@ public class NamespaceResourceIntTest {
         Namespace testNamespace = namespaceList.get(namespaceList.size() - 1);
         assertThat(testNamespace.getNamespace()).isEqualTo(UPDATED_NAMESPACE);
         assertThat(testNamespace.getTitle()).isEqualTo(UPDATED_TITLE);
-        assertThat(testNamespace.isRestricted()).isEqualTo(UPDATED_RESTRICTED);
+        assertThat(testNamespace.isPublicNamespace()).isEqualTo(UPDATED_PUBLIC_NAMESPACE);
         assertThat(testNamespace.getRenewalPolicy()).isEqualTo(UPDATED_RENEWAL_POLICY);
-        assertThat(testNamespace.getProcessStatus()).isEqualTo(UPDATED_PROCESS_STATUS);
-        assertThat(testNamespace.getItemStatus()).isEqualTo(UPDATED_ITEM_STATUS);
-        assertThat(testNamespace.getLastChangeDate()).isEqualTo(UPDATED_LAST_CHANGE_DATE);
-        assertThat(testNamespace.getRegistrationDate()).isEqualTo(UPDATED_REGISTRATION_DATE);
-        assertThat(testNamespace.getLastRevisionDate()).isEqualTo(UPDATED_LAST_REVISION_DATE);
-        assertThat(testNamespace.getNextRenewalDate()).isEqualTo(UPDATED_NEXT_RENEWAL_DATE);
-        assertThat(testNamespace.getAnnullationDate()).isEqualTo(UPDATED_ANNULLATION_DATE);
-        assertThat(testNamespace.getMethodType()).isEqualTo(UPDATED_METHOD_TYPE);
-        assertThat(testNamespace.getType()).isEqualTo(UPDATED_TYPE);
-        assertThat(testNamespace.getEndpointLocation()).isEqualTo(UPDATED_ENDPOINT_LOCATION);
-        assertThat(testNamespace.getSrsName()).isEqualTo(UPDATED_SRS_NAME);
-        assertThat(testNamespace.getSchemaUri()).isEqualTo(UPDATED_SCHEMA_URI);
-        assertThat(testNamespace.getSchemaUriGML()).isEqualTo(UPDATED_SCHEMA_URI_GML);
-        assertThat(testNamespace.getSchemaUriBase()).isEqualTo(UPDATED_SCHEMA_URI_BASE);
-        assertThat(testNamespace.getSchemaPrefix()).isEqualTo(UPDATED_SCHEMA_PREFIX);
-        assertThat(testNamespace.getFeatureType()).isEqualTo(UPDATED_FEATURE_TYPE);
-        assertThat(testNamespace.getGeometryProperty()).isEqualTo(UPDATED_GEOMETRY_PROPERTY);
-        assertThat(testNamespace.getBeginLifespanVersionProperty()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION_PROPERTY);
-        assertThat(testNamespace.getFeaturesThreshold()).isEqualTo(UPDATED_FEATURES_THRESHOLD);
-        assertThat(testNamespace.isResolverProxyMode()).isEqualTo(UPDATED_RESOLVER_PROXY_MODE);
-        assertThat(testNamespace.isHitsRequest()).isEqualTo(UPDATED_HITS_REQUEST);
-        assertThat(testNamespace.getFactorK()).isEqualTo(UPDATED_FACTOR_K);
-        assertThat(testNamespace.getXpath()).isEqualTo(UPDATED_XPATH);
-        assertThat(testNamespace.getNameItem()).isEqualTo(UPDATED_NAME_ITEM);
-        assertThat(testNamespace.getMaxNumRequest()).isEqualTo(UPDATED_MAX_NUM_REQUEST);
-        assertThat(testNamespace.getMinX()).isEqualTo(UPDATED_MIN_X);
-        assertThat(testNamespace.getMinY()).isEqualTo(UPDATED_MIN_Y);
-        assertThat(testNamespace.getMaxX()).isEqualTo(UPDATED_MAX_X);
-        assertThat(testNamespace.getMaxY()).isEqualTo(UPDATED_MAX_Y);
+        assertThat(testNamespace.getNamespaceStatus()).isEqualTo(UPDATED_NAMESPACE_STATUS);
+        assertThat(testNamespace.getRegistration().getProcessStatus()).isEqualTo(UPDATED_PROCESS_STATUS);
+        assertThat(testNamespace.getRegistration().getItemStatus()).isEqualTo(UPDATED_ITEM_STATUS);
+        assertThat(testNamespace.getRegistration().getLastChangeDate()).isEqualTo(UPDATED_LAST_CHANGE_DATE);
+        assertThat(testNamespace.getRegistration().getRegistrationDate()).isEqualTo(UPDATED_REGISTRATION_DATE);
+        assertThat(testNamespace.getRegistration().getLastRevisionDate()).isEqualTo(UPDATED_LAST_REVISION_DATE);
+        assertThat(testNamespace.getRegistration().getNextRenewalDate()).isEqualTo(UPDATED_NEXT_RENEWAL_DATE);
+        assertThat(testNamespace.getRegistration().getAnnullationDate()).isEqualTo(UPDATED_ANNULLATION_DATE);
+        assertThat(testNamespace.getSource().getMethodType()).isEqualTo(UPDATED_METHOD_TYPE);
+        assertThat(testNamespace.getSource().getSourceType()).isEqualTo(UPDATED_SOURCE_TYPE);
+        assertThat(testNamespace.getSource().getEndpointLocation()).isEqualTo(UPDATED_ENDPOINT_LOCATION);
+        assertThat(testNamespace.getSource().getSrsName()).isEqualTo(UPDATED_SRS_NAME);
+        assertThat(testNamespace.getSource().getSchemaUri()).isEqualTo(UPDATED_SCHEMA_URI);
+        assertThat(testNamespace.getSource().getSchemaUriGML()).isEqualTo(UPDATED_SCHEMA_URI_GML);
+        assertThat(testNamespace.getSource().getSchemaUriBase()).isEqualTo(UPDATED_SCHEMA_URI_BASE);
+        assertThat(testNamespace.getSource().getSchemaPrefix()).isEqualTo(UPDATED_SCHEMA_PREFIX);
+        assertThat(testNamespace.getSource().getFeatureType()).isEqualTo(UPDATED_FEATURE_TYPE);
+        assertThat(testNamespace.getSource().getGeometryProperty()).isEqualTo(UPDATED_GEOMETRY_PROPERTY);
+        assertThat(testNamespace.getSource().getBeginLifespanVersionProperty()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION_PROPERTY);
+        assertThat(testNamespace.getSource().getFeaturesThreshold()).isEqualTo(UPDATED_FEATURES_THRESHOLD);
+        assertThat(testNamespace.getSource().isResolverProxyMode()).isEqualTo(UPDATED_RESOLVER_PROXY_MODE);
+        assertThat(testNamespace.getSource().isHitsRequest()).isEqualTo(UPDATED_HITS_REQUEST);
+        assertThat(testNamespace.getSource().getFactorK()).isEqualTo(UPDATED_FACTOR_K);
+        assertThat(testNamespace.getSource().getXpath()).isEqualTo(UPDATED_XPATH);
+        assertThat(testNamespace.getSource().getNameItem()).isEqualTo(UPDATED_NAME_ITEM);
+        assertThat(testNamespace.getSource().getMaxNumRequest()).isEqualTo(UPDATED_MAX_NUM_REQUEST);
+        assertThat(testNamespace.getSource().getBoundingBox().getMinX()).isEqualTo(UPDATED_MIN_X);
+        assertThat(testNamespace.getSource().getBoundingBox().getMinY()).isEqualTo(UPDATED_MIN_Y);
+        assertThat(testNamespace.getSource().getBoundingBox().getMaxX()).isEqualTo(UPDATED_MAX_X);
+        assertThat(testNamespace.getSource().getBoundingBox().getMaxY()).isEqualTo(UPDATED_MAX_Y);
     }
 
     @Test
@@ -570,7 +599,7 @@ public class NamespaceResourceIntTest {
     @Transactional
     public void deleteNamespace() throws Exception {
         // Initialize the database
-        namespaceRepository.saveAndFlush(namespace);
+        namespace = namespaceRepository.saveAndFlush(namespace);
         int databaseSizeBeforeDelete = namespaceRepository.findAll().size();
 
         // Get the namespace

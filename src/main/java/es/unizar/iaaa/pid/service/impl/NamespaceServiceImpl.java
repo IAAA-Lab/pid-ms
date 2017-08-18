@@ -1,25 +1,24 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.NamespaceService;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.repository.NamespaceRepository;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing Namespace.
  */
 @Service
 @Transactional
-public class NamespaceServiceImpl implements NamespaceService{
+public class NamespaceServiceImpl implements NamespaceDTOService {
 
     private final Logger log = LoggerFactory.getLogger(NamespaceServiceImpl.class);
 
@@ -49,15 +48,15 @@ public class NamespaceServiceImpl implements NamespaceService{
     /**
      *  Get all the namespaces.
      *
+     *  @param pageable the pagination information
      *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
-    public List<NamespaceDTO> findAll() {
+    public Page<NamespaceDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Namespaces");
-        return namespaceRepository.findAll().stream()
-            .map(namespaceMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+        return namespaceRepository.findAll(namespaceMapper.toPage(pageable))
+            .map(namespaceMapper::toDto);
     }
 
     /**

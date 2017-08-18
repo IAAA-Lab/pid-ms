@@ -1,12 +1,12 @@
 
-<div>
+<div ng-switch="vm.isAuthenticated()">
     <h2><span data-translate="pidmsApp.change.detail.title">Change</span> {{vm.change.id}}</h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span data-translate="pidmsApp.change.timestamp">Timestamp</span></dt>
+        <dt><span data-translate="pidmsApp.change.changeTimestamp">Change Timestamp</span></dt>
         <dd>
-            <span>{{vm.change.timestamp | date:'medium'}}</span>
+            <span>{{vm.change.changeTimestamp | date:'medium'}}</span>
         </dd>
         <dt><span data-translate="pidmsApp.change.action">Action</span></dt>
         <dd>
@@ -40,13 +40,17 @@
         <dd>
             <span>{{vm.change.alternateId}}</span>
         </dd>
-        <dt><span data-translate="pidmsApp.change.type">Type</span></dt>
+        <dt><span data-translate="pidmsApp.change.resourceType">Resource Type</span></dt>
         <dd>
-            <span data-translate="{{'pidmsApp.ResourceType.' + vm.change.type}}">{{vm.change.type}}</span>
+            <span data-translate="{{'pidmsApp.ResourceType.' + vm.change.resourceType}}">{{vm.change.resourceType}}</span>
         </dd>
         <dt><span data-translate="pidmsApp.change.locator">Locator</span></dt>
         <dd>
             <span>{{vm.change.locator}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.change.task">Task</span></dt>
+        <dd>
+            <a ui-sref="task-detail({id:vm.change.taskId})">{{vm.change.taskId}}</a>
         </dd>
     </dl>
 
@@ -56,7 +60,10 @@
         <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
     </button>
 
-    <button type="button" ui-sref="change-detail.edit({id:vm.change.id})" class="btn btn-primary">
+    <button type="button"
+            ui-sref="change-detail.edit({id:vm.change.id})"
+            class="btn btn-primary"
+            ng-switch-when="true">
         <span class="glyphicon glyphicon-pencil"></span>
         <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
     </button>

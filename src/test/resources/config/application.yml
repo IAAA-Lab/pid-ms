@@ -15,7 +15,7 @@
 
 eureka:
     client:
-        enabled: true
+        enabled: false
     instance:
         appname: pidms
         instanceId: pidms:${spring.application.instance-id:${random.value}}
@@ -29,7 +29,7 @@ spring:
         type: none
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:h2:mem:pidms;DB_CLOSE_DELAY=-1
+        url: jdbc:h2:mem:pidms;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
         name:
         username:
         password:
@@ -113,3 +113,5 @@ jhipster:
 # ===================================================================
 
 application:
+    resolver:
+        metadata-base: http://pid.inspire.gob.es

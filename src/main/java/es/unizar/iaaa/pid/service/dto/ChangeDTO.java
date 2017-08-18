@@ -1,12 +1,13 @@
 package es.unizar.iaaa.pid.service.dto;
 
 
-import java.time.Instant;
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.util.Objects;
 import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
 import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.Objects;
 
 /**
  * A DTO for the Change entity.
@@ -15,7 +16,7 @@ public class ChangeDTO implements Serializable {
 
     private Long id;
 
-    private Instant timestamp;
+    private Instant changeTimestamp;
 
     private ChangeAction action;
 
@@ -35,9 +36,11 @@ public class ChangeDTO implements Serializable {
 
     private String alternateId;
 
-    private ResourceType type;
+    private ResourceType resourceType;
 
     private String locator;
+
+    private Long taskId;
 
     public Long getId() {
         return id;
@@ -47,12 +50,12 @@ public class ChangeDTO implements Serializable {
         this.id = id;
     }
 
-    public Instant getTimestamp() {
-        return timestamp;
+    public Instant getChangeTimestamp() {
+        return changeTimestamp;
     }
 
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
+    public void setChangeTimestamp(Instant changeTimestamp) {
+        this.changeTimestamp = changeTimestamp;
     }
 
     public ChangeAction getAction() {
@@ -119,12 +122,12 @@ public class ChangeDTO implements Serializable {
         this.alternateId = alternateId;
     }
 
-    public ResourceType getType() {
-        return type;
+    public ResourceType getResourceType() {
+        return resourceType;
     }
 
-    public void setType(ResourceType type) {
-        this.type = type;
+    public void setResourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
     }
 
     public String getLocator() {
@@ -133,6 +136,14 @@ public class ChangeDTO implements Serializable {
 
     public void setLocator(String locator) {
         this.locator = locator;
+    }
+
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     @Override
@@ -160,7 +171,7 @@ public class ChangeDTO implements Serializable {
     public String toString() {
         return "ChangeDTO{" +
             "id=" + getId() +
-            ", timestamp='" + getTimestamp() + "'" +
+            ", changeTimestamp='" + getChangeTimestamp() + "'" +
             ", action='" + getAction() + "'" +
             ", feature='" + getFeature() + "'" +
             ", namespace='" + getNamespace() + "'" +
@@ -169,7 +180,7 @@ public class ChangeDTO implements Serializable {
             ", beginLifespanVersion='" + getBeginLifespanVersion() + "'" +
             ", endLifespanVersion='" + getEndLifespanVersion() + "'" +
             ", alternateId='" + getAlternateId() + "'" +
-            ", type='" + getType() + "'" +
+            ", resourceType='" + getResourceType() + "'" +
             ", locator='" + getLocator() + "'" +
             "}";
     }

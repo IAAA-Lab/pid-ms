@@ -1,10 +1,12 @@
-<div>
+<div ng-switch="vm.isAuthenticated()">
     <h2 data-translate="pidmsApp.change.home.title">Changes</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 no-padding-left">
-                <button class="btn btn-primary" ui-sref="change.new" >
+                <button class="btn btn-primary"
+                        ui-sref="change.new"
+                        ng-switch-when="true">
                     <span class="glyphicon glyphicon-plus"></span>
                     <span  data-translate="pidmsApp.change.home.createLabel">
                         Create new Change
@@ -17,26 +19,27 @@
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr>
-                    <th><span data-translate="global.field.id">ID</span></th>
-                    <th><span data-translate="pidmsApp.change.timestamp">Timestamp</span></th>
-                    <th><span data-translate="pidmsApp.change.action">Action</span></th>
-                    <th><span data-translate="pidmsApp.change.feature">Feature</span></th>
-                    <th><span data-translate="pidmsApp.change.namespace">Namespace</span></th>
-                    <th><span data-translate="pidmsApp.change.localId">Local Id</span></th>
-                    <th><span data-translate="pidmsApp.change.versionId">Version Id</span></th>
-                    <th><span data-translate="pidmsApp.change.beginLifespanVersion">Begin Lifespan Version</span></th>
-                    <th><span data-translate="pidmsApp.change.endLifespanVersion">End Lifespan Version</span></th>
-                    <th><span data-translate="pidmsApp.change.alternateId">Alternate Id</span></th>
-                    <th><span data-translate="pidmsApp.change.type">Type</span></th>
-                    <th><span data-translate="pidmsApp.change.locator">Locator</span></th>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="changeTimestamp"><span data-translate="pidmsApp.change.changeTimestamp">Change Timestamp</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="action"><span data-translate="pidmsApp.change.action">Action</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="feature"><span data-translate="pidmsApp.change.feature">Feature</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="namespace"><span data-translate="pidmsApp.change.namespace">Namespace</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="localId"><span data-translate="pidmsApp.change.localId">Local Id</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="versionId"><span data-translate="pidmsApp.change.versionId">Version Id</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="beginLifespanVersion"><span data-translate="pidmsApp.change.beginLifespanVersion">Begin Lifespan Version</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="endLifespanVersion"><span data-translate="pidmsApp.change.endLifespanVersion">End Lifespan Version</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="alternateId"><span data-translate="pidmsApp.change.alternateId">Alternate Id</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="resourceType"><span data-translate="pidmsApp.change.resourceType">Resource Type</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="locator"><span data-translate="pidmsApp.change.locator">Locator</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="taskId"><span data-translate="pidmsApp.change.task">Task</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="change in vm.changes track by change.id">
                     <td><a ui-sref="change-detail({id:change.id})">{{change.id}}</a></td>
-                    <td>{{change.timestamp | date:'medium'}}</td>
+                    <td>{{change.changeTimestamp | date:'medium'}}</td>
                     <td data-translate="{{'pidmsApp.ChangeAction.' + change.action}}">{{change.action}}</td>
                     <td>{{change.feature}}</td>
                     <td>{{change.namespace}}</td>
@@ -45,8 +48,11 @@
                     <td>{{change.beginLifespanVersion | date:'medium'}}</td>
                     <td>{{change.endLifespanVersion | date:'medium'}}</td>
                     <td>{{change.alternateId}}</td>
-                    <td data-translate="{{'pidmsApp.ResourceType.' + change.type}}">{{change.type}}</td>
+                    <td data-translate="{{'pidmsApp.ResourceType.' + change.resourceType}}">{{change.resourceType}}</td>
                     <td>{{change.locator}}</td>
+                    <td>
+                        <a ui-sref="task-detail({id:change.taskId})">{{change.taskId}}</a>
+                    </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"
@@ -57,13 +63,15 @@
                             </button>
                             <button type="submit"
                                     ui-sref="change.edit({id:change.id})"
-                                    class="btn btn-primary btn-sm">
+                                    class="btn btn-primary btn-sm"
+                                    ng-switch-when="true">>
                                 <span class="glyphicon glyphicon-pencil"></span>
                                 <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
                             </button>
                             <button type="submit"
                                     ui-sref="change.delete({id:change.id})"
-                                    class="btn btn-danger btn-sm">
+                                    class="btn btn-danger btn-sm"
+                                    ng-switch-when="true">>
                                 <span class="glyphicon glyphicon-remove-circle"></span>
                                 <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
                             </button>
@@ -73,4 +81,8 @@
             </tbody>
         </table>
     </div>
+    <div class="text-center">
+        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
+    </div>
+    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
 </div>

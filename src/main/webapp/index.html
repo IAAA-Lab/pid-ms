@@ -20,6 +20,8 @@
     <!-- endbuild -->
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="manifest" href="manifest.webapp" />
+    <!-- HTML 5 mode -->
+    <base href="/" />
 </head>
 <body ng-app="pidmsApp" ng-strict-di>
     <!--[if lt IE 9]>
@@ -118,24 +120,24 @@
     <script src="app/entities/persistent-identifier/persistent-identifier.state.js"></script>
     <script src="app/entities/persistent-identifier/persistent-identifier.service.js"></script>
     <script src="app/entities/persistent-identifier/persistent-identifier.controller.js"></script>
+    <script src="app/entities/organization-member/organization-member-dialog.controller.js"></script>
+    <script src="app/entities/organization-member/organization-member-detail.controller.js"></script>
+    <script src="app/entities/organization-member/organization-member-delete-dialog.controller.js"></script>
+    <script src="app/entities/organization-member/organization-member.state.js"></script>
+    <script src="app/entities/organization-member/organization-member.service.js"></script>
+    <script src="app/entities/organization-member/organization-member.controller.js"></script>
+    <script src="app/entities/organization/organization-dialog.controller.js"></script>
+    <script src="app/entities/organization/organization-detail.controller.js"></script>
+    <script src="app/entities/organization/organization-delete-dialog.controller.js"></script>
+    <script src="app/entities/organization/organization.state.js"></script>
+    <script src="app/entities/organization/organization.service.js"></script>
+    <script src="app/entities/organization/organization.controller.js"></script>
     <script src="app/entities/namespace/namespace-dialog.controller.js"></script>
     <script src="app/entities/namespace/namespace-detail.controller.js"></script>
     <script src="app/entities/namespace/namespace-delete-dialog.controller.js"></script>
     <script src="app/entities/namespace/namespace.state.js"></script>
     <script src="app/entities/namespace/namespace.service.js"></script>
     <script src="app/entities/namespace/namespace.controller.js"></script>
-    <script src="app/entities/group-member/group-member-dialog.controller.js"></script>
-    <script src="app/entities/group-member/group-member-detail.controller.js"></script>
-    <script src="app/entities/group-member/group-member-delete-dialog.controller.js"></script>
-    <script src="app/entities/group-member/group-member.state.js"></script>
-    <script src="app/entities/group-member/group-member.service.js"></script>
-    <script src="app/entities/group-member/group-member.controller.js"></script>
-    <script src="app/entities/group/group-dialog.controller.js"></script>
-    <script src="app/entities/group/group-detail.controller.js"></script>
-    <script src="app/entities/group/group-delete-dialog.controller.js"></script>
-    <script src="app/entities/group/group.state.js"></script>
-    <script src="app/entities/group/group.service.js"></script>
-    <script src="app/entities/group/group.controller.js"></script>
     <script src="app/entities/entity.state.js"></script>
     <script src="app/entities/change/change-dialog.controller.js"></script>
     <script src="app/entities/change/change-detail.controller.js"></script>
@@ -179,6 +181,7 @@
     <script src="app/blocks/config/translation.config.js"></script>
     <script src="app/blocks/config/localstorage.config.js"></script>
     <script src="app/blocks/config/http.config.js"></script>
+    <script src="app/blocks/config/html5.mode.config.js"></script>
     <script src="app/blocks/config/compile.config.js"></script>
     <script src="app/blocks/config/alert.config.js"></script>
     <script src="app/app.state.js"></script>

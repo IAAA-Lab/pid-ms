@@ -11,9 +11,9 @@
         $stateProvider
         .state('change', {
             parent: 'entity',
-            url: '/change',
+            url: '/change?page&sort&search',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.change.home.title'
             },
             views: {
@@ -23,7 +23,27 @@
                     controllerAs: 'vm'
                 }
             },
+            params: {
+                page: {
+                    value: '1',
+                    squash: true
+                },
+                sort: {
+                    value: 'id,asc',
+                    squash: true
+                },
+                search: null
+            },
             resolve: {
+                pagingParams: ['$stateParams', 'PaginationUtil', function ($stateParams, PaginationUtil) {
+                    return {
+                        page: PaginationUtil.parsePage($stateParams.page),
+                        sort: $stateParams.sort,
+                        predicate: PaginationUtil.parsePredicate($stateParams.sort),
+                        ascending: PaginationUtil.parseAscending($stateParams.sort),
+                        search: $stateParams.search
+                    };
+                }],
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('change');
                     $translatePartialLoader.addPart('changeAction');
@@ -35,9 +55,9 @@
         })
         .state('change-detail', {
             parent: 'change',
-            url: '/change/{id}',
+            url: '/{id}',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: [],
                 pageTitle: 'pidmsApp.change.detail.title'
             },
             views: {
@@ -108,7 +128,7 @@
                     resolve: {
                         entity: function () {
                             return {
-                                timestamp: null,
+                                changeTimestamp: null,
                                 action: null,
                                 feature: null,
                                 namespace: null,
@@ -117,7 +137,7 @@
                                 beginLifespanVersion: null,
                                 endLifespanVersion: null,
                                 alternateId: null,
-                                type: null,
+                                resourceType: null,
                                 locator: null,
                                 id: null
                             };

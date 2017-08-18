@@ -1,19 +1,24 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import es.unizar.iaaa.pid.service.ChangeService;
-import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
+import es.unizar.iaaa.pid.service.ChangeDTOService;
 import es.unizar.iaaa.pid.service.dto.ChangeDTO;
+import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
+import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -28,9 +33,9 @@ public class ChangeResource {
 
     private static final String ENTITY_NAME = "change";
 
-    private final ChangeService changeService;
+    private final ChangeDTOService changeService;
 
-    public ChangeResource(ChangeService changeService) {
+    public ChangeResource(ChangeDTOService changeService) {
         this.changeService = changeService;
     }
 
@@ -79,13 +84,16 @@ public class ChangeResource {
     /**
      * GET  /changes : get all the changes.
      *
+     * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of changes in body
      */
     @GetMapping("/changes")
     @Timed
-    public List<ChangeDTO> getAllChanges() {
-        log.debug("REST request to get all Changes");
-        return changeService.findAll();
+    public ResponseEntity<List<ChangeDTO>> getAllChanges(@ApiParam Pageable pageable) {
+        log.debug("REST request to get a page of Changes");
+        Page<ChangeDTO> page = changeService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/changes");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**

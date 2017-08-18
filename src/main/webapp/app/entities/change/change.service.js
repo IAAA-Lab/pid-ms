@@ -16,7 +16,7 @@
                 transformResponse: function (data) {
                     if (data) {
                         data = angular.fromJson(data);
-                        data.timestamp = DateUtils.convertDateTimeFromServer(data.timestamp);
+                        data.changeTimestamp = DateUtils.convertDateTimeFromServer(data.changeTimestamp);
                         data.beginLifespanVersion = DateUtils.convertDateTimeFromServer(data.beginLifespanVersion);
                         data.endLifespanVersion = DateUtils.convertDateTimeFromServer(data.endLifespanVersion);
                     }

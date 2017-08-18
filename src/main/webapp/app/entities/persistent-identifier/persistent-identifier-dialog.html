@@ -14,13 +14,13 @@
                     ng-model="vm.persistentIdentifier.id" readonly />
         </div>
         <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.external" for="field_external">External</label>
-            <input type="text" class="form-control" name="external" id="field_external"
-                    ng-model="vm.persistentIdentifier.external"
+            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.externalUrn" for="field_externalUrn">External Urn</label>
+            <input type="text" class="form-control" name="externalUrn" id="field_externalUrn"
+                    ng-model="vm.persistentIdentifier.externalUrn"
                     required/>
-            <div ng-show="editForm.external.$invalid">
+            <div ng-show="editForm.externalUrn.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.external.$error.required" data-translate="entity.validation.required">
+                    ng-show="editForm.externalUrn.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
             </div>
@@ -99,8 +99,8 @@
                     />
         </div>
         <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.type" for="field_type">Type</label>
-            <select class="form-control" name="type" ng-model="vm.persistentIdentifier.type" id="field_type">
+            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.resourceType" for="field_resourceType">Resource Type</label>
+            <select class="form-control" name="resourceType" ng-model="vm.persistentIdentifier.resourceType" id="field_resourceType">
                 <option value="DATASET" data-translate="pidmsApp.ResourceType.DATASET">DATASET</option>
                 <option value="SPATIAL_OBJECT" data-translate="pidmsApp.ResourceType.SPATIAL_OBJECT">SPATIAL_OBJECT</option>
             </select>

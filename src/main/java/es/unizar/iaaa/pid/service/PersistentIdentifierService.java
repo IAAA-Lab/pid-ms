@@ -1,40 +1,75 @@
 package es.unizar.iaaa.pid.service;
 
-import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
+import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.domain.PersistentIdentifier;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.repository.PersistentIdentifierRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
- * Service Interface for managing PersistentIdentifier.
+ * Service class for managing Persistent Identifiers.
  */
-public interface PersistentIdentifierService {
+@Service
+@Transactional
+public class PersistentIdentifierService {
 
-    /**
-     * Save a persistentIdentifier.
-     *
-     * @param persistentIdentifierDTO the entity to save
-     * @return the persisted entity
-     */
-    PersistentIdentifierDTO save(PersistentIdentifierDTO persistentIdentifierDTO);
+    private final Logger log = LoggerFactory.getLogger(PersistentIdentifierService.class);
 
-    /**
-     *  Get all the persistentIdentifiers.
-     *
-     *  @return the list of entities
-     */
-    List<PersistentIdentifierDTO> findAll();
+    final PersistentIdentifierRepository persistentIdentifierRepository;
 
-    /**
-     *  Get the "id" persistentIdentifier.
-     *
-     *  @param id the id of the entity
-     *  @return the entity
-     */
-    PersistentIdentifierDTO findOne(Long id);
+    public PersistentIdentifierService(PersistentIdentifierRepository persistentIdentifierRepository) {
+        this.persistentIdentifierRepository = persistentIdentifierRepository;
+    }
 
-    /**
-     *  Delete the "id" persistentIdentifier.
-     *
-     *  @param id the id of the entity
-     */
-    void delete(Long id);
+    public PersistentIdentifier findByUUID(UUID uuid) {
+        return persistentIdentifierRepository.findOne(uuid);
+    }
+
+    public void deleteAll() {
+        persistentIdentifierRepository.deleteAll();
+    }
+
+    public void save(PersistentIdentifier pid) {
+        pid.autoId();
+        persistentIdentifierRepository.save(pid);
+    }
+
+    public void delete(UUID uuid) {
+        persistentIdentifierRepository.delete(uuid);
+    }
+
+    public Iterable<PersistentIdentifier> findByNamespaceInReviewProcess(String namespace) {
+        return persistentIdentifierRepository.findByIdentifierNamespaceAndRegistrationProcessStatus(namespace, ProcessStatus.PENDING_VALIDATION_BY_ID);
+    }
+
+    public void prepareForVerification(Namespace namespace) {
+        int num = persistentIdentifierRepository.prepareForVerification(ProcessStatus.NONE, namespace.getNamespace());
+        log.info("Marked {} Persistent Identifiers of Namespace {} for verification", num, namespace.getNamespace());
+    }
+
+    public List<PersistentIdentifier> findByNamespaceValidated(Namespace namespace) {
+        return persistentIdentifierRepository.findByNamespaceValidated(namespace.getNamespace(), Arrays.asList(ItemStatus.NEW, ItemStatus.VALIDATED));
+    }
+
+    public Page<PersistentIdentifier> findByNamespaceValidatedOrderById(Namespace namespace, Pageable pageable) {
+        return persistentIdentifierRepository.findByNamespaceValidatedOrderById(namespace.getNamespace(), Arrays.asList(ItemStatus.NEW, ItemStatus.VALIDATED),pageable);
+    }
+
+    public List<PersistentIdentifier> findByNamespaceIssued(Namespace namespace) {
+        return persistentIdentifierRepository.findByNamespaceValidated(namespace.getNamespace(), Arrays.asList(ItemStatus.ISSUED));
+    }
+
+    public List<PersistentIdentifier> findByNamespaceLapsed(Namespace namespace) {
+        return persistentIdentifierRepository.findByNamespaceValidated(namespace.getNamespace(), Arrays.asList(ItemStatus.LAPSED));
+    }
 }

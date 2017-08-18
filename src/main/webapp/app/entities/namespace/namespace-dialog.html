@@ -32,12 +32,12 @@
                     />
         </div>
         <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.namespace.restricted" for="field_restricted">Restricted</label>
-                <input type="checkbox" name="restricted" id="field_restricted"
-                          ng-model="vm.namespace.restricted"/>
-            <div ng-show="editForm.restricted.$invalid">
+            <label class="control-label" data-translate="pidmsApp.namespace.publicNamespace" for="field_publicNamespace">Public Namespace</label>
+                <input type="checkbox" name="publicNamespace" id="field_publicNamespace"
+                          ng-model="vm.namespace.publicNamespace"/>
+            <div ng-show="editForm.publicNamespace.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.restricted.$error.required" data-translate="entity.validation.required">
+                    ng-show="editForm.publicNamespace.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
             </div>
@@ -58,6 +58,13 @@
                     This field is required.
                 </p>
             </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.namespaceStatus" for="field_namespaceStatus">Namespace Status</label>
+            <select class="form-control" name="namespaceStatus" ng-model="vm.namespace.namespaceStatus" id="field_namespaceStatus">
+                <option value="STOP" data-translate="pidmsApp.NamespaceStatus.STOP">STOP</option>
+                <option value="GO" data-translate="pidmsApp.NamespaceStatus.GO">GO</option>
+            </select>
         </div>
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.namespace.processStatus" for="field_processStatus">Process Status</label>
@@ -150,8 +157,8 @@
             </select>
         </div>
         <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.namespace.type" for="field_type">Type</label>
-            <select class="form-control" name="type" ng-model="vm.namespace.type" id="field_type">
+            <label class="control-label" data-translate="pidmsApp.namespace.sourceType" for="field_sourceType">Source Type</label>
+            <select class="form-control" name="sourceType" ng-model="vm.namespace.sourceType" id="field_sourceType">
                 <option value="WFS" data-translate="pidmsApp.SourceType.WFS">WFS</option>
             </select>
         </div>
@@ -286,7 +293,7 @@
 
         <div class="form-group">
             <label data-translate="pidmsApp.namespace.owner" for="field_owner">Owner</label>
-            <select class="form-control" id="field_owner" name="owner" ng-model="vm.namespace.ownerId" ng-options="group.id as group.id for group in vm.groups"            >
+            <select class="form-control" id="field_owner" name="owner" ng-model="vm.namespace.ownerId" ng-options="organization.id as organization.id for organization in vm.organizations"            >
                 <option value=""></option>
             </select>
         </div>

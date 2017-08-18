@@ -1,24 +1,15 @@
 package es.unizar.iaaa.pid.domain;
 
+import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
+import es.unizar.iaaa.pid.domain.enumeration.RenewalPolicy;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Objects;
-
-import es.unizar.iaaa.pid.domain.enumeration.RenewalPolicy;
-
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-
-import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
-
-import es.unizar.iaaa.pid.domain.enumeration.MethodType;
-
-import es.unizar.iaaa.pid.domain.enumeration.SourceType;
 
 /**
  * Entity Namespace
@@ -44,8 +35,8 @@ public class Namespace implements Serializable {
     private String title;
 
     @NotNull
-    @Column(name = "jhi_restricted", nullable = false)
-    private Boolean restricted;
+    @Column(name = "public_namespace", nullable = false)
+    private Boolean publicNamespace;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -53,99 +44,21 @@ public class Namespace implements Serializable {
     private RenewalPolicy renewalPolicy;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "process_status")
-    private ProcessStatus processStatus;
+    @Column(name = "namespace_status")
+    private NamespaceStatus namespaceStatus;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "item_status")
-    private ItemStatus itemStatus;
+    @Embedded
+    private Registration registration;
 
-    @Column(name = "last_change_date")
-    private Instant lastChangeDate;
-
-    @Column(name = "registration_date")
-    private Instant registrationDate;
-
-    @Column(name = "last_revision_date")
-    private Instant lastRevisionDate;
-
-    @Column(name = "next_renewal_date")
-    private Instant nextRenewalDate;
-
-    @Column(name = "annullation_date")
-    private Instant annullationDate;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "method_type")
-    private MethodType methodType;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "jhi_type")
-    private SourceType type;
-
-    @Column(name = "endpoint_location")
-    private String endpointLocation;
-
-    @Column(name = "srs_name")
-    private String srsName;
-
-    @Column(name = "schema_uri")
-    private String schemaUri;
-
-    @Column(name = "schema_uri_gml")
-    private String schemaUriGML;
-
-    @Column(name = "schema_uri_base")
-    private String schemaUriBase;
-
-    @Column(name = "schema_prefix")
-    private String schemaPrefix;
-
-    @Column(name = "feature_type")
-    private String featureType;
-
-    @Column(name = "geometry_property")
-    private String geometryProperty;
-
-    @Column(name = "begin_lifespan_version_property")
-    private String beginLifespanVersionProperty;
-
-    @Column(name = "features_threshold")
-    private Integer featuresThreshold;
-
-    @Column(name = "resolver_proxy_mode")
-    private Boolean resolverProxyMode;
-
-    @Column(name = "hits_request")
-    private Boolean hitsRequest;
-
-    @Column(name = "factor_k")
-    private Integer factorK;
-
-    @Column(name = "xpath")
-    private String xpath;
-
-    @Column(name = "name_item")
-    private String nameItem;
-
-    @Min(value = 0)
-    @Column(name = "max_num_request")
-    private Integer maxNumRequest;
-
-    @Column(name = "min_x")
-    private Double minX;
-
-    @Column(name = "min_y")
-    private Double minY;
-
-    @Column(name = "max_x")
-    private Double maxX;
-
-    @Column(name = "max_y")
-    private Double maxY;
+    @Embedded
+    private Source source;
 
     @ManyToOne
-    private Group owner;
+    private Organization owner;
+
+    @Version
+    @Column(name = "version_lock", nullable = false)
+    private Integer version;
 
     public Long getId() {
         return id;
@@ -181,17 +94,17 @@ public class Namespace implements Serializable {
         this.title = title;
     }
 
-    public Boolean isRestricted() {
-        return restricted;
+    public Boolean isPublicNamespace() {
+        return publicNamespace;
     }
 
-    public Namespace restricted(Boolean restricted) {
-        this.restricted = restricted;
+    public Namespace publicNamespace(Boolean publicNamespace) {
+        this.publicNamespace = publicNamespace;
         return this;
     }
 
-    public void setRestricted(Boolean restricted) {
-        this.restricted = restricted;
+    public void setPublicNamespace(Boolean publicNamespace) {
+        this.publicNamespace = publicNamespace;
     }
 
     public RenewalPolicy getRenewalPolicy() {
@@ -207,395 +120,72 @@ public class Namespace implements Serializable {
         this.renewalPolicy = renewalPolicy;
     }
 
-    public ProcessStatus getProcessStatus() {
-        return processStatus;
+    public NamespaceStatus getNamespaceStatus() {
+        return namespaceStatus;
     }
 
-    public Namespace processStatus(ProcessStatus processStatus) {
-        this.processStatus = processStatus;
+    public Namespace namespaceStatus(NamespaceStatus namespaceStatus) {
+        this.namespaceStatus = namespaceStatus;
         return this;
     }
 
-    public void setProcessStatus(ProcessStatus processStatus) {
-        this.processStatus = processStatus;
+    public void setNamespaceStatus(NamespaceStatus namespaceStatus) {
+        this.namespaceStatus = namespaceStatus;
     }
 
-    public ItemStatus getItemStatus() {
-        return itemStatus;
+    public Registration getRegistration() {
+        return registration;
     }
 
-    public Namespace itemStatus(ItemStatus itemStatus) {
-        this.itemStatus = itemStatus;
+    public Namespace registration(Registration registration) {
+        this.registration = registration;
         return this;
     }
 
-    public void setItemStatus(ItemStatus itemStatus) {
-        this.itemStatus = itemStatus;
+    public void setRegistration(Registration registration) {
+        this.registration = registration;
     }
 
-    public Instant getLastChangeDate() {
-        return lastChangeDate;
+    public Source getSource() {
+        return source;
     }
 
-    public Namespace lastChangeDate(Instant lastChangeDate) {
-        this.lastChangeDate = lastChangeDate;
+    public Namespace source(Source source) {
+        this.source = source;
         return this;
     }
 
-    public void setLastChangeDate(Instant lastChangeDate) {
-        this.lastChangeDate = lastChangeDate;
+    public void setSource(Source source) {
+        this.source = source;
     }
 
-    public Instant getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public Namespace registrationDate(Instant registrationDate) {
-        this.registrationDate = registrationDate;
-        return this;
-    }
-
-    public void setRegistrationDate(Instant registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public Instant getLastRevisionDate() {
-        return lastRevisionDate;
-    }
-
-    public Namespace lastRevisionDate(Instant lastRevisionDate) {
-        this.lastRevisionDate = lastRevisionDate;
-        return this;
-    }
-
-    public void setLastRevisionDate(Instant lastRevisionDate) {
-        this.lastRevisionDate = lastRevisionDate;
-    }
-
-    public Instant getNextRenewalDate() {
-        return nextRenewalDate;
-    }
-
-    public Namespace nextRenewalDate(Instant nextRenewalDate) {
-        this.nextRenewalDate = nextRenewalDate;
-        return this;
-    }
-
-    public void setNextRenewalDate(Instant nextRenewalDate) {
-        this.nextRenewalDate = nextRenewalDate;
-    }
-
-    public Instant getAnnullationDate() {
-        return annullationDate;
-    }
-
-    public Namespace annullationDate(Instant annullationDate) {
-        this.annullationDate = annullationDate;
-        return this;
-    }
-
-    public void setAnnullationDate(Instant annullationDate) {
-        this.annullationDate = annullationDate;
-    }
-
-    public MethodType getMethodType() {
-        return methodType;
-    }
-
-    public Namespace methodType(MethodType methodType) {
-        this.methodType = methodType;
-        return this;
-    }
-
-    public void setMethodType(MethodType methodType) {
-        this.methodType = methodType;
-    }
-
-    public SourceType getType() {
-        return type;
-    }
-
-    public Namespace type(SourceType type) {
-        this.type = type;
-        return this;
-    }
-
-    public void setType(SourceType type) {
-        this.type = type;
-    }
-
-    public String getEndpointLocation() {
-        return endpointLocation;
-    }
-
-    public Namespace endpointLocation(String endpointLocation) {
-        this.endpointLocation = endpointLocation;
-        return this;
-    }
-
-    public void setEndpointLocation(String endpointLocation) {
-        this.endpointLocation = endpointLocation;
-    }
-
-    public String getSrsName() {
-        return srsName;
-    }
-
-    public Namespace srsName(String srsName) {
-        this.srsName = srsName;
-        return this;
-    }
-
-    public void setSrsName(String srsName) {
-        this.srsName = srsName;
-    }
-
-    public String getSchemaUri() {
-        return schemaUri;
-    }
-
-    public Namespace schemaUri(String schemaUri) {
-        this.schemaUri = schemaUri;
-        return this;
-    }
-
-    public void setSchemaUri(String schemaUri) {
-        this.schemaUri = schemaUri;
-    }
-
-    public String getSchemaUriGML() {
-        return schemaUriGML;
-    }
-
-    public Namespace schemaUriGML(String schemaUriGML) {
-        this.schemaUriGML = schemaUriGML;
-        return this;
-    }
-
-    public void setSchemaUriGML(String schemaUriGML) {
-        this.schemaUriGML = schemaUriGML;
-    }
-
-    public String getSchemaUriBase() {
-        return schemaUriBase;
-    }
-
-    public Namespace schemaUriBase(String schemaUriBase) {
-        this.schemaUriBase = schemaUriBase;
-        return this;
-    }
-
-    public void setSchemaUriBase(String schemaUriBase) {
-        this.schemaUriBase = schemaUriBase;
-    }
-
-    public String getSchemaPrefix() {
-        return schemaPrefix;
-    }
-
-    public Namespace schemaPrefix(String schemaPrefix) {
-        this.schemaPrefix = schemaPrefix;
-        return this;
-    }
-
-    public void setSchemaPrefix(String schemaPrefix) {
-        this.schemaPrefix = schemaPrefix;
-    }
-
-    public String getFeatureType() {
-        return featureType;
-    }
-
-    public Namespace featureType(String featureType) {
-        this.featureType = featureType;
-        return this;
-    }
-
-    public void setFeatureType(String featureType) {
-        this.featureType = featureType;
-    }
-
-    public String getGeometryProperty() {
-        return geometryProperty;
-    }
-
-    public Namespace geometryProperty(String geometryProperty) {
-        this.geometryProperty = geometryProperty;
-        return this;
-    }
-
-    public void setGeometryProperty(String geometryProperty) {
-        this.geometryProperty = geometryProperty;
-    }
-
-    public String getBeginLifespanVersionProperty() {
-        return beginLifespanVersionProperty;
-    }
-
-    public Namespace beginLifespanVersionProperty(String beginLifespanVersionProperty) {
-        this.beginLifespanVersionProperty = beginLifespanVersionProperty;
-        return this;
-    }
-
-    public void setBeginLifespanVersionProperty(String beginLifespanVersionProperty) {
-        this.beginLifespanVersionProperty = beginLifespanVersionProperty;
-    }
-
-    public Integer getFeaturesThreshold() {
-        return featuresThreshold;
-    }
-
-    public Namespace featuresThreshold(Integer featuresThreshold) {
-        this.featuresThreshold = featuresThreshold;
-        return this;
-    }
-
-    public void setFeaturesThreshold(Integer featuresThreshold) {
-        this.featuresThreshold = featuresThreshold;
-    }
-
-    public Boolean isResolverProxyMode() {
-        return resolverProxyMode;
-    }
-
-    public Namespace resolverProxyMode(Boolean resolverProxyMode) {
-        this.resolverProxyMode = resolverProxyMode;
-        return this;
-    }
-
-    public void setResolverProxyMode(Boolean resolverProxyMode) {
-        this.resolverProxyMode = resolverProxyMode;
-    }
-
-    public Boolean isHitsRequest() {
-        return hitsRequest;
-    }
-
-    public Namespace hitsRequest(Boolean hitsRequest) {
-        this.hitsRequest = hitsRequest;
-        return this;
-    }
-
-    public void setHitsRequest(Boolean hitsRequest) {
-        this.hitsRequest = hitsRequest;
-    }
-
-    public Integer getFactorK() {
-        return factorK;
-    }
-
-    public Namespace factorK(Integer factorK) {
-        this.factorK = factorK;
-        return this;
-    }
-
-    public void setFactorK(Integer factorK) {
-        this.factorK = factorK;
-    }
-
-    public String getXpath() {
-        return xpath;
-    }
-
-    public Namespace xpath(String xpath) {
-        this.xpath = xpath;
-        return this;
-    }
-
-    public void setXpath(String xpath) {
-        this.xpath = xpath;
-    }
-
-    public String getNameItem() {
-        return nameItem;
-    }
-
-    public Namespace nameItem(String nameItem) {
-        this.nameItem = nameItem;
-        return this;
-    }
-
-    public void setNameItem(String nameItem) {
-        this.nameItem = nameItem;
-    }
-
-    public Integer getMaxNumRequest() {
-        return maxNumRequest;
-    }
-
-    public Namespace maxNumRequest(Integer maxNumRequest) {
-        this.maxNumRequest = maxNumRequest;
-        return this;
-    }
-
-    public void setMaxNumRequest(Integer maxNumRequest) {
-        this.maxNumRequest = maxNumRequest;
-    }
-
-    public Double getMinX() {
-        return minX;
-    }
-
-    public Namespace minX(Double minX) {
-        this.minX = minX;
-        return this;
-    }
-
-    public void setMinX(Double minX) {
-        this.minX = minX;
-    }
-
-    public Double getMinY() {
-        return minY;
-    }
-
-    public Namespace minY(Double minY) {
-        this.minY = minY;
-        return this;
-    }
-
-    public void setMinY(Double minY) {
-        this.minY = minY;
-    }
-
-    public Double getMaxX() {
-        return maxX;
-    }
-
-    public Namespace maxX(Double maxX) {
-        this.maxX = maxX;
-        return this;
-    }
-
-    public void setMaxX(Double maxX) {
-        this.maxX = maxX;
-    }
-
-    public Double getMaxY() {
-        return maxY;
-    }
-
-    public Namespace maxY(Double maxY) {
-        this.maxY = maxY;
-        return this;
-    }
-
-    public void setMaxY(Double maxY) {
-        this.maxY = maxY;
-    }
-
-    public Group getOwner() {
+    public Organization getOwner() {
         return owner;
     }
 
-    public Namespace owner(Group group) {
-        this.owner = group;
+    public Namespace owner(Organization organization) {
+        this.owner = organization;
         return this;
     }
 
-    public void setOwner(Group group) {
-        this.owner = group;
+    public void setOwner(Organization organization) {
+        this.owner = organization;
     }
+
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public Namespace version(Integer version) {
+        this.version = version;
+        return this;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -623,37 +213,12 @@ public class Namespace implements Serializable {
             "id=" + getId() +
             ", namespace='" + getNamespace() + "'" +
             ", title='" + getTitle() + "'" +
-            ", restricted='" + isRestricted() + "'" +
+            ", publicNamespace='" + isPublicNamespace() + "'" +
             ", renewalPolicy='" + getRenewalPolicy() + "'" +
-            ", processStatus='" + getProcessStatus() + "'" +
-            ", itemStatus='" + getItemStatus() + "'" +
-            ", lastChangeDate='" + getLastChangeDate() + "'" +
-            ", registrationDate='" + getRegistrationDate() + "'" +
-            ", lastRevisionDate='" + getLastRevisionDate() + "'" +
-            ", nextRenewalDate='" + getNextRenewalDate() + "'" +
-            ", annullationDate='" + getAnnullationDate() + "'" +
-            ", methodType='" + getMethodType() + "'" +
-            ", type='" + getType() + "'" +
-            ", endpointLocation='" + getEndpointLocation() + "'" +
-            ", srsName='" + getSrsName() + "'" +
-            ", schemaUri='" + getSchemaUri() + "'" +
-            ", schemaUriGML='" + getSchemaUriGML() + "'" +
-            ", schemaUriBase='" + getSchemaUriBase() + "'" +
-            ", schemaPrefix='" + getSchemaPrefix() + "'" +
-            ", featureType='" + getFeatureType() + "'" +
-            ", geometryProperty='" + getGeometryProperty() + "'" +
-            ", beginLifespanVersionProperty='" + getBeginLifespanVersionProperty() + "'" +
-            ", featuresThreshold='" + getFeaturesThreshold() + "'" +
-            ", resolverProxyMode='" + isResolverProxyMode() + "'" +
-            ", hitsRequest='" + isHitsRequest() + "'" +
-            ", factorK='" + getFactorK() + "'" +
-            ", xpath='" + getXpath() + "'" +
-            ", nameItem='" + getNameItem() + "'" +
-            ", maxNumRequest='" + getMaxNumRequest() + "'" +
-            ", minX='" + getMinX() + "'" +
-            ", minY='" + getMinY() + "'" +
-            ", maxX='" + getMaxX() + "'" +
-            ", maxY='" + getMaxY() + "'" +
+            ", namespaceStatus='" + getNamespaceStatus() + "'" +
+            ", registration='" + getRegistration() + "'" +
+            ", source='" + getSource() + "'" +
+            ", version='" + getVersion() + "'" +
             "}";
     }
 }
