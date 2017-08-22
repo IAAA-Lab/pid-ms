@@ -18,7 +18,8 @@
             "name": "Name",
             "title": "Title",
             "member": "Member",
-            "namespace": "Namespace"
+            "namespace": "Namespace",
+            "slug": "Organisation"
         }
     }
 }

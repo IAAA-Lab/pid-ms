@@ -2,23 +2,24 @@
     "pidmsApp": {
         "organization" : {
             "home": {
-                "title": "Organizations",
-                "createLabel": "Crear nuevo Organization",
-                "createOrEditLabel": "Crear o editar Organization"
+                "title": "Organización",
+                "createLabel": "Crear nueva Organización",
+                "createOrEditLabel": "Crear o editar Organización"
             },
-            "created": "Un nuevo Organization ha sido creado con el identificador {{ param }}",
-            "updated": "Un Organization ha sido actualizado con el identificador {{ param }}",
-            "deleted": "Un Organization ha sido eliminado con el identificador {{ param }}",
+            "created": "Una nueva Organización con el identificador {{ param }} ha sido creada ",
+            "updated": "Una Organización con el identificador {{ param }} ha sido actualizada ",
+            "deleted": "Una Organización con el identificador {{ param }} ha sido eliminado ",
             "delete": {
-                "question": "¿Seguro que quiere eliminar Organization {{ id }}?"
+                "question": "¿Seguro que quiere eliminar la Organización {{ id }}?"
             },
             "detail": {
-                "title": "Organization"
+                "title": "Organización"
             },
-            "name": "Name",
-            "title": "Title",
-            "member": "Member",
-            "namespace": "Namespace"
+            "name": "Nombre",
+            "title": "Título",
+            "member": "Miembro",
+            "namespace": "Espacio de nombres",
+            "slug": "Organización"
         }
     }
 }
