@@ -12,14 +12,14 @@ import org.mapstruct.*;
 public interface OrganizationMemberMapper extends EntityMapper <OrganizationMemberDTO, OrganizationMember> {
 
     @Mapping(source = "user.id", target = "userId")
-
+    @Mapping(source = "user.login", target = "userLogin")
     @Mapping(source = "organization.id", target = "organizationId")
-    OrganizationMemberDTO toDto(OrganizationMember organizationMember); 
+    @Mapping(source = "organization.name", target = "organizationName")
+    OrganizationMemberDTO toDto(OrganizationMember organizationMember);
 
     @Mapping(source = "userId", target = "user")
-
     @Mapping(source = "organizationId", target = "organization")
-    OrganizationMember toEntity(OrganizationMemberDTO organizationMemberDTO); 
+    OrganizationMember toEntity(OrganizationMemberDTO organizationMemberDTO);
     default OrganizationMember fromId(Long id) {
         if (id == null) {
             return null;
