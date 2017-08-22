@@ -1,13 +1,10 @@
 <div ng-cloak>
     <div class="row">
-        <div class="col-md-4">
-            <span class="hipster img-responsive img-rounded"></span>
-        </div>
-        <div class="col-md-8">
-            <h1 data-translate="home.title">Welcome, Java Hipster!</h1>
-            <p class="lead" data-translate="home.subtitle">This is your homepage</p>
+        <div class="col-md-12">
+            <h1 data-translate="home.title">This is the INSPIRE Persistent Identifier Management System!</h1>
 
             <div ng-switch="vm.isAuthenticated()">
+                <p class="lead" ng-switch-when="true" data-translate="home.subtitle">This is your homepage</p>
                 <div class="alert alert-success" ng-switch-when="true" data-translate="home.logged.message" translate-values="{username: '{{vm.account.login}}'}">
                     You are logged in as user "{{vm.account.login}}".
                 </div>
@@ -21,20 +18,26 @@
                 </div>
             </div>
 
-            <p data-translate="home.question">
-                If you have any question on JHipster:
+            <p data-translate="home.suggestion">
+                You can start by browsing:
             </p>
 
             <ul>
-                <li><a href="https://jhipster.github.io/" target="_blank" rel="noopener" data-translate="home.link.homepage">JHipster homepage</a></li>
-                <li><a href="http://stackoverflow.com/tags/jhipster/info" target="_blank" rel="noopener" data-translate="home.link.stackoverflow">JHipster on Stack Overflow</a></li>
-                <li><a href="https://github.com/jhipster/generator-jhipster/issues?state=open" target="_blank" rel="noopener" data-translate="home.link.bugtracker">JHipster bug tracker</a></li>
-                <li><a href="https://gitter.im/jhipster/generator-jhipster" target="_blank" rel="noopener" data-translate="home.link.chat">JHipster public chat room</a></li>
-                <li><a href="https://twitter.com/java_hipster" target="_blank" rel="noopener" data-translate="home.link.follow">follow @java_hipster on Twitter</a></li>
+                <li><a ui-sref="namespace({})" data-translate="home.namespaces">Namespaces</a></li>
+                <li><a ui-sref="organization({})" data-translate="home.organizations">Organizations</a></li>
+            </ul>
+
+            <p data-translate="home.question">
+                If you have any question on this project:
+            </p>
+
+            <ul>
+                <li><a href="https://github.com/IAAA-Lab/pid-ms" target="_blank" rel="noopener" data-translate="home.link.homepage">PIDMS homepage</a></li>
+                <li><a href="https://github.com/IAAA-Lab/pid-ms/issues?state=open" target="_blank" rel="noopener" data-translate="home.link.bugtracker">PIDMS bug tracker</a></li>
             </ul>
 
             <p>
-             <span data-translate="home.like">If you like JHipster, don't forget to give us a star on </span>&nbsp;<a href="https://github.com/jhipster/generator-jhipster" target="_blank" rel="noopener" data-translate="home.github">GitHub</a>!
+             <span data-translate="home.like">If you like PIDMS, don't forget to give us a star on </span>&nbsp;<a href="https://github.com/IAAA-Lab/pid-ms" target="_blank" rel="noopener" data-translate="home.github">GitHub</a>!
             </p>
         </div>
     </div>

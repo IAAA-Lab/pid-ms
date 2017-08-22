@@ -1,19 +1,19 @@
 {
     "home": {
-        "title": "¡Bienvenido, Java Hipster!",
+        "title": "¡Éste es el Sistema de Gestión de PID de INSPIRE (PIDMS)!",
         "subtitle": "Esta es su página de inicio",
         "logged": {
             "message": "Está conectado como \"{{username}}\"."
         },
-        "question": "Si tiene preguntas sobre JHipster:",
+        "question": "Si tiene preguntas sobre este proyecto:",
         "link": {
-            "homepage": "Página de inicio de JHipster",
-            "stackoverflow": "JHipster en Stack Overflow",
-            "bugtracker": "JHipster seguimiento de errores",
-            "chat": "Sala de chat pública de JHipster",
-            "follow": "contacto @java_hipster en Twitter"
+            "homepage": "Página de inicio de PIDMS",
+            "bugtracker": "Seguimiento de errores de PIDMS"
         },
-        "like": "Si te gusta JHipster, danos una estrella en",
+        "suggestion": "Puede comenzar explorando:",
+        "namespaces": "Espacios de nombres",
+        "organization": "Organizaciones",
+        "like": "Si te gusta PIDMS, danos una estrella en",
         "github": "GitHub"
     }
 }
