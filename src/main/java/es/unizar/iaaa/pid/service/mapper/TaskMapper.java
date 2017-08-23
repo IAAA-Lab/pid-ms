@@ -1,9 +1,12 @@
 package es.unizar.iaaa.pid.service.mapper;
 
+import com.google.common.collect.ImmutableMap;
 import es.unizar.iaaa.pid.domain.*;
 import es.unizar.iaaa.pid.service.dto.TaskDTO;
 
 import org.mapstruct.*;
+
+import java.util.Map;
 
 /**
  * Mapper for the entity Task and its DTO TaskDTO.
@@ -12,6 +15,7 @@ import org.mapstruct.*;
 public interface TaskMapper extends EntityMapper <TaskDTO, Task> {
 
     @Mapping(source = "namespace.id", target = "namespaceId")
+    @Mapping(source = "namespace.namespace", target = "namespaceName")
     TaskDTO toDto(Task task);
 
     @Mapping(source = "namespaceId", target = "namespace")
@@ -24,5 +28,14 @@ public interface TaskMapper extends EntityMapper <TaskDTO, Task> {
         Task task = new Task();
         task.setId(id);
         return task;
+    }
+
+    Map<String, String> conversions = ImmutableMap.<String, String>builder().
+        put("namespaceName", "namespace.namespace").
+        build();
+
+    @Override
+    default Map<String, String> getConversions() {
+        return conversions;
     }
 }
