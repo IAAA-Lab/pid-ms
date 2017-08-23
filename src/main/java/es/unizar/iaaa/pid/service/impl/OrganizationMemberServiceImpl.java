@@ -55,7 +55,7 @@ public class OrganizationMemberServiceImpl implements OrganizationMemberDTOServi
     @Transactional(readOnly = true)
     public Page<OrganizationMemberDTO> findAll(Pageable pageable) {
         log.debug("Request to get all OrganizationMembers");
-        return organizationMemberRepository.findAll(pageable)
+        return organizationMemberRepository.findAll(organizationMemberMapper.toPage(pageable))
             .map(organizationMemberMapper::toDto);
     }
 

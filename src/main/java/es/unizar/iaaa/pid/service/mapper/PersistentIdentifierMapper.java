@@ -1,18 +1,20 @@
 package es.unizar.iaaa.pid.service.mapper;
 
+import com.google.common.collect.ImmutableMap;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Mapper for the entity PersistentIdentifier and its DTO PersistentIdentifierDTO.
  */
 @Mapper(componentModel = "spring", uses = {})
-public interface PersistentIdentifierMapper extends EntityMapper <PersistentIdentifierDTO, PersistentIdentifier> {
+public interface PersistentIdentifierMapper extends EntityMapper<PersistentIdentifierDTO, PersistentIdentifier> {
 
     @Mappings({
         @Mapping(source = "resource.resourceType", target = "resourceType"),
@@ -59,5 +61,28 @@ public interface PersistentIdentifierMapper extends EntityMapper <PersistentIden
         PersistentIdentifier persistentIdentifier = new PersistentIdentifier();
         persistentIdentifier.setId(id);
         return persistentIdentifier;
+    }
+
+    Map<String, String> conversions = ImmutableMap.<String, String>builder().
+        put("resourceType", "resource.resourceType").
+        put("locator", "resource.locator").
+        put("namespace", "identifier.namespace").
+        put("localId", "identifier.localId").
+        put("versionId", "identifier.versionId").
+        put("beginLifespanVersion", "identifier.beginLifespanVersion").
+        put("endLifespanVersion", "identifier.endLifespanVersion").
+        put("alternateId", "identifier.alternateId").
+        put("processStatus", "registration.processStatus").
+        put("itemStatus", "registration.itemStatus").
+        put("lastChangeDate", "registration.lastChangeDate").
+        put("registrationDate", "registration.registrationDate").
+        put("lastRevisionDate", "registration.lastRevisionDate").
+        put("nextRenewalDate", "registration.nextRenewalDate").
+        put("annullationDate", "registration.annullationDate").
+        build();
+
+    @Override
+    default Map<String, String> getConversions() {
+        return conversions;
     }
 }

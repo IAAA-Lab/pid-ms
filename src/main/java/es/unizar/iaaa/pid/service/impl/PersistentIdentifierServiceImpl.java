@@ -58,7 +58,7 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
     @Transactional(readOnly = true)
     public Page<PersistentIdentifierDTO> findAll(Pageable pageable) {
         log.debug("Request to get all PersistentIdentifiers");
-        return persistentIdentifierRepository.findAll(pageable)
+        return persistentIdentifierRepository.findAll(persistentIdentifierMapper.toPage(pageable))
             .map(persistentIdentifierMapper::toDto);
     }
 

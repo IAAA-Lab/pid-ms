@@ -1,15 +1,19 @@
 package es.unizar.iaaa.pid.service.mapper;
 
-import es.unizar.iaaa.pid.domain.*;
+import com.google.common.collect.ImmutableMap;
+import es.unizar.iaaa.pid.domain.Change;
 import es.unizar.iaaa.pid.service.dto.ChangeDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
-import org.mapstruct.*;
+import java.util.Map;
 
 /**
  * Mapper for the entity Change and its DTO ChangeDTO.
  */
-@Mapper(componentModel = "spring", uses = {TaskMapper.class, })
-public interface ChangeMapper extends EntityMapper <ChangeDTO, Change> {
+@Mapper(componentModel = "spring", uses = {TaskMapper.class,})
+public interface ChangeMapper extends EntityMapper<ChangeDTO, Change> {
 
     @Mappings({
         @Mapping(source = "resource.resourceType", target = "resourceType"),
@@ -44,5 +48,21 @@ public interface ChangeMapper extends EntityMapper <ChangeDTO, Change> {
         Change change = new Change();
         change.setId(id);
         return change;
+    }
+
+    Map<String, String> conversions = ImmutableMap.<String, String>builder().
+        put("resourceType", "resource.resourceType").
+        put("locator", "resource.locator").
+        put("namespace", "identifier.namespace").
+        put("localId", "identifier.localId").
+        put("versionId", "identifier.versionId").
+        put("beginLifespanVersion", "identifier.beginLifespanVersion").
+        put("endLifespanVersion", "identifier.endLifespanVersion").
+        put("alternateId", "identifier.alternateId").
+        build();
+
+    @Override
+    default Map<String, String> getConversions() {
+        return conversions;
     }
 }

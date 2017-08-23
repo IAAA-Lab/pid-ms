@@ -55,7 +55,7 @@ public class ChangeServiceImpl implements ChangeDTOService {
     @Transactional(readOnly = true)
     public Page<ChangeDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Changes");
-        return changeRepository.findAll(pageable)
+        return changeRepository.findAll(changeMapper.toPage(pageable))
             .map(changeMapper::toDto);
     }
 
