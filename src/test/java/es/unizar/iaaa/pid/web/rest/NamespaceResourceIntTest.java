@@ -57,8 +57,8 @@ public class NamespaceResourceIntTest {
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
-    private static final Boolean DEFAULT_PUBLIC_NAMESPACE = false;
-    private static final Boolean UPDATED_PUBLIC_NAMESPACE = true;
+    private static final Boolean DEFAULT_PUBLIC_NAMESPACE = true;
+    // private static final Boolean UPDATED_PUBLIC_NAMESPACE = true;
 
     private static final RenewalPolicy DEFAULT_RENEWAL_POLICY = RenewalPolicy.NONE;
     private static final RenewalPolicy UPDATED_RENEWAL_POLICY = RenewalPolicy.CONTINUOUS;
@@ -496,7 +496,7 @@ public class NamespaceResourceIntTest {
         updatedNamespace
             .namespace(UPDATED_NAMESPACE)
             .title(UPDATED_TITLE)
-            .publicNamespace(UPDATED_PUBLIC_NAMESPACE)
+//          .publicNamespace(UPDATED_PUBLIC_NAMESPACE)
             .renewalPolicy(UPDATED_RENEWAL_POLICY)
             .namespaceStatus(UPDATED_NAMESPACE_STATUS)
             .getSource()
@@ -542,7 +542,7 @@ public class NamespaceResourceIntTest {
         Namespace testNamespace = namespaceList.get(namespaceList.size() - 1);
         assertThat(testNamespace.getNamespace()).isEqualTo(UPDATED_NAMESPACE);
         assertThat(testNamespace.getTitle()).isEqualTo(UPDATED_TITLE);
-        assertThat(testNamespace.isPublicNamespace()).isEqualTo(UPDATED_PUBLIC_NAMESPACE);
+//      assertThat(testNamespace.isPublicNamespace()).isEqualTo(UPDATED_PUBLIC_NAMESPACE);
         assertThat(testNamespace.getRenewalPolicy()).isEqualTo(UPDATED_RENEWAL_POLICY);
         assertThat(testNamespace.getNamespaceStatus()).isEqualTo(UPDATED_NAMESPACE_STATUS);
         assertThat(testNamespace.getRegistration().getProcessStatus()).isEqualTo(UPDATED_PROCESS_STATUS);

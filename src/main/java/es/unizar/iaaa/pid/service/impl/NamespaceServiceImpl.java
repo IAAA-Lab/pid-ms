@@ -59,6 +59,13 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
             .map(namespaceMapper::toDto);
     }
 
+    @Override
+    public Page<NamespaceDTO> findPublic(Pageable pageable) {
+        log.debug("Request to get all Namespaces");
+        return namespaceRepository.findAllByPublicNamespaceIsTrue(namespaceMapper.toPage(pageable))
+            .map(namespaceMapper::toDto);
+    }
+
     /**
      *  Get one namespace by id.
      *
@@ -70,6 +77,13 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
     public NamespaceDTO findOne(Long id) {
         log.debug("Request to get Namespace : {}", id);
         Namespace namespace = namespaceRepository.findOne(id);
+        return namespaceMapper.toDto(namespace);
+    }
+
+    @Override
+    public NamespaceDTO findOnePublic(Long id) {
+        log.debug("Request to get Namespace : {}", id);
+        Namespace namespace = namespaceRepository.findByIdAndPublicNamespaceIsTrue(id);
         return namespaceMapper.toDto(namespace);
     }
 
