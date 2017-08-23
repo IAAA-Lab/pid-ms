@@ -25,6 +25,9 @@ public interface EntityMapper <D, E> {
     List <D> toDto(List<E> entityList);
 
     default Pageable toPage(Pageable pageable) {
+        if (pageable == null || pageable.getSort() == null) {
+            return pageable;
+        }
         List<Sort.Order> mappedOrder = new ArrayList<>();
         for (Sort.Order o : pageable.getSort()) {
             String property = getConversions().getOrDefault(o.getProperty(), o.getProperty());
