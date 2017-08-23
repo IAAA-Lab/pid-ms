@@ -2,31 +2,31 @@
     "pidmsApp": {
         "change" : {
             "home": {
-                "title": "Changes",
-                "createLabel": "Crear nuevo Change",
-                "createOrEditLabel": "Crear o editar Change"
+                "title": "Cambios",
+                "createLabel": "Crear nuevo Cambio",
+                "createOrEditLabel": "Crear o editar Cambio"
             },
-            "created": "Un nuevo Change ha sido creado con el identificador {{ param }}",
-            "updated": "Un Change ha sido actualizado con el identificador {{ param }}",
-            "deleted": "Un Change ha sido eliminado con el identificador {{ param }}",
+            "created": "Un nuevo Cambio con el identificador {{ param }} ha sido creado",
+            "updated": "Un Cambio con el identificador {{ param }} ha sido actualizado",
+            "deleted": "Un Cambio con el identificador {{ param }} ha sido eliminado",
             "delete": {
-                "question": "¿Seguro que quiere eliminar Change {{ id }}?"
+                "question": "¿Seguro que quiere eliminar el Cambio {{ id }}?"
             },
             "detail": {
-                "title": "Change"
+                "title": "Cambio"
             },
-            "changeTimestamp": "Change Timestamp",
-            "action": "Action",
-            "feature": "Feature",
+            "changeTimestamp": "Fecha",
+            "action": "Acción",
+            "feature": "Tipo",
             "namespace": "Namespace",
-            "localId": "Local Id",
-            "versionId": "Version Id",
-            "beginLifespanVersion": "Begin Lifespan Version",
-            "endLifespanVersion": "End Lifespan Version",
-            "alternateId": "Alternate Id",
-            "resourceType": "Resource Type",
-            "locator": "Locator",
-            "task": "Task"
+            "localId": "LocalId",
+            "versionId": "VersionId",
+            "beginLifespanVersion": "Comienzo de inicio de versión",
+            "endLifespanVersion": "Fecha de fin de versión",
+            "alternateId": "Identificador alternativo",
+            "resourceType": "Tipo de recurso",
+            "locator": "Localizador",
+            "task": "Tarea"
         }
     }
 }
