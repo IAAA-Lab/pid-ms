@@ -48,8 +48,8 @@
         <dd>
             <span>{{vm.persistentIdentifier.locator}}</span>
         </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.processStatus">Process Status</span></dt>
-        <dd>
+        <dt ng-switch-when="true"><span data-translate="pidmsApp.persistentIdentifier.processStatus">Process Status</span></dt>
+        <dd ng-switch-when="true">
             <span data-translate="{{'pidmsApp.ProcessStatus.' + vm.persistentIdentifier.processStatus}}">{{vm.persistentIdentifier.processStatus}}</span>
         </dd>
         <dt><span data-translate="pidmsApp.persistentIdentifier.itemStatus">Item Status</span></dt>

@@ -57,7 +57,7 @@
             parent: 'change',
             url: '/{id}',
             data: {
-                authorities: [],
+                authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.change.detail.title'
             },
             views: {

@@ -30,15 +30,18 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="task in vm.tasks track by task.id">
-                    <td><a ui-sref="task-detail({id:task.id})">{{task.id}}</a></td>
+                <tr ng-repeat="task in vm.tasks track by task.id" >
+                    <td ng-switch="vm.isAuthenticated()">
+                        <a ui-sref="task-detail({id:task.id})" ng-switch-when="true">{{task.id}}</a>
+                        <span ng-switch-when="false">{{task.id}}</span>
+                    </td>
                     <td>
                         <a ui-sref="namespace-detail({id:task.namespaceId})">{{task.namespaceName}}</a>
                     </td>
                     <td>{{task.timestamp | date:'medium'}}</td>
                     <td data-translate="{{'pidmsApp.ProcessStatus.' + task.type}}">{{task.type}}</td>
                     <td data-translate="{{'pidmsApp.TaskStatus.' + task.status}}">{{task.status}}</td>
-                    <td class="text-right">
+                    <td class="text-right" ng-switch="vm.isAuthenticated()">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"
                                     ui-sref="task.edit({id:task.id})"

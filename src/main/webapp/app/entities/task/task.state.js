@@ -57,7 +57,7 @@
             parent: 'task',
             url: '/{id}',
             data: {
-                authorities: [],
+                authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.task.detail.title'
             },
             views: {

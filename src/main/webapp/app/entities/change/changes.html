@@ -33,28 +33,32 @@
             </thead>
             <tbody>
                 <tr ng-repeat="change in vm.changes track by change.id">
-                    <td><a ui-sref="change-detail({id:change.id})">{{change.id}}</a></td>
-                    <td>
-                        <a ui-sref="task-detail({id:change.taskId})">{{change.taskId}}</a>
+                    <td ng-switch="vm.isAuthenticated()">
+                        <a ui-sref="change-detail({id:change.id})" ng-switch-when="true">{{change.id}}</a>
+                        <span ng-switch-when="false">{{change.id}}</span>
+                    </td>
+                    <td ng-switch="vm.isAuthenticated()">
+                        <a ui-sref="task-detail({id:change.taskId})" ng-switch-when="true">{{change.taskId}}</a>
+                        <span ng-switch-when="false">{{change.taskId}}</span>
                     </td>
                     <td>{{change.changeTimestamp | date:'medium'}}</td>
                     <td data-translate="{{'pidmsApp.ChangeAction.' + change.action}}">{{change.action}}</td>
                     <td>{{change.namespace}}</td>
                     <td>{{change.localId}}</td>
                     <td>{{change.versionId}}</td>
-                    <td class="text-right">
+                    <td class="text-right" ng-switch="vm.isAuthenticated()">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"
                                     ui-sref="change.edit({id:change.id})"
                                     class="btn btn-primary btn-sm"
-                                    ng-switch-when="true">>
+                                    ng-switch-when="true">
                                 <span class="glyphicon glyphicon-pencil"></span>
                                 <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
                             </button>
                             <button type="submit"
                                     ui-sref="change.delete({id:change.id})"
                                     class="btn btn-danger btn-sm"
-                                    ng-switch-when="true">>
+                                    ng-switch-when="true">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
                                 <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
                             </button>

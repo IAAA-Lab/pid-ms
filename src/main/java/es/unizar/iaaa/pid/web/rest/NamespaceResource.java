@@ -1,6 +1,7 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import es.unizar.iaaa.pid.security.SecurityUtils;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
 import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
@@ -92,7 +93,13 @@ public class NamespaceResource {
     @Timed
     public ResponseEntity<List<NamespaceDTO>> getAllNamespaces(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Namespaces");
-        Page<NamespaceDTO> page = namespaceService.findAll(pageable);
+
+        Page<NamespaceDTO> page;
+        if (SecurityUtils.isAuthenticated()) {
+            page = namespaceService.findAll(pageable);
+        } else {
+            page = namespaceService.findPublic(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/namespaces");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -107,7 +114,12 @@ public class NamespaceResource {
     @Timed
     public ResponseEntity<NamespaceDTO> getNamespace(@PathVariable Long id) {
         log.debug("REST request to get Namespace : {}", id);
-        NamespaceDTO namespaceDTO = namespaceService.findOne(id);
+        NamespaceDTO namespaceDTO;
+        if (SecurityUtils.isAuthenticated()) {
+            namespaceDTO = namespaceService.findOne(id);
+        } else {
+            namespaceDTO = namespaceService.findOnePublic(id);
+        }
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(namespaceDTO));
     }
 
