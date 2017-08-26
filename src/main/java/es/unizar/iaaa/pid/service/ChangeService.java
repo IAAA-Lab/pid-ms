@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
+    /**
  * Service class for managing changes.
- */
+     */
 @Service
 @Transactional
 public class ChangeService {
@@ -25,7 +25,7 @@ public class ChangeService {
 
     public ChangeService(ChangeRepository changeRepository) {
         this.changeRepository = changeRepository;
-    }
+}
 
     public void createChange(Change change) {
         changeRepository.save(change);

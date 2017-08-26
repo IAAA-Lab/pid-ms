@@ -94,6 +94,6 @@
     "javadoc": "Entity PersistentIdentifier",
     "entityTableName": "persistent_identifier",
     "dto": "mapstruct",
-    "pagination": "pager",
+    "pagination": "infinite-scroll",
     "service": "serviceImpl"
 }

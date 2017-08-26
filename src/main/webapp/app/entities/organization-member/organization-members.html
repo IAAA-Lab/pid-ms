@@ -14,11 +14,10 @@
         </div>
     </div>
     <br/>
-    <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
                     <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="organizationId"><span data-translate="pidmsApp.organizationMember.organization">Organization</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="userId"><span data-translate="pidmsApp.organizationMember.user">User</span> <span class="glyphicon glyphicon-sort"></span></th>
@@ -26,7 +25,7 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody infinite-scroll="vm.loadPage(vm.page + 1)" infinite-scroll-disabled="vm.page >= vm.links['last']">
                 <tr ng-repeat="organizationMember in vm.organizationMembers track by organizationMember.id">
                     <td><a ui-sref="organization-member-detail({id:organizationMember.id})">{{organizationMember.id}}</a></td>
                     <td>
@@ -56,5 +55,4 @@
             </tbody>
         </table>
     </div>
-    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
 </div>

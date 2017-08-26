@@ -31,6 +31,6 @@
     "javadoc": "An Organization is the owner of a set of namespaces.",
     "entityTableName": "organization",
     "dto": "mapstruct",
-    "pagination": "pager",
+    "pagination": "infinite-scroll",
     "service": "serviceImpl"
 }

@@ -5,23 +5,28 @@
         .module('pidmsApp')
         .controller('OrganizationMemberController', OrganizationMemberController);
 
-    OrganizationMemberController.$inject = ['$state', 'OrganizationMember', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams'];
+    OrganizationMemberController.$inject = ['OrganizationMember', 'ParseLinks', 'AlertService', 'paginationConstants'];
 
-    function OrganizationMemberController($state, OrganizationMember, ParseLinks, AlertService, paginationConstants, pagingParams) {
+    function OrganizationMemberController(OrganizationMember, ParseLinks, AlertService, paginationConstants) {
 
         var vm = this;
 
+        vm.organizationMembers = [];
         vm.loadPage = loadPage;
-        vm.predicate = pagingParams.predicate;
-        vm.reverse = pagingParams.ascending;
-        vm.transition = transition;
         vm.itemsPerPage = paginationConstants.itemsPerPage;
+        vm.page = 0;
+        vm.links = {
+            last: 0
+        };
+        vm.predicate = 'id';
+        vm.reset = reset;
+        vm.reverse = true;
 
         loadAll();
 
         function loadAll () {
             OrganizationMember.query({
-                page: pagingParams.page - 1,
+                page: vm.page,
                 size: vm.itemsPerPage,
                 sort: sort()
             }, onSuccess, onError);
@@ -32,29 +37,29 @@
                 }
                 return result;
             }
+
             function onSuccess(data, headers) {
                 vm.links = ParseLinks.parse(headers('link'));
                 vm.totalItems = headers('X-Total-Count');
-                vm.queryCount = vm.totalItems;
-                vm.organizationMembers = data;
-                vm.page = pagingParams.page;
+                for (var i = 0; i < data.length; i++) {
+                    vm.organizationMembers.push(data[i]);
+                }
             }
+
             function onError(error) {
                 AlertService.error(error.data.message);
             }
         }
 
-        function loadPage(page) {
-            vm.page = page;
-            vm.transition();
+        function reset () {
+            vm.page = 0;
+            vm.organizationMembers = [];
+            loadAll();
         }
 
-        function transition() {
-            $state.transitionTo($state.$current, {
-                page: vm.page,
-                sort: vm.predicate + ',' + (vm.reverse ? 'asc' : 'desc'),
-                search: vm.currentSearch
-            });
+        function loadPage(page) {
+            vm.page = page;
+            loadAll();
         }
     }
 })();
