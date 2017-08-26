@@ -1,0 +1,39 @@
+
+<div>
+    <h2><span data-translate="pidmsApp.task.detail.title">Task</span> {{vm.task.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="pidmsApp.task.timestamp">Timestamp</span></dt>
+        <dd>
+            <span>{{vm.task.timestamp | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.task.type">Type</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.ProcessStatus.' + vm.task.type}}">{{vm.task.type}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.task.status">Status</span></dt>
+        <dd>
+            <span data-translate="{{'pidmsApp.TaskStatus.' + vm.task.status}}">{{vm.task.status}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.task.numErrors">Num Errors</span></dt>
+        <dd>
+            <span>{{vm.task.numErrors}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.task.namespace">Namespace</span></dt>
+        <dd>
+            <a ui-sref="namespace-detail({id:vm.task.namespaceId})">{{vm.task.namespaceId}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="task-detail.edit({id:vm.task.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

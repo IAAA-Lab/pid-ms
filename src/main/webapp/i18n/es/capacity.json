@@ -1,0 +1,10 @@
+{
+    "pidmsApp": {
+        "Capacity" : {
+            "null": "",
+            "ADMIN": "ADMIN",
+            "EDITOR": "EDITOR",
+            "MEMBER": "MEMBER"
+        }
+    }
+}

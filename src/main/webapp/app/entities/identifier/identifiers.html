@@ -1,0 +1,66 @@
+<div>
+    <h2 data-translate="pidmsApp.identifier.home.title">Identifiers</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="identifier.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span  data-translate="pidmsApp.identifier.home.createLabel">
+                        Create new Identifier
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span data-translate="global.field.id">ID</span></th>
+                    <th><span data-translate="pidmsApp.identifier.namespace">Namespace</span></th>
+                    <th><span data-translate="pidmsApp.identifier.localId">Local Id</span></th>
+                    <th><span data-translate="pidmsApp.identifier.versionId">Version Id</span></th>
+                    <th><span data-translate="pidmsApp.identifier.beginLifespanVersion">Begin Lifespan Version</span></th>
+                    <th><span data-translate="pidmsApp.identifier.endLifespanVersion">End Lifespan Version</span></th>
+                    <th><span data-translate="pidmsApp.identifier.alternateId">Alternate Id</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="identifier in vm.identifiers track by identifier.id">
+                    <td><a ui-sref="identifier-detail({id:identifier.id})">{{identifier.id}}</a></td>
+                    <td>{{identifier.namespace}}</td>
+                    <td>{{identifier.localId}}</td>
+                    <td>{{identifier.versionId}}</td>
+                    <td>{{identifier.beginLifespanVersion | date:'medium'}}</td>
+                    <td>{{identifier.endLifespanVersion | date:'medium'}}</td>
+                    <td>{{identifier.alternateId}}</td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="identifier-detail({id:identifier.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="identifier.edit({id:identifier.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="identifier.delete({id:identifier.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

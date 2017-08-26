@@ -1,0 +1,43 @@
+
+<div>
+    <h2><span data-translate="pidmsApp.identifier.detail.title">Identifier</span> {{vm.identifier.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span data-translate="pidmsApp.identifier.namespace">Namespace</span></dt>
+        <dd>
+            <span>{{vm.identifier.namespace}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.identifier.localId">Local Id</span></dt>
+        <dd>
+            <span>{{vm.identifier.localId}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.identifier.versionId">Version Id</span></dt>
+        <dd>
+            <span>{{vm.identifier.versionId}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.identifier.beginLifespanVersion">Begin Lifespan Version</span></dt>
+        <dd>
+            <span>{{vm.identifier.beginLifespanVersion | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.identifier.endLifespanVersion">End Lifespan Version</span></dt>
+        <dd>
+            <span>{{vm.identifier.endLifespanVersion | date:'medium'}}</span>
+        </dd>
+        <dt><span data-translate="pidmsApp.identifier.alternateId">Alternate Id</span></dt>
+        <dd>
+            <span>{{vm.identifier.alternateId}}</span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button" ui-sref="identifier-detail.edit({id:vm.identifier.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
+    </button>
+</div>

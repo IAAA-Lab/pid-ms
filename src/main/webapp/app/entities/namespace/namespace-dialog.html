@@ -1,0 +1,309 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myNamespaceLabel" data-translate="pidmsApp.namespace.home.createOrEditLabel">Create or edit a Namespace</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.namespace.id">
+            <label for="id" data-translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.namespace.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.namespace" for="field_namespace">Namespace</label>
+            <input type="text" class="form-control" name="namespace" id="field_namespace"
+                    ng-model="vm.namespace.namespace"
+                    required/>
+            <div ng-show="editForm.namespace.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.namespace.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.title" for="field_title">Title</label>
+            <input type="text" class="form-control" name="title" id="field_title"
+                    ng-model="vm.namespace.title"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.publicNamespace" for="field_publicNamespace">Public Namespace</label>
+                <input type="checkbox" name="publicNamespace" id="field_publicNamespace"
+                          ng-model="vm.namespace.publicNamespace"/>
+            <div ng-show="editForm.publicNamespace.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.publicNamespace.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.renewalPolicy" for="field_renewalPolicy">Renewal Policy</label>
+            <select class="form-control" name="renewalPolicy" ng-model="vm.namespace.renewalPolicy" id="field_renewalPolicy" required>
+                <option value="NONE" data-translate="pidmsApp.RenewalPolicy.NONE">NONE</option>
+                <option value="CONTINUOUS" data-translate="pidmsApp.RenewalPolicy.CONTINUOUS">CONTINUOUS</option>
+                <option value="ONE_MINUTE" data-translate="pidmsApp.RenewalPolicy.ONE_MINUTE">ONE_MINUTE</option>
+                <option value="DAILY" data-translate="pidmsApp.RenewalPolicy.DAILY">DAILY</option>
+                <option value="MONTHLY" data-translate="pidmsApp.RenewalPolicy.MONTHLY">MONTHLY</option>
+                <option value="YEARLY" data-translate="pidmsApp.RenewalPolicy.YEARLY">YEARLY</option>
+            </select>
+            <div ng-show="editForm.renewalPolicy.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.renewalPolicy.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.namespaceStatus" for="field_namespaceStatus">Namespace Status</label>
+            <select class="form-control" name="namespaceStatus" ng-model="vm.namespace.namespaceStatus" id="field_namespaceStatus">
+                <option value="STOP" data-translate="pidmsApp.NamespaceStatus.STOP">STOP</option>
+                <option value="GO" data-translate="pidmsApp.NamespaceStatus.GO">GO</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.processStatus" for="field_processStatus">Process Status</label>
+            <select class="form-control" name="processStatus" ng-model="vm.namespace.processStatus" id="field_processStatus">
+                <option value="PENDING_PREPARING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_PREPARING_HARVEST">PENDING_PREPARING_HARVEST</option>
+                <option value="PREPARING_HARVEST" data-translate="pidmsApp.ProcessStatus.PREPARING_HARVEST">PREPARING_HARVEST</option>
+                <option value="PENDING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_HARVEST">PENDING_HARVEST</option>
+                <option value="HARVEST" data-translate="pidmsApp.ProcessStatus.HARVEST">HARVEST</option>
+                <option value="PENDING_TRANSFERRING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_TRANSFERRING_HARVEST">PENDING_TRANSFERRING_HARVEST</option>
+                <option value="TRANSFERRING_HARVEST" data-translate="pidmsApp.ProcessStatus.TRANSFERRING_HARVEST">TRANSFERRING_HARVEST</option>
+                <option value="PENDING_VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.PENDING_VALIDATION_BY_ID">PENDING_VALIDATION_BY_ID</option>
+                <option value="VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.VALIDATION_BY_ID">VALIDATION_BY_ID</option>
+                <option value="PENDING_TRANSFERRING_VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.PENDING_TRANSFERRING_VALIDATION_BY_ID">PENDING_TRANSFERRING_VALIDATION_BY_ID</option>
+                <option value="TRANSFERRING_VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.TRANSFERRING_VALIDATION_BY_ID">TRANSFERRING_VALIDATION_BY_ID</option>
+                <option value="PENDING_VALIDATION_END" data-translate="pidmsApp.ProcessStatus.PENDING_VALIDATION_END">PENDING_VALIDATION_END</option>
+                <option value="VALIDATION_END" data-translate="pidmsApp.ProcessStatus.VALIDATION_END">VALIDATION_END</option>
+                <option value="VALIDATION_BEGIN" data-translate="pidmsApp.ProcessStatus.VALIDATION_BEGIN">VALIDATION_BEGIN</option>
+                <option value="NONE" data-translate="pidmsApp.ProcessStatus.NONE">NONE</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.itemStatus" for="field_itemStatus">Item Status</label>
+            <select class="form-control" name="itemStatus" ng-model="vm.namespace.itemStatus" id="field_itemStatus">
+                <option value="ISSUED" data-translate="pidmsApp.ItemStatus.ISSUED">ISSUED</option>
+                <option value="LAPSED" data-translate="pidmsApp.ItemStatus.LAPSED">LAPSED</option>
+                <option value="RETIRED" data-translate="pidmsApp.ItemStatus.RETIRED">RETIRED</option>
+                <option value="PENDING_VALIDATION" data-translate="pidmsApp.ItemStatus.PENDING_VALIDATION">PENDING_VALIDATION</option>
+                <option value="ANNULLED" data-translate="pidmsApp.ItemStatus.ANNULLED">ANNULLED</option>
+                <option value="PENDING_RETIREMENT" data-translate="pidmsApp.ItemStatus.PENDING_RETIREMENT">PENDING_RETIREMENT</option>
+                <option value="NEW" data-translate="pidmsApp.ItemStatus.NEW">NEW</option>
+                <option value="VALIDATED" data-translate="pidmsApp.ItemStatus.VALIDATED">VALIDATED</option>
+                <option value="PENDING_ANNULLATION" data-translate="pidmsApp.ItemStatus.PENDING_ANNULLATION">PENDING_ANNULLATION</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.lastChangeDate" for="field_lastChangeDate">Last Change Date</label>
+                <div class="input-group">
+                    <input id="field_lastChangeDate" type="text" class="form-control" name="lastChangeDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.lastChangeDate" is-open="vm.datePickerOpenStatus.lastChangeDate"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('lastChangeDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.registrationDate" for="field_registrationDate">Registration Date</label>
+                <div class="input-group">
+                    <input id="field_registrationDate" type="text" class="form-control" name="registrationDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.registrationDate" is-open="vm.datePickerOpenStatus.registrationDate"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('registrationDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.lastRevisionDate" for="field_lastRevisionDate">Last Revision Date</label>
+                <div class="input-group">
+                    <input id="field_lastRevisionDate" type="text" class="form-control" name="lastRevisionDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.lastRevisionDate" is-open="vm.datePickerOpenStatus.lastRevisionDate"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('lastRevisionDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.nextRenewalDate" for="field_nextRenewalDate">Next Renewal Date</label>
+                <div class="input-group">
+                    <input id="field_nextRenewalDate" type="text" class="form-control" name="nextRenewalDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.nextRenewalDate" is-open="vm.datePickerOpenStatus.nextRenewalDate"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('nextRenewalDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.annullationDate" for="field_annullationDate">Annullation Date</label>
+                <div class="input-group">
+                    <input id="field_annullationDate" type="text" class="form-control" name="annullationDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.annullationDate" is-open="vm.datePickerOpenStatus.annullationDate"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('annullationDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.methodType" for="field_methodType">Method Type</label>
+            <select class="form-control" name="methodType" ng-model="vm.namespace.methodType" id="field_methodType">
+                <option value="GET" data-translate="pidmsApp.MethodType.GET">GET</option>
+                <option value="POST" data-translate="pidmsApp.MethodType.POST">POST</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.sourceType" for="field_sourceType">Source Type</label>
+            <select class="form-control" name="sourceType" ng-model="vm.namespace.sourceType" id="field_sourceType">
+                <option value="WFS" data-translate="pidmsApp.SourceType.WFS">WFS</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.endpointLocation" for="field_endpointLocation">Endpoint Location</label>
+            <input type="text" class="form-control" name="endpointLocation" id="field_endpointLocation"
+                    ng-model="vm.namespace.endpointLocation"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.srsName" for="field_srsName">Srs Name</label>
+            <input type="text" class="form-control" name="srsName" id="field_srsName"
+                    ng-model="vm.namespace.srsName"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.schemaUri" for="field_schemaUri">Schema Uri</label>
+            <input type="text" class="form-control" name="schemaUri" id="field_schemaUri"
+                    ng-model="vm.namespace.schemaUri"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.schemaUriGML" for="field_schemaUriGML">Schema Uri GML</label>
+            <input type="text" class="form-control" name="schemaUriGML" id="field_schemaUriGML"
+                    ng-model="vm.namespace.schemaUriGML"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.schemaUriBase" for="field_schemaUriBase">Schema Uri Base</label>
+            <input type="text" class="form-control" name="schemaUriBase" id="field_schemaUriBase"
+                    ng-model="vm.namespace.schemaUriBase"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.schemaPrefix" for="field_schemaPrefix">Schema Prefix</label>
+            <input type="text" class="form-control" name="schemaPrefix" id="field_schemaPrefix"
+                    ng-model="vm.namespace.schemaPrefix"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.featureType" for="field_featureType">Feature Type</label>
+            <input type="text" class="form-control" name="featureType" id="field_featureType"
+                    ng-model="vm.namespace.featureType"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.geometryProperty" for="field_geometryProperty">Geometry Property</label>
+            <input type="text" class="form-control" name="geometryProperty" id="field_geometryProperty"
+                    ng-model="vm.namespace.geometryProperty"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.beginLifespanVersionProperty" for="field_beginLifespanVersionProperty">Begin Lifespan Version Property</label>
+            <input type="text" class="form-control" name="beginLifespanVersionProperty" id="field_beginLifespanVersionProperty"
+                    ng-model="vm.namespace.beginLifespanVersionProperty"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.featuresThreshold" for="field_featuresThreshold">Features Threshold</label>
+            <input type="number" class="form-control" name="featuresThreshold" id="field_featuresThreshold"
+                    ng-model="vm.namespace.featuresThreshold"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.resolverProxyMode" for="field_resolverProxyMode">Resolver Proxy Mode</label>
+                <input type="checkbox" name="resolverProxyMode" id="field_resolverProxyMode"
+                          ng-model="vm.namespace.resolverProxyMode"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.hitsRequest" for="field_hitsRequest">Hits Request</label>
+                <input type="checkbox" name="hitsRequest" id="field_hitsRequest"
+                          ng-model="vm.namespace.hitsRequest"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.factorK" for="field_factorK">Factor K</label>
+            <input type="number" class="form-control" name="factorK" id="field_factorK"
+                    ng-model="vm.namespace.factorK"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.xpath" for="field_xpath">Xpath</label>
+            <input type="text" class="form-control" name="xpath" id="field_xpath"
+                    ng-model="vm.namespace.xpath"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.nameItem" for="field_nameItem">Name Item</label>
+            <input type="text" class="form-control" name="nameItem" id="field_nameItem"
+                    ng-model="vm.namespace.nameItem"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.maxNumRequest" for="field_maxNumRequest">Max Num Request</label>
+            <input type="number" class="form-control" name="maxNumRequest" id="field_maxNumRequest"
+                    ng-model="vm.namespace.maxNumRequest"
+                    min="0"/>
+            <div ng-show="editForm.maxNumRequest.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.maxNumRequest.$error.min" data-translate="entity.validation.min" translate-value-min="0">
+                    This field should be at least 0.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.maxNumRequest.$error.number" data-translate="entity.validation.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.minX" for="field_minX">Min X</label>
+            <input type="number" class="form-control" name="minX" id="field_minX"
+                    ng-model="vm.namespace.minX"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.minY" for="field_minY">Min Y</label>
+            <input type="number" class="form-control" name="minY" id="field_minY"
+                    ng-model="vm.namespace.minY"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.maxX" for="field_maxX">Max X</label>
+            <input type="number" class="form-control" name="maxX" id="field_maxX"
+                    ng-model="vm.namespace.maxX"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.namespace.maxY" for="field_maxY">Max Y</label>
+            <input type="number" class="form-control" name="maxY" id="field_maxY"
+                    ng-model="vm.namespace.maxY"
+                    />
+        </div>
+
+        <div class="form-group">
+            <label data-translate="pidmsApp.namespace.owner" for="field_owner">Owner</label>
+            <select class="form-control" id="field_owner" name="owner" ng-model="vm.namespace.ownerId" ng-options="organization.id as organization.id for organization in vm.organizations"            >
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

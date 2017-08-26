@@ -1,0 +1,127 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myChangeLabel" data-translate="pidmsApp.change.home.createOrEditLabel">Create or edit a Change</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.change.id">
+            <label for="id" data-translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.change.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.change.changeTimestamp" for="field_changeTimestamp">Change Timestamp</label>
+                <div class="input-group">
+                    <input id="field_changeTimestamp" type="text" class="form-control" name="changeTimestamp" datetime-picker="{{dateformat}}" ng-model="vm.change.changeTimestamp" is-open="vm.datePickerOpenStatus.changeTimestamp"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('changeTimestamp')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.change.action" for="field_action">Action</label>
+            <select class="form-control" name="action" ng-model="vm.change.action" id="field_action">
+                <option value="ISSUED" data-translate="pidmsApp.ChangeAction.ISSUED">ISSUED</option>
+                <option value="CANCELLED" data-translate="pidmsApp.ChangeAction.CANCELLED">CANCELLED</option>
+                <option value="INCONSISTENT" data-translate="pidmsApp.ChangeAction.INCONSISTENT">INCONSISTENT</option>
+                <option value="NOT_FOUND" data-translate="pidmsApp.ChangeAction.NOT_FOUND">NOT_FOUND</option>
+                <option value="UNCHANGED" data-translate="pidmsApp.ChangeAction.UNCHANGED">UNCHANGED</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.change.feature" for="field_feature">Feature</label>
+            <input type="text" class="form-control" name="feature" id="field_feature"
+                    ng-model="vm.change.feature"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.change.namespace" for="field_namespace">Namespace</label>
+            <input type="text" class="form-control" name="namespace" id="field_namespace"
+                    ng-model="vm.change.namespace"
+                    required/>
+            <div ng-show="editForm.namespace.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.namespace.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.change.localId" for="field_localId">Local Id</label>
+            <input type="text" class="form-control" name="localId" id="field_localId"
+                    ng-model="vm.change.localId"
+                    required/>
+            <div ng-show="editForm.localId.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.localId.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.change.versionId" for="field_versionId">Version Id</label>
+            <input type="text" class="form-control" name="versionId" id="field_versionId"
+                    ng-model="vm.change.versionId"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.change.beginLifespanVersion" for="field_beginLifespanVersion">Begin Lifespan Version</label>
+                <div class="input-group">
+                    <input id="field_beginLifespanVersion" type="text" class="form-control" name="beginLifespanVersion" datetime-picker="{{dateformat}}" ng-model="vm.change.beginLifespanVersion" is-open="vm.datePickerOpenStatus.beginLifespanVersion"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('beginLifespanVersion')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.change.endLifespanVersion" for="field_endLifespanVersion">End Lifespan Version</label>
+                <div class="input-group">
+                    <input id="field_endLifespanVersion" type="text" class="form-control" name="endLifespanVersion" datetime-picker="{{dateformat}}" ng-model="vm.change.endLifespanVersion" is-open="vm.datePickerOpenStatus.endLifespanVersion"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('endLifespanVersion')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.change.alternateId" for="field_alternateId">Alternate Id</label>
+            <input type="text" class="form-control" name="alternateId" id="field_alternateId"
+                    ng-model="vm.change.alternateId"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.change.resourceType" for="field_resourceType">Resource Type</label>
+            <select class="form-control" name="resourceType" ng-model="vm.change.resourceType" id="field_resourceType">
+                <option value="DATASET" data-translate="pidmsApp.ResourceType.DATASET">DATASET</option>
+                <option value="SPATIAL_OBJECT" data-translate="pidmsApp.ResourceType.SPATIAL_OBJECT">SPATIAL_OBJECT</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.change.locator" for="field_locator">Locator</label>
+            <input type="text" class="form-control" name="locator" id="field_locator"
+                    ng-model="vm.change.locator"
+                    />
+        </div>
+
+        <div class="form-group">
+            <label data-translate="pidmsApp.change.task" for="field_task">Task</label>
+            <select class="form-control" id="field_task" name="task" ng-model="vm.change.taskId" ng-options="task.id as task.id for task in vm.tasks"            >
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

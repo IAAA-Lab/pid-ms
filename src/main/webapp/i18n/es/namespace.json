@@ -1,0 +1,55 @@
+{
+    "pidmsApp": {
+        "namespace" : {
+            "home": {
+                "title": "Namespaces",
+                "createLabel": "Crear nuevo Namespace",
+                "createOrEditLabel": "Crear o editar Namespace"
+            },
+            "created": "Un nuevo Namespace ha sido creado con el identificador {{ param }}",
+            "updated": "Un Namespace ha sido actualizado con el identificador {{ param }}",
+            "deleted": "Un Namespace ha sido eliminado con el identificador {{ param }}",
+            "delete": {
+                "question": "¿Seguro que quiere eliminar Namespace {{ id }}?"
+            },
+            "detail": {
+                "title": "Namespace"
+            },
+            "namespace": "Namespace",
+            "title": "Title",
+            "publicNamespace": "Public Namespace",
+            "renewalPolicy": "Renewal Policy",
+            "namespaceStatus": "Namespace Status",
+            "processStatus": "Process Status",
+            "itemStatus": "Item Status",
+            "lastChangeDate": "Last Change Date",
+            "registrationDate": "Registration Date",
+            "lastRevisionDate": "Last Revision Date",
+            "nextRenewalDate": "Next Renewal Date",
+            "annullationDate": "Annullation Date",
+            "methodType": "Method Type",
+            "sourceType": "Source Type",
+            "endpointLocation": "Endpoint Location",
+            "srsName": "Srs Name",
+            "schemaUri": "Schema Uri",
+            "schemaUriGML": "Schema Uri GML",
+            "schemaUriBase": "Schema Uri Base",
+            "schemaPrefix": "Schema Prefix",
+            "featureType": "Feature Type",
+            "geometryProperty": "Geometry Property",
+            "beginLifespanVersionProperty": "Begin Lifespan Version Property",
+            "featuresThreshold": "Features Threshold",
+            "resolverProxyMode": "Resolver Proxy Mode",
+            "hitsRequest": "Hits Request",
+            "factorK": "Factor K",
+            "xpath": "Xpath",
+            "nameItem": "Name Item",
+            "maxNumRequest": "Max Num Request",
+            "minX": "Min X",
+            "minY": "Min Y",
+            "maxX": "Max X",
+            "maxY": "Max Y",
+            "owner": "Owner"
+        }
+    }
+}

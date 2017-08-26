@@ -1,0 +1,38 @@
+{
+    "pidmsApp": {
+        "persistentIdentifier" : {
+            "home": {
+                "title": "Persistent Identifiers",
+                "createLabel": "Create a new Persistent Identifier",
+                "createOrEditLabel": "Create or edit a Persistent Identifier"
+            },
+            "created": "A new Persistent Identifier is created with identifier {{ param }}",
+            "updated": "A Persistent Identifier is updated with identifier {{ param }}",
+            "deleted": "A Persistent Identifier is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Persistent Identifier {{ id }}?"
+            },
+            "detail": {
+                "title": "Persistent Identifier"
+            },
+            "externalUrn": "External Urn",
+            "feature": "Feature",
+            "resolverProxyMode": "Resolver Proxy Mode",
+            "namespace": "Namespace",
+            "localId": "Local Id",
+            "versionId": "Version Id",
+            "beginLifespanVersion": "Begin Lifespan Version",
+            "endLifespanVersion": "End Lifespan Version",
+            "alternateId": "Alternate Id",
+            "resourceType": "Resource Type",
+            "locator": "Locator",
+            "processStatus": "Process Status",
+            "itemStatus": "Item Status",
+            "lastChangeDate": "Last Change Date",
+            "registrationDate": "Registration Date",
+            "lastRevisionDate": "Last Revision Date",
+            "nextRenewalDate": "Next Renewal Date",
+            "annullationDate": "Annullation Date"
+        }
+    }
+}

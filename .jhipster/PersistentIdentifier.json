@@ -1,0 +1,99 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "externalUrn",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "feature",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "resolverProxyMode",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "namespace",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "localId",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "versionId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "beginLifespanVersion",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "endLifespanVersion",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "alternateId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "resourceType",
+            "fieldType": "ResourceType",
+            "fieldValues": "DATASET,SPATIAL_OBJECT"
+        },
+        {
+            "fieldName": "locator",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "processStatus",
+            "fieldType": "ProcessStatus",
+            "fieldValues": "PENDING_PREPARING_HARVEST,PREPARING_HARVEST,PENDING_HARVEST,HARVEST,PENDING_TRANSFERRING_HARVEST,TRANSFERRING_HARVEST,PENDING_VALIDATION_BY_ID,VALIDATION_BY_ID,PENDING_TRANSFERRING_VALIDATION_BY_ID,TRANSFERRING_VALIDATION_BY_ID,PENDING_VALIDATION_END,VALIDATION_END,VALIDATION_BEGIN,NONE"
+        },
+        {
+            "fieldName": "itemStatus",
+            "fieldType": "ItemStatus",
+            "fieldValues": "ISSUED,LAPSED,RETIRED,PENDING_VALIDATION,ANNULLED,PENDING_RETIREMENT,NEW,VALIDATED,PENDING_ANNULLATION"
+        },
+        {
+            "fieldName": "lastChangeDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "registrationDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "lastRevisionDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "nextRenewalDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "annullationDate",
+            "fieldType": "Instant"
+        }
+    ],
+    "changelogDate": "20170802162142",
+    "javadoc": "Entity PersistentIdentifier",
+    "entityTableName": "persistent_identifier",
+    "dto": "mapstruct",
+    "pagination": "pager",
+    "service": "serviceImpl"
+}

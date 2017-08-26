@@ -1,0 +1,23 @@
+{
+    "pidmsApp": {
+        "organizationMember" : {
+            "home": {
+                "title": "Organization Members",
+                "createLabel": "Crear nuevo Organization Member",
+                "createOrEditLabel": "Crear o editar Organization Member"
+            },
+            "created": "Un nuevo Organization Member ha sido creado con el identificador {{ param }}",
+            "updated": "Un Organization Member ha sido actualizado con el identificador {{ param }}",
+            "deleted": "Un Organization Member ha sido eliminado con el identificador {{ param }}",
+            "delete": {
+                "question": "¿Seguro que quiere eliminar Organization Member {{ id }}?"
+            },
+            "detail": {
+                "title": "Organization Member"
+            },
+            "capacity": "Capacity",
+            "user": "User",
+            "organization": "Organization"
+        }
+    }
+}

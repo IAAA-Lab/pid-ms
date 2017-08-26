@@ -1,0 +1,174 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "owner",
+            "otherEntityName": "organization",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "namespace",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "title",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "publicNamespace",
+            "fieldType": "Boolean",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "renewalPolicy",
+            "fieldType": "RenewalPolicy",
+            "fieldValues": "NONE,CONTINUOUS,ONE_MINUTE,DAILY,MONTHLY,YEARLY",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "namespaceStatus",
+            "fieldType": "NamespaceStatus",
+            "fieldValues": "STOP,GO"
+        },
+        {
+            "fieldName": "processStatus",
+            "fieldType": "ProcessStatus",
+            "fieldValues": "PENDING_PREPARING_HARVEST,PREPARING_HARVEST,PENDING_HARVEST,HARVEST,PENDING_TRANSFERRING_HARVEST,TRANSFERRING_HARVEST,PENDING_VALIDATION_BY_ID,VALIDATION_BY_ID,PENDING_TRANSFERRING_VALIDATION_BY_ID,TRANSFERRING_VALIDATION_BY_ID,PENDING_VALIDATION_END,VALIDATION_END,VALIDATION_BEGIN,NONE"
+        },
+        {
+            "fieldName": "itemStatus",
+            "fieldType": "ItemStatus",
+            "fieldValues": "ISSUED,LAPSED,RETIRED,PENDING_VALIDATION,ANNULLED,PENDING_RETIREMENT,NEW,VALIDATED,PENDING_ANNULLATION"
+        },
+        {
+            "fieldName": "lastChangeDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "registrationDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "lastRevisionDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "nextRenewalDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "annullationDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "methodType",
+            "fieldType": "MethodType",
+            "fieldValues": "GET,POST"
+        },
+        {
+            "fieldName": "sourceType",
+            "fieldType": "SourceType",
+            "fieldValues": "WFS"
+        },
+        {
+            "fieldName": "endpointLocation",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "srsName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "schemaUri",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "schemaUriGML",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "schemaUriBase",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "schemaPrefix",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "featureType",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "geometryProperty",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "beginLifespanVersionProperty",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "featuresThreshold",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "resolverProxyMode",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "hitsRequest",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "factorK",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "xpath",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nameItem",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "maxNumRequest",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        },
+        {
+            "fieldName": "minX",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "minY",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "maxX",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "maxY",
+            "fieldType": "Double"
+        }
+    ],
+    "changelogDate": "20170802153709",
+    "javadoc": "Entity Namespace",
+    "entityTableName": "namespace",
+    "dto": "mapstruct",
+    "pagination": "pager",
+    "service": "serviceImpl"
+}
