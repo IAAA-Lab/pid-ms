@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface NamespaceRepository extends JpaRepository<Namespace,Long> {
+public interface NamespaceRepository extends JpaRepository<Namespace, Long> {
 
     Namespace findFirstByRegistrationProcessStatus(ProcessStatus processStatus);
 

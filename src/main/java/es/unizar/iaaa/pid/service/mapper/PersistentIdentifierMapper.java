@@ -14,7 +14,7 @@ import java.util.UUID;
  * Mapper for the entity PersistentIdentifier and its DTO PersistentIdentifierDTO.
  */
 @Mapper(componentModel = "spring", uses = {})
-public interface PersistentIdentifierMapper extends EntityMapper<PersistentIdentifierDTO, PersistentIdentifier> {
+public interface PersistentIdentifierMapper extends EntityMapper <PersistentIdentifierDTO, PersistentIdentifier> {
 
     @Mappings({
         @Mapping(source = "resource.resourceType", target = "resourceType"),

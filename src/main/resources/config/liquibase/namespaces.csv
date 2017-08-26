@@ -1,5 +1,5 @@
 id;namespace;title;public_namespace;renewal_policy;namespace_status;process_status;item_status;last_change_date;registration_date;method_type;source_type;endpoint_location;srs_name;schema_uri;schema_uri_gml;schema_uri_base;schema_prefix;feature_type;geometry_property;begin_lifespan_version_property;features_threshold;resolver_proxy_mode;hits_request;factor_k;xpath;name_item;max_num_request;min_x;min_y;max_x;max_y;owner_id;version_lock
-1;ES.IGN.NGBE;ES.IGN.NGBE;0;MONTHLY;STOP;NONE;PENDING_VALIDATION;2016-09-27 07:43:40;2016-09-27 07:43:40;GET;WFS;http://www.ign.es/wfs-inspire/ngbe;urn:ogc:def:crs:EPSG::4258;http://inspire.ec.europa.eu/schemas/gn/4.0;http://www.opengis.net/gml/3.2;http://inspire.ec.europa.eu/schemas/base/3.3;gn;NamedPlace;geometry;beginLifespanVersion;10000;0;1;0;http://www.opengis.net/wfs/2.0;member;0;p28.215;-16.875;33.75;14.0625;1;1
+1;ES.IGN.NGBE;ES.IGN.NGBE;0;MONTHLY;STOP;NONE;PENDING_VALIDATION;2016-09-27 07:43:40;2016-09-27 07:43:40;GET;WFS;http://www.ign.es/wfs-inspire/ngbe;urn:ogc:def:crs:EPSG::4258;http://inspire.ec.europa.eu/schemas/gn/4.0;http://www.opengis.net/gml/3.2;http://inspire.ec.europa.eu/schemas/base/3.3;gn;NamedPlace;geometry;beginLifespanVersion;10000;0;1;0;http://www.opengis.net/wfs/2.0;member;0;28.215;-16.875;33.75;14.0625;1;0
 
 
 

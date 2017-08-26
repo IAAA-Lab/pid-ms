@@ -52,7 +52,7 @@ public class NamespaceServiceTest {
     }
 
     @Test
-    public void simpleTest() throws InterruptedException, ExecutionException {
+    public void ensureNamespaceHasOptimisticLocking() throws InterruptedException, ExecutionException {
         transactionTemplate.execute(transactionStatus -> {
             registration.setItemStatus(ItemStatus.PENDING_VALIDATION);
             registration.setProcessStatus(ProcessStatus.PENDING_HARVEST);

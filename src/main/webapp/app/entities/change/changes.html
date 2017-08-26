@@ -16,11 +16,10 @@
         </div>
     </div>
     <br/>
-    <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
                     <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="taskId"><span data-translate="pidmsApp.change.task">Task</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="changeTimestamp"><span data-translate="pidmsApp.change.changeTimestamp">Change Timestamp</span> <span class="glyphicon glyphicon-sort"></span></th>
@@ -31,7 +30,7 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody infinite-scroll="vm.loadPage(vm.page + 1)" infinite-scroll-disabled="vm.page >= vm.links['last']">
                 <tr ng-repeat="change in vm.changes track by change.id">
                     <td ng-switch="vm.isAuthenticated()">
                         <a ui-sref="change-detail({id:change.id})" ng-switch-when="true">{{change.id}}</a>
@@ -68,5 +67,4 @@
             </tbody>
         </table>
     </div>
-    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
 </div>

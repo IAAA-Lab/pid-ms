@@ -15,7 +15,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ChangeRepository extends JpaRepository<Change,Long> {
+public interface ChangeRepository extends JpaRepository<Change, Long> {
 
     List<Change> findByTask(Task task);
 

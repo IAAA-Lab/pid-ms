@@ -12,8 +12,8 @@ import java.util.Map;
 /**
  * Mapper for the entity Namespace and its DTO NamespaceDTO.
  */
-@Mapper(componentModel = "spring", uses = {OrganizationMapper.class,})
-public interface NamespaceMapper extends EntityMapper<NamespaceDTO, Namespace> {
+@Mapper(componentModel = "spring", uses = {OrganizationMapper.class, })
+public interface NamespaceMapper extends EntityMapper <NamespaceDTO, Namespace> {
 
     @Mappings({
         @Mapping(source = "owner.id", target = "ownerId"),

@@ -66,10 +66,9 @@ spring:
 logging:
   level: info
 
-
-
 liquibase:
     contexts: dev
+
 
 # ===================================================================
 # To enable SSL, generate a certificate using:

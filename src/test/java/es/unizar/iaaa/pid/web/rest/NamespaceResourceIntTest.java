@@ -159,7 +159,8 @@ public class NamespaceResourceIntTest {
     private static final BoundingBox UPDATED_BOUNDING_BOX = new BoundingBox().
         maxX(UPDATED_MAX_X).maxY(UPDATED_MAX_Y).minY(UPDATED_MIN_Y).minX(UPDATED_MIN_X);
 
-    private static final Integer DEFAULT_VERSION_ID = 1;
+    private static final Integer FIRST_VERSION = 0;
+    private static final Integer NEXT_VERSION = 1;
 
     @Autowired
     private NamespaceRepository namespaceRepository;
@@ -240,8 +241,7 @@ public class NamespaceResourceIntTest {
             .renewalPolicy(DEFAULT_RENEWAL_POLICY)
             .namespaceStatus(DEFAULT_NAMESPACE_STATUS)
             .registration(registration)
-            .source(source)
-            .version(DEFAULT_VERSION_ID);
+            .source(source);
 
         return namespace;
     }
@@ -301,7 +301,7 @@ public class NamespaceResourceIntTest {
         assertThat(testNamespace.getSource().getBoundingBox().getMinY()).isEqualTo(DEFAULT_MIN_Y);
         assertThat(testNamespace.getSource().getBoundingBox().getMaxX()).isEqualTo(DEFAULT_MAX_X);
         assertThat(testNamespace.getSource().getBoundingBox().getMaxY()).isEqualTo(DEFAULT_MAX_Y);
-        assertThat(testNamespace.getVersion()).isEqualTo(DEFAULT_VERSION_ID);
+        assertThat(testNamespace.getVersion()).isEqualTo(FIRST_VERSION);
     }
 
     @Test
@@ -425,7 +425,8 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.[*].minX").value(hasItem(DEFAULT_MIN_X.doubleValue())))
             .andExpect(jsonPath("$.[*].minY").value(hasItem(DEFAULT_MIN_Y.doubleValue())))
             .andExpect(jsonPath("$.[*].maxX").value(hasItem(DEFAULT_MAX_X.doubleValue())))
-            .andExpect(jsonPath("$.[*].maxY").value(hasItem(DEFAULT_MAX_Y.doubleValue())));
+            .andExpect(jsonPath("$.[*].maxY").value(hasItem(DEFAULT_MAX_Y.doubleValue())))
+            .andExpect(jsonPath("$.[*].version").value(hasItem(FIRST_VERSION)));
     }
 
     @Test
@@ -472,7 +473,8 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.minX").value(DEFAULT_MIN_X.doubleValue()))
             .andExpect(jsonPath("$.minY").value(DEFAULT_MIN_Y.doubleValue()))
             .andExpect(jsonPath("$.maxX").value(DEFAULT_MAX_X.doubleValue()))
-            .andExpect(jsonPath("$.maxY").value(DEFAULT_MAX_Y.doubleValue()));
+            .andExpect(jsonPath("$.maxY").value(DEFAULT_MAX_Y.doubleValue()))
+            .andExpect(jsonPath("$.version").value(FIRST_VERSION));
     }
 
     @Test
@@ -574,6 +576,7 @@ public class NamespaceResourceIntTest {
         assertThat(testNamespace.getSource().getBoundingBox().getMinY()).isEqualTo(UPDATED_MIN_Y);
         assertThat(testNamespace.getSource().getBoundingBox().getMaxX()).isEqualTo(UPDATED_MAX_X);
         assertThat(testNamespace.getSource().getBoundingBox().getMaxY()).isEqualTo(UPDATED_MAX_Y);
+        assertThat(testNamespace.getVersion()).isEqualTo(NEXT_VERSION);
     }
 
     @Test

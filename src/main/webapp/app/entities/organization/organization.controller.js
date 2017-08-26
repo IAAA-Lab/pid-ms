@@ -5,24 +5,29 @@
         .module('pidmsApp')
         .controller('OrganizationController', OrganizationController);
 
-    OrganizationController.$inject = ['$state', 'Organization', 'Principal', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams'];
+    OrganizationController.$inject = ['Organization', 'ParseLinks', 'AlertService', 'paginationConstants', 'Principal'];
 
-    function OrganizationController($state, Organization, Principal, ParseLinks, AlertService, paginationConstants, pagingParams) {
+    function OrganizationController(Organization, ParseLinks, AlertService, paginationConstants, Principal) {
 
         var vm = this;
 
         vm.isAuthenticated = Principal.isAuthenticated;
+        vm.organizations = [];
         vm.loadPage = loadPage;
-        vm.predicate = pagingParams.predicate;
-        vm.reverse = pagingParams.ascending;
-        vm.transition = transition;
         vm.itemsPerPage = paginationConstants.itemsPerPage;
+        vm.page = 0;
+        vm.links = {
+            last: 0
+        };
+        vm.predicate = 'id';
+        vm.reset = reset;
+        vm.reverse = true;
 
         loadAll();
 
         function loadAll () {
             Organization.query({
-                page: pagingParams.page - 1,
+                page: vm.page,
                 size: vm.itemsPerPage,
                 sort: sort()
             }, onSuccess, onError);
@@ -33,29 +38,29 @@
                 }
                 return result;
             }
+
             function onSuccess(data, headers) {
                 vm.links = ParseLinks.parse(headers('link'));
                 vm.totalItems = headers('X-Total-Count');
-                vm.queryCount = vm.totalItems;
-                vm.organizations = data;
-                vm.page = pagingParams.page;
+                for (var i = 0; i < data.length; i++) {
+                    vm.organizations.push(data[i]);
+                }
             }
+
             function onError(error) {
                 AlertService.error(error.data.message);
             }
         }
 
-        function loadPage(page) {
-            vm.page = page;
-            vm.transition();
+        function reset () {
+            vm.page = 0;
+            vm.organizations = [];
+            loadAll();
         }
 
-        function transition() {
-            $state.transitionTo($state.$current, {
-                page: vm.page,
-                sort: vm.predicate + ',' + (vm.reverse ? 'asc' : 'desc'),
-                search: vm.currentSearch
-            });
+        function loadPage(page) {
+            vm.page = page;
+            loadAll();
         }
     }
 })();
