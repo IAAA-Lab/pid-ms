@@ -25,7 +25,6 @@ public class TaskServiceImpl implements TaskService{
     private final TaskRepository taskRepository;
 
     private final TaskMapper taskMapper;
-
     public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;

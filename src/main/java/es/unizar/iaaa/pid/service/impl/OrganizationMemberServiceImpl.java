@@ -25,7 +25,6 @@ public class OrganizationMemberServiceImpl implements OrganizationMemberService{
     private final OrganizationMemberRepository organizationMemberRepository;
 
     private final OrganizationMemberMapper organizationMemberMapper;
-
     public OrganizationMemberServiceImpl(OrganizationMemberRepository organizationMemberRepository, OrganizationMemberMapper organizationMemberMapper) {
         this.organizationMemberRepository = organizationMemberRepository;
         this.organizationMemberMapper = organizationMemberMapper;

@@ -46,6 +46,7 @@ public class Identifier implements Serializable {
     @Column(name = "alternate_id")
     private String alternateId;
 
+    // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -131,6 +132,7 @@ public class Identifier implements Serializable {
     public void setAlternateId(String alternateId) {
         this.alternateId = alternateId;
     }
+    // jhipster-needle-entity-add-getters-setters - Jhipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

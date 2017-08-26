@@ -11,6 +11,6 @@ import org.springframework.data.jpa.repository.*;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface TaskRepository extends JpaRepository<Task,Long> {
-    
+public interface TaskRepository extends JpaRepository<Task, Long> {
+
 }

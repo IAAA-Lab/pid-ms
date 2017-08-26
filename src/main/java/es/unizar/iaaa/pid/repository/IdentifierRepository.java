@@ -11,6 +11,6 @@ import org.springframework.data.jpa.repository.*;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface IdentifierRepository extends JpaRepository<Identifier,Long> {
-    
+public interface IdentifierRepository extends JpaRepository<Identifier, Long> {
+
 }

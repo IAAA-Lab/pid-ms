@@ -25,7 +25,6 @@ public class NamespaceServiceImpl implements NamespaceService{
     private final NamespaceRepository namespaceRepository;
 
     private final NamespaceMapper namespaceMapper;
-
     public NamespaceServiceImpl(NamespaceRepository namespaceRepository, NamespaceMapper namespaceMapper) {
         this.namespaceRepository = namespaceRepository;
         this.namespaceMapper = namespaceMapper;

@@ -11,6 +11,6 @@ import org.springframework.data.jpa.repository.*;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface NamespaceRepository extends JpaRepository<Namespace,Long> {
-    
+public interface NamespaceRepository extends JpaRepository<Namespace, Long> {
+
 }

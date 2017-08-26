@@ -105,7 +105,7 @@ public class ChangeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ChangeResource changeResource = new ChangeResource(changeService);
+        final ChangeResource changeResource = new ChangeResource(changeService);
         this.restChangeMockMvc = MockMvcBuilders.standaloneSetup(changeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

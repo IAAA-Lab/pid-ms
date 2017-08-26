@@ -93,6 +93,7 @@ public class PersistentIdentifier implements Serializable {
     @Column(name = "annullation_date")
     private Instant annullationDate;
 
+    // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -334,6 +335,7 @@ public class PersistentIdentifier implements Serializable {
     public void setAnnullationDate(Instant annullationDate) {
         this.annullationDate = annullationDate;
     }
+    // jhipster-needle-entity-add-getters-setters - Jhipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

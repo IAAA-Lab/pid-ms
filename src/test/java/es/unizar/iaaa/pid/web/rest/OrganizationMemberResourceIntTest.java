@@ -72,7 +72,7 @@ public class OrganizationMemberResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        OrganizationMemberResource organizationMemberResource = new OrganizationMemberResource(organizationMemberService);
+        final OrganizationMemberResource organizationMemberResource = new OrganizationMemberResource(organizationMemberService);
         this.restOrganizationMemberMockMvc = MockMvcBuilders.standaloneSetup(organizationMemberResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

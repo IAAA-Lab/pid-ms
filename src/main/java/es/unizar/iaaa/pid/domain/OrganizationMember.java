@@ -38,6 +38,7 @@ public class OrganizationMember implements Serializable {
     @ManyToOne
     private Organization organization;
 
+    // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -84,6 +85,7 @@ public class OrganizationMember implements Serializable {
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
+    // jhipster-needle-entity-add-getters-setters - Jhipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

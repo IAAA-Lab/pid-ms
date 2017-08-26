@@ -86,7 +86,7 @@ public class IdentifierResource {
     public List<IdentifierDTO> getAllIdentifiers() {
         log.debug("REST request to get all Identifiers");
         return identifierService.findAll();
-    }
+        }
 
     /**
      * GET  /identifiers/:id : get the "id" identifier.

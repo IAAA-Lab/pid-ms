@@ -153,6 +153,7 @@ public class Namespace implements Serializable {
     @ManyToOne
     private Organization owner;
 
+    // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -615,6 +616,7 @@ public class Namespace implements Serializable {
     public void setOwner(Organization organization) {
         this.owner = organization;
     }
+    // jhipster-needle-entity-add-getters-setters - Jhipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

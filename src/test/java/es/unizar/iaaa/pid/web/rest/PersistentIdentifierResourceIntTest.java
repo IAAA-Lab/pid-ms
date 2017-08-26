@@ -127,7 +127,7 @@ public class PersistentIdentifierResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        PersistentIdentifierResource persistentIdentifierResource = new PersistentIdentifierResource(persistentIdentifierService);
+        final PersistentIdentifierResource persistentIdentifierResource = new PersistentIdentifierResource(persistentIdentifierService);
         this.restPersistentIdentifierMockMvc = MockMvcBuilders.standaloneSetup(persistentIdentifierResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

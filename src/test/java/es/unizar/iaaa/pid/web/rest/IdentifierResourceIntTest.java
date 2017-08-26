@@ -88,7 +88,7 @@ public class IdentifierResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        IdentifierResource identifierResource = new IdentifierResource(identifierService);
+        final IdentifierResource identifierResource = new IdentifierResource(identifierService);
         this.restIdentifierMockMvc = MockMvcBuilders.standaloneSetup(identifierResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

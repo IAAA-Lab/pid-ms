@@ -178,7 +178,7 @@ public class NamespaceResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        NamespaceResource namespaceResource = new NamespaceResource(namespaceService);
+        final NamespaceResource namespaceResource = new NamespaceResource(namespaceService);
         this.restNamespaceMockMvc = MockMvcBuilders.standaloneSetup(namespaceResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

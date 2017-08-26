@@ -25,7 +25,6 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierServ
     private final PersistentIdentifierRepository persistentIdentifierRepository;
 
     private final PersistentIdentifierMapper persistentIdentifierMapper;
-
     public PersistentIdentifierServiceImpl(PersistentIdentifierRepository persistentIdentifierRepository, PersistentIdentifierMapper persistentIdentifierMapper) {
         this.persistentIdentifierRepository = persistentIdentifierRepository;
         this.persistentIdentifierMapper = persistentIdentifierMapper;

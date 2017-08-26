@@ -84,7 +84,7 @@ public class TaskResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        TaskResource taskResource = new TaskResource(taskService);
+        final TaskResource taskResource = new TaskResource(taskService);
         this.restTaskMockMvc = MockMvcBuilders.standaloneSetup(taskResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

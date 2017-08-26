@@ -26,7 +26,6 @@ public class IdentifierServiceImpl implements IdentifierService{
     private final IdentifierRepository identifierRepository;
 
     private final IdentifierMapper identifierMapper;
-
     public IdentifierServiceImpl(IdentifierRepository identifierRepository, IdentifierMapper identifierMapper) {
         this.identifierRepository = identifierRepository;
         this.identifierMapper = identifierMapper;
