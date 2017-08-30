@@ -5,6 +5,8 @@ import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.domain.enumeration.TaskStatus;
 import es.unizar.iaaa.pid.repository.TaskRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +20,15 @@ import java.util.List;
 @Transactional
 public class TaskService {
 
+    private final Logger log = LoggerFactory.getLogger(TaskService.class);
+
     private final TaskRepository taskRepository;
 
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
-    public void createOrUpdateTask(Task task) {
+    void createTask(Task task) {
         taskRepository.save(task);
     }
 
@@ -32,17 +36,15 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    public void changeStatus(Task task, TaskStatus error) {
-        task.setStatus(error);
+    public void changeStatus(Task task, TaskStatus status) {
+        log.debug("Change status of Task {} to Status {}", task, status);
+        task.setStatus(status);
         taskRepository.save(task);
     }
 
     public void deleteAll() {
+        log.debug("Delete all Tasks");
         taskRepository.deleteAll();
-    }
-
-    public List<Task> getPendingTasks(){
-        return null;
     }
 
     public List<Task> getExecutingTasksByNamespace(Namespace namespace) {
@@ -57,13 +59,14 @@ public class TaskService {
         return taskRepository.findMostRecentHarvestTask(namespace, ProcessStatus.VALIDATION_BY_ID);
     }
 
-    public Task executing(Task task, Instant now) {
+    public void executing(Task task, Instant now) {
+        log.debug("Change status of Task {} to Status {} at Instant ", task, TaskStatus.EXECUTING, now);
         task.setStatus(TaskStatus.EXECUTING);
         task.setTimestamp(now);
-        return taskRepository.save(task);
+        taskRepository.save(task);
     }
 
-    public Task createOrUpdateTask(Namespace namespace, ProcessStatus type, Instant now) {
+    public Task createTask(Namespace namespace, ProcessStatus type, Instant now) {
         Task task = new Task();
         task.setNamespace(namespace);
         switch (type) {
@@ -75,12 +78,16 @@ public class TaskService {
         }
         task.setTimestamp(now);
         task.setType(type);
-        return taskRepository.save(task);
+        taskRepository.save(task);
+        log.debug("Created Task {}", task);
+        return task;
     }
 
     public void done(Task task, Instant now) {
+        log.debug("Change status of Task {} to Status {} at Instant ", task, TaskStatus.DONE, now);
         task.setStatus(TaskStatus.DONE);
         task.setTimestamp(now);
+        taskRepository.save(task);
     }
 
 }

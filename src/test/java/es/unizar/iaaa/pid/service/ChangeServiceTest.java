@@ -40,7 +40,7 @@ public class ChangeServiceTest {
         namespaceService.createOrUpdateNamespace(namespace);
 
         Task task = Fixtures.task(namespace);
-        taskService.createOrUpdateTask(task);
+        taskService.createTask(task);
 
         Identifier identifier = Fixtures.identifier();
 

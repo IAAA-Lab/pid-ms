@@ -38,7 +38,7 @@ abstract class AbstractTaskRunner implements TaskRunner {
 
     private void doBegin() {
         try {
-            task = taskService.executing(task, Instant.now());
+            taskService.executing(task, Instant.now());
             log("executing");
         } catch (Exception e) {
             error(e);
@@ -49,7 +49,7 @@ abstract class AbstractTaskRunner implements TaskRunner {
 
     protected void doEnd() {
         try {
-            namespaceService.doneTaskAndSetNextStep(task, Instant.now(), getNextStep());
+            namespaceService.doneTaskAndSetNextStep(task, getNextStep(), Instant.now());
             log("done");
         } catch (Exception e) {
             error(e);
