@@ -11,8 +11,8 @@ The provided solution is able to register HTTP URI as persistent identifiers of 
 
 To show more know more about its development and building:
 
-*[English documentation][] 
-*[Spanish documentation][]
+* [English documentation][] 
+* [Spanish documentation][]
 
 
 [English documentation]: README_en.md
