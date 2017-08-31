@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/IAAA-Lab/pid-ms.png)](https://travis-ci.org/IAAA-Lab/pid-ms)
 
-# INSPIRE PID Management System
+# Sistema de Gestión de PID INSPIRE
 
 Esta aplicación ha sido generada usando JHipster 4.7.0, puede encontrar documentación y ayuda en [https://jhipster.github.io/documentation-archive/v4.7.0](https://jhipster.github.io/documentation-archive/v4.7.0).
 
