@@ -102,7 +102,7 @@
         })
         .state('namespace.new', {
             parent: 'namespace',
-            url: '/new',
+            url: '',
             data: {
                 authorities: ['ROLE_USER']
             },

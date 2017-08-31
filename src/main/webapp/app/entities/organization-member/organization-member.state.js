@@ -92,7 +92,7 @@
         })
         .state('organization-member.new', {
             parent: 'organization-member',
-            url: '/new',
+            url: '',
             data: {
                 authorities: ['ROLE_USER']
             },

@@ -94,7 +94,7 @@
         })
         .state('task.new', {
             parent: 'task',
-            url: '/new',
+            url: '',
             data: {
                 authorities: ['ROLE_USER']
             },

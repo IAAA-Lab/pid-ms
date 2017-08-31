@@ -96,7 +96,7 @@
         })
         .state('persistent-identifier.new', {
             parent: 'persistent-identifier',
-            url: '/new',
+            url: '',
             data: {
                 authorities: ['ROLE_USER']
             },

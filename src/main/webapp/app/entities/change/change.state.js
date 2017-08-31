@@ -94,7 +94,7 @@
         })
         .state('change.new', {
             parent: 'change',
-            url: '/new',
+            url: '',
             data: {
                 authorities: ['ROLE_USER']
             },
