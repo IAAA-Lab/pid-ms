@@ -2,21 +2,21 @@
     "pidmsApp": {
         "persistentIdentifier" : {
             "home": {
-                "title": "Persistent Identifiers",
-                "createLabel": "Crear nuevo Persistent Identifier",
-                "createOrEditLabel": "Crear o editar Persistent Identifier"
+                "title": "Identificadores Persistentes",
+                "createLabel": "Crear nuevo Identificador Persistente",
+                "createOrEditLabel": "Crear o editar un Identificador Persistente"
             },
-            "created": "Un nuevo Persistent Identifier ha sido creado con el identificador {{ param }}",
-            "updated": "Un Persistent Identifier ha sido actualizado con el identificador {{ param }}",
-            "deleted": "Un Persistent Identifier ha sido eliminado con el identificador {{ param }}",
+            "created": "Un nuevo Identificador Persistente ha sido creado con el identificador {{ param }}",
+            "updated": "Un Identificador Persistente con el identificador {{ param }} ha sido actualizado",
+            "deleted": "Un Identificador Persistente con el identificador {{ param }} ha sido eliminado",
             "delete": {
-                "question": "¿Seguro que quiere eliminar Persistent Identifier {{ id }}?"
+                "question": "¿Seguro que quiere eliminar el Identificador Persistente {{ id }}?"
             },
             "detail": {
-                "title": "Persistent Identifier"
+                "title": "Identificador Persistente"
             },
-            "externalUrn": "External Urn",
-            "feature": "Feature",
+            "externalUrn": "URN",
+            "feature": "Tipo de objeto espacial",
             "resolverProxyMode": "Resolver Proxy Mode",
             "namespace": "Namespace",
             "localId": "Local Id",
@@ -27,7 +27,7 @@
             "resourceType": "Resource Type",
             "locator": "Locator",
             "processStatus": "Process Status",
-            "itemStatus": "Item Status",
+            "itemStatus": "Estado",
             "lastChangeDate": "Last Change Date",
             "registrationDate": "Registration Date",
             "lastRevisionDate": "Last Revision Date",

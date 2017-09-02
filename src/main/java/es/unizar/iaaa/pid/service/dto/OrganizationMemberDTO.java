@@ -1,12 +1,11 @@
 package es.unizar.iaaa.pid.service.dto;
 
 
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Objects;
 import es.unizar.iaaa.pid.domain.enumeration.Capacity;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A DTO for the OrganizationMember entity.
@@ -21,6 +20,10 @@ public class OrganizationMemberDTO implements Serializable {
     private Long userId;
 
     private Long organizationId;
+
+    private String userLogin;
+
+    private String organizationName;
 
     public Long getId() {
         return id;
@@ -52,6 +55,22 @@ public class OrganizationMemberDTO implements Serializable {
 
     public void setOrganizationId(Long organizationId) {
         this.organizationId = organizationId;
+    }
+
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
     }
 
     @Override

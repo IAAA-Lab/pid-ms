@@ -28,6 +28,6 @@
     "javadoc": "When a group member is created a user joins to a group with a role",
     "entityTableName": "organization_member",
     "dto": "mapstruct",
-    "pagination": "pager",
+    "pagination": "infinite-scroll",
     "service": "serviceImpl"
 }

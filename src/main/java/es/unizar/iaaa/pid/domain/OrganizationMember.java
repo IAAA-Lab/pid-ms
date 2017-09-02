@@ -1,15 +1,14 @@
 package es.unizar.iaaa.pid.domain;
 
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
-
-import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 
 /**
  * When a group member is created a user joins to a group with a role
@@ -38,6 +37,7 @@ public class OrganizationMember implements Serializable {
     @ManyToOne
     private Organization organization;
 
+    // jhipster-needle-entity-add-field - Jhipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -84,6 +84,7 @@ public class OrganizationMember implements Serializable {
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
+    // jhipster-needle-entity-add-getters-setters - Jhipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

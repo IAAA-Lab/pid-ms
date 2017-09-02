@@ -36,7 +36,7 @@ public class TaskServiceTest {
         namespaceService.createOrUpdateNamespace(ns);
 
         task = Fixtures.task(ns);
-        taskService.createOrUpdateTask(task);
+        taskService.createTask(task);
     }
 
     @After

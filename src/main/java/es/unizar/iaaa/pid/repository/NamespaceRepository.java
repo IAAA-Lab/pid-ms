@@ -3,6 +3,8 @@ package es.unizar.iaaa.pid.repository;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +18,7 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface NamespaceRepository extends JpaRepository<Namespace,Long> {
+public interface NamespaceRepository extends JpaRepository<Namespace, Long> {
 
     Namespace findFirstByRegistrationProcessStatus(ProcessStatus processStatus);
 
@@ -32,4 +34,7 @@ public interface NamespaceRepository extends JpaRepository<Namespace,Long> {
     // was findOneByExternal
     Namespace findOneByNamespace(String namespace);
 
+    Page<Namespace> findAllByPublicNamespaceIsTrue(Pageable pageable);
+
+    Namespace findByIdAndPublicNamespaceIsTrue(Long id);
 }

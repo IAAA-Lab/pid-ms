@@ -17,13 +17,15 @@ public interface NamespaceDTOService {
      */
     NamespaceDTO save(NamespaceDTO namespaceDTO);
 
+    Page<NamespaceDTO> findAll(Pageable pageable);
+
     /**
-     *  Get all the namespaces.
+     *  Get the public namespaces.
      *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    Page<NamespaceDTO> findAll(Pageable pageable);
+    Page<NamespaceDTO> findPublic(Pageable pageable);
 
     /**
      *  Get the "id" namespace.
@@ -34,9 +36,18 @@ public interface NamespaceDTOService {
     NamespaceDTO findOne(Long id);
 
     /**
+     *  Get the "id" namespace if public.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
+    NamespaceDTO findOnePublic(Long id);
+
+    /**
      *  Delete the "id" namespace.
      *
      *  @param id the id of the entity
      */
     void delete(Long id);
+
 }

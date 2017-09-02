@@ -1,15 +1,13 @@
 package es.unizar.iaaa.pid.service.mapper;
 
+import com.google.common.collect.ImmutableMap;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Mapper for the entity Namespace and its DTO NamespaceDTO.
@@ -85,6 +83,7 @@ public interface NamespaceMapper extends EntityMapper <NamespaceDTO, Namespace> 
         @Mapping(source = "annullationDate", target = "registration.annullationDate")
     })
     Namespace toEntity(NamespaceDTO namespaceDTO);
+
     default Namespace fromId(Long id) {
         if (id == null) {
             return null;
@@ -94,68 +93,40 @@ public interface NamespaceMapper extends EntityMapper <NamespaceDTO, Namespace> 
         return namespace;
     }
 
-    default Pageable toPage(final Pageable pageable) {
-        List<Sort.Order> mappedOrder = new ArrayList<>();
+    Map<String, String> conversions = ImmutableMap.<String, String>builder().
+        put("methodType", "source.methodType").
+        put("sourceType", "source.sourceType").
+        put("endpointLocation", "source.endpointLocation").
+        put("srsName", "source.srsName").
+        put("schemaUri", "source.schemaUri").
+        put("schemaUriGML", "source.schemaUriGML").
+        put("schemaUriBase", "source.schemaUriBase").
+        put("schemaPrefix", "source.schemaPrefix").
+        put("featureType", "source.featureType").
+        put("geometryProperty", "source.geometryProperty").
+        put("beginLifespanVersionProperty", "source.beginLifespanVersionProperty").
+        put("featuresThreshold", "source.featuresThreshold").
+        put("resolverProxyMode", "source.resolverProxyMode").
+        put("hitsRequest", "source.hitsRequest").
+        put("factorK", "source.factorK").
+        put("xpath", "source.xpath").
+        put("nameItem", "source.nameItem").
+        put("maxNumRequest", "source.maxNumRequest").
+        put("maxX", "source.boundingBox.maxX").
+        put("maxY", "source.boundingBox.maxY").
+        put("minX", "source.boundingBox.minX").
+        put("minY", "source.boundingBox.minY").
+        put("processStatus", "registration.processStatus").
+        put("itemStatus", "registration.itemStatus").
+        put("lastChangeDate", "registration.lastChangeDate").
+        put("registrationDate", "registration.registrationDate").
+        put("lastRevisionDate", "registration.lastRevisionDate").
+        put("nextRenewalDate", "registration.nextRenewalDate").
+        put("annullationDate", "registration.annullationDate").
+        build();
 
-        for(Sort.Order o: pageable.getSort()) {
-            switch(o.getProperty()) {
-                case "itemStatus":
-                    mappedOrder.add(o.withProperty("registration.itemStatus"));
-                    break;
-                case "sourceType":
-                    mappedOrder.add(o.withProperty("source.sourceType"));
-                    break;
-                case "endpointLocation":
-                    mappedOrder.add(o.withProperty("source.endpointLocation"));
-                    break;
-                case "ownerId":
-                    mappedOrder.add(o.withProperty("owner.title"));
-                    break;
-                default:
-                    mappedOrder.add(o);
-            }
-        }
-
-        return new Pageable() {
-            @Override
-            public int getPageNumber() {
-                return pageable.getPageNumber();
-            }
-
-            @Override
-            public int getPageSize() {
-                return pageable.getPageSize();
-            }
-
-            @Override
-            public int getOffset() {
-                return pageable.getOffset();
-            }
-
-            @Override
-            public Sort getSort() {
-                return new Sort(mappedOrder);
-            }
-
-            @Override
-            public Pageable next() {
-                return pageable.next();
-            }
-
-            @Override
-            public Pageable previousOrFirst() {
-                return pageable.previousOrFirst();
-            }
-
-            @Override
-            public Pageable first() {
-                return pageable.first();
-            }
-
-            @Override
-            public boolean hasPrevious() {
-                return pageable.hasPrevious();
-            }
-        };
+    @Override
+    default Map<String, String> getConversions() {
+        return conversions;
     }
 }

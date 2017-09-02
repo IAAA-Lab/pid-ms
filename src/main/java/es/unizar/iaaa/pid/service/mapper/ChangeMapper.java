@@ -1,9 +1,13 @@
 package es.unizar.iaaa.pid.service.mapper;
 
-import es.unizar.iaaa.pid.domain.*;
+import com.google.common.collect.ImmutableMap;
+import es.unizar.iaaa.pid.domain.Change;
 import es.unizar.iaaa.pid.service.dto.ChangeDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
-import org.mapstruct.*;
+import java.util.Map;
 
 /**
  * Mapper for the entity Change and its DTO ChangeDTO.
@@ -20,7 +24,7 @@ public interface ChangeMapper extends EntityMapper <ChangeDTO, Change> {
         @Mapping(source = "identifier.beginLifespanVersion", target = "beginLifespanVersion"),
         @Mapping(source = "identifier.endLifespanVersion", target = "endLifespanVersion"),
         @Mapping(source = "identifier.alternateId", target = "alternateId"),
-        @Mapping(source = "task.id", target = "taskId")
+    @Mapping(source = "task.id", target = "taskId")
     })
     ChangeDTO toDto(Change change);
 
@@ -44,5 +48,21 @@ public interface ChangeMapper extends EntityMapper <ChangeDTO, Change> {
         Change change = new Change();
         change.setId(id);
         return change;
+    }
+
+    Map<String, String> conversions = ImmutableMap.<String, String>builder().
+        put("resourceType", "resource.resourceType").
+        put("locator", "resource.locator").
+        put("namespace", "identifier.namespace").
+        put("localId", "identifier.localId").
+        put("versionId", "identifier.versionId").
+        put("beginLifespanVersion", "identifier.beginLifespanVersion").
+        put("endLifespanVersion", "identifier.endLifespanVersion").
+        put("alternateId", "identifier.alternateId").
+        build();
+
+    @Override
+    default Map<String, String> getConversions() {
+        return conversions;
     }
 }

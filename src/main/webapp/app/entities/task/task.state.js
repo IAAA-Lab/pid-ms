@@ -11,7 +11,7 @@
         $stateProvider
         .state('task', {
             parent: 'entity',
-            url: '/task?page&sort&search',
+            url: '/task',
             data: {
                 authorities: [],
                 pageTitle: 'pidmsApp.task.home.title'
@@ -23,27 +23,7 @@
                     controllerAs: 'vm'
                 }
             },
-            params: {
-                page: {
-                    value: '1',
-                    squash: true
-                },
-                sort: {
-                    value: 'id,asc',
-                    squash: true
-                },
-                search: null
-            },
             resolve: {
-                pagingParams: ['$stateParams', 'PaginationUtil', function ($stateParams, PaginationUtil) {
-                    return {
-                        page: PaginationUtil.parsePage($stateParams.page),
-                        sort: $stateParams.sort,
-                        predicate: PaginationUtil.parsePredicate($stateParams.sort),
-                        ascending: PaginationUtil.parseAscending($stateParams.sort),
-                        search: $stateParams.search
-                    };
-                }],
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('task');
                     $translatePartialLoader.addPart('processStatus');
@@ -57,7 +37,7 @@
             parent: 'task',
             url: '/{id}',
             data: {
-                authorities: [],
+                authorities: ['ROLE_USER'],
                 pageTitle: 'pidmsApp.task.detail.title'
             },
             views: {
@@ -114,7 +94,7 @@
         })
         .state('task.new', {
             parent: 'task',
-            url: '/new',
+            url: '',
             data: {
                 authorities: ['ROLE_USER']
             },

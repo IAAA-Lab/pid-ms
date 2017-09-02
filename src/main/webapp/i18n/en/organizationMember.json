@@ -2,20 +2,20 @@
     "pidmsApp": {
         "organizationMember" : {
             "home": {
-                "title": "Organization Members",
-                "createLabel": "Create a new Organization Member",
-                "createOrEditLabel": "Create or edit a Organization Member"
+                "title": "Organization members",
+                "createLabel": "Create a new Organization member",
+                "createOrEditLabel": "Create or edit a Organization member"
             },
-            "created": "A new Organization Member is created with identifier {{ param }}",
-            "updated": "A Organization Member is updated with identifier {{ param }}",
-            "deleted": "A Organization Member is deleted with identifier {{ param }}",
+            "created": "A new Organization member is created with identifier {{ param }}",
+            "updated": "A Organization member is updated with identifier {{ param }}",
+            "deleted": "A Organization member is deleted with identifier {{ param }}",
             "delete": {
-                "question": "Are you sure you want to delete Organization Member {{ id }}?"
+                "question": "Are you sure you want to delete Organization member {{ id }}?"
             },
             "detail": {
                 "title": "Organization Member"
             },
-            "capacity": "Capacity",
+            "capacity": "Profile",
             "user": "User",
             "organization": "Organization"
         }

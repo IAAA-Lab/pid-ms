@@ -15,8 +15,8 @@
             "detail": {
                 "title": "Persistent Identifier"
             },
-            "externalUrn": "External Urn",
-            "feature": "Feature",
+            "externalUrn": "URN",
+            "feature": "Feature Type",
             "resolverProxyMode": "Resolver Proxy Mode",
             "namespace": "Namespace",
             "localId": "Local Id",
@@ -27,7 +27,7 @@
             "resourceType": "Resource Type",
             "locator": "Locator",
             "processStatus": "Process Status",
-            "itemStatus": "Item Status",
+            "itemStatus": "Status",
             "lastChangeDate": "Last Change Date",
             "registrationDate": "Registration Date",
             "lastRevisionDate": "Last Revision Date",

@@ -2,23 +2,23 @@
     "pidmsApp": {
         "task" : {
             "home": {
-                "title": "Tasks",
-                "createLabel": "Crear nuevo Task",
-                "createOrEditLabel": "Crear o editar Task"
+                "title": "Tareas",
+                "createLabel": "Crear nueva Tarea",
+                "createOrEditLabel": "Crear o editar Tarea"
             },
-            "created": "Un nuevo Task ha sido creado con el identificador {{ param }}",
-            "updated": "Un Task ha sido actualizado con el identificador {{ param }}",
-            "deleted": "Un Task ha sido eliminado con el identificador {{ param }}",
+            "created": "Una nueva Tarea con el identificador {{ param }} ha sido creada",
+            "updated": "Una Tarea con el identificador {{ param }} ha sido actualizado",
+            "deleted": "Una Tarea con el identificador {{ param }} ha sido eliminada ",
             "delete": {
-                "question": "¿Seguro que quiere eliminar Task {{ id }}?"
+                "question": "¿Seguro que quiere eliminar la Tarea {{ id }}?"
             },
             "detail": {
-                "title": "Task"
+                "title": "Tarea"
             },
-            "timestamp": "Timestamp",
-            "type": "Type",
-            "status": "Status",
-            "numErrors": "Num Errors",
+            "timestamp": "Fecha",
+            "type": "Tipo",
+            "status": "Estado",
+            "numErrors": "Num. Errores",
             "namespace": "Namespace"
         }
     }

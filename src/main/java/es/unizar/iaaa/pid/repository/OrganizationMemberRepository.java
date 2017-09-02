@@ -11,9 +11,9 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface OrganizationMemberRepository extends JpaRepository<OrganizationMember,Long> {
+public interface OrganizationMemberRepository extends JpaRepository<OrganizationMember, Long> {
 
     @Query("select organization_member from OrganizationMember organization_member where organization_member.user.login = ?#{principal.username}")
     List<OrganizationMember> findByUserIsCurrentUser();
-    
+
 }

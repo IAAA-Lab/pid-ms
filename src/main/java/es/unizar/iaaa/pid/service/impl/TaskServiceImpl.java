@@ -55,7 +55,7 @@ public class TaskServiceImpl implements TaskDTOService {
     @Transactional(readOnly = true)
     public Page<TaskDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Tasks");
-        return taskRepository.findAll(pageable)
+        return taskRepository.findAll(taskMapper.toPage(pageable))
             .map(taskMapper::toDto);
     }
 

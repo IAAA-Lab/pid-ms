@@ -40,7 +40,7 @@ abstract class AbstractAction implements Action<States,Events> {
         for(Namespace namespace : list) {
             Task task;
             try {
-                task = namespaceService.nextTask(namespace, nextStatus, now);
+                task = namespaceService.nextTask(namespace.getId(), nextStatus, now);
             } catch(Exception e) {
                 LOGGER.error("Namespace \"{}\" cannot be processed due to exception: {}", namespace.getNamespace(), e.getMessage(), e);
                 continue;
@@ -56,7 +56,8 @@ abstract class AbstractAction implements Action<States,Events> {
         for(Namespace namespace : list) {
             Task task;
             try {
-                task = namespaceService.firstTask(namespace, nextStatus, itemStatus, now);
+
+                task = namespaceService.firstTask(namespace.getId(), nextStatus, itemStatus, now);
             } catch(Exception e) {
                 LOGGER.error("Namespace \"{}\" cannot be processed due to exception: {}", namespace.getNamespace(), e.getMessage(), e);
                 continue;

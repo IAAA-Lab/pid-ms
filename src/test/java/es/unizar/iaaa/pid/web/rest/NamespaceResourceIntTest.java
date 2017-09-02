@@ -57,8 +57,8 @@ public class NamespaceResourceIntTest {
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
-    private static final Boolean DEFAULT_PUBLIC_NAMESPACE = false;
-    private static final Boolean UPDATED_PUBLIC_NAMESPACE = true;
+    private static final Boolean DEFAULT_PUBLIC_NAMESPACE = true;
+    // private static final Boolean UPDATED_PUBLIC_NAMESPACE = true;
 
     private static final RenewalPolicy DEFAULT_RENEWAL_POLICY = RenewalPolicy.NONE;
     private static final RenewalPolicy UPDATED_RENEWAL_POLICY = RenewalPolicy.CONTINUOUS;
@@ -159,7 +159,8 @@ public class NamespaceResourceIntTest {
     private static final BoundingBox UPDATED_BOUNDING_BOX = new BoundingBox().
         maxX(UPDATED_MAX_X).maxY(UPDATED_MAX_Y).minY(UPDATED_MIN_Y).minX(UPDATED_MIN_X);
 
-    private static final Integer DEFAULT_VERSION_ID = 1;
+    private static final Integer FIRST_VERSION = 0;
+    private static final Integer NEXT_VERSION = 1;
 
     @Autowired
     private NamespaceRepository namespaceRepository;
@@ -240,8 +241,7 @@ public class NamespaceResourceIntTest {
             .renewalPolicy(DEFAULT_RENEWAL_POLICY)
             .namespaceStatus(DEFAULT_NAMESPACE_STATUS)
             .registration(registration)
-            .source(source)
-            .version(DEFAULT_VERSION_ID);
+            .source(source);
 
         return namespace;
     }
@@ -301,7 +301,7 @@ public class NamespaceResourceIntTest {
         assertThat(testNamespace.getSource().getBoundingBox().getMinY()).isEqualTo(DEFAULT_MIN_Y);
         assertThat(testNamespace.getSource().getBoundingBox().getMaxX()).isEqualTo(DEFAULT_MAX_X);
         assertThat(testNamespace.getSource().getBoundingBox().getMaxY()).isEqualTo(DEFAULT_MAX_Y);
-        assertThat(testNamespace.getVersion()).isEqualTo(DEFAULT_VERSION_ID);
+        assertThat(testNamespace.getVersion()).isEqualTo(FIRST_VERSION);
     }
 
     @Test
@@ -425,7 +425,8 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.[*].minX").value(hasItem(DEFAULT_MIN_X.doubleValue())))
             .andExpect(jsonPath("$.[*].minY").value(hasItem(DEFAULT_MIN_Y.doubleValue())))
             .andExpect(jsonPath("$.[*].maxX").value(hasItem(DEFAULT_MAX_X.doubleValue())))
-            .andExpect(jsonPath("$.[*].maxY").value(hasItem(DEFAULT_MAX_Y.doubleValue())));
+            .andExpect(jsonPath("$.[*].maxY").value(hasItem(DEFAULT_MAX_Y.doubleValue())))
+            .andExpect(jsonPath("$.[*].version").value(hasItem(FIRST_VERSION)));
     }
 
     @Test
@@ -472,7 +473,8 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.minX").value(DEFAULT_MIN_X.doubleValue()))
             .andExpect(jsonPath("$.minY").value(DEFAULT_MIN_Y.doubleValue()))
             .andExpect(jsonPath("$.maxX").value(DEFAULT_MAX_X.doubleValue()))
-            .andExpect(jsonPath("$.maxY").value(DEFAULT_MAX_Y.doubleValue()));
+            .andExpect(jsonPath("$.maxY").value(DEFAULT_MAX_Y.doubleValue()))
+            .andExpect(jsonPath("$.version").value(FIRST_VERSION));
     }
 
     @Test
@@ -496,7 +498,7 @@ public class NamespaceResourceIntTest {
         updatedNamespace
             .namespace(UPDATED_NAMESPACE)
             .title(UPDATED_TITLE)
-            .publicNamespace(UPDATED_PUBLIC_NAMESPACE)
+//          .publicNamespace(UPDATED_PUBLIC_NAMESPACE)
             .renewalPolicy(UPDATED_RENEWAL_POLICY)
             .namespaceStatus(UPDATED_NAMESPACE_STATUS)
             .getSource()
@@ -542,7 +544,7 @@ public class NamespaceResourceIntTest {
         Namespace testNamespace = namespaceList.get(namespaceList.size() - 1);
         assertThat(testNamespace.getNamespace()).isEqualTo(UPDATED_NAMESPACE);
         assertThat(testNamespace.getTitle()).isEqualTo(UPDATED_TITLE);
-        assertThat(testNamespace.isPublicNamespace()).isEqualTo(UPDATED_PUBLIC_NAMESPACE);
+//      assertThat(testNamespace.isPublicNamespace()).isEqualTo(UPDATED_PUBLIC_NAMESPACE);
         assertThat(testNamespace.getRenewalPolicy()).isEqualTo(UPDATED_RENEWAL_POLICY);
         assertThat(testNamespace.getNamespaceStatus()).isEqualTo(UPDATED_NAMESPACE_STATUS);
         assertThat(testNamespace.getRegistration().getProcessStatus()).isEqualTo(UPDATED_PROCESS_STATUS);
@@ -574,6 +576,7 @@ public class NamespaceResourceIntTest {
         assertThat(testNamespace.getSource().getBoundingBox().getMinY()).isEqualTo(UPDATED_MIN_Y);
         assertThat(testNamespace.getSource().getBoundingBox().getMaxX()).isEqualTo(UPDATED_MAX_X);
         assertThat(testNamespace.getSource().getBoundingBox().getMaxY()).isEqualTo(UPDATED_MAX_Y);
+        assertThat(testNamespace.getVersion()).isEqualTo(NEXT_VERSION);
     }
 
     @Test

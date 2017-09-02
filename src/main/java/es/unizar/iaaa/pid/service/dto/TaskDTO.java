@@ -31,6 +31,8 @@ public class TaskDTO implements Serializable {
 
     private Long namespaceId;
 
+    private String namespaceName;
+
     public Long getId() {
         return id;
     }
@@ -77,6 +79,14 @@ public class TaskDTO implements Serializable {
 
     public void setNamespaceId(Long namespaceId) {
         this.namespaceId = namespaceId;
+    }
+
+    public String getNamespaceName() {
+        return namespaceName;
+    }
+
+    public void setNamespaceName(String namespaceName) {
+        this.namespaceName = namespaceName;
     }
 
     @Override

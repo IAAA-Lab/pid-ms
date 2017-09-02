@@ -19,34 +19,29 @@
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
                     <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="namespaceId"><span data-translate="pidmsApp.task.namespace">Namespace</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="timestamp"><span data-translate="pidmsApp.task.timestamp">Timestamp</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="type"><span data-translate="pidmsApp.task.type">Type</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="status"><span data-translate="pidmsApp.task.status">Status</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="numErrors"><span data-translate="pidmsApp.task.numErrors">Num Errors</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="namespaceId"><span data-translate="pidmsApp.task.namespace">Namespace</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody infinite-scroll="vm.loadPage(vm.page + 1)" infinite-scroll-disabled="vm.page >= vm.links['last']">
                 <tr ng-repeat="task in vm.tasks track by task.id">
-                    <td><a ui-sref="task-detail({id:task.id})">{{task.id}}</a></td>
+                    <td ng-switch="vm.isAuthenticated()">
+                        <a ui-sref="task-detail({id:task.id})" ng-switch-when="true">{{task.id}}</a>
+                        <span ng-switch-when="false">{{task.id}}</span>
+                    </td>
+                    <td>
+                        <a ui-sref="namespace-detail({id:task.namespaceId})">{{task.namespaceName}}</a>
+                    </td>
                     <td>{{task.timestamp | date:'medium'}}</td>
                     <td data-translate="{{'pidmsApp.ProcessStatus.' + task.type}}">{{task.type}}</td>
                     <td data-translate="{{'pidmsApp.TaskStatus.' + task.status}}">{{task.status}}</td>
-                    <td>{{task.numErrors}}</td>
-                    <td>
-                        <a ui-sref="namespace-detail({id:task.namespaceId})">{{task.namespaceId}}</a>
-                    </td>
-                    <td class="text-right">
+                    <td class="text-right" ng-switch="vm.isAuthenticated()">
                         <div class="btn-group flex-btn-group-container">
-                            <button type="submit"
-                                    ui-sref="task-detail({id:task.id})"
-                                    class="btn btn-info btn-sm">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                                <span class="hidden-sm-down" data-translate="entity.action.view"></span>
-                            </button>
                             <button type="submit"
                                     ui-sref="task.edit({id:task.id})"
                                     class="btn btn-primary btn-sm"
@@ -67,8 +62,4 @@
             </tbody>
         </table>
     </div>
-    <div class="text-center">
-        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
-    </div>
-    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
 </div>
