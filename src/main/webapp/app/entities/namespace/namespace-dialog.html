@@ -34,7 +34,8 @@
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.namespace.publicNamespace" for="field_publicNamespace">Public Namespace</label>
                 <input type="checkbox" name="publicNamespace" id="field_publicNamespace"
-                          ng-model="vm.namespace.publicNamespace"/>
+                          ng-model="vm.namespace.publicNamespace"
+                          ng-init="vm.namespace.publicNamespace = vm.namespace.publicNamespace == null ? false : vm.namespace.publicNamespace"/>
             <div ng-show="editForm.publicNamespace.$invalid">
                 <p class="help-block"
                     ng-show="editForm.publicNamespace.$error.required" data-translate="entity.validation.required">
@@ -225,12 +226,14 @@
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.namespace.resolverProxyMode" for="field_resolverProxyMode">Resolver Proxy Mode</label>
                 <input type="checkbox" name="resolverProxyMode" id="field_resolverProxyMode"
-                          ng-model="vm.namespace.resolverProxyMode"/>
+                          ng-model="vm.namespace.resolverProxyMode"
+                          ng-init="vm.namespace.resolverProxyMode = vm.namespace.resolverProxyMode == null ? false : vm.namespace.resolverProxyMode"/>
         </div>
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.namespace.hitsRequest" for="field_hitsRequest">Hits Request</label>
                 <input type="checkbox" name="hitsRequest" id="field_hitsRequest"
-                          ng-model="vm.namespace.hitsRequest"/>
+                          ng-model="vm.namespace.hitsRequest"
+                          ng-init="vm.namespace.hitsRequest = vm.namespace.hitsRequest == null ? false : vm.namespace.hitsRequest"/>
         </div>
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.namespace.factorK" for="field_factorK">Factor K</label>
