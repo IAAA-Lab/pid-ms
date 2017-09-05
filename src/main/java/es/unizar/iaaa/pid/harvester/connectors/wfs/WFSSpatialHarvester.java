@@ -41,16 +41,16 @@ public class WFSSpatialHarvester implements SpatialHarvester {
     }
 
     @Override
-    public int getHitsTotal(BoundingBox boundingBox) {
+    public int getHitsTotal(String feature,BoundingBox boundingBox) {
     	String request;
     	WFSResponse response;
 
     	if(source.getMethodType() == MethodType.POST){
-	        request = WFSClient.createWfsGetFeatureRequestBodyPost(source, boundingBox, "hits");
+	        request = WFSClient.createWfsGetFeatureRequestBodyPost(feature, source, boundingBox, "hits");
 	        response = WFSClient.executeRequestPOST(source.getEndpointLocation(), request);
     	}
     	else{
-    		request = WFSClient.createWfsGetFeatureRequestGet(source, boundingBox, "hits");
+    		request = WFSClient.createWfsGetFeatureRequestGet(feature, source, boundingBox, "hits");
     		response = WFSClient.executeRequestGET(request);
     	}
 
@@ -109,16 +109,16 @@ public class WFSSpatialHarvester implements SpatialHarvester {
 
 
     @Override
-    public int extractIdentifiers(BoundingBox boundingBox) {
+    public int extractIdentifiers(String feature, BoundingBox boundingBox) {
     	String request;
     	WFSResponse response;
 
     	if(source.getMethodType() == MethodType.POST){
-	        request = WFSClient.createWfsGetFeatureRequestBodyPost(source, boundingBox, "results");
+	        request = WFSClient.createWfsGetFeatureRequestBodyPost(feature, source, boundingBox, "results");
 	        response = WFSClient.executeRequestPOST(source.getEndpointLocation(), request);
     	}
     	else{
-    		request = WFSClient.createWfsGetFeatureRequestGet(source, boundingBox, "results");
+    		request = WFSClient.createWfsGetFeatureRequestGet(feature, source, boundingBox, "results");
 	        response = WFSClient.executeRequestGET(request);
     	}
 
@@ -146,7 +146,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
             ap.selectXPath("//ns1:"+source.getNameItem());
             while (ap.evalXPath() != -1) {
                 try {
-                    Identifier identifier = extractIdentifier(nav);
+                    Identifier identifier = extractIdentifier(feature,nav);
                     Resource resource = new Resource();
                     resource.setResourceType(ResourceType.SPATIAL_OBJECT);
                     resource.setLocator(WFSClient.createWfsGetFeatureById(source, identifier));
@@ -157,7 +157,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
                     change.setTask(this.task);
                     change.setAction(ChangeAction.ISSUED);
                     change.setChangeTimestamp(Instant.now());
-                    change.setFeature(source.getFeatureType());
+                    change.setFeature(feature);
                     changeService.createChange(change);
                     debug("{} is FOUND ", PersistentIdentifier.computeExternalUrnFromIdentifier(identifier));
                     valid++;
@@ -189,7 +189,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         return valid;
     }
 
-    private Identifier extractIdentifier(VTDNav nav) throws NavException, FailedExtractionException {
+    private Identifier extractIdentifier(String feature, VTDNav nav) throws NavException, FailedExtractionException {
 
         nav.push();
         NodeRecorder member = new NodeRecorder(nav);
@@ -205,7 +205,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         member.iterate();
 
         AutoPilot apx1 = new AutoPilot(nav);
-        apx1.selectElementNS(source.getSchemaUri(),  source.getFeatureType());
+        apx1.selectElementNS(source.getSchemaUri(), feature);
         String gmlId = null;
         boolean isCorrectFeature = false;
 
@@ -276,7 +276,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         }
 
         if(!isCorrectFeature){
-        	throw new FailedExtractionException("It is not a " + source.getFeatureType() + " feature", true);
+        	throw new FailedExtractionException("It is not a " + feature + " feature", true);
         }
 
         if (gmlId == null) {

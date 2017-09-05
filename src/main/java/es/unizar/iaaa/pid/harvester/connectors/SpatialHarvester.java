@@ -6,7 +6,7 @@ import es.unizar.iaaa.pid.domain.Task;
 public interface SpatialHarvester {
     void setTask(Task source);
 
-    int getHitsTotal(BoundingBox boundingBox);
+    int getHitsTotal(String feature,BoundingBox boundingBox);
 
-    int extractIdentifiers(BoundingBox boundingBox);
+    int extractIdentifiers(String feature,BoundingBox boundingBox);
 }

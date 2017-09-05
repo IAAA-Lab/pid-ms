@@ -34,93 +34,100 @@ class HarvestTask extends AbstractTaskRunner {
     protected void doTask() {
         SpatialHarvester harvester = getHarvester();
         int threshold = getThreshold();
+        
+        //Para cada una de las features del WFS
+        String[]featureList = task.getNamespace().getSource().getFeatureType().split(",");
 
-        Queue<BoundingBox> queue = new LinkedList<>();
-        queue.add(initialBoundingBox());
-
-        if(task.getNamespace().getSource().isHitsRequest()){
-        	 while (!queue.isEmpty() && task.getNumErrors() < MAX_NUM_ERRORS) {
-                 sleepIntervalBetweenRequests();
-
-                 BoundingBox boundingBox = queue.remove();
-                 log("boundingBox={}, queue size={}", boundingBox, queue.size());
-
-                 //tiene disponible la peticion de numero de hits
-
-             	int hits = harvester.getHitsTotal(boundingBox);
-                 log("hits={}", hits);
-
-                 if (hits == -1) {
-                     log("fail, enqueue boundingBox={}", boundingBox);
-                     queue.add(boundingBox);
-                     incNumErrors(task);
-                 } else if (hits > threshold) {
-                     log("hits over threshold, split={}", boundingBox);
-                     queue.addAll(boundingBox.split());
-                 } else if (hits > 0) {
-                     log("hits over threshold, extract");
-                     int ids = harvester.extractIdentifiers(boundingBox);
-                     if (ids == -1) {
-                         log("fail, enqueue boundingBox={}", boundingBox);
-                         queue.add(boundingBox);
-                         incNumErrors(task);
-                     } else {
-                         log("extracted={}", ids);
-                     }
-                     sleepIntervalBetweenRequests();
-                 }
-        	 }
-        }
-
-        //no disponible hits request
-        else{
-        	log("no hits request available");
-
-        	Queue<BoundingBox> errorBoundingBox = new LinkedList<>();
-        	int factor = task.getNamespace().getSource().getFactorK();
-        	BoundingBox boundingBox = task.getNamespace().getSource().getBoundingBox();
-
-    		double disX = (boundingBox.getMaxX() - boundingBox.getMinX())/factor;
-    		double disY = (boundingBox.getMaxY() - boundingBox.getMinY())/factor;
-
-    		double positionX = boundingBox.getMinX();
-
-    		for(int i = 0; i< factor; i++){
-    			double positionY = boundingBox.getMinY();
-    			for(int j = 0 ; j < factor; j++){
-    				BoundingBox bbox = new BoundingBox();
-        			bbox.setMinY(positionY);bbox.setMinX(positionX);
-        			positionY  = positionY + disY;
-        			bbox.setMaxY(positionY);bbox.setMaxX(positionX+disX);
-
-        			int ids = harvester.extractIdentifiers(bbox);
-                	if(ids == -1){
-                		log("fail, enqueue boundingBox={}", bbox);
-                		errorBoundingBox.add(bbox);
-                        incNumErrors(task);
-                	}
-                	else{
-                		log("{} : extracted={}",j,ids);
-                	}
-
-                    sleepIntervalBetweenRequests();
-                }
-    			positionX = positionX + disX;
-    		}
-
-    		//vuelvo a intentar los bbox fallidos
-    		while(!errorBoundingBox.isEmpty() && task.getNumErrors() < MAX_NUM_ERRORS){
-    			BoundingBox bbox = errorBoundingBox.remove();
-    			int ids = harvester.extractIdentifiers(bbox);
-            	if(ids == -1){
-            		log("fail, enqueue boundingBox={}", bbox);
-            		errorBoundingBox.add(bbox);
-                    incNumErrors(task);
-            	}
-            	else{
-            		log("extracted={}",ids);
-            	}
-    		}
+        for(int index = 0; index< featureList.length; index++){
+	        Queue<BoundingBox> queue = new LinkedList<>();
+	        queue.add(initialBoundingBox());
+	        
+	        String feature = featureList[index].trim();
+	        
+	        if(task.getNamespace().getSource().isHitsRequest()){
+	        	 while (!queue.isEmpty() && task.getNumErrors() < MAX_NUM_ERRORS) {
+	                 sleepIntervalBetweenRequests();
+	
+	                 BoundingBox boundingBox = queue.remove();
+	                 log("feature={}, boundingBox={}, queue size={}",feature, boundingBox, queue.size());
+	
+	                 //tiene disponible la peticion de numero de hits
+	
+	             	int hits = harvester.getHitsTotal(feature,boundingBox);
+	                 log("feature={}, hits={}",feature, hits);
+	
+	                 if (hits == -1) {
+	                     log("fail, enqueue boundingBox={}", feature, boundingBox);
+	                     queue.add(boundingBox);
+	                     incNumErrors(task);
+	                 } else if (hits > threshold) {
+	                     log("hits over threshold, split={}", boundingBox);
+	                     queue.addAll(boundingBox.split());
+	                 } else if (hits > 0) {
+	                     log("hits over threshold, extract");
+	                     int ids = harvester.extractIdentifiers(feature,boundingBox);
+	                     if (ids == -1) {
+	                         log("fail, enqueue boundingBox={}", boundingBox);
+	                         queue.add(boundingBox);
+	                         incNumErrors(task);
+	                     } else {
+	                         log("feature={}, extracted={}", feature,ids);
+	                     }
+	                     sleepIntervalBetweenRequests();
+	                 }
+	        	 }
+	        }
+	
+	        //no disponible hits request
+	        else{
+	        	log("no hits request available");
+	
+	        	Queue<BoundingBox> errorBoundingBox = new LinkedList<>();
+	        	int factor = task.getNamespace().getSource().getFactorK();
+	        	BoundingBox boundingBox = task.getNamespace().getSource().getBoundingBox();
+	
+	    		double disX = (boundingBox.getMaxX() - boundingBox.getMinX())/factor;
+	    		double disY = (boundingBox.getMaxY() - boundingBox.getMinY())/factor;
+	
+	    		double positionX = boundingBox.getMinX();
+	
+	    		for(int i = 0; i< factor; i++){
+	    			double positionY = boundingBox.getMinY();
+	    			for(int j = 0 ; j < factor; j++){
+	    				BoundingBox bbox = new BoundingBox();
+	        			bbox.setMinY(positionY);bbox.setMinX(positionX);
+	        			positionY  = positionY + disY;
+	        			bbox.setMaxY(positionY);bbox.setMaxX(positionX+disX);
+	
+	        			int ids = harvester.extractIdentifiers(feature,bbox);
+	                	if(ids == -1){
+	                		log("fail, enqueue boundingBox={}", bbox);
+	                		errorBoundingBox.add(bbox);
+	                        incNumErrors(task);
+	                	}
+	                	else{
+	                		log("feature={}, {} : extracted={}",feature,j,ids);
+	                	}
+	
+	                    sleepIntervalBetweenRequests();
+	                }
+	    			positionX = positionX + disX;
+	    		}
+	
+	    		//vuelvo a intentar los bbox fallidos
+	    		while(!errorBoundingBox.isEmpty() && task.getNumErrors() < MAX_NUM_ERRORS){
+	    			BoundingBox bbox = errorBoundingBox.remove();
+	    			int ids = harvester.extractIdentifiers(feature,bbox);
+	            	if(ids == -1){
+	            		log("fail, enqueue boundingBox={}", bbox);
+	            		errorBoundingBox.add(bbox);
+	                    incNumErrors(task);
+	            	}
+	            	else{
+	            		log("feature={}, extracted={}",feature, ids);
+	            	}
+	    		}
+	        }
         }
     }
 
