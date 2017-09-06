@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -22,6 +23,7 @@ import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_TRANSF
 @Scope("prototype")
 class HarvestTask extends AbstractTaskRunner {
     private static final int MAX_NUM_ERRORS = 20;
+    private static final int MAX_NUM_TIMEOUTS = 8;
     protected ApplicationContext context;
 
     @Autowired
@@ -42,35 +44,70 @@ class HarvestTask extends AbstractTaskRunner {
 	        Queue<BoundingBox> queue = new LinkedList<>();
 	        queue.add(initialBoundingBox());
 	        
-	        String feature = featureList[index].trim();
+	        //control de timeOuts
+            Queue<Integer> timeOutQueue = new LinkedList<Integer>();
+            timeOutQueue.add(0);
 	        
+	        String feature = featureList[index].trim();
+	
 	        if(task.getNamespace().getSource().isHitsRequest()){
 	        	 while (!queue.isEmpty() && task.getNumErrors() < MAX_NUM_ERRORS) {
 	                 sleepIntervalBetweenRequests();
 	
 	                 BoundingBox boundingBox = queue.remove();
+	                 int numTimeOut = timeOutQueue.remove();
+	                 
 	                 log("feature={}, boundingBox={}, queue size={}",feature, boundingBox, queue.size());
 	
 	                 //tiene disponible la peticion de numero de hits
 	
-	             	int hits = harvester.getHitsTotal(feature,boundingBox);
+	             	 int hits = harvester.getHitsTotal(feature,boundingBox);
 	                 log("feature={}, hits={}",feature, hits);
 	
 	                 if (hits == -1) {
 	                     log("fail, enqueue boundingBox={}", feature, boundingBox);
 	                     queue.add(boundingBox);
+	                     timeOutQueue.add(numTimeOut);
 	                     incNumErrors(task);
-	                 } else if (hits > threshold) {
+	                 } 
+	                 else if(hits == -2){
+                    	 if(numTimeOut < MAX_NUM_TIMEOUTS){
+                    		 log("TimeOut, split={}", boundingBox);
+	                    	 queue.addAll(boundingBox.split());
+	                    	 Integer [] newTimeOuts = {numTimeOut+1,numTimeOut+1,numTimeOut+1,numTimeOut+1};
+	                    	 timeOutQueue.addAll(Arrays.asList(newTimeOuts));
+                    	 }
+                    	 else{
+                    		 log("Maximun number of TimeOut reach, Discard boundingBox {}",boundingBox);
+                    	 }
+                     }
+	                 else if (hits > threshold) {
 	                     log("hits over threshold, split={}", boundingBox);
 	                     queue.addAll(boundingBox.split());
-	                 } else if (hits > 0) {
+	                     Integer [] newTimeOuts = {numTimeOut,numTimeOut,numTimeOut,numTimeOut};
+                    	 timeOutQueue.addAll(Arrays.asList(newTimeOuts));
+	                 } 
+	                 else if (hits > 0) {
 	                     log("hits over threshold, extract");
 	                     int ids = harvester.extractIdentifiers(feature,boundingBox);
 	                     if (ids == -1) {
 	                         log("fail, enqueue boundingBox={}", boundingBox);
 	                         queue.add(boundingBox);
+	                         timeOutQueue.add(numTimeOut);
 	                         incNumErrors(task);
-	                     } else {
+	                     } 
+	                     else if(ids == -2){
+                        	 if(numTimeOut < MAX_NUM_TIMEOUTS){
+                        		 log("TimeOut, split={}", boundingBox);
+    	                    	 queue.addAll(boundingBox.split());
+    	                    	 Integer [] newTimeOuts = {numTimeOut+1,numTimeOut+1,numTimeOut+1,numTimeOut+1};
+    	                    	 timeOutQueue.addAll(Arrays.asList(newTimeOuts));
+                        	 }
+                        	 else{
+                        		 log("Maximun number of TimeOut reach, Discard boundingBox {}",boundingBox);
+                        	 }
+                         }
+	                     else {
 	                         log("feature={}, extracted={}", feature,ids);
 	                     }
 	                     sleepIntervalBetweenRequests();

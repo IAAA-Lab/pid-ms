@@ -1,12 +1,11 @@
 package es.unizar.iaaa.pid.harvester.connectors.wfs;
 
-import com.ximpleware.*;
-import es.unizar.iaaa.pid.domain.*;
-import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
-import es.unizar.iaaa.pid.domain.enumeration.MethodType;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-import es.unizar.iaaa.pid.harvester.connectors.SpatialHarvester;
-import es.unizar.iaaa.pid.service.ChangeService;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +14,27 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import com.ximpleware.AutoPilot;
+import com.ximpleware.NavException;
+import com.ximpleware.NodeRecorder;
+import com.ximpleware.VTDGen;
+import com.ximpleware.VTDNav;
+import com.ximpleware.XPathEvalException;
+import com.ximpleware.XPathParseException;
+
+import es.unizar.iaaa.pid.domain.BoundingBox;
+import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Identifier;
+import es.unizar.iaaa.pid.domain.PersistentIdentifier;
+import es.unizar.iaaa.pid.domain.Resource;
+import es.unizar.iaaa.pid.domain.Source;
+import es.unizar.iaaa.pid.domain.Task;
+import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
+import es.unizar.iaaa.pid.domain.enumeration.MethodType;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+import es.unizar.iaaa.pid.harvester.connectors.SpatialHarvester;
+import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSResponse.ResponseStatus;
+import es.unizar.iaaa.pid.service.ChangeService;
 
 @Component
 @Scope("prototype")
@@ -54,9 +69,13 @@ public class WFSSpatialHarvester implements SpatialHarvester {
     		response = WFSClient.executeRequestGET(request);
     	}
 
-        if (response.isInValid()) {
-            return -1;
-        }
+    	if(response.getResponseStatus() == ResponseStatus.FAIL){
+    		return -1;
+    	}
+    	else if(response.getResponseStatus() == ResponseStatus.TIMEOUT){
+    		return -2;
+    	}
+        
         VTDGen document = response.getDocument();
         VTDNav nav = document.getNav();
         Integer numResults = getNumberMatched(nav);
@@ -122,9 +141,15 @@ public class WFSSpatialHarvester implements SpatialHarvester {
 	        response = WFSClient.executeRequestGET(request);
     	}
 
-        if (response.isInValid() || response.getSrc().startsWith("<error>") ||
-        		response.getSrc().contains("Runtime Error")) {
+    	if (response.getResponseStatus() == ResponseStatus.FAIL){
             return -1;
+        }
+        else if(response.getResponseStatus() == ResponseStatus.TIMEOUT){
+        	return -2;
+        }
+        else if(response.getSrc().startsWith("<error>") || response.getSrc().contains("Runtime Error") 
+        		|| response.getSrc().contains("ows:Exception")){
+        	return -1;
         }
 
         //ñappa para hacer que funcione el catastro

@@ -1,11 +1,10 @@
 package es.unizar.iaaa.pid.harvester.connectors.wfs;
 
-import com.ximpleware.*;
-import es.unizar.iaaa.pid.domain.*;
-import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-import es.unizar.iaaa.pid.harvester.connectors.ValidatorById;
-import es.unizar.iaaa.pid.service.ChangeService;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +15,23 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.ximpleware.AutoPilot;
+import com.ximpleware.NavException;
+import com.ximpleware.NodeRecorder;
+import com.ximpleware.VTDGen;
+import com.ximpleware.VTDNav;
+
+import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Identifier;
+import es.unizar.iaaa.pid.domain.PersistentIdentifier;
+import es.unizar.iaaa.pid.domain.Resource;
+import es.unizar.iaaa.pid.domain.Source;
+import es.unizar.iaaa.pid.domain.Task;
+import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+import es.unizar.iaaa.pid.harvester.connectors.ValidatorById;
+import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSResponse.ResponseStatus;
+import es.unizar.iaaa.pid.service.ChangeService;
 
 @Component
 @Scope("prototype")
@@ -44,10 +56,10 @@ public class WFSValidatorById implements ValidatorById {
     }
 
     @Override
-    public int validateGmlId(Identifier identifier) {
+    public int validateGmlId(String feature, Identifier identifier) {
         String request = WFSClient.createWfsGetFeatureById(source, identifier);
         WFSResponse response = WFSClient.executeRequestGET(request);
-        if (response.isInValid()) {
+        if (response.getResponseStatus() == ResponseStatus.FAIL || response.getResponseStatus() == ResponseStatus.TIMEOUT) {
             log("{} causes ERROR", PersistentIdentifier.computeExternalUrnFromIdentifier(identifier));
             return -1;
         }
@@ -55,13 +67,13 @@ public class WFSValidatorById implements ValidatorById {
         VTDGen document = response.getDocument();
         VTDNav nav = document.getNav();
         AutoPilot ap = new AutoPilot(nav);
-        ap.selectElementNS(source.getSchemaUri(),  source.getFeatureType());
+        ap.selectElementNS(source.getSchemaUri(), feature);
 
         Identifier remoteIdentifier = null;
         try {
             if (!ap.iterate()) {
                 log("{} is NOT_FOUND", PersistentIdentifier.computeExternalUrnFromIdentifier(identifier));
-                response(ChangeAction.NOT_FOUND, identifier);
+                response(ChangeAction.NOT_FOUND, identifier,feature);
                 return 1;
             }
             nav.push();
@@ -105,7 +117,7 @@ public class WFSValidatorById implements ValidatorById {
             member.iterate();
 
             apx = new AutoPilot(nav);
-            apx.selectElementNS(source.getSchemaUri(),  source.getFeatureType());
+            apx.selectElementNS(source.getSchemaUri(), feature);
             String gmlId = null;
             if (apx.iterate()) {
                 int gmlidx  = nav.getAttrValNS("http://www.opengis.net/gml/3.2", "id");
@@ -123,7 +135,7 @@ public class WFSValidatorById implements ValidatorById {
                 .alternateId(gmlId);
         } catch (NavException e) {
             e.printStackTrace();
-            response(ChangeAction.NOT_FOUND, identifier);
+            response(ChangeAction.NOT_FOUND, identifier, feature);
             return 1;
         }
 
@@ -131,19 +143,19 @@ public class WFSValidatorById implements ValidatorById {
         if (identifier.sameAs(remoteIdentifier)) {
             if (remoteIdentifier.getEndLifespanVersion() != null) {
                 log("{} is CANCELLED", PersistentIdentifier.computeExternalUrnFromIdentifier(identifier));
-                response(ChangeAction.CANCELLED, remoteIdentifier);
+                response(ChangeAction.CANCELLED, remoteIdentifier, feature);
             } else {
                 log("{} is UNCHANGED", PersistentIdentifier.computeExternalUrnFromIdentifier(identifier));
-                response(ChangeAction.UNCHANGED, identifier);
+                response(ChangeAction.UNCHANGED, identifier, feature);
             }
         } else {
             log("{} is INCONSISTENT", PersistentIdentifier.computeExternalUrnFromIdentifier(identifier));
-            response(ChangeAction.INCONSISTENT, identifier);
+            response(ChangeAction.INCONSISTENT, identifier, feature);
         }
         return 1;
     }
 
-    private void response(ChangeAction action, Identifier identifier) {
+    private void response(ChangeAction action, Identifier identifier, String feature) {
         Resource resource = new Resource();
         resource.setResourceType(ResourceType.SPATIAL_OBJECT);
         resource.setLocator(WFSClient.createWfsGetFeatureById(source, identifier));
@@ -153,6 +165,7 @@ public class WFSValidatorById implements ValidatorById {
         change.setResource(resource);
         change.setTask(this.task);
         change.setAction(action);
+        change.setFeature(feature);
         change.setChangeTimestamp(Instant.now());
         changeService.createChange(change);
 

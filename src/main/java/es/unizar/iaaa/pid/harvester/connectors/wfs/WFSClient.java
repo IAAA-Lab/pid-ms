@@ -1,24 +1,32 @@
 package es.unizar.iaaa.pid.harvester.connectors.wfs;
 
-import com.ximpleware.ParseException;
-import com.ximpleware.VTDGen;
-import es.unizar.iaaa.pid.domain.BoundingBox;
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.Source;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.SocketTimeoutException;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ximpleware.ParseException;
+import com.ximpleware.VTDGen;
+
+import es.unizar.iaaa.pid.domain.BoundingBox;
+import es.unizar.iaaa.pid.domain.Identifier;
+import es.unizar.iaaa.pid.domain.Source;
+import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSResponse.ResponseStatus;
 
 public class WFSClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(WFSClient.class);
@@ -55,10 +63,15 @@ public class WFSClient {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpEntity entity = new StringEntity(body, ContentType.APPLICATION_XML);
         try{
-        	CloseableHttpResponse response = httpclient.execute(RequestBuilder.post(endpoint).setEntity(entity).build());
+        	HttpContext httpContext = new BasicHttpContext();
+            httpContext.setAttribute(HttpClientContext.REQUEST_CONFIG,RequestConfig.custom().setSocketTimeout(45000).build());
+        	CloseableHttpResponse response = httpclient.execute(RequestBuilder.post(endpoint).setEntity(entity).build(),httpContext);
+        	
         	WFSResponse wfsResponse = extractEntity(endpoint, response);
         	response.close();
             return wfsResponse;
+        } catch(SocketTimeoutException e){
+        	return new WFSResponse(null,null,ResponseStatus.TIMEOUT);
         } catch (IOException e) {
             LOGGER.error("Error for POST request {}", body, e);
             return WFSResponse.FAIL;
@@ -83,6 +96,10 @@ public class WFSClient {
     }
 
     private static WFSResponse extractEntity(String endpoint, CloseableHttpResponse response) throws IOException, ParseException {
+    	if(response.getStatusLine().toString().contains("504")){
+			return new WFSResponse(null,null,ResponseStatus.TIMEOUT);
+		}
+		
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
 
@@ -92,7 +109,9 @@ public class WFSClient {
             result.append(line);
         }
         LOGGER.info("Retrieved {} bytes from {}", result.length(), endpoint);
-        return new WFSResponse(getDocument(result.toString()), result.toString());
+		VTDGen document = getDocument(result.toString());
+		return new WFSResponse(document, result.toString(), ResponseStatus.SUCCESS);
+		
     }
 
     private static VTDGen getDocument(String s) throws ParseException {
