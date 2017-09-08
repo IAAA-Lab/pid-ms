@@ -49,5 +49,13 @@ public interface NamespaceDTOService {
      *  @param id the id of the entity
      */
     void delete(Long id);
+    
+    /**
+     *  Get the "namespace" namespace.
+     *  
+     *  @param namespace the namespace of the entity
+     *  @return the entity
+     */
+    NamespaceDTO findOneByNamespace(String namespace);
 
 }

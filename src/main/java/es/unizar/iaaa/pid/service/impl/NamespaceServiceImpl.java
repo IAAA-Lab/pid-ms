@@ -97,4 +97,12 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
         log.debug("Request to delete Namespace : {}", id);
         namespaceRepository.delete(id);
     }
+
+	@Override
+	public NamespaceDTO findOneByNamespace(String namespaceString) {
+		log.debug("Request to get Namespace: {}", namespaceString);
+		Namespace namespace  = namespaceRepository.findOneByNamespace(namespaceString);
+		return namespaceMapper.toDto(namespace);
+	}
+
 }
