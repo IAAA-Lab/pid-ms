@@ -2,6 +2,8 @@ package es.unizar.iaaa.pid.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.security.SecurityUtils;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
@@ -66,11 +71,22 @@ public class NamespaceResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new namespace cannot already have an ID")).body(null);
         }
         
-      //check if exist other namespace with the same id, if exist, return error
+        //check if exist other namespace with the same id, if exist, return error
         NamespaceDTO auxNamespace = namespaceService.findOneByNamespace(namespaceDTO.getNamespace());
         if(auxNamespace != null){
         	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "namespaceExist", "Exist other Namespace with the same Namespace")).body(null);
         }
+        
+        //add the rest of the attributes for namespace
+        namespaceDTO.setNamespaceStatus(NamespaceStatus.STOP);
+        namespaceDTO.setProcessStatus(ProcessStatus.NONE);
+        namespaceDTO.setItemStatus(ItemStatus.PENDING_VALIDATION);
+        
+        Calendar calendar = Calendar.getInstance();
+        Instant instant = calendar.toInstant();
+        
+        namespaceDTO.setLastChangeDate(instant);
+        namespaceDTO.setRegistrationDate(instant);
         
         NamespaceDTO result = namespaceService.save(namespaceDTO);
         return ResponseEntity.created(new URI("/api/namespaces/" + result.getId()))

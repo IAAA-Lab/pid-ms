@@ -11,7 +11,7 @@
         <div class="form-group" ng-show="vm.namespace.id">
             <label for="id" data-translate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
-                    ng-model="vm.namespace.id" readonly />
+                    ng-model="vm.namespace.id" disabled="true" />
         </div>
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.namespace.namespace" for="field_namespace">Namespace</label>
@@ -60,16 +60,16 @@
                 </p>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-show="vm.namespace.namespaceStatus">
             <label class="control-label" data-translate="pidmsApp.namespace.namespaceStatus" for="field_namespaceStatus">Namespace Status</label>
-            <select class="form-control" name="namespaceStatus" ng-model="vm.namespace.namespaceStatus" id="field_namespaceStatus">
+            <select class="form-control" name="namespaceStatus" ng-model="vm.namespace.namespaceStatus" disabled="true" id="field_namespaceStatus">
                 <option value="STOP" data-translate="pidmsApp.NamespaceStatus.STOP">STOP</option>
                 <option value="GO" data-translate="pidmsApp.NamespaceStatus.GO">GO</option>
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-show="vm.namespace.processStatus">
             <label class="control-label" data-translate="pidmsApp.namespace.processStatus" for="field_processStatus">Process Status</label>
-            <select class="form-control" name="processStatus" ng-model="vm.namespace.processStatus" id="field_processStatus">
+            <select class="form-control" name="processStatus" ng-model="vm.namespace.processStatus" disabled="true" id="field_processStatus">
                 <option value="PENDING_PREPARING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_PREPARING_HARVEST">PENDING_PREPARING_HARVEST</option>
                 <option value="PREPARING_HARVEST" data-translate="pidmsApp.ProcessStatus.PREPARING_HARVEST">PREPARING_HARVEST</option>
                 <option value="PENDING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_HARVEST">PENDING_HARVEST</option>
@@ -86,9 +86,9 @@
                 <option value="NONE" data-translate="pidmsApp.ProcessStatus.NONE">NONE</option>
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-show="vm.namespace.itemStatus">
             <label class="control-label" data-translate="pidmsApp.namespace.itemStatus" for="field_itemStatus">Item Status</label>
-            <select class="form-control" name="itemStatus" ng-model="vm.namespace.itemStatus" id="field_itemStatus">
+            <select class="form-control" name="itemStatus" ng-model="vm.namespace.itemStatus" disabled="true" id="field_itemStatus">
                 <option value="ISSUED" data-translate="pidmsApp.ItemStatus.ISSUED">ISSUED</option>
                 <option value="LAPSED" data-translate="pidmsApp.ItemStatus.LAPSED">LAPSED</option>
                 <option value="RETIRED" data-translate="pidmsApp.ItemStatus.RETIRED">RETIRED</option>
@@ -100,33 +100,33 @@
                 <option value="PENDING_ANNULLATION" data-translate="pidmsApp.ItemStatus.PENDING_ANNULLATION">PENDING_ANNULLATION</option>
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-show="vm.namespace.lastChangeDate">
             <label class="control-label" data-translate="pidmsApp.namespace.lastChangeDate" for="field_lastChangeDate">Last Change Date</label>
                 <div class="input-group">
-                    <input id="field_lastChangeDate" type="text" class="form-control" name="lastChangeDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.lastChangeDate" is-open="vm.datePickerOpenStatus.lastChangeDate"
+                    <input id="field_lastChangeDate" type="text" class="form-control" name="lastChangeDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.lastChangeDate" readonly is-open="vm.datePickerOpenStatus.lastChangeDate"
                     />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('lastChangeDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('lastChangeDate')" disabled="true"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-show="vm.namespace.registrationDate">
             <label class="control-label" data-translate="pidmsApp.namespace.registrationDate" for="field_registrationDate">Registration Date</label>
                 <div class="input-group">
-                    <input id="field_registrationDate" type="text" class="form-control" name="registrationDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.registrationDate" is-open="vm.datePickerOpenStatus.registrationDate"
+                    <input id="field_registrationDate" type="text" class="form-control" name="registrationDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.registrationDate" readonly is-open="vm.datePickerOpenStatus.registrationDate"
                     />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('registrationDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('registrationDate')" disabled="true"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-show="vm.namespace.lastRevisionDate">
             <label class="control-label" data-translate="pidmsApp.namespace.lastRevisionDate" for="field_lastRevisionDate">Last Revision Date</label>
                 <div class="input-group">
-                    <input id="field_lastRevisionDate" type="text" class="form-control" name="lastRevisionDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.lastRevisionDate" is-open="vm.datePickerOpenStatus.lastRevisionDate"
+                    <input id="field_lastRevisionDate" type="text" class="form-control" name="lastRevisionDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.lastRevisionDate" readonly is-open="vm.datePickerOpenStatus.lastRevisionDate"
                     />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('lastRevisionDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('lastRevisionDate')" disabled="true"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
         </div>
@@ -140,13 +140,13 @@
                     </span>
                 </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-show="vm.namespace.annullationDate">
             <label class="control-label" data-translate="pidmsApp.namespace.annullationDate" for="field_annullationDate">Annullation Date</label>
                 <div class="input-group">
-                    <input id="field_annullationDate" type="text" class="form-control" name="annullationDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.annullationDate" is-open="vm.datePickerOpenStatus.annullationDate"
+                    <input id="field_annullationDate" type="text" class="form-control" name="annullationDate" datetime-picker="{{dateformat}}" ng-model="vm.namespace.annullationDate" readonly is-open="vm.datePickerOpenStatus.annullationDate"
                     />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('annullationDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('annullationDate')" disabled="true"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
         </div>
