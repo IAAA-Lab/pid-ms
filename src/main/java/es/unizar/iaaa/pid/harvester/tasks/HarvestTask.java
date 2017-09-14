@@ -1,5 +1,17 @@
 package es.unizar.iaaa.pid.harvester.tasks;
 
+import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_TRANSFERRING_HARVEST;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import es.unizar.iaaa.pid.config.ApplicationProperties;
 import es.unizar.iaaa.pid.domain.BoundingBox;
 import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
@@ -7,29 +19,22 @@ import es.unizar.iaaa.pid.harvester.connectors.SpatialHarvester;
 import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSSpatialHarvester;
 import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_TRANSFERRING_HARVEST;
 
 
 @Component
 @Scope("prototype")
 class HarvestTask extends AbstractTaskRunner {
-    private static final int MAX_NUM_ERRORS = 20;
-    private static final int MAX_NUM_TIMEOUTS = 8;
+	
+	private ApplicationProperties properties;
+	
     protected ApplicationContext context;
 
     @Autowired
-    public HarvestTask(ApplicationContext context, NamespaceService namespaceService, TaskService taskService) {
+    public HarvestTask(ApplicationContext context, NamespaceService namespaceService, TaskService taskService,
+    		ApplicationProperties properties) {
         super(namespaceService, taskService);
         this.context = context;
+        this.properties = properties;
     }
 
     @Override
@@ -51,7 +56,7 @@ class HarvestTask extends AbstractTaskRunner {
 	        String feature = featureList[index].trim();
 	
 	        if(task.getNamespace().getSource().isHitsRequest()){
-	        	 while (!queue.isEmpty() && task.getNumErrors() < MAX_NUM_ERRORS) {
+	        	 while (!queue.isEmpty() && task.getNumErrors() < properties.getHarvester().getMAX_NUM_ERRORS()) {
 	                 sleepIntervalBetweenRequests();
 	
 	                 BoundingBox boundingBox = queue.remove();
@@ -71,7 +76,7 @@ class HarvestTask extends AbstractTaskRunner {
 	                     incNumErrors(task);
 	                 } 
 	                 else if(hits == -2){
-                    	 if(numTimeOut < MAX_NUM_TIMEOUTS){
+                    	 if(numTimeOut < properties.getHarvester().getMAX_NUM_TIMEOUTS()){
                     		 log("TimeOut, split={}", boundingBox);
 	                    	 queue.addAll(boundingBox.split());
 	                    	 Integer [] newTimeOuts = {numTimeOut+1,numTimeOut+1,numTimeOut+1,numTimeOut+1};
@@ -97,7 +102,7 @@ class HarvestTask extends AbstractTaskRunner {
 	                         incNumErrors(task);
 	                     } 
 	                     else if(ids == -2){
-                        	 if(numTimeOut < MAX_NUM_TIMEOUTS){
+                        	 if(numTimeOut < properties.getHarvester().getMAX_NUM_TIMEOUTS()){
                         		 log("TimeOut, split={}", boundingBox);
     	                    	 queue.addAll(boundingBox.split());
     	                    	 Integer [] newTimeOuts = {numTimeOut+1,numTimeOut+1,numTimeOut+1,numTimeOut+1};
@@ -152,7 +157,7 @@ class HarvestTask extends AbstractTaskRunner {
 	    		}
 	
 	    		//vuelvo a intentar los bbox fallidos
-	    		while(!errorBoundingBox.isEmpty() && task.getNumErrors() < MAX_NUM_ERRORS){
+	    		while(!errorBoundingBox.isEmpty() && task.getNumErrors() < properties.getHarvester().getMAX_NUM_ERRORS()){
 	    			BoundingBox bbox = errorBoundingBox.remove();
 	    			int ids = harvester.extractIdentifiers(feature,bbox);
 	            	if(ids == -1){

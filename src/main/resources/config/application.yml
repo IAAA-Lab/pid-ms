@@ -126,3 +126,6 @@ jhipster:
 application:
     resolver:
         metadata-base: http://pid.inspire.gob.es
+    harvester:
+        MAX_NUM_ERRORS: 20
+        MAX_NUM_TIMEOUTS: 8
