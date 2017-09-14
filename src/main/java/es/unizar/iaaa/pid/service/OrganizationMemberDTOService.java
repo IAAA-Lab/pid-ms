@@ -39,4 +39,20 @@ public interface OrganizationMemberDTOService {
      *  @param id the id of the entity
      */
     void delete(Long id);
+
+    /**
+     *  Get all the organizationMembers that belongs to organizations where the Principal is a member.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    Page<OrganizationMemberDTO> findAllInPrincipalOrganizations(Pageable pageable);
+
+    /**
+     *  Get the "id" organizationMember that belongs to an organization where the Principal is a member.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
+    OrganizationMemberDTO findOneInPrincipalOrganizations(Long id);
 }
