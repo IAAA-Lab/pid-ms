@@ -39,4 +39,20 @@ public interface ChangeDTOService {
      *  @param id the id of the entity
      */
     void delete(Long id);
+
+    /**
+     *  Get all the change that belongs to organizations where the Principal is a member.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    Page<ChangeDTO> findAllInPrincipalOrganizations(Pageable pageable);
+
+    /**
+     *  Get the "id" change that belongs to an organization where the Principal is a member.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
+    ChangeDTO findOneInPrincipalOrganizations(Long id);
 }

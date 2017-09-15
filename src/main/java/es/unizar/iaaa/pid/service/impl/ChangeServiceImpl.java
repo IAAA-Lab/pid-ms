@@ -83,4 +83,33 @@ public class ChangeServiceImpl implements ChangeDTOService {
         log.debug("Request to delete Change : {}", id);
         changeRepository.delete(id);
     }
+
+    /**
+     *  Get all the change that belongs to organizations where the Principal is a member.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ChangeDTO> findAllInPrincipalOrganizations(Pageable pageable) {
+        log.debug("Request to get all the change that belongs to organizations where the Principal is a member");
+        return changeRepository.findAllInPrincipalOrganizations(changeMapper.toPage(pageable))
+            .map(changeMapper::toDto);
+    }
+
+    /**
+     *  Get the "id" change that belongs to an organization where the Principal is a member.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public ChangeDTO findOneInPrincipalOrganizations(Long id) {
+        log.debug("Request to get Task : {}", id);
+        Change change = changeRepository.findOneInPrincipalOrganizations(id);
+        return changeMapper.toDto(change);
+    }
+
 }
