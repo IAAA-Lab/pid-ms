@@ -19,9 +19,9 @@ public interface OrganizationMemberRepository extends JpaRepository<Organization
     @Query("select organization_member from OrganizationMember organization_member where organization_member.user.login = ?#{principal.username}")
     List<OrganizationMember> findByUserIsCurrentUser();
 
-    @Query("select om1 from OrganizationMember om1, OrganizationMember om2 where om1.organization = om2.organization and om2.user.login = ?#{principal.username}")
+    @Query("select om from OrganizationMember om where om.organization in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username})")
     Page<OrganizationMember> findAllInPrincipalOrganizations(Pageable pageable);
 
-    @Query("select om1 from OrganizationMember om1, OrganizationMember om2 where om1.id = ?1 and om1.organization = om2.organization and om2.user.login = ?#{principal.username}")
+    @Query("select om from OrganizationMember om where om.id = ?1 and om.organization in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username})")
     OrganizationMember findOneInPrincipalOrganizations(Long id);
 }

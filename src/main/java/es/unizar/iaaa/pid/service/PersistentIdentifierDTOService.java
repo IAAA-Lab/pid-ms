@@ -41,4 +41,20 @@ public interface PersistentIdentifierDTOService {
      *  @param id the id of the entity
      */
     void delete(UUID id);
+
+    /**
+     *  Get all the persistentIdentifiers public or in organizations where the Principal is a memeber.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    Page<PersistentIdentifierDTO> findAllPublicOrInPrincipalOrganizations(Pageable pageable);
+
+    /**
+     *  Get the "id" persistentIdentifier public or in organizations where the Principal is a memeber.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
+    PersistentIdentifierDTO findOnePublicOrInPrincipalOrganizations(UUID id);
 }
