@@ -91,7 +91,7 @@ public class ChangeResource {
     @Timed
     public ResponseEntity<List<ChangeDTO>> getAllChanges(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Changes");
-        Page<ChangeDTO> page = changeService.findAll(pageable);
+        Page<ChangeDTO> page = changeService.findAllInPrincipalOrganizations(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/changes");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -106,7 +106,7 @@ public class ChangeResource {
     @Timed
     public ResponseEntity<ChangeDTO> getChange(@PathVariable Long id) {
         log.debug("REST request to get Change : {}", id);
-        ChangeDTO changeDTO = changeService.findOne(id);
+        ChangeDTO changeDTO = changeService.findOneInPrincipalOrganizations(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(changeDTO));
     }
 

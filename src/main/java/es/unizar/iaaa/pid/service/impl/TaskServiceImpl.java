@@ -1,8 +1,8 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.TaskDTOService;
 import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.repository.TaskRepository;
+import es.unizar.iaaa.pid.service.TaskDTOService;
 import es.unizar.iaaa.pid.service.dto.TaskDTO;
 import es.unizar.iaaa.pid.service.mapper.TaskMapper;
 import org.slf4j.Logger;
@@ -83,4 +83,33 @@ public class TaskServiceImpl implements TaskDTOService {
         log.debug("Request to delete Task : {}", id);
         taskRepository.delete(id);
     }
+
+    /**
+     *  Get all the tasks that belongs to organizations where the Principal is a member.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TaskDTO> findAllInPrincipalOrganizations(Pageable pageable) {
+        log.debug("Request to get all the tasks that belongs to organizations where the Principal is a member");
+        return taskRepository.findAllInPrincipalOrganizations(taskMapper.toPage(pageable))
+            .map(taskMapper::toDto);
+    }
+
+    /**
+     *  Get the "id" task that belongs to an organization where the Principal is a member.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public TaskDTO findOneInPrincipalOrganizations(Long id) {
+        log.debug("Request to get Task : {}", id);
+        Task task = taskRepository.findOneInPrincipalOrganizations(id);
+        return taskMapper.toDto(task);
+    }
+
 }

@@ -92,7 +92,7 @@ public class PersistentIdentifierResource {
     @Timed
     public ResponseEntity<List<PersistentIdentifierDTO>> getAllPersistentIdentifiers(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of PersistentIdentifiers");
-        Page<PersistentIdentifierDTO> page = persistentIdentifierService.findAll(pageable);
+        Page<PersistentIdentifierDTO> page = persistentIdentifierService.findAllPublicOrInPrincipalOrganizations(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/persistent-identifiers");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -107,7 +107,7 @@ public class PersistentIdentifierResource {
     @Timed
     public ResponseEntity<PersistentIdentifierDTO> getPersistentIdentifier(@PathVariable UUID id) {
         log.debug("REST request to get PersistentIdentifier : {}", id);
-        PersistentIdentifierDTO persistentIdentifierDTO = persistentIdentifierService.findOne(id);
+        PersistentIdentifierDTO persistentIdentifierDTO = persistentIdentifierService.findOnePublicOrInPrincipalOrganizations(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(persistentIdentifierDTO));
     }
 
