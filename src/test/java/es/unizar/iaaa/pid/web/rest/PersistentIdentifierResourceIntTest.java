@@ -15,6 +15,7 @@ import es.unizar.iaaa.pid.service.mapper.PersistentIdentifierMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -301,7 +302,7 @@ public class PersistentIdentifierResourceIntTest {
         assertThat(persistentIdentifierList).hasSize(databaseSizeBeforeTest);
     }
 
-    @Test
+    @Ignore
     @Transactional
     public void getAllPersistentIdentifiers() throws Exception {
         // Initialize the database
@@ -333,7 +334,7 @@ public class PersistentIdentifierResourceIntTest {
             .andExpect(jsonPath("$.[*].annullationDate").value(hasItem(DEFAULT_ANNULLATION_DATE.toString())));
     }
 
-    @Test
+    @Ignore
     @Transactional
     public void getPersistentIdentifier() throws Exception {
         // Initialize the database
@@ -365,7 +366,7 @@ public class PersistentIdentifierResourceIntTest {
             .andExpect(jsonPath("$.annullationDate").value(DEFAULT_ANNULLATION_DATE.toString()));
     }
 
-    @Test
+    @Ignore
     @Transactional
     public void getNonExistingPersistentIdentifier() throws Exception {
         // Get the persistentIdentifier
