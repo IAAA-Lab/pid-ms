@@ -104,7 +104,7 @@ jhipster:
         default-include-pattern: /api/.*
         title: pidms API
         description: pidms API documentation
-        version: 0.0.1
+        version: 0.2.0
         terms-of-service-url:
         contact-name:
         contact-url:
@@ -126,3 +126,6 @@ jhipster:
 application:
     resolver:
         metadata-base: http://pid.inspire.gob.es
+    harvester:
+        MAX_NUM_ERRORS: 20
+        MAX_NUM_TIMEOUTS: 8

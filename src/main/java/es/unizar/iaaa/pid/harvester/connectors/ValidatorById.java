@@ -7,5 +7,5 @@ public interface ValidatorById {
 
     void setTask(Task task);
 
-    int validateGmlId(Identifier identifier);
+	int validateGmlId(String feature, Identifier identifier);
 }

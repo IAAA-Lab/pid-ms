@@ -37,4 +37,9 @@ public interface PersistentIdentifierRepository extends JpaRepository<Persistent
 
     Long countByIdentifierNamespace(String namespace);
 
+    @Query("select p from PersistentIdentifier p where p.identifier.namespace in (select ns.namespace from Namespace ns where ns.publicNamespace = true or ns.owner in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username}))")
+    Page<PersistentIdentifier> findAllPublicOrInPrincipalOrganizations(Pageable pageable);
+
+    @Query("select p from PersistentIdentifier p where p.id = ?1 and p.identifier.namespace in (select ns.namespace from Namespace ns where ns.publicNamespace = true or ns.owner in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username}))")
+    PersistentIdentifier findOnePublicOrInPrincipalOrganizations(UUID id);
 }

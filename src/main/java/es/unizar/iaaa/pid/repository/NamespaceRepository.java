@@ -6,6 +6,7 @@ import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -37,4 +38,10 @@ public interface NamespaceRepository extends JpaRepository<Namespace, Long> {
     Page<Namespace> findAllByPublicNamespaceIsTrue(Pageable pageable);
 
     Namespace findByIdAndPublicNamespaceIsTrue(Long id);
+
+    @Query("select ns from Namespace ns where ns.publicNamespace = true or ns.owner in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username})")
+    Page<Namespace> findAllPublicOrBelongsToPrincipalOrganizations(Pageable pageable);
+
+    @Query("select ns from Namespace ns where ns.id = ?1 and (ns.publicNamespace = true  or ns.owner in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username}))")
+    Namespace findByIdAndPublicOrBelongsToPrincipalOrganizations(Long id);
 }

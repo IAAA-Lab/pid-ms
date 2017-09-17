@@ -1,11 +1,11 @@
 
 <form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
 
-    <div class="modal-header">
+    <!--<div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="vm.clear()">&times;</button>
         <h4 class="modal-title" id="myPersistentIdentifierLabel" data-translate="pidmsApp.persistentIdentifier.home.createOrEditLabel">Create or edit a Persistent Identifier</h4>
-    </div>
+    </div>-->
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" ng-show="vm.persistentIdentifier.id">
@@ -113,7 +113,7 @@
         </div>
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.persistentIdentifier.processStatus" for="field_processStatus">Process Status</label>
-            <select class="form-control" name="processStatus" ng-model="vm.persistentIdentifier.processStatus" id="field_processStatus">
+            <select class="form-control" name="processStatus" disabled="true" ng-model="vm.persistentIdentifier.processStatus" id="field_processStatus">
                 <option value="PENDING_PREPARING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_PREPARING_HARVEST">PENDING_PREPARING_HARVEST</option>
                 <option value="PREPARING_HARVEST" data-translate="pidmsApp.ProcessStatus.PREPARING_HARVEST">PREPARING_HARVEST</option>
                 <option value="PENDING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_HARVEST">PENDING_HARVEST</option>
@@ -132,7 +132,7 @@
         </div>
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.persistentIdentifier.itemStatus" for="field_itemStatus">Item Status</label>
-            <select class="form-control" name="itemStatus" ng-model="vm.persistentIdentifier.itemStatus" id="field_itemStatus">
+            <select class="form-control" name="itemStatus" disabled="true" ng-model="vm.persistentIdentifier.itemStatus" id="field_itemStatus">
                 <option value="ISSUED" data-translate="pidmsApp.ItemStatus.ISSUED">ISSUED</option>
                 <option value="LAPSED" data-translate="pidmsApp.ItemStatus.LAPSED">LAPSED</option>
                 <option value="RETIRED" data-translate="pidmsApp.ItemStatus.RETIRED">RETIRED</option>
@@ -147,30 +147,30 @@
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.persistentIdentifier.lastChangeDate" for="field_lastChangeDate">Last Change Date</label>
                 <div class="input-group">
-                    <input id="field_lastChangeDate" type="text" class="form-control" name="lastChangeDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.lastChangeDate" is-open="vm.datePickerOpenStatus.lastChangeDate"
+                    <input id="field_lastChangeDate" type="text" disabled="true" class="form-control" name="lastChangeDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.lastChangeDate" is-open="vm.datePickerOpenStatus.lastChangeDate"
                     />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('lastChangeDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" disabled="true" ng-click="vm.openCalendar('lastChangeDate')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
         </div>
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.persistentIdentifier.registrationDate" for="field_registrationDate">Registration Date</label>
                 <div class="input-group">
-                    <input id="field_registrationDate" type="text" class="form-control" name="registrationDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.registrationDate" is-open="vm.datePickerOpenStatus.registrationDate"
+                    <input id="field_registrationDate" type="text" disabled="true" class="form-control" name="registrationDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.registrationDate" is-open="vm.datePickerOpenStatus.registrationDate"
                     />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('registrationDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" disabled="true" ng-click="vm.openCalendar('registrationDate')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
         </div>
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.persistentIdentifier.lastRevisionDate" for="field_lastRevisionDate">Last Revision Date</label>
                 <div class="input-group">
-                    <input id="field_lastRevisionDate" type="text" class="form-control" name="lastRevisionDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.lastRevisionDate" is-open="vm.datePickerOpenStatus.lastRevisionDate"
+                    <input id="field_lastRevisionDate" disabled="true" type="text" class="form-control" name="lastRevisionDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.lastRevisionDate" is-open="vm.datePickerOpenStatus.lastRevisionDate"
                     />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('lastRevisionDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" disabled="true" ng-click="vm.openCalendar('lastRevisionDate')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
         </div>
@@ -184,7 +184,7 @@
                     </span>
                 </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-show="vm.persistentIdentifier.annullationDate">
             <label class="control-label" data-translate="pidmsApp.persistentIdentifier.annullationDate" for="field_annullationDate">Annullation Date</label>
                 <div class="input-group">
                     <input id="field_annullationDate" type="text" class="form-control" name="annullationDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.annullationDate" is-open="vm.datePickerOpenStatus.annullationDate"

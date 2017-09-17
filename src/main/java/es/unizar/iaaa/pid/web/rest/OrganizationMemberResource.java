@@ -2,11 +2,11 @@ package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
 import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
-import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
-import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -92,7 +91,7 @@ public class OrganizationMemberResource {
     @Timed
     public ResponseEntity<List<OrganizationMemberDTO>> getAllOrganizationMembers(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of OrganizationMembers");
-        Page<OrganizationMemberDTO> page = organizationMemberService.findAll(pageable);
+        Page<OrganizationMemberDTO> page = organizationMemberService.findAllInPrincipalOrganizations(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/organization-members");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -107,7 +106,7 @@ public class OrganizationMemberResource {
     @Timed
     public ResponseEntity<OrganizationMemberDTO> getOrganizationMember(@PathVariable Long id) {
         log.debug("REST request to get OrganizationMember : {}", id);
-        OrganizationMemberDTO organizationMemberDTO = organizationMemberService.findOne(id);
+        OrganizationMemberDTO organizationMemberDTO = organizationMemberService.findOneInPrincipalOrganizations(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(organizationMemberDTO));
     }
 

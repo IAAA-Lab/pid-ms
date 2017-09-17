@@ -86,4 +86,20 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
         log.debug("Request to delete PersistentIdentifier : {}", id);
         persistentIdentifierRepository.delete(id);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PersistentIdentifierDTO> findAllPublicOrInPrincipalOrganizations(Pageable pageable) {
+        log.debug("Request to get all PersistentIdentifiers public or in Principal's organization");
+        return persistentIdentifierRepository.findAllPublicOrInPrincipalOrganizations(persistentIdentifierMapper.toPage(pageable))
+            .map(persistentIdentifierMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PersistentIdentifierDTO findOnePublicOrInPrincipalOrganizations(UUID id) {
+        log.debug("Request to get PersistentIdentifier public or in Principal's organization: {}", id);
+        PersistentIdentifier persistentIdentifier = persistentIdentifierRepository.findOnePublicOrInPrincipalOrganizations(id);
+        return persistentIdentifierMapper.toDto(persistentIdentifier);
+    }
 }

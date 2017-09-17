@@ -59,7 +59,14 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
             .map(namespaceMapper::toDto);
     }
 
+    /**
+     *  Get the public namespaces.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
     @Override
+    @Transactional(readOnly = true)
     public Page<NamespaceDTO> findPublic(Pageable pageable) {
         log.debug("Request to get all Namespaces");
         return namespaceRepository.findAllByPublicNamespaceIsTrue(namespaceMapper.toPage(pageable))
@@ -80,7 +87,14 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
         return namespaceMapper.toDto(namespace);
     }
 
+    /**
+     *  Get the "id" namespace if public.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
     @Override
+    @Transactional(readOnly = true)
     public NamespaceDTO findOnePublic(Long id) {
         log.debug("Request to get Namespace : {}", id);
         Namespace namespace = namespaceRepository.findByIdAndPublicNamespaceIsTrue(id);
@@ -97,4 +111,47 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
         log.debug("Request to delete Namespace : {}", id);
         namespaceRepository.delete(id);
     }
+
+    /**
+     *  Get the "namespace" namespace.
+     *
+     *  @param namespace the namespace of the entity
+     *  @return the entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+	public NamespaceDTO findOneByNamespace(String namespace) {
+		log.debug("Request to get Namespace: {}", namespace);
+		Namespace namespaceObject  = namespaceRepository.findOneByNamespace(namespace);
+		return namespaceMapper.toDto(namespaceObject);
+	}
+
+    /**
+     *  Get all the nemespaces that are public or belongs to organizations where the Principal is a member.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<NamespaceDTO> findAllInPrincipalOrganizationsOrPublic(Pageable pageable) {
+        log.debug("Request to get all public Namespaces or private to the principal");
+        return namespaceRepository.findAllPublicOrBelongsToPrincipalOrganizations(namespaceMapper.toPage(pageable))
+            .map(namespaceMapper::toDto);
+    }
+
+    /**
+     *  Get the "id" namepspace that is public or belongs to an organization where the Principal is a member.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public NamespaceDTO findOneInPrincipalOrganizationsOrPublic(Long id) {
+        log.debug("Request to get Namespace : {}", id);
+        Namespace namespace = namespaceRepository.findByIdAndPublicOrBelongsToPrincipalOrganizations(id);
+        return namespaceMapper.toDto(namespace);
+    }
+
 }

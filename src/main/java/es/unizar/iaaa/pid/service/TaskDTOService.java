@@ -39,4 +39,20 @@ public interface TaskDTOService {
      *  @param id the id of the entity
      */
     void delete(Long id);
+
+    /**
+     *  Get all the tasks that belongs to organizations where the Principal is a member.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    Page<TaskDTO> findAllInPrincipalOrganizations(Pageable pageable);
+
+    /**
+     *  Get the "id" task that belongs to an organization where the Principal is a member.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
+    TaskDTO findOneInPrincipalOrganizations(Long id);
 }

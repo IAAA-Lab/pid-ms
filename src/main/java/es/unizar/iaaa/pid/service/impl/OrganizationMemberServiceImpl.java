@@ -83,4 +83,32 @@ public class OrganizationMemberServiceImpl implements OrganizationMemberDTOServi
         log.debug("Request to delete OrganizationMember : {}", id);
         organizationMemberRepository.delete(id);
     }
+
+    /**
+     *  Get all the organizationMembers that belongs to organizations where the Principal is a member.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<OrganizationMemberDTO> findAllInPrincipalOrganizations(Pageable pageable) {
+        log.debug("Request to get all OrganizationMembers belonging to organizations where the Principal is a member");
+        return organizationMemberRepository.findAllInPrincipalOrganizations(organizationMemberMapper.toPage(pageable))
+            .map(organizationMemberMapper::toDto);
+    }
+
+    /**
+     *  Get the "id" organizationMember that belongs to an organization where the Principal is a member.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public OrganizationMemberDTO findOneInPrincipalOrganizations(Long id) {
+        log.debug("Request to get OrganizationMember : {}", id);
+        OrganizationMember organizationMember = organizationMemberRepository.findOneInPrincipalOrganizations(id);
+        return organizationMemberMapper.toDto(organizationMember);
+    }
 }

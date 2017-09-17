@@ -45,7 +45,7 @@ public class ValidationByIdTask extends AbstractTaskRunner {
         		log("Error al esperar para hacer la siguiente petición");
         	}
 
-            int isValid = validatorById.validateGmlId(pid.getIdentifier());
+        	int isValid = validatorById.validateGmlId(pid.getFeature(),pid.getIdentifier());
             if(isValid == -1){
                 task.setNumErrors(task.getNumErrors() + 1);
             }

@@ -1,5 +1,17 @@
 package es.unizar.iaaa.pid.harvester.tasks;
 
+import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_TRANSFERRING_HARVEST;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import es.unizar.iaaa.pid.config.ApplicationProperties;
 import es.unizar.iaaa.pid.domain.BoundingBox;
 import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
@@ -7,120 +19,157 @@ import es.unizar.iaaa.pid.harvester.connectors.SpatialHarvester;
 import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSSpatialHarvester;
 import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import java.util.LinkedList;
-import java.util.Queue;
-
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_TRANSFERRING_HARVEST;
 
 
 @Component
 @Scope("prototype")
 class HarvestTask extends AbstractTaskRunner {
-    private static final int MAX_NUM_ERRORS = 20;
+	
+	private ApplicationProperties properties;
+	
     protected ApplicationContext context;
 
     @Autowired
-    public HarvestTask(ApplicationContext context, NamespaceService namespaceService, TaskService taskService) {
+    public HarvestTask(ApplicationContext context, NamespaceService namespaceService, TaskService taskService,
+    		ApplicationProperties properties) {
         super(namespaceService, taskService);
         this.context = context;
+        this.properties = properties;
     }
 
     @Override
     protected void doTask() {
         SpatialHarvester harvester = getHarvester();
         int threshold = getThreshold();
+        
+        //Para cada una de las features del WFS
+        String[]featureList = task.getNamespace().getSource().getFeatureType().split(",");
 
-        Queue<BoundingBox> queue = new LinkedList<>();
-        queue.add(initialBoundingBox());
-
-        if(task.getNamespace().getSource().isHitsRequest()){
-        	 while (!queue.isEmpty() && task.getNumErrors() < MAX_NUM_ERRORS) {
-                 sleepIntervalBetweenRequests();
-
-                 BoundingBox boundingBox = queue.remove();
-                 log("boundingBox={}, queue size={}", boundingBox, queue.size());
-
-                 //tiene disponible la peticion de numero de hits
-
-             	int hits = harvester.getHitsTotal(boundingBox);
-                 log("hits={}", hits);
-
-                 if (hits == -1) {
-                     log("fail, enqueue boundingBox={}", boundingBox);
-                     queue.add(boundingBox);
-                     incNumErrors(task);
-                 } else if (hits > threshold) {
-                     log("hits over threshold, split={}", boundingBox);
-                     queue.addAll(boundingBox.split());
-                 } else if (hits > 0) {
-                     log("hits over threshold, extract");
-                     int ids = harvester.extractIdentifiers(boundingBox);
-                     if (ids == -1) {
-                         log("fail, enqueue boundingBox={}", boundingBox);
-                         queue.add(boundingBox);
-                         incNumErrors(task);
-                     } else {
-                         log("extracted={}", ids);
+        for(int index = 0; index< featureList.length; index++){
+	        Queue<BoundingBox> queue = new LinkedList<>();
+	        queue.add(initialBoundingBox());
+	        
+	        //control de timeOuts
+            Queue<Integer> timeOutQueue = new LinkedList<Integer>();
+            timeOutQueue.add(0);
+	        
+	        String feature = featureList[index].trim();
+	
+	        if(task.getNamespace().getSource().isHitsRequest()){
+	        	 while (!queue.isEmpty() && task.getNumErrors() < properties.getHarvester().getMAX_NUM_ERRORS()) {
+	                 sleepIntervalBetweenRequests();
+	
+	                 BoundingBox boundingBox = queue.remove();
+	                 int numTimeOut = timeOutQueue.remove();
+	                 
+	                 log("feature={}, boundingBox={}, queue size={}",feature, boundingBox, queue.size());
+	
+	                 //tiene disponible la peticion de numero de hits
+	
+	             	 int hits = harvester.getHitsTotal(feature,boundingBox);
+	                 log("feature={}, hits={}",feature, hits);
+	
+	                 if (hits == -1) {
+	                     log("fail, enqueue boundingBox={}", feature, boundingBox);
+	                     queue.add(boundingBox);
+	                     timeOutQueue.add(numTimeOut);
+	                     incNumErrors(task);
+	                 } 
+	                 else if(hits == -2){
+                    	 if(numTimeOut < properties.getHarvester().getMAX_NUM_TIMEOUTS()){
+                    		 log("TimeOut, split={}", boundingBox);
+	                    	 queue.addAll(boundingBox.split());
+	                    	 Integer [] newTimeOuts = {numTimeOut+1,numTimeOut+1,numTimeOut+1,numTimeOut+1};
+	                    	 timeOutQueue.addAll(Arrays.asList(newTimeOuts));
+                    	 }
+                    	 else{
+                    		 log("Maximun number of TimeOut reach, Discard boundingBox {}",boundingBox);
+                    	 }
                      }
-                     sleepIntervalBetweenRequests();
-                 }
-        	 }
-        }
-
-        //no disponible hits request
-        else{
-        	log("no hits request available");
-
-        	Queue<BoundingBox> errorBoundingBox = new LinkedList<>();
-        	int factor = task.getNamespace().getSource().getFactorK();
-        	BoundingBox boundingBox = task.getNamespace().getSource().getBoundingBox();
-
-    		double disX = (boundingBox.getMaxX() - boundingBox.getMinX())/factor;
-    		double disY = (boundingBox.getMaxY() - boundingBox.getMinY())/factor;
-
-    		double positionX = boundingBox.getMinX();
-
-    		for(int i = 0; i< factor; i++){
-    			double positionY = boundingBox.getMinY();
-    			for(int j = 0 ; j < factor; j++){
-    				BoundingBox bbox = new BoundingBox();
-        			bbox.setMinY(positionY);bbox.setMinX(positionX);
-        			positionY  = positionY + disY;
-        			bbox.setMaxY(positionY);bbox.setMaxX(positionX+disX);
-
-        			int ids = harvester.extractIdentifiers(bbox);
-                	if(ids == -1){
-                		log("fail, enqueue boundingBox={}", bbox);
-                		errorBoundingBox.add(bbox);
-                        incNumErrors(task);
-                	}
-                	else{
-                		log("{} : extracted={}",j,ids);
-                	}
-
-                    sleepIntervalBetweenRequests();
-                }
-    			positionX = positionX + disX;
-    		}
-
-    		//vuelvo a intentar los bbox fallidos
-    		while(!errorBoundingBox.isEmpty() && task.getNumErrors() < MAX_NUM_ERRORS){
-    			BoundingBox bbox = errorBoundingBox.remove();
-    			int ids = harvester.extractIdentifiers(bbox);
-            	if(ids == -1){
-            		log("fail, enqueue boundingBox={}", bbox);
-            		errorBoundingBox.add(bbox);
-                    incNumErrors(task);
-            	}
-            	else{
-            		log("extracted={}",ids);
-            	}
-    		}
+	                 else if (hits > threshold) {
+	                     log("hits over threshold, split={}", boundingBox);
+	                     queue.addAll(boundingBox.split());
+	                     Integer [] newTimeOuts = {numTimeOut,numTimeOut,numTimeOut,numTimeOut};
+                    	 timeOutQueue.addAll(Arrays.asList(newTimeOuts));
+	                 } 
+	                 else if (hits > 0) {
+	                     log("hits over threshold, extract");
+	                     int ids = harvester.extractIdentifiers(feature,boundingBox);
+	                     if (ids == -1) {
+	                         log("fail, enqueue boundingBox={}", boundingBox);
+	                         queue.add(boundingBox);
+	                         timeOutQueue.add(numTimeOut);
+	                         incNumErrors(task);
+	                     } 
+	                     else if(ids == -2){
+                        	 if(numTimeOut < properties.getHarvester().getMAX_NUM_TIMEOUTS()){
+                        		 log("TimeOut, split={}", boundingBox);
+    	                    	 queue.addAll(boundingBox.split());
+    	                    	 Integer [] newTimeOuts = {numTimeOut+1,numTimeOut+1,numTimeOut+1,numTimeOut+1};
+    	                    	 timeOutQueue.addAll(Arrays.asList(newTimeOuts));
+                        	 }
+                        	 else{
+                        		 log("Maximun number of TimeOut reach, Discard boundingBox {}",boundingBox);
+                        	 }
+                         }
+	                     else {
+	                         log("feature={}, extracted={}", feature,ids);
+	                     }
+	                     sleepIntervalBetweenRequests();
+	                 }
+	        	 }
+	        }
+	
+	        //no disponible hits request
+	        else{
+	        	log("no hits request available");
+	
+	        	Queue<BoundingBox> errorBoundingBox = new LinkedList<>();
+	        	int factor = task.getNamespace().getSource().getFactorK();
+	        	BoundingBox boundingBox = task.getNamespace().getSource().getBoundingBox();
+	
+	    		double disX = (boundingBox.getMaxX() - boundingBox.getMinX())/factor;
+	    		double disY = (boundingBox.getMaxY() - boundingBox.getMinY())/factor;
+	
+	    		double positionX = boundingBox.getMinX();
+	
+	    		for(int i = 0; i< factor; i++){
+	    			double positionY = boundingBox.getMinY();
+	    			for(int j = 0 ; j < factor; j++){
+	    				BoundingBox bbox = new BoundingBox();
+	        			bbox.setMinY(positionY);bbox.setMinX(positionX);
+	        			positionY  = positionY + disY;
+	        			bbox.setMaxY(positionY);bbox.setMaxX(positionX+disX);
+	
+	        			int ids = harvester.extractIdentifiers(feature,bbox);
+	                	if(ids == -1){
+	                		log("fail, enqueue boundingBox={}", bbox);
+	                		errorBoundingBox.add(bbox);
+	                        incNumErrors(task);
+	                	}
+	                	else{
+	                		log("feature={}, {} : extracted={}",feature,j,ids);
+	                	}
+	
+	                    sleepIntervalBetweenRequests();
+	                }
+	    			positionX = positionX + disX;
+	    		}
+	
+	    		//vuelvo a intentar los bbox fallidos
+	    		while(!errorBoundingBox.isEmpty() && task.getNumErrors() < properties.getHarvester().getMAX_NUM_ERRORS()){
+	    			BoundingBox bbox = errorBoundingBox.remove();
+	    			int ids = harvester.extractIdentifiers(feature,bbox);
+	            	if(ids == -1){
+	            		log("fail, enqueue boundingBox={}", bbox);
+	            		errorBoundingBox.add(bbox);
+	                    incNumErrors(task);
+	            	}
+	            	else{
+	            		log("feature={}, extracted={}",feature, ids);
+	            	}
+	    		}
+	        }
         }
     }
 

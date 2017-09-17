@@ -112,7 +112,7 @@
                             return {
                                 externalUrn: null,
                                 feature: null,
-                                resolverProxyMode: null,
+                                resolverProxyMode: false,
                                 namespace: null,
                                 localId: null,
                                 versionId: null,

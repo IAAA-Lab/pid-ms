@@ -92,7 +92,7 @@ public class TaskResource {
     @Timed
     public ResponseEntity<List<TaskDTO>> getAllTasks(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Tasks");
-        Page<TaskDTO> page = taskService.findAll(pageable);
+        Page<TaskDTO> page = taskService.findAllInPrincipalOrganizations(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/tasks");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -107,7 +107,7 @@ public class TaskResource {
     @Timed
     public ResponseEntity<TaskDTO> getTask(@PathVariable Long id) {
         log.debug("REST request to get Task : {}", id);
-        TaskDTO taskDTO = taskService.findOne(id);
+        TaskDTO taskDTO = taskService.findOneInPrincipalOrganizations(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(taskDTO));
     }
 
