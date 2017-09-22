@@ -1,12 +1,16 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.security.SecurityUtils;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
 import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -40,9 +44,11 @@ public class NamespaceResource {
     private static final String ENTITY_NAME = "namespace";
 
     private final NamespaceDTOService namespaceService;
+    private final OrganizationMemberDTOService organizationMemberService;
 
-    public NamespaceResource(NamespaceDTOService namespaceService) {
+    public NamespaceResource(NamespaceDTOService namespaceService, OrganizationMemberDTOService organizationMemberService) {
         this.namespaceService = namespaceService;
+        this.organizationMemberService = organizationMemberService;
     }
 
     /**
@@ -61,6 +67,13 @@ public class NamespaceResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new namespace cannot already have an ID")).body(null);
         }
 
+        //check if user have capacity to add this namespace
+        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespaceDTO.getOwnerId());
+        
+        if(organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER){
+        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToAddNamespace", 
+        			"You must be Admin or Editor of the organization to add a Namespace")).body(null);
+        }
         //check if exist other namespace with the same id, if exist, return error
         NamespaceDTO auxNamespace = namespaceService.findOneByNamespace(namespaceDTO.getNamespace());
         if(auxNamespace != null){
@@ -78,6 +91,7 @@ public class NamespaceResource {
         namespaceDTO.setLastChangeDate(instant);
         namespaceDTO.setRegistrationDate(instant);
 
+//        NamespaceDTO result = namespaceService.save(namespaceDTO);
         NamespaceDTO result = namespaceService.save(namespaceDTO);
         return ResponseEntity.created(new URI("/api/namespaces/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

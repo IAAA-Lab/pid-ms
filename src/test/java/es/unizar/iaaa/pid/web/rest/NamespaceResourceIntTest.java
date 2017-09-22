@@ -7,6 +7,7 @@ import es.unizar.iaaa.pid.domain.Registration;
 import es.unizar.iaaa.pid.domain.Source;
 import es.unizar.iaaa.pid.repository.NamespaceRepository;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
@@ -170,6 +171,9 @@ public class NamespaceResourceIntTest {
 
     @Autowired
     private NamespaceDTOService namespaceService;
+    
+    @Autowired
+    private OrganizationMemberDTOService organizationMemberDTOService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -190,7 +194,7 @@ public class NamespaceResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        NamespaceResource namespaceResource = new NamespaceResource(namespaceService);
+        NamespaceResource namespaceResource = new NamespaceResource(namespaceService, organizationMemberDTOService);
         this.restNamespaceMockMvc = MockMvcBuilders.standaloneSetup(namespaceResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

@@ -49,6 +49,13 @@ public interface OrganizationMemberDTOService {
     Page<OrganizationMemberDTO> findAllInPrincipalOrganizations(Pageable pageable);
 
     /**
+     *  Get the organizationMember that belongs to a specific organization where the Principal is a member.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    OrganizationMemberDTO findOneByOrganizationInPrincipal(Long oraganizationId);
+    /**
      *  Get the "id" organizationMember that belongs to an organization where the Principal is a member.
      *
      *  @param id the id of the entity

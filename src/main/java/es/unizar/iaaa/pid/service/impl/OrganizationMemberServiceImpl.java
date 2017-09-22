@@ -97,6 +97,20 @@ public class OrganizationMemberServiceImpl implements OrganizationMemberDTOServi
         return organizationMemberRepository.findAllInPrincipalOrganizations(organizationMemberMapper.toPage(pageable))
             .map(organizationMemberMapper::toDto);
     }
+    
+    /**
+     *  Get the organizationMember that belongs to a specific organization where the Principal is a member.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public OrganizationMemberDTO findOneByOrganizationInPrincipal(Long oraganizationId) {
+        log.debug("Request to get the OrganizationMember that belonging to a specific organization where the Principal is a member");
+        OrganizationMember organizationMember = organizationMemberRepository.findOneByOrganizationInPrincipal(oraganizationId);
+        return organizationMemberMapper.toDto(organizationMember);
+    }
 
     /**
      *  Get the "id" organizationMember that belongs to an organization where the Principal is a member.
