@@ -71,7 +71,7 @@ public class NamespaceResource {
         OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespaceDTO.getOwnerId());
         
         if(organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER){
-        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToAddNamespace", 
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToAddNamespace", 
         			"You must be Admin or Editor of the organization to add a Namespace")).body(null);
         }
         //check if exist other namespace with the same id, if exist, return error
