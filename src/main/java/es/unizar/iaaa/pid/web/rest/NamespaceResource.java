@@ -74,6 +74,7 @@ public class NamespaceResource {
         	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToAddNamespace", 
         			"You must be Admin or Editor of the organization to add a Namespace")).body(null);
         }
+        
         //check if exist other namespace with the same id, if exist, return error
         NamespaceDTO auxNamespace = namespaceService.findOneByNamespace(namespaceDTO.getNamespace());
         if(auxNamespace != null){
@@ -114,6 +115,18 @@ public class NamespaceResource {
         if (namespaceDTO.getId() == null) {
             return createNamespace(namespaceDTO);
         }
+        
+        //get the Namespace which exists in the database
+        NamespaceDTO namespaceDTOprevious = namespaceService.findOne(namespaceDTO.getId());
+        
+        //check if the user have capacity to modify the namespace
+        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespaceDTOprevious.getOwnerId());
+        
+        if(organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER){
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToModifyNamespace", 
+        			"You must be Admin or Editor of the organization to modify a Namespace")).body(null);
+        }
+        
         NamespaceDTO result = namespaceService.save(namespaceDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, namespaceDTO.getId().toString()))

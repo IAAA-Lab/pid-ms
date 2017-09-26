@@ -129,7 +129,8 @@
         "emailexists": "Email is already in use!",
         "idexists": "A new {{entityName}} cannot already have an ID",
         "namespaceExist": "Exist other Namespace with the same namespace value",
-        "notCapacityToAddNamespace": "It is necessary to be Admin or Editor of the Organication to add a new Namespace"
+        "notCapacityToAddNamespace": "It is necessary to be Admin or Editor of the Organication to add a new Namespace",
+        "notCapacityToModifyNamespace": "It is necessary to be Admin or Editor of the Organication to modify a Namespace"
     },
     "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad de Zaragoza</a>"
 }
