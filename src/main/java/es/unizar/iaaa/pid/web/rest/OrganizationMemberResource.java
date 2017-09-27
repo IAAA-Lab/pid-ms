@@ -78,7 +78,7 @@ public class OrganizationMemberResource {
             return createOrganizationMember(organizationMemberDTO);
         }
         
-      //check if user have capacity to add this namespace
+        //check if user have capacity to add this namespace
         OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(organizationMemberDTO.getOrganizationId());
         
         if(organizationMember == null || organizationMember.getCapacity() != Capacity.ADMIN){
@@ -130,6 +130,16 @@ public class OrganizationMemberResource {
     @Timed
     public ResponseEntity<Void> deleteOrganizationMember(@PathVariable Long id) {
         log.debug("REST request to delete OrganizationMember : {}", id);
+        
+        //get the organizacion of the OrganizacionMember
+        long organizationId = organizationMemberService.findOne(id).getOrganizationId();
+        //check if user have capacity to add this namespace
+        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(organizationId);
+        
+        if(organizationMember == null || organizationMember.getCapacity() != Capacity.ADMIN){
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToDeleteUserOfOrganization", 
+        			"You must be Admin of the organization to delete a user of it")).body(null);
+        }
         organizationMemberService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
