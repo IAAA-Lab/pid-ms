@@ -1,16 +1,20 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.domain.Task;
-import es.unizar.iaaa.pid.repository.TaskRepository;
-import es.unizar.iaaa.pid.service.TaskDTOService;
-import es.unizar.iaaa.pid.service.dto.TaskDTO;
-import es.unizar.iaaa.pid.service.mapper.TaskMapper;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import es.unizar.iaaa.pid.domain.Task;
+import es.unizar.iaaa.pid.repository.TaskRepository;
+import es.unizar.iaaa.pid.service.ChangeDTOService;
+import es.unizar.iaaa.pid.service.TaskDTOService;
+import es.unizar.iaaa.pid.service.dto.TaskDTO;
+import es.unizar.iaaa.pid.service.mapper.TaskMapper;
 
 
 /**
@@ -23,12 +27,16 @@ public class TaskServiceImpl implements TaskDTOService {
     private final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     private final TaskRepository taskRepository;
+    
+    private final ChangeDTOService changeDTOService;
 
     private final TaskMapper taskMapper;
 
-    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper) {
+    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper,
+    		ChangeDTOService changeDTOService) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
+        this.changeDTOService =changeDTOService;
     }
 
     /**
@@ -110,6 +118,22 @@ public class TaskServiceImpl implements TaskDTOService {
         log.debug("Request to get Task : {}", id);
         Task task = taskRepository.findOneInPrincipalOrganizations(id);
         return taskMapper.toDto(task);
+    }
+    
+    /**
+     * Delete all task associate with the Namespace
+     * 
+     * @param idNamespace id of the Namespace to be deleted
+     */
+    @Override
+    public void deleteAllByNamespaceId(Long namespaceId){
+    	log.debug("Request to delete task associate to NamespaceId {}", namespaceId);
+    	//delete all changes associated to the task
+    	List<Task> listTask = taskRepository.findAllByNamespaceId(namespaceId);
+    	for(Task task : listTask){
+    		changeDTOService.deleteAllByTaskId(task.getId());
+    		taskRepository.delete(task.getId());
+    	}
     }
 
 }

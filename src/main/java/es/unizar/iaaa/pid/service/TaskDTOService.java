@@ -55,4 +55,11 @@ public interface TaskDTOService {
      *  @return the entity
      */
     TaskDTO findOneInPrincipalOrganizations(Long id);
+    
+    /**
+     * Delete all task associate with the Namespace
+     * 
+     * @param idNamespace id of the Namespace to be deleted
+     */
+    void deleteAllByNamespaceId(Long idNamespace);
 }

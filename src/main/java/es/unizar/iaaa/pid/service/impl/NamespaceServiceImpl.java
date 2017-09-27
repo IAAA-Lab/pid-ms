@@ -1,6 +1,8 @@
 package es.unizar.iaaa.pid.service.impl;
 
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
+import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
+import es.unizar.iaaa.pid.service.TaskDTOService;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.repository.NamespaceRepository;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
@@ -23,12 +25,19 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
     private final Logger log = LoggerFactory.getLogger(NamespaceServiceImpl.class);
 
     private final NamespaceRepository namespaceRepository;
+    
+    private final TaskDTOService taskDTOService;
+    
+    private final PersistentIdentifierDTOService persistentIdentifierDTOService;
 
     private final NamespaceMapper namespaceMapper;
 
-    public NamespaceServiceImpl(NamespaceRepository namespaceRepository, NamespaceMapper namespaceMapper) {
+    public NamespaceServiceImpl(NamespaceRepository namespaceRepository, NamespaceMapper namespaceMapper,
+    		TaskDTOService taskDTOService, PersistentIdentifierDTOService persistentIdentifierDTOService) {
         this.namespaceRepository = namespaceRepository;
         this.namespaceMapper = namespaceMapper;
+        this.taskDTOService = taskDTOService;
+        this.persistentIdentifierDTOService = persistentIdentifierDTOService;
     }
 
     /**
@@ -109,6 +118,12 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Namespace : {}", id);
+        
+        //delete the task asociate to the Namespace
+        taskDTOService.deleteAllByNamespaceId(id);
+        
+        //delete all persistentIdentifiers associated to the Namespace
+        persistentIdentifierDTOService.deleteAllByNamespaceId(id);
         namespaceRepository.delete(id);
     }
 

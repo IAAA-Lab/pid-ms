@@ -112,4 +112,15 @@ public class ChangeServiceImpl implements ChangeDTOService {
         return changeMapper.toDto(change);
     }
 
+    /**
+     * Delete all change associated with the task
+     * 
+     * @param taskId the id of the associate Task
+     */
+	@Override
+	public void deleteAllByTaskId(Long taskId) {
+		log.debug("Request to delete all Task associate with taskId : {}",taskId);
+		changeRepository.deleteAllByTaskId(taskId);
+	}
+
 }

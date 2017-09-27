@@ -102,4 +102,15 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
         PersistentIdentifier persistentIdentifier = persistentIdentifierRepository.findOnePublicOrInPrincipalOrganizations(id);
         return persistentIdentifierMapper.toDto(persistentIdentifier);
     }
+    
+    /**
+     * Delete all persistentIdentifier associated with the namespace
+     * 
+     * @param namespaceId the id of the associate namespace
+     */
+    @Override
+    public void deleteAllByNamespaceId(Long namespaceId){
+    	log.debug("Request to delete All PersistentIdentifiers associated with the namespace: {}", namespaceId);
+    	persistentIdentifierRepository.deleteAllByNamespaceId(namespaceId);
+    }
 }

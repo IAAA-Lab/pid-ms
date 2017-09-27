@@ -42,4 +42,8 @@ public interface PersistentIdentifierRepository extends JpaRepository<Persistent
 
     @Query("select p from PersistentIdentifier p where p.id = ?1 and p.identifier.namespace in (select ns.namespace from Namespace ns where ns.publicNamespace = true or ns.owner in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username}))")
     PersistentIdentifier findOnePublicOrInPrincipalOrganizations(UUID id);
+    
+    @Modifying
+    @Query("delete from PersistentIdentifier p where p.identifier.namespace in (select ns.namespace from Namespace ns where ns.id = ?1)")
+    void deleteAllByNamespaceId(Long namespaceId);
 }

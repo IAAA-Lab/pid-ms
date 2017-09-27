@@ -57,4 +57,11 @@ public interface PersistentIdentifierDTOService {
      *  @return the entity
      */
     PersistentIdentifierDTO findOnePublicOrInPrincipalOrganizations(UUID id);
+    
+    /**
+     * Delete all persistentIdentifier associated with the namespace
+     * 
+     * @param namespaceId the id of the associate namespace
+     */
+    void deleteAllByNamespaceId(Long namespaceId);
 }

@@ -183,6 +183,22 @@ public class NamespaceResource {
     @Timed
     public ResponseEntity<Void> deleteNamespace(@PathVariable Long id) {
         log.debug("REST request to delete Namespace : {}", id);
+        
+        //get the Namespace which exists in the database
+        NamespaceDTO namespaceDTOprevious = namespaceService.findOne(id);
+        if(namespaceDTOprevious == null){
+        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "NamespaceNotExist", 
+        			"The Namespace which want to be deleted does not exist")).body(null);
+        }
+        
+        //check if the user have capacity to modify the namespace
+        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespaceDTOprevious.getOwnerId());
+        
+        if(organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER){
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToDeleteNamespace", 
+        			"You must be Admin or Editor of the organization to delete a Namespace")).body(null);
+        }
+        
         namespaceService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

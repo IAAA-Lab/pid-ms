@@ -55,4 +55,11 @@ public interface ChangeDTOService {
      *  @return the entity
      */
     ChangeDTO findOneInPrincipalOrganizations(Long id);
+    
+    /**
+     * Delete all change associated with the task
+     * 
+     * @param taskId the id of the associate Task
+     */
+    void deleteAllByTaskId(Long taskId);
 }
