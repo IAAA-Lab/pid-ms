@@ -1,6 +1,8 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
@@ -74,6 +76,14 @@ public class OrganizationMemberResource {
         log.debug("REST request to update OrganizationMember : {}", organizationMemberDTO);
         if (organizationMemberDTO.getId() == null) {
             return createOrganizationMember(organizationMemberDTO);
+        }
+        
+      //check if user have capacity to add this namespace
+        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(organizationMemberDTO.getOrganizationId());
+        
+        if(organizationMember == null || organizationMember.getCapacity() != Capacity.ADMIN){
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToModifyCapacity", 
+        			"You must be Admin the organization to modify the capacity of a user")).body(null);
         }
         OrganizationMemberDTO result = organizationMemberService.save(organizationMemberDTO);
         return ResponseEntity.ok()
