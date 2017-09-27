@@ -118,6 +118,10 @@ public class NamespaceResource {
         
         //get the Namespace which exists in the database
         NamespaceDTO namespaceDTOprevious = namespaceService.findOne(namespaceDTO.getId());
+        if(namespaceDTOprevious == null){
+        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "NamespaceNotExist", 
+        			"The Namespace which want to be deleted does not exist")).body(null);
+        }
         
         //check if the user have capacity to modify the namespace
         OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespaceDTOprevious.getOwnerId());
