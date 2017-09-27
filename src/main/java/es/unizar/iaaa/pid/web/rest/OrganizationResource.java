@@ -1,10 +1,15 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.service.OrganizationDTOService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
 import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
+import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.dto.OrganizationDTO;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -35,9 +40,12 @@ public class OrganizationResource {
     private static final String ENTITY_NAME = "organization";
 
     private final OrganizationDTOService organizationService;
+    private final OrganizationMemberDTOService organizationMemberService;
 
-    public OrganizationResource(OrganizationDTOService organizationService) {
+    public OrganizationResource(OrganizationDTOService organizationService, 
+    		OrganizationMemberDTOService organizationMemberService) {
         this.organizationService = organizationService;
+        this.organizationMemberService = organizationMemberService;
     }
 
     /**
@@ -75,6 +83,21 @@ public class OrganizationResource {
         log.debug("REST request to update Organization : {}", organizationDTO);
         if (organizationDTO.getId() == null) {
             return createOrganization(organizationDTO);
+        }
+        
+        //get the Organization which exists in the database
+        OrganizationDTO organizationDTOprevious = organizationService.findOne(organizationDTO.getId());
+        if(organizationDTOprevious == null){
+        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "OrganizationNotExist", 
+        			"The Organization which want to be modify does not exist")).body(null);
+        }
+        
+        //check if the user have capacity to modify the namespace
+        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(organizationDTO.getId());
+        
+        if(organizationMember == null || organizationMember.getCapacity() != Capacity.ADMIN){
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToModifyOrganization", 
+        			"You must be Admin in the organization to modify its details")).body(null);
         }
         OrganizationDTO result = organizationService.save(organizationDTO);
         return ResponseEntity.ok()

@@ -5,6 +5,7 @@ import es.unizar.iaaa.pid.PidmsApp;
 import es.unizar.iaaa.pid.domain.Organization;
 import es.unizar.iaaa.pid.repository.OrganizationRepository;
 import es.unizar.iaaa.pid.service.OrganizationDTOService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.service.dto.OrganizationDTO;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
@@ -54,6 +55,9 @@ public class OrganizationResourceIntTest {
 
     @Autowired
     private OrganizationDTOService organizationService;
+    
+    @Autowired
+    private OrganizationMemberDTOService organizationMemberDTOService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -74,7 +78,8 @@ public class OrganizationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        OrganizationResource organizationResource = new OrganizationResource(organizationService);
+        OrganizationResource organizationResource = new OrganizationResource(organizationService,
+        		organizationMemberDTOService);
         this.restOrganizationMockMvc = MockMvcBuilders.standaloneSetup(organizationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
