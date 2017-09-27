@@ -55,6 +55,15 @@ public class OrganizationMemberResource {
         if (organizationMemberDTO.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new organizationMember cannot already have an ID")).body(null);
         }
+        
+        //check if user have capacity to add this namespace
+        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(organizationMemberDTO.getOrganizationId());
+        
+        if(organizationMember == null || organizationMember.getCapacity() != Capacity.ADMIN){
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToAddOrganizationMember", 
+        			"You must be Admin in the organization to add a user of it")).body(null);
+        }
+        
         OrganizationMemberDTO result = organizationMemberService.save(organizationMemberDTO);
         return ResponseEntity.created(new URI("/api/organization-members/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -78,7 +87,7 @@ public class OrganizationMemberResource {
             return createOrganizationMember(organizationMemberDTO);
         }
         
-        //check if user have capacity to add this namespace
+        //check if user have capacity to edit a organizationMember
         OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(organizationMemberDTO.getOrganizationId());
         
         if(organizationMember == null || organizationMember.getCapacity() != Capacity.ADMIN){
@@ -133,7 +142,7 @@ public class OrganizationMemberResource {
         
         //get the organizacion of the OrganizacionMember
         long organizationId = organizationMemberService.findOne(id).getOrganizationId();
-        //check if user have capacity to add this namespace
+        //check if user have capacity to delete this organizationMember
         OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(organizationId);
         
         if(organizationMember == null || organizationMember.getCapacity() != Capacity.ADMIN){

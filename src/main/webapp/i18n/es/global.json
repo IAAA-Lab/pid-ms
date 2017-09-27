@@ -130,11 +130,12 @@
         "idexists": "A new {{entityName}} cannot already have an ID",
         "namespaceExist": "Exist other Namespace with the same namespace value",
         "NamespaceNotExist": "The Namespace does not exist",
-        "notCapacityToAddNamespace": "It is necessary to be Admin or Editor of an Organization to add a new Namespace",
-        "notCapacityToModifyNamespace": "It is necessary to be Admin or Editor of an Organization to modify a Namespace",
-        "notCapacityToDeleteNamespace": "It is necessary to be Admin or Editor of an Organization to delete a Namespace",
-        "notCapacityToModifyCapacity": "It is necessary to be Admin of an Organization to modify user's capacities",
-        "notCapacityToDeleteUserOfOrganization": "It is necessary to be Admin of an Organization to remove a User of it"
+        "notCapacityToAddNamespace": "It is necessary to be Admin or Editor in the Organization to add a new Namespace",
+        "notCapacityToModifyNamespace": "It is necessary to be Admin or Editor in the Organization to modify a Namespace",
+        "notCapacityToDeleteNamespace": "It is necessary to be Admin or Editor in the Organization to delete a Namespace",
+        "notCapacityToModifyCapacity": "It is necessary to be Admin in the Organization to modify user's capacities",
+        "notCapacityToDeleteUserOfOrganization": "It is necessary to be Admin in the Organization to remove an User on it",
+        "notCapacityToAddOrganizationMember": "Is is necessary to be Admin in the Organization to add an User on it"
     },
     "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad de Zaragoza</a>"
 }
