@@ -79,4 +79,11 @@ public interface NamespaceDTOService {
      *  @return the entity
      */
     NamespaceDTO findOneInPrincipalOrganizationsOrPublic(Long id);
+    
+    /**
+     * Delete all namespace associate with the organization
+     * 
+     * @param oraganizationId id of the organization to be deleted
+     */
+    void deleteAllByOrganizationId(Long organizationId);
 }

@@ -1,8 +1,11 @@
 package es.unizar.iaaa.pid.service.impl;
 
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.OrganizationDTOService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.domain.Organization;
 import es.unizar.iaaa.pid.repository.OrganizationRepository;
+import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.dto.OrganizationDTO;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
 import org.slf4j.Logger;
@@ -23,12 +26,19 @@ public class OrganizationServiceImpl implements OrganizationDTOService {
     private final Logger log = LoggerFactory.getLogger(OrganizationServiceImpl.class);
 
     private final OrganizationRepository organizationRepository;
+    
+    private final NamespaceDTOService namespaceDTOService;
+    
+    private final OrganizationMemberDTOService organizationMemberDTOService;
 
     private final OrganizationMapper organizationMapper;
 
-    public OrganizationServiceImpl(OrganizationRepository organizationRepository, OrganizationMapper organizationMapper) {
+    public OrganizationServiceImpl(OrganizationRepository organizationRepository, OrganizationMapper organizationMapper,
+    		NamespaceDTOService namespaceDTOService, OrganizationMemberDTOService organizationMemberDTOService) {
         this.organizationRepository = organizationRepository;
         this.organizationMapper = organizationMapper;
+        this.namespaceDTOService = namespaceDTOService;
+        this.organizationMemberDTOService = organizationMemberDTOService;
     }
 
     /**
@@ -81,6 +91,12 @@ public class OrganizationServiceImpl implements OrganizationDTOService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Organization : {}", id);
+        
+        //delete all associated namespaces
+        namespaceDTOService.deleteAllByOrganizationId(id);
+        
+        //delete all associated organizationMember
+        organizationMemberDTOService.deleteAllByOrganizationId(id);
         organizationRepository.delete(id);
     }
 }

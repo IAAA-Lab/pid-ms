@@ -62,4 +62,11 @@ public interface OrganizationMemberDTOService {
      *  @return the entity
      */
     OrganizationMemberDTO findOneInPrincipalOrganizations(Long id);
+    
+    /**
+     * Delete all organizationMembers associate with the organization
+     * 
+     * @param oraganizationId id of the organization to be deleted
+     */
+    void deleteAllByOrganizationId(Long organizationId);
 }

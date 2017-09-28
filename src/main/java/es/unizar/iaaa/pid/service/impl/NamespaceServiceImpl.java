@@ -4,9 +4,13 @@ import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
 import es.unizar.iaaa.pid.service.TaskDTOService;
 import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.repository.NamespaceRepository;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -125,6 +129,21 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
         //delete all persistentIdentifiers associated to the Namespace
         persistentIdentifierDTOService.deleteAllByNamespaceId(id);
         namespaceRepository.delete(id);
+    }
+    
+    /**
+     * Delete all namespace associate with the organization
+     * 
+     * @param oraganizationId id of the organization to be deleted
+     */
+    @Override
+    public void deleteAllByOrganizationId(Long organizationId){
+    	log.debug("Request to delete namespaces associate with organizationId {}", organizationId);
+    	//delete all changes associated to the task
+    	List<Namespace> namespaceList = namespaceRepository.findAllByOrganizationId(organizationId);
+    	for(Namespace namespace : namespaceList){
+    		delete(namespace.getId());
+    	}
     }
 
     /**

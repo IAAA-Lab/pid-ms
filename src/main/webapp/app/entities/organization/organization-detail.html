@@ -27,4 +27,11 @@
         <span class="glyphicon glyphicon-pencil"></span>
         <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
     </button>
+    <button type="submit"
+            ui-sref="organization.delete({id:vm.organization.id})"
+            class="btn btn-danger"
+            ng-switch-when="true">
+        <span class="glyphicon glyphicon-remove-circle"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
+    </button>
 </div>

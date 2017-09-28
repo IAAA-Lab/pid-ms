@@ -93,7 +93,7 @@ public class OrganizationResource {
         }
         
         //check if the user have capacity to modify the namespace
-        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(organizationDTO.getId());
+        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(organizationDTOprevious.getId());
         
         if(organizationMember == null || organizationMember.getCapacity() != Capacity.ADMIN){
         	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToModifyOrganization", 
@@ -144,6 +144,22 @@ public class OrganizationResource {
     @Timed
     public ResponseEntity<Void> deleteOrganization(@PathVariable Long id) {
         log.debug("REST request to delete Organization : {}", id);
+        
+        //get the Organization which exists in the database
+        OrganizationDTO organizationDTOprevious = organizationService.findOne(id);
+        if(organizationDTOprevious == null){
+        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "OrganizationNotExist", 
+        			"The Organization which want to be modify does not exist")).body(null);
+        }
+        
+        //check if the user have capacity to modify the namespace
+        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(organizationDTOprevious.getId());
+        
+        if(organizationMember == null || organizationMember.getCapacity() != Capacity.ADMIN){
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToDeleteOrganization", 
+        			"You must be Admin in the organization to delete the organization")).body(null);
+        }
+        
         organizationService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

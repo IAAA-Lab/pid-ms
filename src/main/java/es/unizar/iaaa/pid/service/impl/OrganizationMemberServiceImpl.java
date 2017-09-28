@@ -125,4 +125,14 @@ public class OrganizationMemberServiceImpl implements OrganizationMemberDTOServi
         OrganizationMember organizationMember = organizationMemberRepository.findOneInPrincipalOrganizations(id);
         return organizationMemberMapper.toDto(organizationMember);
     }
+    
+    /**
+     * Delete all organizationMembers associate with the organization
+     * 
+     * @param oraganizationId id of the organization to be deleted
+     */
+    public void deleteAllByOrganizationId(Long organizationId){
+    	log.debug("Request to delete all oragnizationMembers of the organization : {}", organizationId);
+    	organizationMemberRepository.deleteAllByOrganizationId(organizationId);
+    }
 }

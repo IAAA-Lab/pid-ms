@@ -4,6 +4,7 @@ import es.unizar.iaaa.pid.domain.OrganizationMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -27,4 +28,8 @@ public interface OrganizationMemberRepository extends JpaRepository<Organization
 
     @Query("select om from OrganizationMember om where om.id = ?1 and om.organization in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username})")
     OrganizationMember findOneInPrincipalOrganizations(Long id);
+    
+    @Modifying
+    @Query("delete from OrganizationMember om where om.organization.id = ?1")
+    void deleteAllByOrganizationId(Long organizationId);
 }
