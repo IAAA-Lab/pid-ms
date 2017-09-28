@@ -94,12 +94,40 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
         return persistentIdentifierRepository.findAllPublicOrInPrincipalOrganizations(persistentIdentifierMapper.toPage(pageable))
             .map(persistentIdentifierMapper::toDto);
     }
+    
+    /**
+     *  Get all the persistentIdentifiers public.
+     *
+     *  @param pageable the pagination information
+     *  @return the list of entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<PersistentIdentifierDTO> findAllPublic(Pageable pageable){
+    	log.debug("Request to get all PersistentIdentifiers public");
+    	return persistentIdentifierRepository.findAllPublic(persistentIdentifierMapper.toPage(pageable))
+                .map(persistentIdentifierMapper::toDto);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public PersistentIdentifierDTO findOnePublicOrInPrincipalOrganizations(UUID id) {
         log.debug("Request to get PersistentIdentifier public or in Principal's organization: {}", id);
         PersistentIdentifier persistentIdentifier = persistentIdentifierRepository.findOnePublicOrInPrincipalOrganizations(id);
+        return persistentIdentifierMapper.toDto(persistentIdentifier);
+    }
+    
+    /**
+     *  Get the "id" persistentIdentifier public.
+     *
+     *  @param id the id of the entity
+     *  @return the entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public PersistentIdentifierDTO findOnePublic(UUID id){
+    	log.debug("Request to get PersistentIdentifier public: {}", id);
+    	PersistentIdentifier persistentIdentifier = persistentIdentifierRepository.findOnePublic(id);
         return persistentIdentifierMapper.toDto(persistentIdentifier);
     }
     

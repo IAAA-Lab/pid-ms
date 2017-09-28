@@ -1,6 +1,8 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+
+import es.unizar.iaaa.pid.security.SecurityUtils;
 import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
 import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
@@ -92,7 +94,14 @@ public class PersistentIdentifierResource {
     @Timed
     public ResponseEntity<List<PersistentIdentifierDTO>> getAllPersistentIdentifiers(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of PersistentIdentifiers");
-        Page<PersistentIdentifierDTO> page = persistentIdentifierService.findAllPublicOrInPrincipalOrganizations(pageable);
+        
+        Page<PersistentIdentifierDTO> page;
+        if (SecurityUtils.isAuthenticated()) {
+        	page = persistentIdentifierService.findAllPublicOrInPrincipalOrganizations(pageable);
+        }
+        else{
+        	page = persistentIdentifierService.findAllPublic(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/persistent-identifiers");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -107,7 +116,13 @@ public class PersistentIdentifierResource {
     @Timed
     public ResponseEntity<PersistentIdentifierDTO> getPersistentIdentifier(@PathVariable UUID id) {
         log.debug("REST request to get PersistentIdentifier : {}", id);
-        PersistentIdentifierDTO persistentIdentifierDTO = persistentIdentifierService.findOnePublicOrInPrincipalOrganizations(id);
+        PersistentIdentifierDTO persistentIdentifierDTO;
+        if(SecurityUtils.isAuthenticated()){
+        	persistentIdentifierDTO = persistentIdentifierService.findOnePublicOrInPrincipalOrganizations(id);
+        }
+        else{
+        	persistentIdentifierDTO = persistentIdentifierService.findOnePublic(id);
+        }
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(persistentIdentifierDTO));
     }
 
