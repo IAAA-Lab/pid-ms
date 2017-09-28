@@ -3,15 +3,19 @@ package es.unizar.iaaa.pid.service.impl;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.OrganizationDTOService;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
+import es.unizar.iaaa.pid.service.UserService;
 import es.unizar.iaaa.pid.domain.Organization;
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.repository.OrganizationRepository;
-import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.dto.OrganizationDTO;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,15 +34,19 @@ public class OrganizationServiceImpl implements OrganizationDTOService {
     private final NamespaceDTOService namespaceDTOService;
     
     private final OrganizationMemberDTOService organizationMemberDTOService;
+    
+    private final UserService userService;
 
     private final OrganizationMapper organizationMapper;
 
     public OrganizationServiceImpl(OrganizationRepository organizationRepository, OrganizationMapper organizationMapper,
-    		NamespaceDTOService namespaceDTOService, OrganizationMemberDTOService organizationMemberDTOService) {
+    		NamespaceDTOService namespaceDTOService, OrganizationMemberDTOService organizationMemberDTOService,
+    		UserService userService) {
         this.organizationRepository = organizationRepository;
         this.organizationMapper = organizationMapper;
         this.namespaceDTOService = namespaceDTOService;
         this.organizationMemberDTOService = organizationMemberDTOService;
+        this.userService = userService;
     }
 
     /**
@@ -52,6 +60,16 @@ public class OrganizationServiceImpl implements OrganizationDTOService {
         log.debug("Request to save Organization : {}", organizationDTO);
         Organization organization = organizationMapper.toEntity(organizationDTO);
         organization = organizationRepository.save(organization);
+        
+        //Add organization member
+        OrganizationMemberDTO organizationMemberDTO = new OrganizationMemberDTO();
+        organizationMemberDTO.setCapacity(Capacity.ADMIN);
+        organizationMemberDTO.setOrganizationId(organization.getId());
+        
+        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        organizationMemberDTO.setUserId(userService.getUserWithAuthoritiesByLogin(user.getUsername()).get().getId());
+        organizationMemberDTOService.save(organizationMemberDTO);
+        
         return organizationMapper.toDto(organization);
     }
 
