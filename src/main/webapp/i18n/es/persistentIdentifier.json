@@ -13,26 +13,26 @@
                 "question": "¿Seguro que quiere eliminar el Identificador Persistente {{ id }}?"
             },
             "detail": {
-                "title": "Identificador Persistente"
+                "title": "Identificador persistente"
             },
             "externalUrn": "URN",
             "feature": "Tipo de objeto espacial",
-            "resolverProxyMode": "Resolver Proxy Mode",
+            "resolverProxyMode": "Modo proxy",
             "namespace": "Namespace",
             "localId": "Local Id",
             "versionId": "Version Id",
-            "beginLifespanVersion": "Begin Lifespan Version",
-            "endLifespanVersion": "End Lifespan Version",
-            "alternateId": "Alternate Id",
-            "resourceType": "Resource Type",
-            "locator": "Locator",
-            "processStatus": "Process Status",
+            "beginLifespanVersion": "Comienzo de la vida util de la versión",
+            "endLifespanVersion": "Final de la vida util de la versión",
+            "alternateId": "Id alternativo",
+            "resourceType": "Tipo de recurso",
+            "locator": "Localizador",
+            "processStatus": "Estado del proceso",
             "itemStatus": "Estado",
-            "lastChangeDate": "Last Change Date",
-            "registrationDate": "Registration Date",
-            "lastRevisionDate": "Last Revision Date",
-            "nextRenewalDate": "Next Renewal Date",
-            "annullationDate": "Annullation Date"
+            "lastChangeDate": "Fecha del último cambio",
+            "registrationDate": "Fecha de registro",
+            "lastRevisionDate": "Fecha de última revisión",
+            "nextRenewalDate": "Fecha de siguiente actualización",
+            "annullationDate": "Fecha de anulación"
         }
     }
 }

@@ -15,7 +15,7 @@
                 "title": "Hilos",
                 "all": "Todo",
                 "runnable": "Ejecutables",
-                "timedwaiting": "Timed waiting",
+                "timedwaiting": "Tiempo de espera",
                 "waiting": "Esperando",
                 "blocked": "Bloqueados",
                 "dump": {
@@ -25,7 +25,7 @@
                     "blockedcount": "Contador bloqueados",
                     "waitedtime": "Tiempo en espera",
                     "waitedcount": "Contador en espera",
-                    "lockname": "Lock name",
+                    "lockname": "Nombre bloqueado",
                     "stacktrace": "Stacktrace",
                     "show": "Mostrar",
                     "hide": "Ocultar"

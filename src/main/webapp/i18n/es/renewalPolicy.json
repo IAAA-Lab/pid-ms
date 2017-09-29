@@ -2,12 +2,12 @@
     "pidmsApp": {
         "RenewalPolicy" : {
             "null": "",
-            "NONE": "NONE",
-            "CONTINUOUS": "CONTINUOUS",
-            "ONE_MINUTE": "ONE_MINUTE",
-            "DAILY": "DAILY",
-            "MONTHLY": "MONTHLY",
-            "YEARLY": "YEARLY"
+            "NONE": "NUNCA",
+            "CONTINUOUS": "CONTINUA",
+            "ONE_MINUTE": "CADA MINUTO",
+            "DAILY": "DIARIAMENTE",
+            "MONTHLY": "MENSUALMENTE",
+            "YEARLY": "ANUALMENTE"
         }
     }
 }

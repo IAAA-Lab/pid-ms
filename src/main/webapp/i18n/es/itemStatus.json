@@ -2,15 +2,15 @@
     "pidmsApp": {
         "ItemStatus" : {
             "null": "",
-            "ISSUED": "ISSUED",
-            "LAPSED": "LAPSED",
-            "RETIRED": "RETIRED",
-            "PENDING_VALIDATION": "PENDING_VALIDATION",
-            "ANNULLED": "ANNULLED",
-            "PENDING_RETIREMENT": "PENDING_RETIREMENT",
-            "NEW": "NEW",
-            "VALIDATED": "VALIDATED",
-            "PENDING_ANNULLATION": "PENDING_ANNULLATION"
+            "ISSUED": "PUBLICADO",
+            "LAPSED": "CADUCADO",
+            "RETIRED": "RETIRADO",
+            "PENDING_VALIDATION": "PENDIENTE DE VALIDACIÓN",
+            "ANNULLED": "ANULADO",
+            "PENDING_RETIREMENT": "PENDIENTE DE RETIRO",
+            "NEW": "NUEVO",
+            "VALIDATED": "VALIDADO",
+            "PENDING_ANNULLATION": "PENDIENTE DE ANULACÓN"
         }
     }
 }
