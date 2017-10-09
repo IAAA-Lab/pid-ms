@@ -106,7 +106,8 @@ public class TransferringHarvestTask extends AbstractTaskRunner {
 	}
 
 	private boolean canUpdateExtingingPid(PersistentIdentifier pid, Instant timeStamp) {
-        return (pid.getRegistration().getItemStatus() == VALIDATED) ||
+        return (pid.getRegistration().getItemStatus() == VALIDATED) || 
+        		pid.getRegistration().getItemStatus() == ISSUED ||
                 (pid.getRegistration().getItemStatus() == LAPSED &&
                         timeStamp.isAfter(pid.getRegistration().getLastRevisionDate()));
     }
