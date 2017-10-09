@@ -97,6 +97,20 @@ public class ChangeServiceImpl implements ChangeDTOService {
         return changeRepository.findAllInPrincipalOrganizations(changeMapper.toPage(pageable))
             .map(changeMapper::toDto);
     }
+    
+    /**
+     * Get all the change that Namespace is public
+     * 
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ChangeDTO> findAllPublicOrganizations(Pageable pageable){
+    	log.debug("Request to get all the change of a public Namespace");
+    	return changeRepository.findAllPublic(changeMapper.toPage(pageable))
+    			.map(changeMapper::toDto);
+    }
 
     /**
      *  Get the "id" change that belongs to an organization where the Principal is a member.
@@ -110,6 +124,20 @@ public class ChangeServiceImpl implements ChangeDTOService {
         log.debug("Request to get Task : {}", id);
         Change change = changeRepository.findOneInPrincipalOrganizations(id);
         return changeMapper.toDto(change);
+    }
+    
+    /**
+     * Get the "id" change that belong a public namespace
+     * 
+     * @param id the id of the entity
+     * @return the entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public ChangeDTO findOnePublic(Long id){
+    	log.debug("Request to get Task : {}", id);
+    	Change change = changeRepository.findOnePublic(id);
+    	return changeMapper.toDto(change);
     }
 
     /**

@@ -138,7 +138,8 @@
         "notCapacityToDeleteUserOfOrganization": "Es necesario ser Administrador de la Organización para eliminar un usuario de ella",
         "notCapacityToAddOrganizationMember": "Es necesario ser Administrador de la Organización para añadir un nuevo usuario",
         "notCapacityToModifyOrganization": "Es necesario ser Administrador de la Organización para modificar sus detalles",
-        "notCapacityToDeleteOrganization": "Es necesario ser Administrador de la Organización para poder borrarla"
+        "notCapacityToDeleteOrganization": "Es necesario ser Administrador de la Organización para poder borrarla",
+        "notAuthenticated": "Debes estar autentificado para realizar esta acción"
     },
     "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad de Zaragoza</a>"
 }

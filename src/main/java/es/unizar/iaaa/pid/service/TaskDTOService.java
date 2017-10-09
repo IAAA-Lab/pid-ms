@@ -49,12 +49,28 @@ public interface TaskDTOService {
     Page<TaskDTO> findAllInPrincipalOrganizations(Pageable pageable);
 
     /**
+     * Get all the task that are related with public namespaces
+     * 
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    Page<TaskDTO> findAllPublic(Pageable pageable);
+    
+    /**
      *  Get the "id" task that belongs to an organization where the Principal is a member.
      *
      *  @param id the id of the entity
      *  @return the entity
      */
     TaskDTO findOneInPrincipalOrganizations(Long id);
+    
+    /**
+     * Get the "id" task that belong to a public namespace
+     * 
+     * @param id the id of the entity
+     * @return the entity
+     */
+    TaskDTO findOnePublic(Long id);
     
     /**
      * Delete all task associate with the Namespace

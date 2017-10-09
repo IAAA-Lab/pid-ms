@@ -138,7 +138,8 @@
         "notCapacityToDeleteUserOfOrganization": "It is necessary to be Admin in the Organization to remove an User on it",
         "notCapacityToAddOrganizationMember": "It is necessary to be Admin in the Organization to add an User on it",
         "notCapacityToModifyOrganization": "It is necessary to be Admin in the Oganization to modify its details",
-        "notCapacityToDeleteOrganization": "It is necessary to be Admin in the Organization to delete it"
+        "notCapacityToDeleteOrganization": "It is necessary to be Admin in the Organization to delete it",
+        "notAuthenticated": "You must be authenticated to do this action"
     },
     "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad Zaragoza</a>"
 }

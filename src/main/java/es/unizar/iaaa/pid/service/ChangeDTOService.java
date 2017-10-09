@@ -47,6 +47,14 @@ public interface ChangeDTOService {
      *  @return the list of entities
      */
     Page<ChangeDTO> findAllInPrincipalOrganizations(Pageable pageable);
+    
+    /**
+     * Get all the change that Namespace is public
+     * 
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    Page<ChangeDTO> findAllPublicOrganizations(Pageable pageable);
 
     /**
      *  Get the "id" change that belongs to an organization where the Principal is a member.
@@ -55,6 +63,14 @@ public interface ChangeDTOService {
      *  @return the entity
      */
     ChangeDTO findOneInPrincipalOrganizations(Long id);
+    
+    /**
+     * Get the "id" change that belong a public namespace
+     * 
+     * @param id the id of the entity
+     * @return the entity
+     */
+    ChangeDTO findOnePublic(Long id);
     
     /**
      * Delete all change associated with the task

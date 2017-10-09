@@ -105,6 +105,20 @@ public class TaskServiceImpl implements TaskDTOService {
         return taskRepository.findAllInPrincipalOrganizations(taskMapper.toPage(pageable))
             .map(taskMapper::toDto);
     }
+    
+    /**
+     * Get all the task that are related with public namespaces
+     * 
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TaskDTO> findAllPublic(Pageable pageable){
+    	log.debug("Request to get all the tasks of public Namespaces");
+    	return taskRepository.findAllPublic(taskMapper.toPage(pageable))
+    			.map(taskMapper::toDto);
+    }
 
     /**
      *  Get the "id" task that belongs to an organization where the Principal is a member.
@@ -118,6 +132,20 @@ public class TaskServiceImpl implements TaskDTOService {
         log.debug("Request to get Task : {}", id);
         Task task = taskRepository.findOneInPrincipalOrganizations(id);
         return taskMapper.toDto(task);
+    }
+    
+    /**
+     * Get the "id" task that belong to a public namespace
+     * 
+     * @param id the id of the entity
+     * @return the entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public TaskDTO findOnePublic(Long id){
+    	log.debug("Request to get Task: {}", id);
+    	Task task = taskRepository.findOnePublic(id);
+    	return taskMapper.toDto(task);
     }
     
     /**

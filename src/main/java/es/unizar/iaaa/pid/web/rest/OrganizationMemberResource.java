@@ -1,14 +1,12 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
-import es.unizar.iaaa.pid.domain.enumeration.Capacity;
-import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
-import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
-import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
-import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,13 +14,25 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import com.codahale.metrics.annotation.Timed;
+
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
+import es.unizar.iaaa.pid.security.SecurityUtils;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
+import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
+import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
+import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing OrganizationMember.
@@ -110,7 +120,14 @@ public class OrganizationMemberResource {
     @Timed
     public ResponseEntity<List<OrganizationMemberDTO>> getAllOrganizationMembers(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of OrganizationMembers");
-        Page<OrganizationMemberDTO> page = organizationMemberService.findAllInPrincipalOrganizations(pageable);
+        Page<OrganizationMemberDTO> page;
+        if (SecurityUtils.isAuthenticated()) {
+        	page = organizationMemberService.findAllInPrincipalOrganizations(pageable);
+        }  
+        else {
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notAuthenticated", 
+        			"You be authenticated to show OrganizationMembers")).body(null);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/organization-members");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -125,7 +142,15 @@ public class OrganizationMemberResource {
     @Timed
     public ResponseEntity<OrganizationMemberDTO> getOrganizationMember(@PathVariable Long id) {
         log.debug("REST request to get OrganizationMember : {}", id);
-        OrganizationMemberDTO organizationMemberDTO = organizationMemberService.findOneInPrincipalOrganizations(id);
+        OrganizationMemberDTO organizationMemberDTO;
+        
+        if (SecurityUtils.isAuthenticated()) {
+        	organizationMemberDTO = organizationMemberService.findOneInPrincipalOrganizations(id);
+        }  
+        else {
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notAuthenticated", 
+        			"You be authenticated to show the properties of an OrganizationMember")).body(null);
+        }
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(organizationMemberDTO));
     }
 

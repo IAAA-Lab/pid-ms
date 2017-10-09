@@ -26,8 +26,14 @@ public interface ChangeRepository extends JpaRepository<Change, Long> {
     @Query("select c1 from Change c1 where c1.task.namespace.owner in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username})")
     Page<Change> findAllInPrincipalOrganizations(Pageable pageable);
 
+    @Query("select c1 from Change c1 where c1.task.namespace.publicNamespace = true")
+    Page<Change> findAllPublic(Pageable pageable);
+    
     @Query("select c1 from Change c1 where c1.id=?1 and c1.task.namespace.owner in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username})")
     Change findOneInPrincipalOrganizations(Long id);
+    
+    @Query("select c1 from Change c1 where c1.id = ?1 and c1.task.namespace.publicNamespace = true")
+    Change findOnePublic(Long id);
     
     @Modifying
     @Query("delete from Change c1 where c1.task.id = ?1")
