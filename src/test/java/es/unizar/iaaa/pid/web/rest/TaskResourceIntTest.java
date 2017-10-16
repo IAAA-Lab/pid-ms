@@ -1,11 +1,13 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import es.unizar.iaaa.pid.PidmsApp;
-
+import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.repository.TaskRepository;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.TaskDTOService;
 import es.unizar.iaaa.pid.service.dto.TaskDTO;
+import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
 import es.unizar.iaaa.pid.service.mapper.TaskMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
 
@@ -64,6 +66,12 @@ public class TaskResourceIntTest {
 
     @Autowired
     private TaskDTOService taskService;
+    
+    @Autowired
+    private NamespaceDTOService namespaceDTOService;
+    
+    @Autowired
+    private NamespaceMapper namespaceMapper;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -80,6 +88,8 @@ public class TaskResourceIntTest {
     private MockMvc restTaskMockMvc;
 
     private Task task;
+    
+    private Namespace namespace;
 
     @Before
     public void setup() {
@@ -109,6 +119,7 @@ public class TaskResourceIntTest {
     @Before
     public void initTest() {
         task = createEntity(em);
+        namespace = NamespaceResourceIntTest.createEntity(em);
     }
 
     @Test
@@ -214,6 +225,8 @@ public class TaskResourceIntTest {
     @Transactional
     public void getAllTasks() throws Exception {
         // Initialize the database
+    	namespace = namespaceMapper.toEntity(namespaceDTOService.save(namespaceMapper.toDto(namespace)));
+    	task.setNamespace(namespace);
         taskRepository.saveAndFlush(task);
 
         // Get all the taskList
@@ -231,6 +244,8 @@ public class TaskResourceIntTest {
     @Transactional
     public void getTask() throws Exception {
         // Initialize the database
+    	namespace = namespaceMapper.toEntity(namespaceDTOService.save(namespaceMapper.toDto(namespace)));
+    	task.setNamespace(namespace);
         taskRepository.saveAndFlush(task);
 
         // Get the task

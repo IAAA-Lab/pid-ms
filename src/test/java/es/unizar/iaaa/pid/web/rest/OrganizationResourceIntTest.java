@@ -3,11 +3,17 @@ package es.unizar.iaaa.pid.web.rest;
 import es.unizar.iaaa.pid.PidmsApp;
 
 import es.unizar.iaaa.pid.domain.Organization;
+import es.unizar.iaaa.pid.domain.OrganizationMember;
+import es.unizar.iaaa.pid.domain.User;
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.repository.OrganizationRepository;
 import es.unizar.iaaa.pid.service.OrganizationDTOService;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
+import es.unizar.iaaa.pid.service.UserService;
 import es.unizar.iaaa.pid.service.dto.OrganizationDTO;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
+import es.unizar.iaaa.pid.service.mapper.OrganizationMemberMapper;
+import es.unizar.iaaa.pid.service.mapper.UserMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -19,8 +25,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +54,12 @@ public class OrganizationResourceIntTest {
 
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
+    
+    private static final String ERROR_HEADER = "X-pidmsApp-error";
+    private static final String ERROR_ID_ALREADY_EXIST = "error.idexists";
+    
+    private static final String FIELD_NAME = "name";
+    private static final String ERROR_NULL_FIELD = "\"message\" : \"NotNull\"";
 
     @Autowired
     private OrganizationRepository organizationRepository;
@@ -57,7 +71,16 @@ public class OrganizationResourceIntTest {
     private OrganizationDTOService organizationService;
     
     @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private UserMapper userMapper;
+    
+    @Autowired
     private OrganizationMemberDTOService organizationMemberDTOService;
+    
+    @Autowired
+    private OrganizationMemberMapper organizationMemberMapper;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -74,6 +97,8 @@ public class OrganizationResourceIntTest {
     private MockMvc restOrganizationMockMvc;
 
     private Organization organization;
+    private OrganizationMember organizationMemberAdmin;
+    private User user;
 
     @Before
     public void setup() {
@@ -102,11 +127,17 @@ public class OrganizationResourceIntTest {
     @Before
     public void initTest() {
         organization = createEntity(em);
+        user = UserResourceIntTest.createEntity(em);
+        organizationMemberAdmin = new OrganizationMember().user(user).organization(organization).capacity(Capacity.ADMIN);
     }
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void createOrganization() throws Exception {
+    	//add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        
         int databaseSizeBeforeCreate = organizationRepository.findAll().size();
 
         // Create the Organization
@@ -122,11 +153,16 @@ public class OrganizationResourceIntTest {
         Organization testOrganization = organizationList.get(organizationList.size() - 1);
         assertThat(testOrganization.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testOrganization.getTitle()).isEqualTo(DEFAULT_TITLE);
+
     }
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void createOrganizationWithExistingId() throws Exception {
+    	//add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        
         int databaseSizeBeforeCreate = organizationRepository.findAll().size();
 
         // Create the Organization with an existing ID
@@ -137,7 +173,7 @@ public class OrganizationResourceIntTest {
         restOrganizationMockMvc.perform(post("/api/organizations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(organizationDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest()).andExpect(header().string(ERROR_HEADER,ERROR_ID_ALREADY_EXIST));
 
         // Validate the Alice in the database
         List<Organization> organizationList = organizationRepository.findAll();
@@ -146,7 +182,11 @@ public class OrganizationResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void checkNameIsRequired() throws Exception {
+    	//add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        
         int databaseSizeBeforeTest = organizationRepository.findAll().size();
         // set the field null
         organization.setName(null);
@@ -154,13 +194,17 @@ public class OrganizationResourceIntTest {
         // Create the Organization, which fails.
         OrganizationDTO organizationDTO = organizationMapper.toDto(organization);
 
-        restOrganizationMockMvc.perform(post("/api/organizations")
+        MvcResult result = restOrganizationMockMvc.perform(post("/api/organizations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(organizationDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest()).andReturn();
 
         List<Organization> organizationList = organizationRepository.findAll();
         assertThat(organizationList).hasSize(databaseSizeBeforeTest);
+        
+        String content = result.getResponse().getContentAsString();
+        assertThat(content.contains(FIELD_NAME));
+        assertThat(content.contains(ERROR_NULL_FIELD));
     }
 
     @Test
@@ -203,9 +247,15 @@ public class OrganizationResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void updateOrganization() throws Exception {
-        // Initialize the database
-        organizationRepository.saveAndFlush(organization);
+    	//add organization, user and organizationMember in the database
+        user = userService.createUser(userMapper.userToUserDTO(user));
+        organization = organizationRepository.saveAndFlush(organization);
+        organizationMemberAdmin.setOrganization(organization);
+        organizationMemberAdmin.setUser(user);
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        
         int databaseSizeBeforeUpdate = organizationRepository.findAll().size();
 
         // Update the organization
@@ -230,7 +280,13 @@ public class OrganizationResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void updateNonExistingOrganization() throws Exception {
+    	//user in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        
         int databaseSizeBeforeUpdate = organizationRepository.findAll().size();
 
         // Create the Organization
@@ -249,9 +305,16 @@ public class OrganizationResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void deleteOrganization() throws Exception {
+    	//add organization, user and organizationMember in the database
+        user = userService.createUser(userMapper.userToUserDTO(user));
+        organization = organizationRepository.saveAndFlush(organization);
+        organizationMemberAdmin.setOrganization(organization);
+        organizationMemberAdmin.setUser(user);
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        
         // Initialize the database
-        organizationRepository.saveAndFlush(organization);
         int databaseSizeBeforeDelete = organizationRepository.findAll().size();
 
         // Get the organization

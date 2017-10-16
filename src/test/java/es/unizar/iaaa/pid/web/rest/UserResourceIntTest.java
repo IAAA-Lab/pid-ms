@@ -1,5 +1,41 @@
 package es.unizar.iaaa.pid.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.persistence.EntityManager;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+
 import es.unizar.iaaa.pid.PidmsApp;
 import es.unizar.iaaa.pid.domain.Authority;
 import es.unizar.iaaa.pid.domain.User;
@@ -11,35 +47,6 @@ import es.unizar.iaaa.pid.service.dto.UserDTO;
 import es.unizar.iaaa.pid.service.mapper.UserMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
 import es.unizar.iaaa.pid.web.rest.vm.ManagedUserVM;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the UserResource REST controller.
@@ -52,10 +59,10 @@ public class UserResourceIntTest {
 
     private static final Long DEFAULT_ID = 1L;
 
-    private static final String DEFAULT_LOGIN = "johndoe";
+    protected static final String DEFAULT_LOGIN = "johndoe";
     private static final String UPDATED_LOGIN = "jhipster";
 
-    private static final String DEFAULT_PASSWORD = "passjohndoe";
+    protected static final String DEFAULT_PASSWORD = "passjohndoe";
     private static final String UPDATED_PASSWORD = "passjhipster";
 
     private static final String DEFAULT_EMAIL = "johndoe@localhost";
@@ -84,6 +91,9 @@ public class UserResourceIntTest {
 
     @Autowired
     private UserMapper userMapper;
+   
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -121,7 +131,7 @@ public class UserResourceIntTest {
     public static User createEntity(EntityManager em) {
         User user = new User();
         user.setLogin(DEFAULT_LOGIN);
-        user.setPassword(RandomStringUtils.random(60));
+        user.setPassword(DEFAULT_PASSWORD);
         user.setActivated(true);
         user.setEmail(DEFAULT_EMAIL);
         user.setFirstName(DEFAULT_FIRSTNAME);
@@ -215,6 +225,8 @@ public class UserResourceIntTest {
     @Transactional
     public void createUserWithExistingLogin() throws Exception {
         // Initialize the database
+    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
+    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
@@ -251,6 +263,8 @@ public class UserResourceIntTest {
     @Transactional
     public void createUserWithExistingEmail() throws Exception {
         // Initialize the database
+    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
+    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
@@ -287,6 +301,8 @@ public class UserResourceIntTest {
     @Transactional
     public void getAllUsers() throws Exception {
         // Initialize the database
+    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
+    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
 
         // Get all the users
@@ -306,6 +322,8 @@ public class UserResourceIntTest {
     @Transactional
     public void getUser() throws Exception {
         // Initialize the database
+    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
+    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
 
         // Get the user
@@ -331,6 +349,8 @@ public class UserResourceIntTest {
     @Transactional
     public void updateUser() throws Exception {
         // Initialize the database
+    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
+    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
@@ -375,6 +395,8 @@ public class UserResourceIntTest {
     @Transactional
     public void updateUserLogin() throws Exception {
         // Initialize the database
+    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
+    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
@@ -420,6 +442,8 @@ public class UserResourceIntTest {
     @Transactional
     public void updateUserExistingEmail() throws Exception {
         // Initialize the database with 2 users
+    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
+    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
 
         User anotherUser = new User();
@@ -464,6 +488,8 @@ public class UserResourceIntTest {
     @Transactional
     public void updateUserExistingLogin() throws Exception {
         // Initialize the database
+    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
+    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
 
         User anotherUser = new User();
@@ -508,6 +534,8 @@ public class UserResourceIntTest {
     @Transactional
     public void deleteUser() throws Exception {
         // Initialize the database
+    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
+    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeDelete = userRepository.findAll().size();
 

@@ -1,18 +1,21 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import es.unizar.iaaa.pid.PidmsApp;
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.PersistentIdentifier;
-import es.unizar.iaaa.pid.domain.Registration;
-import es.unizar.iaaa.pid.domain.Resource;
-import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-import es.unizar.iaaa.pid.repository.PersistentIdentifierRepository;
-import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
-import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
-import es.unizar.iaaa.pid.service.mapper.PersistentIdentifierMapper;
-import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.UUID;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,17 +31,22 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import es.unizar.iaaa.pid.PidmsApp;
+import es.unizar.iaaa.pid.domain.Identifier;
+import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.domain.PersistentIdentifier;
+import es.unizar.iaaa.pid.domain.Registration;
+import es.unizar.iaaa.pid.domain.Resource;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+import es.unizar.iaaa.pid.repository.PersistentIdentifierRepository;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
+import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
+import es.unizar.iaaa.pid.service.dto.PersistentIdentifierDTO;
+import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
+import es.unizar.iaaa.pid.service.mapper.PersistentIdentifierMapper;
+import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
 
 /**
  * Test class for the PersistentIdentifierResource REST controller.
@@ -118,6 +126,12 @@ public class PersistentIdentifierResourceIntTest {
 
     @Autowired
     private PersistentIdentifierDTOService persistentIdentifierService;
+    
+    @Autowired
+    private NamespaceDTOService namespaceDTOService;
+    
+    @Autowired
+    private NamespaceMapper namespaceMapper;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -134,6 +148,8 @@ public class PersistentIdentifierResourceIntTest {
     private MockMvc restPersistentIdentifierMockMvc;
 
     private PersistentIdentifier persistentIdentifier;
+    
+    private Namespace namespace;
 
     @Before
     public void setup() {
@@ -186,6 +202,7 @@ public class PersistentIdentifierResourceIntTest {
     @Before
     public void initTest() {
         persistentIdentifier = createEntity(em);
+        namespace = NamespaceResourceIntTest.createEntity(em);
     }
 
     @Test
@@ -305,7 +322,9 @@ public class PersistentIdentifierResourceIntTest {
     @Transactional
     public void getAllPersistentIdentifiers() throws Exception {
         // Initialize the database
+    	namespaceDTOService.save(namespaceMapper.toDto(namespace));
         persistentIdentifier.autoId();
+        
         persistentIdentifierRepository.saveAndFlush(persistentIdentifier);
 
         // Get all the persistentIdentifierList
@@ -337,6 +356,8 @@ public class PersistentIdentifierResourceIntTest {
     @Transactional
     public void getPersistentIdentifier() throws Exception {
         // Initialize the database
+    	namespaceDTOService.save(namespaceMapper.toDto(namespace));
+    	
         persistentIdentifier.autoId();
         persistentIdentifierRepository.saveAndFlush(persistentIdentifier);
 

@@ -1,16 +1,21 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import es.unizar.iaaa.pid.PidmsApp;
-import es.unizar.iaaa.pid.domain.BoundingBox;
-import es.unizar.iaaa.pid.domain.Namespace;
-import es.unizar.iaaa.pid.domain.Registration;
-import es.unizar.iaaa.pid.domain.Source;
-import es.unizar.iaaa.pid.repository.NamespaceRepository;
-import es.unizar.iaaa.pid.service.NamespaceDTOService;
-import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
-import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
-import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
-import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,28 +26,39 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import es.unizar.iaaa.pid.domain.enumeration.RenewalPolicy;
-import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.PidmsApp;
+import es.unizar.iaaa.pid.domain.BoundingBox;
+import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.domain.Organization;
+import es.unizar.iaaa.pid.domain.OrganizationMember;
+import es.unizar.iaaa.pid.domain.Registration;
+import es.unizar.iaaa.pid.domain.Source;
+import es.unizar.iaaa.pid.domain.User;
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.MethodType;
+import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.RenewalPolicy;
 import es.unizar.iaaa.pid.domain.enumeration.SourceType;
+import es.unizar.iaaa.pid.repository.NamespaceRepository;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
+import es.unizar.iaaa.pid.service.OrganizationDTOService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
+import es.unizar.iaaa.pid.service.UserService;
+import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
+import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
+import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
+import es.unizar.iaaa.pid.service.mapper.OrganizationMemberMapper;
+import es.unizar.iaaa.pid.service.mapper.UserMapper;
+import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
 /**
  * Test class for the NamespaceResource REST controller.
  *
@@ -162,6 +178,15 @@ public class NamespaceResourceIntTest {
 
     private static final Integer FIRST_VERSION = 0;
     private static final Integer NEXT_VERSION = 1;
+    
+    private static final String ERROR_HEADER = "X-pidmsApp-error";
+    private static final String ERROR_VALUE_NAMESPACE_ALREADY_EXIST = "error.idexists";
+    
+    private static final String FIELD_NAMESPACE = "\"field\" : \"namespace\"";
+    private static final String FIELD_PUBLIC_NAMESPACE = "\"field\" : \"publicNamespace\"";
+    private static final String FIELD_RENEWALPOLICY = "\"field\" : \"renewalPolicy\"";
+    
+    private static final String ERROR_NULL_FIELD = "\"message\" : \"NotNull\"";
 
     @Autowired
     private NamespaceRepository namespaceRepository;
@@ -174,6 +199,21 @@ public class NamespaceResourceIntTest {
     
     @Autowired
     private OrganizationMemberDTOService organizationMemberDTOService;
+    
+    @Autowired
+    private OrganizationMemberMapper organizationMemberMapper;
+    
+    @Autowired
+    private OrganizationMapper organizationMapper;
+    
+    @Autowired
+    private OrganizationDTOService organizationDTOService;
+    
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -190,6 +230,16 @@ public class NamespaceResourceIntTest {
     private MockMvc restNamespaceMockMvc;
 
     private Namespace namespace;
+    
+    private User user;
+    
+    private Organization organization;
+    
+    private OrganizationMember organizationMemberAdmin;
+    
+    private OrganizationMember organizationMemberEditor;
+    
+    private OrganizationMember organizationMemberMember;
 
     @Before
     public void setup() {
@@ -246,20 +296,41 @@ public class NamespaceResourceIntTest {
             .namespaceStatus(DEFAULT_NAMESPACE_STATUS)
             .registration(registration)
             .source(source);
-
+        
         return namespace;
     }
 
     @Before
     public void initTest() {
+    	//create namespace
         namespace = createEntity(em);
+        //add user
+        user = UserResourceIntTest.createEntity(em);
+        //create organization
+        organization = OrganizationResourceIntTest.createEntity(em);
+        //create organizationMembers
+        organizationMemberAdmin = new OrganizationMember().user(user).organization(organization).capacity(Capacity.ADMIN);
+        
+        organizationMemberEditor = new OrganizationMember().user(user).organization(organization).capacity(Capacity.EDITOR);
+        
+        organizationMemberMember = new OrganizationMember().user(user).organization(organization).capacity(Capacity.MEMBER);
     }
+    
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void createNamespace() throws Exception {
         int databaseSizeBeforeCreate = namespaceRepository.findAll().size();
-
+        
+        //add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        
+        //asign owner to namespace
+        namespace.setOwner(organization);
+        
         // Create the Namespace
         NamespaceDTO namespaceDTO = namespaceMapper.toDto(namespace);
         restNamespaceMockMvc.perform(post("/api/namespaces")
@@ -310,9 +381,18 @@ public class NamespaceResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void createNamespaceWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = namespaceRepository.findAll().size();
 
+        //add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        
+        //asign owner to namespace
+        namespace.setOwner(organization);
+        
         // Create the Namespace with an existing ID
         namespace.setId(1L);
         NamespaceDTO namespaceDTO = namespaceMapper.toDto(namespace);
@@ -321,7 +401,7 @@ public class NamespaceResourceIntTest {
         restNamespaceMockMvc.perform(post("/api/namespaces")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(namespaceDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest()).andExpect(header().string(ERROR_HEADER,ERROR_VALUE_NAMESPACE_ALREADY_EXIST ));
 
         // Validate the Alice in the database
         List<Namespace> namespaceList = namespaceRepository.findAll();
@@ -330,59 +410,92 @@ public class NamespaceResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void checkNamespaceIsRequired() throws Exception {
         int databaseSizeBeforeTest = namespaceRepository.findAll().size();
+        
+        //add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        
         // set the field null
         namespace.setNamespace(null);
 
         // Create the Namespace, which fails.
         NamespaceDTO namespaceDTO = namespaceMapper.toDto(namespace);
 
-        restNamespaceMockMvc.perform(post("/api/namespaces")
+        MvcResult result = restNamespaceMockMvc.perform(post("/api/namespaces")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(namespaceDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest()).andReturn();
 
         List<Namespace> namespaceList = namespaceRepository.findAll();
         assertThat(namespaceList).hasSize(databaseSizeBeforeTest);
+        
+        String content = result.getResponse().getContentAsString();
+        assertThat(content.contains(FIELD_NAMESPACE));
+        assertThat(content.contains(ERROR_NULL_FIELD));
     }
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void checkPublicNamespaceIsRequired() throws Exception {
         int databaseSizeBeforeTest = namespaceRepository.findAll().size();
+        
+        //add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        
         // set the field null
         namespace.setPublicNamespace(null);
 
         // Create the Namespace, which fails.
         NamespaceDTO namespaceDTO = namespaceMapper.toDto(namespace);
 
-        restNamespaceMockMvc.perform(post("/api/namespaces")
+        MvcResult result = restNamespaceMockMvc.perform(post("/api/namespaces")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(namespaceDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest()).andReturn();
 
         List<Namespace> namespaceList = namespaceRepository.findAll();
         assertThat(namespaceList).hasSize(databaseSizeBeforeTest);
+        
+        String content = result.getResponse().getContentAsString();
+        assertThat(content.contains(FIELD_PUBLIC_NAMESPACE));
+        assertThat(content.contains(ERROR_NULL_FIELD));
     }
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void checkRenewalPolicyIsRequired() throws Exception {
         int databaseSizeBeforeTest = namespaceRepository.findAll().size();
+        
+        //add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        
         // set the field null
         namespace.setRenewalPolicy(null);
 
         // Create the Namespace, which fails.
         NamespaceDTO namespaceDTO = namespaceMapper.toDto(namespace);
 
-        restNamespaceMockMvc.perform(post("/api/namespaces")
+        MvcResult result = restNamespaceMockMvc.perform(post("/api/namespaces")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(namespaceDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest()).andReturn();
 
         List<Namespace> namespaceList = namespaceRepository.findAll();
         assertThat(namespaceList).hasSize(databaseSizeBeforeTest);
+        
+        String content = result.getResponse().getContentAsString();
+        assertThat(content.contains(FIELD_RENEWALPOLICY));
+        assertThat(content.contains(ERROR_NULL_FIELD));
     }
 
     @Test
@@ -491,11 +604,21 @@ public class NamespaceResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void updateNamespace() throws Exception {
+    	
+    	//add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        
+    	//asign owner to namespace
+        namespace.setOwner(organization);
+        
         // Initialize the database
         namespace = namespaceRepository.saveAndFlush(namespace);
         int databaseSizeBeforeUpdate = namespaceRepository.findAll().size();
-
+        
         // Update the namespace
         Namespace updatedNamespace = namespaceRepository.findOne(namespace.getId());
 
@@ -585,7 +708,17 @@ public class NamespaceResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void updateNonExistingNamespace() throws Exception {
+    	
+    	//add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        
+    	//asign owner to namespace
+        namespace.setOwner(organization);
+        
         int databaseSizeBeforeUpdate = namespaceRepository.findAll().size();
 
         // Create the Namespace
@@ -604,7 +737,16 @@ public class NamespaceResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void deleteNamespace() throws Exception {
+    	//add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        
+    	//asign owner to namespace
+        namespace.setOwner(organization);
+    	
         // Initialize the database
         namespace = namespaceRepository.saveAndFlush(namespace);
         int databaseSizeBeforeDelete = namespaceRepository.findAll().size();
