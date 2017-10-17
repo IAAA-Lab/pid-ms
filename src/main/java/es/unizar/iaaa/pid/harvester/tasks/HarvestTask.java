@@ -4,6 +4,7 @@ import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_TRANSF
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,12 @@ import org.springframework.stereotype.Component;
 
 import es.unizar.iaaa.pid.config.ApplicationProperties;
 import es.unizar.iaaa.pid.domain.BoundingBox;
+import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.harvester.connectors.SpatialHarvester;
 import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSSpatialHarvester;
+import es.unizar.iaaa.pid.service.FeatureService;
 import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.TaskService;
 
@@ -27,35 +30,40 @@ class HarvestTask extends AbstractTaskRunner {
 	
 	private ApplicationProperties properties;
 	
+	private FeatureService featureService;
+	
     protected ApplicationContext context;
 
     @Autowired
     public HarvestTask(ApplicationContext context, NamespaceService namespaceService, TaskService taskService,
-    		ApplicationProperties properties) {
+    		FeatureService featureService, ApplicationProperties properties) {
         super(namespaceService, taskService);
         this.context = context;
         this.properties = properties;
+        this.featureService = featureService;
     }
 
     @Override
     protected void doTask() {
         SpatialHarvester harvester = getHarvester();
-        int threshold = getThreshold();
-        
-        //Para cada una de las features del WFS
-        String[]featureList = task.getNamespace().getSource().getFeatureType().split(",");
 
-        for(int index = 0; index< featureList.length; index++){
+        //Para cada una de las features de la fuente
+        List<Feature> featureList = featureService.findAllByNamespace(task.getNamespace());
+
+        for(int index = 0; index < featureList.size(); index++){
+        	
+        	Feature feature = featureList.get(index);
+        	
 	        Queue<BoundingBox> queue = new LinkedList<>();
-	        queue.add(initialBoundingBox());
+	        queue.add(feature.getBoundingBox());
+	        
+	        int threshold = feature.getFeaturesThreshold();
 	        
 	        //control de timeOuts
             Queue<Integer> timeOutQueue = new LinkedList<Integer>();
             timeOutQueue.add(0);
-	        
-	        String feature = featureList[index].trim();
 	
-	        if(task.getNamespace().getSource().isHitsRequest()){
+	        if(feature.thereIsHitsRequest()){
 	        	 while (!queue.isEmpty() && task.getNumErrors() < properties.getHarvester().getMAX_NUM_ERRORS()) {
 	                 sleepIntervalBetweenRequests();
 	
@@ -66,7 +74,7 @@ class HarvestTask extends AbstractTaskRunner {
 	
 	                 //tiene disponible la peticion de numero de hits
 	
-	             	 int hits = harvester.getHitsTotal(feature,boundingBox);
+	             	 int hits = harvester.getHitsTotal(feature, boundingBox);
 	                 log("feature={}, hits={}",feature, hits);
 	
 	                 if (hits == -1) {
@@ -125,8 +133,8 @@ class HarvestTask extends AbstractTaskRunner {
 	        	log("no hits request available");
 	
 	        	Queue<BoundingBox> errorBoundingBox = new LinkedList<>();
-	        	int factor = task.getNamespace().getSource().getFactorK();
-	        	BoundingBox boundingBox = task.getNamespace().getSource().getBoundingBox();
+	        	int factor = feature.getFactorK();
+	        	BoundingBox boundingBox = feature.getBoundingBox();
 	
 	    		double disX = (boundingBox.getMaxX() - boundingBox.getMinX())/factor;
 	    		double disY = (boundingBox.getMaxY() - boundingBox.getMinY())/factor;
@@ -141,7 +149,7 @@ class HarvestTask extends AbstractTaskRunner {
 	        			positionY  = positionY + disY;
 	        			bbox.setMaxY(positionY);bbox.setMaxX(positionX+disX);
 	
-	        			int ids = harvester.extractIdentifiers(feature,bbox);
+	        			int ids = harvester.extractIdentifiers(feature, bbox);
 	                	if(ids == -1){
 	                		log("fail, enqueue boundingBox={}", bbox);
 	                		errorBoundingBox.add(bbox);
@@ -159,7 +167,7 @@ class HarvestTask extends AbstractTaskRunner {
 	    		//vuelvo a intentar los bbox fallidos
 	    		while(!errorBoundingBox.isEmpty() && task.getNumErrors() < properties.getHarvester().getMAX_NUM_ERRORS()){
 	    			BoundingBox bbox = errorBoundingBox.remove();
-	    			int ids = harvester.extractIdentifiers(feature,bbox);
+	    			int ids = harvester.extractIdentifiers(feature, bbox);
 	            	if(ids == -1){
 	            		log("fail, enqueue boundingBox={}", bbox);
 	            		errorBoundingBox.add(bbox);
@@ -189,15 +197,6 @@ class HarvestTask extends AbstractTaskRunner {
     private void incNumErrors(Task task) {
         task.setNumErrors(task.getNumErrors() + 1);
     }
-
-    private int getThreshold() {
-        return task.getNamespace().getSource().getFeaturesThreshold();
-    }
-
-    private BoundingBox initialBoundingBox() {
-    	return task.getNamespace().getSource().getBoundingBox();
-    }
-
 
     private SpatialHarvester getHarvester() {
         SpatialHarvester harvester = context.getBean(WFSSpatialHarvester.class);
