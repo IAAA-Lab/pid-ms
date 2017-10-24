@@ -47,6 +47,7 @@ import es.unizar.iaaa.pid.service.dto.UserDTO;
 import es.unizar.iaaa.pid.service.mapper.UserMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
 import es.unizar.iaaa.pid.web.rest.vm.ManagedUserVM;
+import org.springframework.util.StringUtils;
 
 /**
  * Test class for the UserResource REST controller.
@@ -91,9 +92,6 @@ public class UserResourceIntTest {
 
     @Autowired
     private UserMapper userMapper;
-   
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -131,7 +129,7 @@ public class UserResourceIntTest {
     public static User createEntity(EntityManager em) {
         User user = new User();
         user.setLogin(DEFAULT_LOGIN);
-        user.setPassword(DEFAULT_PASSWORD);
+        user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
         user.setEmail(DEFAULT_EMAIL);
         user.setFirstName(DEFAULT_FIRSTNAME);
@@ -225,8 +223,6 @@ public class UserResourceIntTest {
     @Transactional
     public void createUserWithExistingLogin() throws Exception {
         // Initialize the database
-    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
-    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
@@ -263,8 +259,6 @@ public class UserResourceIntTest {
     @Transactional
     public void createUserWithExistingEmail() throws Exception {
         // Initialize the database
-    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
-    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
@@ -301,8 +295,6 @@ public class UserResourceIntTest {
     @Transactional
     public void getAllUsers() throws Exception {
         // Initialize the database
-    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
-    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
 
         // Get all the users
@@ -322,8 +314,6 @@ public class UserResourceIntTest {
     @Transactional
     public void getUser() throws Exception {
         // Initialize the database
-    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
-    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
 
         // Get the user
@@ -349,8 +339,6 @@ public class UserResourceIntTest {
     @Transactional
     public void updateUser() throws Exception {
         // Initialize the database
-    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
-    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
@@ -395,8 +383,6 @@ public class UserResourceIntTest {
     @Transactional
     public void updateUserLogin() throws Exception {
         // Initialize the database
-    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
-    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeUpdate = userRepository.findAll().size();
 
@@ -442,8 +428,6 @@ public class UserResourceIntTest {
     @Transactional
     public void updateUserExistingEmail() throws Exception {
         // Initialize the database with 2 users
-    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
-    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
 
         User anotherUser = new User();
@@ -488,8 +472,6 @@ public class UserResourceIntTest {
     @Transactional
     public void updateUserExistingLogin() throws Exception {
         // Initialize the database
-    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
-    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
 
         User anotherUser = new User();
@@ -534,8 +516,6 @@ public class UserResourceIntTest {
     @Transactional
     public void deleteUser() throws Exception {
         // Initialize the database
-    	String encryptedPassword = passwordEncoder.encode(user.getPassword());
-    	user.setPassword(encryptedPassword);
         userRepository.saveAndFlush(user);
         int databaseSizeBeforeDelete = userRepository.findAll().size();
 

@@ -178,14 +178,14 @@ public class NamespaceResourceIntTest {
 
     private static final Integer FIRST_VERSION = 0;
     private static final Integer NEXT_VERSION = 1;
-    
+
     private static final String ERROR_HEADER = "X-pidmsApp-error";
     private static final String ERROR_VALUE_NAMESPACE_ALREADY_EXIST = "error.idexists";
-    
+
     private static final String FIELD_NAMESPACE = "\"field\" : \"namespace\"";
     private static final String FIELD_PUBLIC_NAMESPACE = "\"field\" : \"publicNamespace\"";
     private static final String FIELD_RENEWALPOLICY = "\"field\" : \"renewalPolicy\"";
-    
+
     private static final String ERROR_NULL_FIELD = "\"message\" : \"NotNull\"";
 
     @Autowired
@@ -196,22 +196,22 @@ public class NamespaceResourceIntTest {
 
     @Autowired
     private NamespaceDTOService namespaceService;
-    
+
     @Autowired
     private OrganizationMemberDTOService organizationMemberDTOService;
-    
+
     @Autowired
     private OrganizationMemberMapper organizationMemberMapper;
-    
+
     @Autowired
     private OrganizationMapper organizationMapper;
-    
+
     @Autowired
     private OrganizationDTOService organizationDTOService;
-    
+
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private UserMapper userMapper;
 
@@ -230,15 +230,15 @@ public class NamespaceResourceIntTest {
     private MockMvc restNamespaceMockMvc;
 
     private Namespace namespace;
-    
+
     private User user;
-    
+
     private Organization organization;
-    
+
     private OrganizationMember organizationMemberAdmin;
-    
+
     private OrganizationMember organizationMemberEditor;
-    
+
     private OrganizationMember organizationMemberMember;
 
     @Before
@@ -296,7 +296,7 @@ public class NamespaceResourceIntTest {
             .namespaceStatus(DEFAULT_NAMESPACE_STATUS)
             .registration(registration)
             .source(source);
-        
+
         return namespace;
     }
 
@@ -310,27 +310,30 @@ public class NamespaceResourceIntTest {
         organization = OrganizationResourceIntTest.createEntity(em);
         //create organizationMembers
         organizationMemberAdmin = new OrganizationMember().user(user).organization(organization).capacity(Capacity.ADMIN);
-        
+
         organizationMemberEditor = new OrganizationMember().user(user).organization(organization).capacity(Capacity.EDITOR);
-        
+
         organizationMemberMember = new OrganizationMember().user(user).organization(organization).capacity(Capacity.MEMBER);
     }
-    
+
+    private void populateDatabase() {
+        // Add organization, user and organizationMember in the database
+        userService.createUser(userMapper.userToUserDTO(user));
+        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
+        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+
+        // Assign owner to namespace
+        namespace.setOwner(organization);
+    }
 
     @Test
     @Transactional
     @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void createNamespace() throws Exception {
         int databaseSizeBeforeCreate = namespaceRepository.findAll().size();
-        
-        //add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
-        //asign owner to namespace
-        namespace.setOwner(organization);
-        
+
+        populateDatabase();
+
         // Create the Namespace
         NamespaceDTO namespaceDTO = namespaceMapper.toDto(namespace);
         restNamespaceMockMvc.perform(post("/api/namespaces")
@@ -385,14 +388,8 @@ public class NamespaceResourceIntTest {
     public void createNamespaceWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = namespaceRepository.findAll().size();
 
-        //add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
-        //asign owner to namespace
-        namespace.setOwner(organization);
-        
+        populateDatabase();
+
         // Create the Namespace with an existing ID
         namespace.setId(1L);
         NamespaceDTO namespaceDTO = namespaceMapper.toDto(namespace);
@@ -413,12 +410,9 @@ public class NamespaceResourceIntTest {
     @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void checkNamespaceIsRequired() throws Exception {
         int databaseSizeBeforeTest = namespaceRepository.findAll().size();
-        
-        //add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
+        populateDatabase();
+
         // set the field null
         namespace.setNamespace(null);
 
@@ -432,7 +426,7 @@ public class NamespaceResourceIntTest {
 
         List<Namespace> namespaceList = namespaceRepository.findAll();
         assertThat(namespaceList).hasSize(databaseSizeBeforeTest);
-        
+
         String content = result.getResponse().getContentAsString();
         assertThat(content.contains(FIELD_NAMESPACE));
         assertThat(content.contains(ERROR_NULL_FIELD));
@@ -443,12 +437,9 @@ public class NamespaceResourceIntTest {
     @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void checkPublicNamespaceIsRequired() throws Exception {
         int databaseSizeBeforeTest = namespaceRepository.findAll().size();
-        
-        //add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
+        populateDatabase();
+
         // set the field null
         namespace.setPublicNamespace(null);
 
@@ -462,7 +453,7 @@ public class NamespaceResourceIntTest {
 
         List<Namespace> namespaceList = namespaceRepository.findAll();
         assertThat(namespaceList).hasSize(databaseSizeBeforeTest);
-        
+
         String content = result.getResponse().getContentAsString();
         assertThat(content.contains(FIELD_PUBLIC_NAMESPACE));
         assertThat(content.contains(ERROR_NULL_FIELD));
@@ -473,12 +464,9 @@ public class NamespaceResourceIntTest {
     @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void checkRenewalPolicyIsRequired() throws Exception {
         int databaseSizeBeforeTest = namespaceRepository.findAll().size();
-        
-        //add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
+        populateDatabase();
+
         // set the field null
         namespace.setRenewalPolicy(null);
 
@@ -492,7 +480,7 @@ public class NamespaceResourceIntTest {
 
         List<Namespace> namespaceList = namespaceRepository.findAll();
         assertThat(namespaceList).hasSize(databaseSizeBeforeTest);
-        
+
         String content = result.getResponse().getContentAsString();
         assertThat(content.contains(FIELD_RENEWALPOLICY));
         assertThat(content.contains(ERROR_NULL_FIELD));
@@ -509,9 +497,9 @@ public class NamespaceResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(namespace.getId().intValue())))
-            .andExpect(jsonPath("$.[*].namespace").value(hasItem(DEFAULT_NAMESPACE.toString())))
-            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
-            .andExpect(jsonPath("$.[*].publicNamespace").value(hasItem(DEFAULT_PUBLIC_NAMESPACE.booleanValue())))
+            .andExpect(jsonPath("$.[*].namespace").value(hasItem(DEFAULT_NAMESPACE)))
+            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
+            .andExpect(jsonPath("$.[*].publicNamespace").value(hasItem(DEFAULT_PUBLIC_NAMESPACE)))
             .andExpect(jsonPath("$.[*].renewalPolicy").value(hasItem(DEFAULT_RENEWAL_POLICY.toString())))
             .andExpect(jsonPath("$.[*].namespaceStatus").value(hasItem(DEFAULT_NAMESPACE_STATUS.toString())))
             .andExpect(jsonPath("$.[*].processStatus").value(hasItem(DEFAULT_PROCESS_STATUS.toString())))
@@ -523,26 +511,26 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.[*].annullationDate").value(hasItem(DEFAULT_ANNULLATION_DATE.toString())))
             .andExpect(jsonPath("$.[*].methodType").value(hasItem(DEFAULT_METHOD_TYPE.toString())))
             .andExpect(jsonPath("$.[*].sourceType").value(hasItem(DEFAULT_SOURCE_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].endpointLocation").value(hasItem(DEFAULT_ENDPOINT_LOCATION.toString())))
-            .andExpect(jsonPath("$.[*].srsName").value(hasItem(DEFAULT_SRS_NAME.toString())))
-            .andExpect(jsonPath("$.[*].schemaUri").value(hasItem(DEFAULT_SCHEMA_URI.toString())))
-            .andExpect(jsonPath("$.[*].schemaUriGML").value(hasItem(DEFAULT_SCHEMA_URI_GML.toString())))
-            .andExpect(jsonPath("$.[*].schemaUriBase").value(hasItem(DEFAULT_SCHEMA_URI_BASE.toString())))
-            .andExpect(jsonPath("$.[*].schemaPrefix").value(hasItem(DEFAULT_SCHEMA_PREFIX.toString())))
-            .andExpect(jsonPath("$.[*].featureType").value(hasItem(DEFAULT_FEATURE_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].geometryProperty").value(hasItem(DEFAULT_GEOMETRY_PROPERTY.toString())))
-            .andExpect(jsonPath("$.[*].beginLifespanVersionProperty").value(hasItem(DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY.toString())))
+            .andExpect(jsonPath("$.[*].endpointLocation").value(hasItem(DEFAULT_ENDPOINT_LOCATION)))
+            .andExpect(jsonPath("$.[*].srsName").value(hasItem(DEFAULT_SRS_NAME)))
+            .andExpect(jsonPath("$.[*].schemaUri").value(hasItem(DEFAULT_SCHEMA_URI)))
+            .andExpect(jsonPath("$.[*].schemaUriGML").value(hasItem(DEFAULT_SCHEMA_URI_GML)))
+            .andExpect(jsonPath("$.[*].schemaUriBase").value(hasItem(DEFAULT_SCHEMA_URI_BASE)))
+            .andExpect(jsonPath("$.[*].schemaPrefix").value(hasItem(DEFAULT_SCHEMA_PREFIX)))
+            .andExpect(jsonPath("$.[*].featureType").value(hasItem(DEFAULT_FEATURE_TYPE)))
+            .andExpect(jsonPath("$.[*].geometryProperty").value(hasItem(DEFAULT_GEOMETRY_PROPERTY)))
+            .andExpect(jsonPath("$.[*].beginLifespanVersionProperty").value(hasItem(DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY)))
             .andExpect(jsonPath("$.[*].featuresThreshold").value(hasItem(DEFAULT_FEATURES_THRESHOLD)))
-            .andExpect(jsonPath("$.[*].resolverProxyMode").value(hasItem(DEFAULT_RESOLVER_PROXY_MODE.booleanValue())))
-            .andExpect(jsonPath("$.[*].hitsRequest").value(hasItem(DEFAULT_HITS_REQUEST.booleanValue())))
+            .andExpect(jsonPath("$.[*].resolverProxyMode").value(hasItem(DEFAULT_RESOLVER_PROXY_MODE)))
+            .andExpect(jsonPath("$.[*].hitsRequest").value(hasItem(DEFAULT_HITS_REQUEST)))
             .andExpect(jsonPath("$.[*].factorK").value(hasItem(DEFAULT_FACTOR_K)))
-            .andExpect(jsonPath("$.[*].xpath").value(hasItem(DEFAULT_XPATH.toString())))
-            .andExpect(jsonPath("$.[*].nameItem").value(hasItem(DEFAULT_NAME_ITEM.toString())))
+            .andExpect(jsonPath("$.[*].xpath").value(hasItem(DEFAULT_XPATH)))
+            .andExpect(jsonPath("$.[*].nameItem").value(hasItem(DEFAULT_NAME_ITEM)))
             .andExpect(jsonPath("$.[*].maxNumRequest").value(hasItem(DEFAULT_MAX_NUM_REQUEST)))
-            .andExpect(jsonPath("$.[*].minX").value(hasItem(DEFAULT_MIN_X.doubleValue())))
-            .andExpect(jsonPath("$.[*].minY").value(hasItem(DEFAULT_MIN_Y.doubleValue())))
-            .andExpect(jsonPath("$.[*].maxX").value(hasItem(DEFAULT_MAX_X.doubleValue())))
-            .andExpect(jsonPath("$.[*].maxY").value(hasItem(DEFAULT_MAX_Y.doubleValue())))
+            .andExpect(jsonPath("$.[*].minX").value(hasItem(DEFAULT_MIN_X)))
+            .andExpect(jsonPath("$.[*].minY").value(hasItem(DEFAULT_MIN_Y)))
+            .andExpect(jsonPath("$.[*].maxX").value(hasItem(DEFAULT_MAX_X)))
+            .andExpect(jsonPath("$.[*].maxY").value(hasItem(DEFAULT_MAX_Y)))
             .andExpect(jsonPath("$.[*].version").value(hasItem(FIRST_VERSION)));
     }
 
@@ -557,9 +545,9 @@ public class NamespaceResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(namespace.getId().intValue()))
-            .andExpect(jsonPath("$.namespace").value(DEFAULT_NAMESPACE.toString()))
-            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
-            .andExpect(jsonPath("$.publicNamespace").value(DEFAULT_PUBLIC_NAMESPACE.booleanValue()))
+            .andExpect(jsonPath("$.namespace").value(DEFAULT_NAMESPACE))
+            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
+            .andExpect(jsonPath("$.publicNamespace").value(DEFAULT_PUBLIC_NAMESPACE))
             .andExpect(jsonPath("$.renewalPolicy").value(DEFAULT_RENEWAL_POLICY.toString()))
             .andExpect(jsonPath("$.namespaceStatus").value(DEFAULT_NAMESPACE_STATUS.toString()))
             .andExpect(jsonPath("$.processStatus").value(DEFAULT_PROCESS_STATUS.toString()))
@@ -571,26 +559,26 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.annullationDate").value(DEFAULT_ANNULLATION_DATE.toString()))
             .andExpect(jsonPath("$.methodType").value(DEFAULT_METHOD_TYPE.toString()))
             .andExpect(jsonPath("$.sourceType").value(DEFAULT_SOURCE_TYPE.toString()))
-            .andExpect(jsonPath("$.endpointLocation").value(DEFAULT_ENDPOINT_LOCATION.toString()))
-            .andExpect(jsonPath("$.srsName").value(DEFAULT_SRS_NAME.toString()))
-            .andExpect(jsonPath("$.schemaUri").value(DEFAULT_SCHEMA_URI.toString()))
-            .andExpect(jsonPath("$.schemaUriGML").value(DEFAULT_SCHEMA_URI_GML.toString()))
-            .andExpect(jsonPath("$.schemaUriBase").value(DEFAULT_SCHEMA_URI_BASE.toString()))
-            .andExpect(jsonPath("$.schemaPrefix").value(DEFAULT_SCHEMA_PREFIX.toString()))
-            .andExpect(jsonPath("$.featureType").value(DEFAULT_FEATURE_TYPE.toString()))
-            .andExpect(jsonPath("$.geometryProperty").value(DEFAULT_GEOMETRY_PROPERTY.toString()))
-            .andExpect(jsonPath("$.beginLifespanVersionProperty").value(DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY.toString()))
+            .andExpect(jsonPath("$.endpointLocation").value(DEFAULT_ENDPOINT_LOCATION))
+            .andExpect(jsonPath("$.srsName").value(DEFAULT_SRS_NAME))
+            .andExpect(jsonPath("$.schemaUri").value(DEFAULT_SCHEMA_URI))
+            .andExpect(jsonPath("$.schemaUriGML").value(DEFAULT_SCHEMA_URI_GML))
+            .andExpect(jsonPath("$.schemaUriBase").value(DEFAULT_SCHEMA_URI_BASE))
+            .andExpect(jsonPath("$.schemaPrefix").value(DEFAULT_SCHEMA_PREFIX))
+            .andExpect(jsonPath("$.featureType").value(DEFAULT_FEATURE_TYPE))
+            .andExpect(jsonPath("$.geometryProperty").value(DEFAULT_GEOMETRY_PROPERTY))
+            .andExpect(jsonPath("$.beginLifespanVersionProperty").value(DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY))
             .andExpect(jsonPath("$.featuresThreshold").value(DEFAULT_FEATURES_THRESHOLD))
-            .andExpect(jsonPath("$.resolverProxyMode").value(DEFAULT_RESOLVER_PROXY_MODE.booleanValue()))
-            .andExpect(jsonPath("$.hitsRequest").value(DEFAULT_HITS_REQUEST.booleanValue()))
+            .andExpect(jsonPath("$.resolverProxyMode").value(DEFAULT_RESOLVER_PROXY_MODE))
+            .andExpect(jsonPath("$.hitsRequest").value(DEFAULT_HITS_REQUEST))
             .andExpect(jsonPath("$.factorK").value(DEFAULT_FACTOR_K))
-            .andExpect(jsonPath("$.xpath").value(DEFAULT_XPATH.toString()))
-            .andExpect(jsonPath("$.nameItem").value(DEFAULT_NAME_ITEM.toString()))
+            .andExpect(jsonPath("$.xpath").value(DEFAULT_XPATH))
+            .andExpect(jsonPath("$.nameItem").value(DEFAULT_NAME_ITEM))
             .andExpect(jsonPath("$.maxNumRequest").value(DEFAULT_MAX_NUM_REQUEST))
-            .andExpect(jsonPath("$.minX").value(DEFAULT_MIN_X.doubleValue()))
-            .andExpect(jsonPath("$.minY").value(DEFAULT_MIN_Y.doubleValue()))
-            .andExpect(jsonPath("$.maxX").value(DEFAULT_MAX_X.doubleValue()))
-            .andExpect(jsonPath("$.maxY").value(DEFAULT_MAX_Y.doubleValue()))
+            .andExpect(jsonPath("$.minX").value(DEFAULT_MIN_X))
+            .andExpect(jsonPath("$.minY").value(DEFAULT_MIN_Y))
+            .andExpect(jsonPath("$.maxX").value(DEFAULT_MAX_X))
+            .andExpect(jsonPath("$.maxY").value(DEFAULT_MAX_Y))
             .andExpect(jsonPath("$.version").value(FIRST_VERSION));
     }
 
@@ -606,19 +594,15 @@ public class NamespaceResourceIntTest {
     @Transactional
     @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void updateNamespace() throws Exception {
-    	
+
+
     	//add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
-    	//asign owner to namespace
-        namespace.setOwner(organization);
-        
+        populateDatabase();
+
         // Initialize the database
         namespace = namespaceRepository.saveAndFlush(namespace);
         int databaseSizeBeforeUpdate = namespaceRepository.findAll().size();
-        
+
         // Update the namespace
         Namespace updatedNamespace = namespaceRepository.findOne(namespace.getId());
 
@@ -710,15 +694,9 @@ public class NamespaceResourceIntTest {
     @Transactional
     @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void updateNonExistingNamespace() throws Exception {
-    	
-    	//add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
-    	//asign owner to namespace
-        namespace.setOwner(organization);
-        
+
+        populateDatabase();
+
         int databaseSizeBeforeUpdate = namespaceRepository.findAll().size();
 
         // Create the Namespace
@@ -739,14 +717,9 @@ public class NamespaceResourceIntTest {
     @Transactional
     @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void deleteNamespace() throws Exception {
-    	//add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberDTOService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
-    	//asign owner to namespace
-        namespace.setOwner(organization);
-    	
+
+        populateDatabase();
+
         // Initialize the database
         namespace = namespaceRepository.saveAndFlush(namespace);
         int databaseSizeBeforeDelete = namespaceRepository.findAll().size();
