@@ -18,7 +18,7 @@ public interface TaskMapper extends EntityMapper <TaskDTO, Task> {
     @Mapping(source = "namespace.namespace", target = "namespaceName")
     TaskDTO toDto(Task task);
 
-    @Mapping(source = "namespaceId", target = "namespace")
+    @Mapping(source = "namespaceId", target = "namespace.id")
     Task toEntity(TaskDTO taskDTO);
 
     default Task fromId(Long id) {
@@ -32,6 +32,7 @@ public interface TaskMapper extends EntityMapper <TaskDTO, Task> {
 
     Map<String, String> conversions = ImmutableMap.<String, String>builder().
         put("namespaceName", "namespace.namespace").
+        put("namespaceId","namespace.id").
         build();
 
     @Override

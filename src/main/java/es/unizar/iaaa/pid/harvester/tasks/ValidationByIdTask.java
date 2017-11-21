@@ -2,6 +2,7 @@ package es.unizar.iaaa.pid.harvester.tasks;
 
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.SourceType;
 import es.unizar.iaaa.pid.harvester.connectors.ValidatorById;
 import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.PersistentIdentifierService;
@@ -31,6 +32,11 @@ public class ValidationByIdTask extends AbstractTaskRunner {
     }
     @Override
     protected void doTask() {
+    	//En el caso de que se trate de un fuente SHP no se hace validacion
+    	if(task.getNamespace().getSource().getSourceType() == SourceType.SHP){
+    		return;
+    	}
+    	
         ValidatorById validatorById = getValidatorById();
 
         for(PersistentIdentifier pid: persistentIdentifierService.findByNamespaceLapsed(task.getNamespace())) {

@@ -6,6 +6,7 @@ import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.SourceType;
 import es.unizar.iaaa.pid.security.SecurityUtils;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
@@ -80,6 +81,12 @@ public class NamespaceResource {
         if(auxNamespace != null){
         	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "namespaceExist", "Exist other Namespace with the same Namespace")).body(null);
         }
+        
+        //check if the number of features is equal to the number or NameItems when SHP sourceType is choosen
+        if(namespaceDTO.getSourceType() == SourceType.SHP && namespaceDTO.getFeatureType().split(",").length != namespaceDTO.getNameItem().split(",").length){
+        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME,"numFeaturesNotEqualNumItme","The number of"
+        			+ " feature types must be equal to the number of NameItems if SHP is choosen")).body(null);
+        }
 
         //add the rest of the attributes for namespace
         namespaceDTO.setNamespaceStatus(NamespaceStatus.STOP);
@@ -129,6 +136,12 @@ public class NamespaceResource {
         if(organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER){
         	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToModifyNamespace", 
         			"You must be Admin or Editor of the organization to modify a Namespace")).body(null);
+        }
+        
+        //check if the number of features is equal to the number or NameItems when SHP sourceType is choosen
+        if(namespaceDTO.getSourceType() == SourceType.SHP && namespaceDTO.getFeatureType().split(",").length != namespaceDTO.getNameItem().split(",").length){
+        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME,"numFeaturesNotEqualNumItme","The number of"
+        			+ " feature types must be equal to the number of NameItems if SHP is choosen")).body(null);
         }
         
         NamespaceDTO result = namespaceService.save(namespaceDTO);

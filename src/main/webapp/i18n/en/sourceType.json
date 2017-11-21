@@ -2,7 +2,8 @@
     "pidmsApp": {
         "SourceType" : {
             "null": "",
-            "WFS": "WFS"
+            "WFS": "WFS",
+            "SHP": "SHP"
         }
     }
 }

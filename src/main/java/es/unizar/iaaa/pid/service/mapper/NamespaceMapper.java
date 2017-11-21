@@ -51,7 +51,7 @@ public interface NamespaceMapper extends EntityMapper <NamespaceDTO, Namespace> 
     NamespaceDTO toDto(Namespace namespace);
 
     @Mappings({
-        @Mapping(source = "ownerId", target = "owner"),
+        @Mapping(source = "ownerId", target = "owner.id"),
         @Mapping(source = "methodType", target = "source.methodType"),
         @Mapping(source = "sourceType", target = "source.sourceType"),
         @Mapping(source = "endpointLocation", target = "source.endpointLocation"),
@@ -94,6 +94,7 @@ public interface NamespaceMapper extends EntityMapper <NamespaceDTO, Namespace> 
     }
 
     Map<String, String> conversions = ImmutableMap.<String, String>builder().
+		put("ownerId", "owner.id").
         put("methodType", "source.methodType").
         put("sourceType", "source.sourceType").
         put("endpointLocation", "source.endpointLocation").

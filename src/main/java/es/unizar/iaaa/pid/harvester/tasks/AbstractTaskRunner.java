@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-abstract class AbstractTaskRunner implements TaskRunner {
+public abstract class AbstractTaskRunner implements TaskRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunner.class);
     protected final TaskService taskService;
     protected final NamespaceService namespaceService;
@@ -56,14 +56,14 @@ abstract class AbstractTaskRunner implements TaskRunner {
         }
     }
 
-    void log(String msg, Object... objects) {
+    protected void log(String msg, Object... objects) {
         List<Object> l = new ArrayList<>();
         l.addAll(Arrays.asList(task.getType(), task.getId(), task.getNamespace().getNamespace()));
         l.addAll(Arrays.asList(objects));
         LOGGER.info("Task \"{}:{}\" for namespace \"{}\" : " + msg, l.toArray());
     }
 
-    void error(Throwable e) {
+    protected void error(Throwable e) {
         List<Object> l = new ArrayList<>();
         l.addAll(Arrays.asList(task.getType(), task.getId(), task.getNamespace().getNamespace()));
         l.addAll(Arrays.asList(e.getMessage(), e));

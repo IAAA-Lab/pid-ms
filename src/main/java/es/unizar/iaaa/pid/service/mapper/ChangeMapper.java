@@ -29,7 +29,7 @@ public interface ChangeMapper extends EntityMapper <ChangeDTO, Change> {
     ChangeDTO toDto(Change change);
 
     @Mappings({
-        @Mapping(source = "taskId", target = "task"),
+        @Mapping(source = "taskId", target = "task.id"),
         @Mapping(source = "resourceType", target = "resource.resourceType"),
         @Mapping(source = "locator", target = "resource.locator"),
         @Mapping(source = "namespace", target = "identifier.namespace"),
@@ -51,6 +51,7 @@ public interface ChangeMapper extends EntityMapper <ChangeDTO, Change> {
     }
 
     Map<String, String> conversions = ImmutableMap.<String, String>builder().
+		put("taskId", "task.id").
         put("resourceType", "resource.resourceType").
         put("locator", "resource.locator").
         put("namespace", "identifier.namespace").
