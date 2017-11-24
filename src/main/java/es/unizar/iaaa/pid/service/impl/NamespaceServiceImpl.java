@@ -54,7 +54,7 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
     public NamespaceDTO save(NamespaceDTO namespaceDTO) {
         log.debug("Request to save Namespace : {}", namespaceDTO);
         Namespace namespace = namespaceMapper.toEntity(namespaceDTO);
-        namespace = namespaceRepository.save(namespace);
+        namespace = namespaceRepository.saveAndFlush(namespace);
         return namespaceMapper.toDto(namespace);
     }
 

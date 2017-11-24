@@ -26,6 +26,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("select t1 from Task t1 where t1.namespace = ?1 and t1.status = 'EXECUTING'")
     List<Task> findExecutingTaksByNamespace(Namespace namespace);
+    
+    @Query("select t1 from Task t1 where t1.namespace.id = ?1 and t1.status = 'EXECUTING'")
+    List<Task> findExecutingTaksByNamespaceId(Long id);
 
     @Query("select t1 from Task t1 where t1.namespace.owner in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username})")
     Page<Task> findAllInPrincipalOrganizations(Pageable pageable);

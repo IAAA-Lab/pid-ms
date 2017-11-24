@@ -80,4 +80,5 @@ public interface PersistentIdentifierDTOService {
      * @param namespaceId the id of the associate namespace
      */
     void deleteAllByNamespaceId(Long namespaceId);
+    
 }

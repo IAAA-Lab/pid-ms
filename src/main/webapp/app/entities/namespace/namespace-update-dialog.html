@@ -1,0 +1,23 @@
+<form name="updateForm" ng-submit="vm.update(vm.namespace.id)">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" data-translate="pidmsApp.namespace.updateCSV.title">Update operation</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <label for="csvData" data-translate="pidmsApp.namespace.updateCSV.csvData">CSV data</label>
+        <p class="text-muted" data-translate="pidmsApp.namespace.updateCSV.addAction">add,feature,localId,versionId,beginLifeSpanVersion,endLifeSpanVersion,alternateId,locator,resolveProxyMode</p>
+        <p class="text-muted" data-translate="pidmsApp.namespace.updateCSV.updateAction">update,id,beginLifeSpanVersion,endLifeSpanVersion,alternateId,locator</p>
+        <p class="text-muted" data-translate="pidmsApp.namespace.updateCSV.deleteAction">delete,id</p>
+        <textarea class="form-control" id="csvData" rows="10" ng-model="vm.csvData.data"></textarea>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="updateForm.$invalid" class="btn btn-primary">
+            <span class="glyphicon glyphicon-pencil"></span></span>&nbsp;<span data-translate="pidmsApp.namespace.updateCSV.update">Update</span>
+        </button>
+    </div>
+</form>

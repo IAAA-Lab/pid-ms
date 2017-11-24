@@ -12,6 +12,14 @@
             "delete": {
                 "question": "¿Seguro que quiere eliminar Namespace {{ id }}?"
             },
+            "updateCSV": {
+            	"title": "Actualizar PIDs del Namespace a traves de CSV",
+            	"csvData": "Datos CSV",
+            	"update": "Actualizar",
+            	"addAction": "add,feature,localId,versionId,beginLifeSpan,endLifeSpan,alternateId,locator,proxyMode",
+            	"updateAction": "update,id,beginLifeSpanVersion,endLifeSpanVersion,alternateId,locator",
+            	"deleteAction": "delete,id"
+            },
             "detail": {
                 "title": "Namespace"
             },

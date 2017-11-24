@@ -1,21 +1,14 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.Instant;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 
-import es.unizar.iaaa.pid.domain.enumeration.Capacity;
-import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
-import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.domain.enumeration.SourceType;
-import es.unizar.iaaa.pid.security.SecurityUtils;
-import es.unizar.iaaa.pid.service.NamespaceDTOService;
-import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
-import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
-import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
-import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
-import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -23,15 +16,36 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.Instant;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import com.codahale.metrics.annotation.Timed;
+
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.SourceType;
+import es.unizar.iaaa.pid.harvester.tasks.UpdatingTask;
+import es.unizar.iaaa.pid.security.SecurityUtils;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
+import es.unizar.iaaa.pid.service.PersistentIdentifierService;
+import es.unizar.iaaa.pid.service.TaskService;
+import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
+import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
+import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
+import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
+import es.unizar.iaaa.pid.web.rest.vm.CsvData;
+import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing Namespace.
@@ -45,11 +59,19 @@ public class NamespaceResource {
     private static final String ENTITY_NAME = "namespace";
 
     private final NamespaceDTOService namespaceService;
+    private final NamespaceMapper namespaceMapper;
     private final OrganizationMemberDTOService organizationMemberService;
+    private final TaskService taskService;
+    private final PersistentIdentifierService persistentIdentifierService;
 
-    public NamespaceResource(NamespaceDTOService namespaceService, OrganizationMemberDTOService organizationMemberService) {
+    public NamespaceResource(NamespaceDTOService namespaceService, NamespaceMapper namespaceMapper,
+    		OrganizationMemberDTOService organizationMemberService,	TaskService taskService,
+    		PersistentIdentifierService persistentIdentifierService) {
         this.namespaceService = namespaceService;
+        this.namespaceMapper = namespaceMapper;
         this.organizationMemberService = organizationMemberService;
+        this.taskService = taskService;
+        this.persistentIdentifierService = persistentIdentifierService;
     }
 
     /**
@@ -218,5 +240,35 @@ public class NamespaceResource {
         
         namespaceService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+    
+    /**
+     * UPDATE /namespace/updateCSV : update the PIDs
+     * 
+     * @param csvData the csvData information to update
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @PutMapping("/namespaces/updateCSV")
+    @Timed
+    public ResponseEntity<Void> updateCSVNamespace(@RequestBody CsvData csvData){
+    	log.debug("REST request to update with csv data the PIDs of namespace : {}", csvData.getNamespaceId());
+    	
+    	//check if there is a task executing over the namespace
+    	NamespaceDTO namespace = namespaceService.findOne(csvData.getNamespaceId());
+    	if(namespace.getProcessStatus() != ProcessStatus.NONE){
+    		return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert("Updating proccess", "taskInExecuting",
+    				"There is a task in executing over this Namespace")).body(null);
+    	}
+    	namespace.setProcessStatus(ProcessStatus.UPDATING_PIDS);
+    	namespace = namespaceService.save(namespace);
+    	
+    	
+    	UpdatingTask updatingTask = new UpdatingTask(taskService, namespaceService,namespaceMapper,
+    			persistentIdentifierService, csvData, namespace);
+    	
+		Thread thread = new Thread(updatingTask);
+		thread.start();
+		
+    	return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("Updating proccess", csvData.toString())).build();
     }
 }

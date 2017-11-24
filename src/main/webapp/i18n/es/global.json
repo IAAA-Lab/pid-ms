@@ -140,7 +140,8 @@
         "notCapacityToModifyOrganization": "Es necesario ser Administrador de la Organización para modificar sus detalles",
         "notCapacityToDeleteOrganization": "Es necesario ser Administrador de la Organización para poder borrarla",
         "notAuthenticated": "Debes estar autentificado para realizar esta acción",
-        "numFeaturesNotEqualNumItme": "El número de feature types debe ser igual al número de nameItem cuando se elige SPH como sourceType"
+        "numFeaturesNotEqualNumItme": "El número de feature types debe ser igual al número de nameItem cuando se elige SPH como sourceType",
+        "taskInExecuting": "El namespace tiene una tarea en ejecución"
     },
     "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad de Zaragoza</a>"
 }

@@ -49,7 +49,7 @@ public class TaskServiceImpl implements TaskDTOService {
     public TaskDTO save(TaskDTO taskDTO) {
         log.debug("Request to save Task : {}", taskDTO);
         Task task = taskMapper.toEntity(taskDTO);
-        task = taskRepository.save(task);
+        task = taskRepository.saveAndFlush(task);
         return taskMapper.toDto(task);
     }
 

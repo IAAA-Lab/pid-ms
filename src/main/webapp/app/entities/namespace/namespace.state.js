@@ -209,6 +209,34 @@
                     $state.go('^');
                 });
             }]
+        })
+        .state('namespace.update', {
+            parent: 'namespace-detail',
+            url: '/update',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/namespace/namespace-update-dialog.html',
+                    controller: 'NamespaceUpdateController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                    	entity: function () {
+                            return {
+                            	namespaceId: $stateParams.id,
+                                data: null
+                            };
+                    	}
+                    }
+                }).result.then(function() {
+                	$state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
         });
     }
 

@@ -52,6 +52,8 @@ import es.unizar.iaaa.pid.repository.NamespaceRepository;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.OrganizationDTOService;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
+import es.unizar.iaaa.pid.service.PersistentIdentifierService;
+import es.unizar.iaaa.pid.service.TaskService;
 import es.unizar.iaaa.pid.service.UserService;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
@@ -196,6 +198,12 @@ public class NamespaceResourceIntTest {
 
     @Autowired
     private NamespaceDTOService namespaceService;
+    
+    @Autowired
+    private TaskService taskService;
+    
+    @Autowired
+    private PersistentIdentifierService persistentIdentifierService;
 
     @Autowired
     private OrganizationMemberDTOService organizationMemberDTOService;
@@ -244,7 +252,8 @@ public class NamespaceResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        NamespaceResource namespaceResource = new NamespaceResource(namespaceService, organizationMemberDTOService);
+        NamespaceResource namespaceResource = new NamespaceResource(namespaceService, namespaceMapper,
+        		organizationMemberDTOService, taskService,persistentIdentifierService);
         this.restNamespaceMockMvc = MockMvcBuilders.standaloneSetup(namespaceResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

@@ -1,8 +1,11 @@
 package es.unizar.iaaa.pid.service;
 
-import es.unizar.iaaa.pid.service.dto.TaskDTO;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import es.unizar.iaaa.pid.service.dto.TaskDTO;
 
 /**
  * Service Interface for managing Task.

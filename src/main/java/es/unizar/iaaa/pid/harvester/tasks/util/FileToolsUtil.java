@@ -200,9 +200,4 @@ public class FileToolsUtil {
 		directory.delete();
 	}
 	
-	public static void main(String [] args){
-		unzipFile(new File("/home/sergioib/Escritorio/32044.zip"), "tmp");
-		deleteDirectory(new File("tmp"));
-	}
-	
 }

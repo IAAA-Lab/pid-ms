@@ -24,7 +24,7 @@ public interface ChangeMapper extends EntityMapper <ChangeDTO, Change> {
         @Mapping(source = "identifier.beginLifespanVersion", target = "beginLifespanVersion"),
         @Mapping(source = "identifier.endLifespanVersion", target = "endLifespanVersion"),
         @Mapping(source = "identifier.alternateId", target = "alternateId"),
-    @Mapping(source = "task.id", target = "taskId")
+        @Mapping(source = "task.id", target = "taskId")
     })
     ChangeDTO toDto(Change change);
 

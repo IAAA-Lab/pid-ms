@@ -238,7 +238,7 @@ class HarvestTask extends AbstractTaskRunner {
     	String fileZipName = tmpDirectory + File.separator + ZIP_FILE_NAME;
     	
     	if(!FileToolsUtil.downloadFileHTTP(task.getNamespace().getSource().getEndpointLocation(), fileZipName)){
-    		task.setStatus(TaskStatus.ERROR);
+    		taskService.changeStatus(task, TaskStatus.ERROR);
     		log("Error descargando fichero " + task.getNamespace().getSource().getEndpointLocation());
     		return;
     	}
@@ -246,7 +246,7 @@ class HarvestTask extends AbstractTaskRunner {
     	File zipFile = new File(fileZipName);
     	//descomprimo el zip
     	if(!FileToolsUtil.unzipFile(zipFile, tmpDirectory.getAbsolutePath())){
-    		task.setStatus(TaskStatus.ERROR);
+    		taskService.changeStatus(task, TaskStatus.ERROR);
     		log("Error descomprimiendo fichero " + zipFile.getAbsolutePath());
     		return;
     	}
@@ -258,6 +258,7 @@ class HarvestTask extends AbstractTaskRunner {
 
         for(int index = 0; index< featureList.length; index++){
 			if(featureList[index].split("#").length != 2){
+				incNumErrors(task);
 				log("Error, la feature no posee el formato correcto.");
 				continue;
 			}
@@ -275,6 +276,7 @@ class HarvestTask extends AbstractTaskRunner {
         	int ids = harvester.extractIdentifiers(feature,shpFile);
         	
         	if(ids == -1){
+        		incNumErrors(task);
         		log("fail, idendifier extraction was wrong");
         	}
         	else{

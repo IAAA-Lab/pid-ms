@@ -50,6 +50,10 @@ public class TaskService {
     public List<Task> getExecutingTasksByNamespace(Namespace namespace) {
         return taskRepository.findExecutingTaksByNamespace(namespace);
     }
+    
+    public List<Task> getExecutingTasksByNamespaceId(Long id) {
+        return taskRepository.findExecutingTaksByNamespaceId(id);
+    }
 
     public Task findMostRecentHarvestTask(Namespace namespace) {
         return taskRepository.findMostRecentHarvestTask(namespace, ProcessStatus.HARVEST);
