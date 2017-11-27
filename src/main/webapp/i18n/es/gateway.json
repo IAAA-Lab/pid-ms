@@ -4,7 +4,7 @@
         "routes": {
             "title": "Rutas Actuales",
             "url": "URL",
-            "service": "servicio",
+            "service": "Servicio",
             "servers": "Servidores disponibles",
             "error": "Advertencia: servidor no disponible"
         },

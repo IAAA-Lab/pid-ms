@@ -2,18 +2,18 @@
     "pidmsApp": {
         "namespace" : {
             "home": {
-                "title": "Namespaces",
-                "createLabel": "Crear nuevo Namespace",
-                "createOrEditLabel": "Crear o editar Namespace"
+                "title": "Espacio de nombres",
+                "createLabel": "Crear nuevo Espacio de nombres",
+                "createOrEditLabel": "Crear o editar Espacio de nombres"
             },
-            "created": "Un nuevo Namespace ha sido creado con el identificador {{ param }}",
-            "updated": "Un Namespace ha sido actualizado con el identificador {{ param }}",
-            "deleted": "Un Namespace ha sido eliminado con el identificador {{ param }}",
+            "created": "Un nuevo Espacio de nombres ha sido creado con el identificador {{ param }}",
+            "updated": "El Espacio de nombres ha sido actualizado con el identificador {{ param }}",
+            "deleted": "El Espacio de nombres ha sido eliminado con el identificador {{ param }}",
             "delete": {
-                "question": "¿Seguro que quiere eliminar Namespace {{ id }}?"
+                "question": "¿Seguro que quiere eliminar Espacio de nombres {{ id }}?"
             },
             "updateCSV": {
-            	"title": "Actualizar PIDs del Namespace a traves de CSV",
+            	"title": "Actualizar PIDs del Espacio de nombres a traves de CSV",
             	"csvData": "Datos CSV",
             	"update": "Actualizar",
             	"addAction": "add,feature,localId,versionId,beginLifeSpan,endLifeSpan,alternateId,locator,proxyMode",
@@ -21,13 +21,13 @@
             	"deleteAction": "delete,id"
             },
             "detail": {
-                "title": "Namespace"
+                "title": "Espacio de nombres"
             },
-            "namespace": "Namespace",
+            "namespace": "Espacio de nombres",
             "title": "Título",
-            "publicNamespace": "Namespace público",
+            "publicNamespace": "Espacio de nombres público",
             "renewalPolicy": "Política de actualización",
-            "namespaceStatus": "Estado del Namespace",
+            "namespaceStatus": "Estado del Estado de nombres",
             "processStatus": "Estado del proceso",
             "itemStatus": "Estado",
             "lastChangeDate": "Fecha del último cambio",

@@ -7,8 +7,8 @@
                 "createOrEditLabel": "Crear o editar Organización"
             },
             "created": "Una nueva Organización con el identificador {{ param }} ha sido creada ",
-            "updated": "Una Organización con el identificador {{ param }} ha sido actualizada ",
-            "deleted": "Una Organización con el identificador {{ param }} ha sido eliminado ",
+            "updated": "La Organización con el identificador {{ param }} ha sido actualizada ",
+            "deleted": "La Organización con el identificador {{ param }} ha sido eliminado ",
             "delete": {
                 "question": "¿Seguro que quiere eliminar la Organización {{ id }}?"
             },

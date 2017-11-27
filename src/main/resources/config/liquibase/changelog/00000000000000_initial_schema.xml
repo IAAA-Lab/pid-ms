@@ -91,7 +91,7 @@
                                  referencedTableName="jhi_user"/>
         <loadData encoding="UTF-8"
                   file="config/liquibase/users.csv"
-                  separator=";"
+                  separator=","
                   tableName="jhi_user">
             <column name="activated" type="boolean"/>
             <column name="created_date" type="timestamp"/>
@@ -100,12 +100,12 @@
 
         <loadData encoding="UTF-8"
                   file="config/liquibase/authorities.csv"
-                  separator=";"
+                  separator=","
                   tableName="jhi_authority"/>
 
         <loadData encoding="UTF-8"
                   file="config/liquibase/users_authorities.csv"
-                  separator=";"
+                  separator=","
                   tableName="jhi_user_authority"/>
         <createTable tableName="jhi_persistent_audit_event">
             <column name="event_id" type="bigint" autoIncrement="${autoIncrement}">

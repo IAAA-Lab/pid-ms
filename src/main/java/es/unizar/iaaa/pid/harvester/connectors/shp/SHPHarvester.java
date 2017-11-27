@@ -93,7 +93,7 @@ public class SHPHarvester implements FileHarvester {
 						                    .alternateId(null);
         	
         	Resource resource = new Resource()
-        								.locator(source.getEndpointLocation())
+        								.locator(source.getEndpointLocation() + "#" + shpFile.getName())
         								.resourceType(ResourceType.SPATIAL_OBJECT);
         	
         	Change change = new Change();

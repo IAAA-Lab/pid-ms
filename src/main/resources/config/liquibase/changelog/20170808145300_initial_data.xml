@@ -12,17 +12,17 @@
     <changeSet id="201708080144300-1" author="fjlopez" context="!test">
         <loadData encoding="UTF-8"
                   file="config/liquibase/organizations.csv"
-                  separator=";"
+                  separator=","
                   tableName="organization">
         </loadData>
         <loadData encoding="UTF-8"
                   file="config/liquibase/organizations_members.csv"
-                  separator=";"
+                  separator=","
                   tableName="organization_member">
         </loadData>
         <loadData encoding="UTF-8"
                   file="config/liquibase/namespaces.csv"
-                  separator=";"
+                  separator=","
                   tableName="namespace">
         </loadData>
     </changeSet>

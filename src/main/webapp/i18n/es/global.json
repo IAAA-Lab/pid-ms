@@ -9,7 +9,7 @@
                 "main": "Entidades",
                 "groupMember": "Miembro del grupo",
                 "group": "Grupo",
-                "namespace": "Namespace",
+                "namespace": "Espacio de nombres",
                 "task": "Tarea",
                 "change": "Cambio",
                 "persistentIdentifier": "Identificador persistente",
@@ -23,7 +23,7 @@
                 "password": "Contraseña",
                 "sessions": "Sesiones",
                 "login": "Iniciar sesión",
-                "logout": "Cerrar la sesión",
+                "logout": "Cerrar sesión",
                 "register": "Crear una cuenta"
             },
             "admin": {
@@ -95,7 +95,7 @@
             "cancel": "Cancelar",
             "delete": "Eliminar",
             "edit": "Editar",
-            "open": "Open",
+            "open": "Abrir",
             "save": "Guardar",
             "view": "Vista"
         },
@@ -143,5 +143,6 @@
         "numFeaturesNotEqualNumItme": "El número de feature types debe ser igual al número de nameItem cuando se elige SPH como sourceType",
         "taskInExecuting": "El namespace tiene una tarea en ejecución"
     },
-    "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad de Zaragoza</a>"
+    "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad de Zaragoza</a>",
+    "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>"
 }

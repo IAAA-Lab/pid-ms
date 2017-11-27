@@ -143,5 +143,6 @@
         "numFeaturesNotEqualNumItme": "The number of feature types must be equal to the number of nameIntem when is choosen SHP sourceType",
         "taskInExecuting": "The namespace has a executing task"
     },
-    "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad Zaragoza</a>"
+    "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad Zaragoza</a>",
+    "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>"
 }
