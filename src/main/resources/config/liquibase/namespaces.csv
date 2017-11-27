@@ -1,27 +1,8 @@
-id;namespace;title;public_namespace;renewal_policy;namespace_status;process_status;item_status;last_change_date;registration_date;method_type;source_type;endpoint_location;srs_name;schema_uri;schema_uri_gml;schema_uri_base;schema_prefix;feature_type;geometry_property;begin_lifespan_version_property;features_threshold;resolver_proxy_mode;hits_request;factor_k;xpath;name_item;max_num_request;min_x;min_y;max_x;max_y;owner_id;version_lock
-1;ES.IGN.NGBE;ES.IGN.NGBE;0;MONTHLY;STOP;NONE;PENDING_VALIDATION;2016-09-27 07:43:40;2016-09-27 07:43:40;GET;WFS;http://www.ign.es/wfs-inspire/ngbe;urn:ogc:def:crs:EPSG::4258;http://inspire.ec.europa.eu/schemas/gn/4.0;http://www.opengis.net/gml/3.2;http://inspire.ec.europa.eu/schemas/base/3.3;gn;NamedPlace;geometry;beginLifespanVersion;10000;0;1;0;http://www.opengis.net/wfs/2.0;member;0;28.215;-16.875;33.75;14.0625;1;0
-2;ES.IGN.HIDROGRAFIA;ES.IGN.HIDROGRAFIA;0;MONTHLY;STOP;NONE;PENDING_VALIDATION;2017-09-05 07:43:40;2017-09-05 07:43:40;POST;WFS;http://www.ign.es/wfs-inspire/hidrografia-btn100;urn:ogc:def:crs:EPSG::4258;http://inspire.ec.europa.eu/schemas/hy-p/3.0;http://www.opengis.net/gml/3.2;http://inspire.ec.europa.eu/schemas/base/3.2;hy-p;DamOrWeir, LandWaterBoundary;geometry;beginLifespanVersion;10000;0;1;1;http://www.opengis.net/wfs/2.0;member;0;-10;34.5;5;44;1;0
-3;EU.EUROPA.ENVIRONMENT.LC.CLC.STATUS;EU.EUROPA.ENVIRONMENT.LC.CLC.STATUS;0;MONTHLY;STOP;NONE;PENDING_VALIDATION;2017-09-06 07:43:40;2017-09-06 07:43:40;POST;WFS;http://www.ign.es/wfs-inspire/ocupacion-suelo;urn:ogc:def:crs:EPSG::4258;http://inspire.ec.europa.eu/schemas/lcv/4.0;http://www.opengis.net/gml/3.2;http://inspire.ec.europa.eu/schemas/base/3.3;lcv;LandCoverUnit;geometry;beginLifespanVersion;10000;0;1;1;http://www.opengis.net/wfs/2.0;member;0;-10;34.5;5;44;1;0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+id,namespace,title,public_namespace,renewal_policy,namespace_status,process_status,item_status,last_change_date,registration_date,method_type,source_type,endpoint_location,srs_name,schema_uri,schema_uri_gml,schema_uri_base,schema_prefix,feature_type,geometry_property,begin_lifespan_version_property,features_threshold,resolver_proxy_mode,hits_request,factor_k,xpath,name_item,max_num_request,min_x,min_y,max_x,max_y,owner_id,version_lock
+1,ES.IGN.NGBE,Nomenclátor Geográfico Básico de España,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2016-09-27 07:43:40,2016-09-27 07:43:40,POST,WFS,http://www.ign.es/wfs-inspire/ngbe,urn:ogc:def:crs:EPSG::4258,http://inspire.ec.europa.eu/schemas/gn/4.0,http://www.opengis.net/gml/3.2,http://inspire.ec.europa.eu/schemas/base/3.3,gn,NamedPlace,geometry,beginLifespanVersion,10000,0,1,0,http://www.opengis.net/wfs/2.0,member,0,-10,34.5,5,44,1,0
+2,ES.IGN.HIDROGRAFIA,Hidrografía BTN100,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2017-09-05 07:43:40,2017-09-05 07:43:40,POST,WFS,http://www.ign.es/wfs-inspire/hidrografia-btn100,urn:ogc:def:crs:EPSG::4258,http://inspire.ec.europa.eu/schemas/hy-p/3.0,http://www.opengis.net/gml/3.2,http://inspire.ec.europa.eu/schemas/base/3.2,hy-p,DamOrWeir,geometry,beginLifespanVersion,10000,0,1,1,http://www.opengis.net/wfs/2.0,member,0,-10,34.5,5,44,1,0
+3,EU.EUROPA.ENVIRONMENT.LC.CLC.STATUS,EU.EUROPA.ENVIRONMENT.LC.CLC.STATUS,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2017-09-06 07:43:40,2017-09-06 07:43:40,POST,WFS,http://www.ign.es/wfs-inspire/ocupacion-suelo,urn:ogc:def:crs:EPSG::4258,http://inspire.ec.europa.eu/schemas/lcv/4.0,http://www.opengis.net/gml/3.2,http://inspire.ec.europa.eu/schemas/base/3.3,lcv,LandCoverUnit,geometry,beginLifespanVersion,10000,0,1,1,http://www.opengis.net/wfs/2.0,member,0,-10,34.5,5,44,1,0
+4,ES_IGN_IGR_HI,Hidrografía Aguas Físicas,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2017-09-06 07:43:40,2017-09-06 07:43:40,POST,WFS,http://www.ign.es/wfs-inspire/hidrografia,urn:ogc:def:crs:EPSG::4258,http://inspire.ec.europa.eu/schemas/hy-p/4.0,http://www.opengis.net/gml/3.2,http://inspire.ec.europa.eu/schemas/base/3.3,hy-p,"Crossing,DamOrWeir,DrainageBasin,Falls,Ford,Lock,ShorelineConstruction,RiverBasin,StandingWater,Watercourse,Wetland",hy-p:geometry,beginLifespanVersion,10000,0,1,1,http://www.opengis.net/wfs/2.0,member,0,-10,34.5,5,44,1,0
+5,ES_IGN_IGR_RT,Redes de Transportes,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2017-09-06 07:43:40,2017-09-06 07:43:40,POST,WFS,http://www.ign.es/wfs-inspire/transportes,urn:ogc:def:crs:EPSG::4258,http://inspire.ec.europa.eu/schemas/tn-a/4.0,http://www.opengis.net/gml/3.2,http://inspire.ec.europa.eu/schemas/base/3.3,tn-a,"AerodromeArea,ApronArea,RunwayArea,TaxiwayArea",net:geometry,beginLifespanVersion,10000,0,1,1,http://www.opengis.net/wfs/2.0,member,0,-10,34.5,5,44,1,0
+6,ES.IGN.BTN100.,Redes de Transportes BTN100,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2017-09-06 07:43:40,2017-09-06 07:43:40,POST,WFS,http://www.ign.es/wfs-inspire/transportes-btn100,urn:ogc:def:crs:EPSG::4258,http://inspire.ec.europa.eu/schemas/tn-ro/4.0,http://www.opengis.net/gml/3.2,http://inspire.ec.europa.eu/schemas/base/3.3,tn-ro,RoadLink,net:centrelineGeometry,beginLifespanVersion,10000,0,1,1,http://www.opengis.net/wfs/2.0,member,0,-10,34.5,5,44,1,0
+7,ES.IGN.SIGLIM.,Unidaders adminstrativas,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2017-09-06 07:43:40,2017-09-06 07:43:40,POST,WFS,http://www.ign.es/wfs-inspire/unidades-administrativas,urn:ogc:def:crs:EPSG::4258,http://inspire.ec.europa.eu/schemas/au/4.0,http://www.opengis.net/gml/3.2,http://inspire.ec.europa.eu/schemas/base/3.3,au,"AdministrativeBoundary,AdministrativeUnit",au:geometry,beginLifespanVersion,10000,0,1,1,http://www.opengis.net/wfs/2.0,member,0,-10,34.5,5,44,1,0
