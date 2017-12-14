@@ -27,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,10 +97,10 @@ public class ChangeResourceIntTest {
 
     @Autowired
     private ChangeDTOService changeService;
-    
+
     @Autowired
     private NamespaceRepository namespaceRepository;
-    
+
     @Autowired
     private TaskRepository taskRepository;
 
@@ -118,9 +119,9 @@ public class ChangeResourceIntTest {
     private MockMvc restChangeMockMvc;
 
     private Change change;
-    
+
     private Task task;
-    
+
     private Namespace namespace;
 
     @Before
@@ -172,6 +173,14 @@ public class ChangeResourceIntTest {
 //        namespace = NamespaceResourceIntTest.createEntity(em);
     }
 
+    private void populateDatabase() {
+        namespace = namespaceRepository.saveAndFlush(namespace);
+        task.setNamespace(namespace);
+        taskRepository.saveAndFlush(task);
+        change.setTask(task);
+        changeRepository.saveAndFlush(change);
+    }
+
     @Test
     @Transactional
     public void createChange() throws Exception {
@@ -188,7 +197,7 @@ public class ChangeResourceIntTest {
         List<Change> changeList = changeRepository.findAll();
         assertThat(changeList).hasSize(databaseSizeBeforeCreate + 1);
         Change testChange = changeList.get(changeList.size() - 1);
-        //assertThat(testChange.getChangeTimestamp()).isEqualTo(DEFAULT_CHANGE_TIMESTAMP);
+        assertThat(testChange.getChangeTimestamp()).isEqualTo(DEFAULT_CHANGE_TIMESTAMP);
         assertThat(testChange.getAction()).isEqualTo(DEFAULT_ACTION);
         assertThat(testChange.getFeature()).isEqualTo(DEFAULT_FEATURE);
         assertThat(testChange.getIdentifier().getNamespace()).isEqualTo(DEFAULT_NAMESPACE);
@@ -263,11 +272,7 @@ public class ChangeResourceIntTest {
     @Transactional
     public void getAllChanges() throws Exception {
         // Initialize the database
-    	namespace = namespaceRepository.saveAndFlush(namespace);
-    	task.setNamespace(namespace);
-    	taskRepository.saveAndFlush(task);
-    	change.setTask(task);
-        changeRepository.saveAndFlush(change);
+        populateDatabase();
 
         // Get all the changeList
         restChangeMockMvc.perform(get("/api/changes?sort=id,desc"))
@@ -276,28 +281,23 @@ public class ChangeResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(change.getId().intValue())))
             .andExpect(jsonPath("$.[*].changeTimestamp").value(hasItem(DEFAULT_CHANGE_TIMESTAMP.toString())))
             .andExpect(jsonPath("$.[*].action").value(hasItem(DEFAULT_ACTION.toString())))
-            .andExpect(jsonPath("$.[*].feature").value(hasItem(DEFAULT_FEATURE.toString())))
-            .andExpect(jsonPath("$.[*].namespace").value(hasItem(DEFAULT_NAMESPACE.toString())))
-            .andExpect(jsonPath("$.[*].localId").value(hasItem(DEFAULT_LOCAL_ID.toString())))
-            .andExpect(jsonPath("$.[*].versionId").value(hasItem(DEFAULT_VERSION_ID.toString())))
+            .andExpect(jsonPath("$.[*].feature").value(hasItem(DEFAULT_FEATURE)))
+            .andExpect(jsonPath("$.[*].namespace").value(hasItem(DEFAULT_NAMESPACE)))
+            .andExpect(jsonPath("$.[*].localId").value(hasItem(DEFAULT_LOCAL_ID)))
+            .andExpect(jsonPath("$.[*].versionId").value(hasItem(DEFAULT_VERSION_ID)))
             .andExpect(jsonPath("$.[*].beginLifespanVersion").value(hasItem(DEFAULT_BEGIN_LIFESPAN_VERSION.toString())))
             .andExpect(jsonPath("$.[*].endLifespanVersion").value(hasItem(DEFAULT_END_LIFESPAN_VERSION.toString())))
-            .andExpect(jsonPath("$.[*].alternateId").value(hasItem(DEFAULT_ALTERNATE_ID.toString())))
+            .andExpect(jsonPath("$.[*].alternateId").value(hasItem(DEFAULT_ALTERNATE_ID)))
             .andExpect(jsonPath("$.[*].resourceType").value(hasItem(DEFAULT_RESOURCE_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].locator").value(hasItem(DEFAULT_LOCATOR.toString())));
+            .andExpect(jsonPath("$.[*].locator").value(hasItem(DEFAULT_LOCATOR)));
     }
 
     @Test
     @Transactional
     public void getChange() throws Exception {
-        // Initialize the database
     	// Initialize the database
-    	namespace = namespaceRepository.saveAndFlush(namespace);
-    	task.setNamespace(namespace);
-    	taskRepository.saveAndFlush(task);
-    	change.setTask(task);
-        changeRepository.saveAndFlush(change);
-        
+        populateDatabase();
+
         // Get the change
         restChangeMockMvc.perform(get("/api/changes/{id}", change.getId()))
             .andExpect(status().isOk())
@@ -305,15 +305,15 @@ public class ChangeResourceIntTest {
             .andExpect(jsonPath("$.id").value(change.getId().intValue()))
             .andExpect(jsonPath("$.changeTimestamp").value(DEFAULT_CHANGE_TIMESTAMP.toString()))
             .andExpect(jsonPath("$.action").value(DEFAULT_ACTION.toString()))
-            .andExpect(jsonPath("$.feature").value(DEFAULT_FEATURE.toString()))
-            .andExpect(jsonPath("$.namespace").value(DEFAULT_NAMESPACE.toString()))
-            .andExpect(jsonPath("$.localId").value(DEFAULT_LOCAL_ID.toString()))
-            .andExpect(jsonPath("$.versionId").value(DEFAULT_VERSION_ID.toString()))
+            .andExpect(jsonPath("$.feature").value(DEFAULT_FEATURE))
+            .andExpect(jsonPath("$.namespace").value(DEFAULT_NAMESPACE))
+            .andExpect(jsonPath("$.localId").value(DEFAULT_LOCAL_ID))
+            .andExpect(jsonPath("$.versionId").value(DEFAULT_VERSION_ID))
             .andExpect(jsonPath("$.beginLifespanVersion").value(DEFAULT_BEGIN_LIFESPAN_VERSION.toString()))
             .andExpect(jsonPath("$.endLifespanVersion").value(DEFAULT_END_LIFESPAN_VERSION.toString()))
-            .andExpect(jsonPath("$.alternateId").value(DEFAULT_ALTERNATE_ID.toString()))
+            .andExpect(jsonPath("$.alternateId").value(DEFAULT_ALTERNATE_ID))
             .andExpect(jsonPath("$.resourceType").value(DEFAULT_RESOURCE_TYPE.toString()))
-            .andExpect(jsonPath("$.locator").value(DEFAULT_LOCATOR.toString()));
+            .andExpect(jsonPath("$.locator").value(DEFAULT_LOCATOR));
     }
 
     @Test

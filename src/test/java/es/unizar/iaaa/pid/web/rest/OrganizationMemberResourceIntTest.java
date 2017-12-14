@@ -56,12 +56,12 @@ public class OrganizationMemberResourceIntTest {
 
     private static final Capacity DEFAULT_CAPACITY = Capacity.ADMIN;
     private static final Capacity UPDATED_CAPACITY = Capacity.EDITOR;
-    
+
     private static final String ERROR_HEADER = "X-pidmsApp-error";
     private static final String ERROR_ID_ALREADY_EXIST = "error.idexists";
-    
+
     private static final String FIELD_CAPACITY = "\"field\" : \"capacity\"";
-    
+
     private static final String ERROR_NULL_FIELD = "\"message\" : \"NotNull\"";
 
     @Autowired
@@ -72,16 +72,16 @@ public class OrganizationMemberResourceIntTest {
 
     @Autowired
     private OrganizationMemberDTOService organizationMemberService;
-    
+
     @Autowired
     private OrganizationDTOService organizationDTOService;
-    
+
     @Autowired
     private OrganizationMapper organizationMapper;
-    
+
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private UserMapper userMapper;
 
@@ -100,7 +100,7 @@ public class OrganizationMemberResourceIntTest {
     private MockMvc restOrganizationMemberMockMvc;
 
     private OrganizationMember organizationMember;
-    
+
     private User user;
     private Organization organization;
     private OrganizationMember organizationMemberAdmin;
@@ -130,7 +130,7 @@ public class OrganizationMemberResourceIntTest {
     @Before
     public void initTest() {
         organizationMember = createEntity(em);
-        
+
         //add user
         user = UserResourceIntTest.createEntity(em);
         //create organization
@@ -147,11 +147,11 @@ public class OrganizationMemberResourceIntTest {
         userService.createUser(userMapper.userToUserDTO(user));
         organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
         organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
         int databaseSizeBeforeCreate = organizationMemberRepository.findAll().size();
-        
+
         organizationMember.setOrganization(organization);
-        
+
         // Create the OrganizationMember
         OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMember);
         restOrganizationMemberMockMvc.perform(post("/api/organization-members")
@@ -170,16 +170,16 @@ public class OrganizationMemberResourceIntTest {
     @Transactional
     @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void createOrganizationMemberWithExistingId() throws Exception {
-    	
+
     	//add organization, user and organizationMember in the database
         userService.createUser(userMapper.userToUserDTO(user));
         organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
         organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
         int databaseSizeBeforeCreate = organizationMemberRepository.findAll().size();
 
         organizationMember.setOrganization(organization);
-        
+
         // Create the OrganizationMember with an existing ID
         organizationMember.setId(1L);
         OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMember);
@@ -203,9 +203,9 @@ public class OrganizationMemberResourceIntTest {
         userService.createUser(userMapper.userToUserDTO(user));
         organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
         organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
         int databaseSizeBeforeTest = organizationMemberRepository.findAll().size();
-        
+
         organizationMember.setOrganization(organization);
         // set the field null
         organizationMember.setCapacity(null);
@@ -220,7 +220,7 @@ public class OrganizationMemberResourceIntTest {
 
         List<OrganizationMember> organizationMemberList = organizationMemberRepository.findAll();
         assertThat(organizationMemberList).hasSize(databaseSizeBeforeTest);
-        
+
         String content = result.getResponse().getContentAsString();
         assertThat(content.contains(FIELD_CAPACITY));
         assertThat(content.contains(ERROR_NULL_FIELD));
@@ -230,14 +230,14 @@ public class OrganizationMemberResourceIntTest {
     @Transactional
     @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void getAllOrganizationMembers() throws Exception {
-    	
+
     	//add organization, user and organizationMember in the database
         userService.createUser(userMapper.userToUserDTO(user));
         organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
         organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
         organizationMember.setOrganization(organization);
-        
+
         // Initialize the database
         organizationMemberRepository.saveAndFlush(organizationMember);
 
@@ -257,7 +257,7 @@ public class OrganizationMemberResourceIntTest {
         userService.createUser(userMapper.userToUserDTO(user));
         organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
         organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
         organizationMember.setOrganization(organization);
         // Initialize the database
         organizationMemberRepository.saveAndFlush(organizationMember);
@@ -278,9 +278,9 @@ public class OrganizationMemberResourceIntTest {
         userService.createUser(userMapper.userToUserDTO(user));
         organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
         organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
         organizationMember.setOrganization(organization);
-        
+
         // Get the organizationMember
         restOrganizationMemberMockMvc.perform(get("/api/organization-members/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
@@ -295,9 +295,9 @@ public class OrganizationMemberResourceIntTest {
         userService.createUser(userMapper.userToUserDTO(user));
         organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
         organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
         organizationMember.setOrganization(organization);
-        
+
         organizationMemberRepository.saveAndFlush(organizationMember);
         int databaseSizeBeforeUpdate = organizationMemberRepository.findAll().size();
 
@@ -327,9 +327,9 @@ public class OrganizationMemberResourceIntTest {
         userService.createUser(userMapper.userToUserDTO(user));
         organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
         organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
         organizationMember.setOrganization(organization);
-        
+
         int databaseSizeBeforeUpdate = organizationMemberRepository.findAll().size();
 
         // Create the OrganizationMember
@@ -354,9 +354,9 @@ public class OrganizationMemberResourceIntTest {
         userService.createUser(userMapper.userToUserDTO(user));
         organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
         organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-        
+
         organizationMember.setOrganization(organization);
-        
+
         // Initialize the database
         organizationMemberRepository.saveAndFlush(organizationMember);
         int databaseSizeBeforeDelete = organizationMemberRepository.findAll().size();
