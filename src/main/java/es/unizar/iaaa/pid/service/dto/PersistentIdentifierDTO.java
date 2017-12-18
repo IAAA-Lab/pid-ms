@@ -1,15 +1,17 @@
 package es.unizar.iaaa.pid.service.dto;
 
 
-import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
+
+import javax.validation.constraints.NotNull;
+
+import es.unizar.iaaa.pid.domain.Feature;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 
 /**
  * A DTO for the PersistentIdentifier entity.
@@ -21,7 +23,7 @@ public class PersistentIdentifierDTO implements Serializable {
     private String externalUrn;
 
     @NotNull
-    private String feature;
+    private Long featureId;
 
     private Boolean resolverProxyMode;
 
@@ -73,15 +75,15 @@ public class PersistentIdentifierDTO implements Serializable {
         this.externalUrn = externalUrn;
     }
 
-    public String getFeature() {
-        return feature;
-    }
+    public Long getFeatureId() {
+		return featureId;
+	}
 
-    public void setFeature(String feature) {
-        this.feature = feature;
-    }
+	public void setFeatureId(Long featureId) {
+		this.featureId = featureId;
+	}
 
-    public Boolean isResolverProxyMode() {
+	public Boolean isResolverProxyMode() {
         return resolverProxyMode;
     }
 
@@ -235,7 +237,7 @@ public class PersistentIdentifierDTO implements Serializable {
         return "PersistentIdentifierDTO{" +
             "id=" + getId() +
             ", externalUrn='" + getExternalUrn() + "'" +
-            ", feature='" + getFeature() + "'" +
+            ", feature='" + getFeatureId() + "'" +
             ", resolverProxyMode='" + isResolverProxyMode() + "'" +
             ", namespace='" + getNamespace() + "'" +
             ", localId='" + getLocalId() + "'" +

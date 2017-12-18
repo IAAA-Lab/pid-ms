@@ -22,6 +22,7 @@ import com.ximpleware.VTDGen;
 import com.ximpleware.VTDNav;
 
 import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Identifier;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.domain.Resource;
@@ -56,7 +57,7 @@ public class WFSValidatorById implements ValidatorById {
     }
 
     @Override
-    public int validateGmlId(String feature, Identifier identifier) {
+    public int validateGmlId(Feature feature, Identifier identifier) {
         String request = WFSClient.createWfsGetFeatureById(source, identifier);
         WFSResponse response = WFSClient.executeRequestGET(request);
         if (response.getResponseStatus() == ResponseStatus.FAIL || response.getResponseStatus() == ResponseStatus.TIMEOUT) {
@@ -67,7 +68,7 @@ public class WFSValidatorById implements ValidatorById {
         VTDGen document = response.getDocument();
         VTDNav nav = document.getNav();
         AutoPilot ap = new AutoPilot(nav);
-        ap.selectElementNS(source.getSchemaUri(), feature);
+        ap.selectElementNS(feature.getSchemaUri(), feature.getFeatureType());
 
         Identifier remoteIdentifier = null;
         try {
@@ -108,7 +109,7 @@ public class WFSValidatorById implements ValidatorById {
             member.iterate();
 
             apx = new AutoPilot(nav);
-            apx.selectElementNS(source.getSchemaUri(),  source.getBeginLifespanVersionProperty());
+            apx.selectElementNS(feature.getSchemaUri(), feature.getBeginLifespanVersionProperty());
             Instant beginLifespanVersion = null;
             if (apx.iterate()) {
                 beginLifespanVersion = Instant.parse(nav.toNormalizedString(nav.getText()));
@@ -117,7 +118,7 @@ public class WFSValidatorById implements ValidatorById {
             member.iterate();
 
             apx = new AutoPilot(nav);
-            apx.selectElementNS(source.getSchemaUri(), feature);
+            apx.selectElementNS(feature.getSchemaUri(), feature.getFeatureType());
             String gmlId = null;
             if (apx.iterate()) {
                 int gmlidx  = nav.getAttrValNS("http://www.opengis.net/gml/3.2", "id");
@@ -155,7 +156,7 @@ public class WFSValidatorById implements ValidatorById {
         return 1;
     }
 
-    private void response(ChangeAction action, Identifier identifier, String feature) {
+    private void response(ChangeAction action, Identifier identifier, Feature feature) {
         Resource resource = new Resource();
         resource.setResourceType(ResourceType.SPATIAL_OBJECT);
         resource.setLocator(WFSClient.createWfsGetFeatureById(source, identifier));

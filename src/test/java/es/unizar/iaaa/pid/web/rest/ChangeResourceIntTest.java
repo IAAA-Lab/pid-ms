@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.unizar.iaaa.pid.PidmsApp;
 import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Identifier;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.domain.Resource;
@@ -152,10 +153,13 @@ public class ChangeResourceIntTest {
             .endLifespanVersion(DEFAULT_END_LIFESPAN_VERSION)
             .alternateId(DEFAULT_ALTERNATE_ID);
 
+        Feature feature = new Feature();
+        feature.setFeatureType(DEFAULT_FEATURE);
+        
         Change change = new Change()
             .changeTimestamp(DEFAULT_CHANGE_TIMESTAMP)
             .action(DEFAULT_ACTION)
-            .feature(DEFAULT_FEATURE)
+            .feature(feature)
             .identifier(identifier)
             .resource(resource);
 
@@ -166,7 +170,7 @@ public class ChangeResourceIntTest {
     public void initTest() {
         change = createEntity(em);
         task = TaskResourceIntTest.createEntity(em);
-        namespace = NamespaceResourceIntTest.createEntity(em);
+//        namespace = NamespaceResourceIntTest.createEntity(em);
     }
 
     private void populateDatabase() {
@@ -327,12 +331,15 @@ public class ChangeResourceIntTest {
         changeRepository.saveAndFlush(change);
         int databaseSizeBeforeUpdate = changeRepository.findAll().size();
 
+        Feature feature = new Feature();
+        feature.setFeatureType(DEFAULT_FEATURE);
+        
         // Update the change
         Change updatedChange = changeRepository.findOne(change.getId());
         updatedChange
             .changeTimestamp(UPDATED_CHANGE_TIMESTAMP)
             .action(UPDATED_ACTION)
-            .feature(UPDATED_FEATURE)
+            .feature(feature)
             .getResource()
             .resourceType(UPDATED_RESOURCE_TYPE)
             .locator(UPDATED_LOCATOR);

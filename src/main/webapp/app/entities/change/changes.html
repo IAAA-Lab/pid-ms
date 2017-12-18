@@ -22,6 +22,7 @@
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
                     <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="taskId"><span data-translate="pidmsApp.change.task">Task</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="featureId"><span data-translate="pidmsApp.change.feature">Feature</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="changeTimestamp"><span data-translate="pidmsApp.change.changeTimestamp">Change Timestamp</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="action"><span data-translate="pidmsApp.change.action">Action</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="namespace"><span data-translate="pidmsApp.change.namespace">Namespace</span> <span class="glyphicon glyphicon-sort"></span></th>
@@ -39,6 +40,10 @@
                     <td ng-switch="vm.isAuthenticated()">
                         <a ui-sref="task-detail({id:change.taskId})" ng-switch-when="true">{{change.taskId}}</a>
                         <span ng-switch-when="false">{{change.taskId}}</span>
+                    </td>
+                    <td ng-switch="vm.isAuthenticated()">
+                        <a ui-sref="feature-detail({id:change.featureId})" ng-switch-when="true">{{change.featureId}}</a>
+                        <span ng-switch-when="false">{{change.featureId}}</span>
                     </td>
                     <td>{{change.changeTimestamp | date:'medium'}}</td>
                     <td data-translate="{{'pidmsApp.ChangeAction.' + change.action}}">{{change.action}}</td>

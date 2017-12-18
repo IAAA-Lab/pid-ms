@@ -35,8 +35,8 @@ public class PersistentIdentifier implements Serializable {
     private String externalUrn;
 
     @NotNull
-    @Column(name = "feature", nullable = false)
-    private String feature;
+    @ManyToOne(optional=false)
+    private Feature feature;
 
     @Column(name = "resolver_proxy_mode")
     private Boolean resolverProxyMode;
@@ -50,6 +50,11 @@ public class PersistentIdentifier implements Serializable {
     @Embedded
     private Resource resource;
 
+    public PersistentIdentifier externalUrn(String externalUrn) {
+        this.externalUrn = externalUrn;
+        return this;
+    }
+    
     public UUID getId() {
         return id;
     }
@@ -62,25 +67,20 @@ public class PersistentIdentifier implements Serializable {
         return externalUrn;
     }
 
-    public PersistentIdentifier externalUrn(String externalUrn) {
-        this.externalUrn = externalUrn;
-        return this;
-    }
-
     public void setExternalUrn(String externalUrn) {
         this.externalUrn = externalUrn;
     }
 
-    public String getFeature() {
+    public Feature getFeature() {
         return feature;
     }
 
-    public PersistentIdentifier feature(String feature) {
+    public PersistentIdentifier feature(Feature feature) {
         this.feature = feature;
         return this;
     }
 
-    public void setFeature(String feature) {
+    public void setFeature(Feature feature) {
         this.feature = feature;
     }
 

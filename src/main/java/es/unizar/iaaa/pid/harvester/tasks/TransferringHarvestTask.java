@@ -1,11 +1,16 @@
 package es.unizar.iaaa.pid.harvester.tasks;
 
-import es.unizar.iaaa.pid.domain.*;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.service.ChangeService;
-import es.unizar.iaaa.pid.service.NamespaceService;
-import es.unizar.iaaa.pid.service.PersistentIdentifierService;
-import es.unizar.iaaa.pid.service.TaskService;
+import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.ISSUED;
+import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.LAPSED;
+import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.NEW;
+import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.PENDING_VALIDATION;
+import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.VALIDATED;
+import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_VALIDATION_BY_ID;
+import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_VALIDATION_END;
+
+import java.time.Instant;
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +20,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.util.UUID;
-
-import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.*;
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_VALIDATION_BY_ID;
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_VALIDATION_END;
+import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Identifier;
+import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.domain.PersistentIdentifier;
+import es.unizar.iaaa.pid.domain.Registration;
+import es.unizar.iaaa.pid.domain.Task;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.service.ChangeService;
+import es.unizar.iaaa.pid.service.NamespaceService;
+import es.unizar.iaaa.pid.service.PersistentIdentifierService;
+import es.unizar.iaaa.pid.service.TaskService;
 
 
 @Component

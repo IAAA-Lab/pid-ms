@@ -26,10 +26,10 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.feature" for="field_feature">Feature</label>
-            <input type="text" class="form-control" name="feature" id="field_feature"
-                    ng-model="vm.persistentIdentifier.feature"
-                    required/>
+            <label data-translate="pidmsApp.persistentIdentifier.feature" for="field_feature">Feature</label>
+            <select class="form-control" id="field_feature" name="feature" ng-model="vm.persistentIdentifier.featureId" ng-options="feature.id as feature.id for feature in vm.features"            >
+                <option value=""></option>
+            </select>
             <div ng-show="editForm.feature.$invalid">
                 <p class="help-block"
                     ng-show="editForm.feature.$error.required" data-translate="entity.validation.required">

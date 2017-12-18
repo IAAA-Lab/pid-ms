@@ -119,7 +119,7 @@ public class TaskResourceIntTest {
     @Before
     public void initTest() {
         task = createEntity(em);
-        namespace = NamespaceResourceIntTest.createEntity(em);
+//        namespace = NamespaceResourceIntTest.createEntity(em);
     }
 
     @Test

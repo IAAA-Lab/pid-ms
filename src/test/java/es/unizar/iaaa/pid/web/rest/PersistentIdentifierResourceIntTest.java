@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.unizar.iaaa.pid.PidmsApp;
+import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Identifier;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
@@ -189,8 +190,11 @@ public class PersistentIdentifierResourceIntTest {
             .endLifespanVersion(DEFAULT_END_LIFESPAN_VERSION)
             .alternateId(DEFAULT_ALTERNATE_ID);
 
+        Feature feature = new Feature()
+        	.featureType(DEFAULT_FEATURE);
+        
         PersistentIdentifier persistentIdentifier = new PersistentIdentifier()
-            .feature(DEFAULT_FEATURE)
+            .feature(feature)
             .resolverProxyMode(DEFAULT_RESOLVER_PROXY_MODE)
             .identifier(identifier)
             .resource(resource)
@@ -202,7 +206,7 @@ public class PersistentIdentifierResourceIntTest {
     @Before
     public void initTest() {
         persistentIdentifier = createEntity(em);
-        namespace = NamespaceResourceIntTest.createEntity(em);
+//        namespace = NamespaceResourceIntTest.createEntity(em);
     }
 
     @Test
@@ -402,10 +406,13 @@ public class PersistentIdentifierResourceIntTest {
         persistentIdentifierRepository.saveAndFlush(persistentIdentifier);
         int databaseSizeBeforeUpdate = persistentIdentifierRepository.findAll().size();
 
+        Feature feature = new Feature()
+            	.featureType(DEFAULT_FEATURE);
+        
         // Update the persistentIdentifier
         PersistentIdentifier updatedPersistentIdentifier = persistentIdentifierRepository.findOne(persistentIdentifier.getId());
         updatedPersistentIdentifier
-            .feature(UPDATED_FEATURE)
+            .feature(feature)
             .resolverProxyMode(UPDATED_RESOLVER_PROXY_MODE)
             .getResource()
             .resourceType(UPDATED_RESOURCE_TYPE)

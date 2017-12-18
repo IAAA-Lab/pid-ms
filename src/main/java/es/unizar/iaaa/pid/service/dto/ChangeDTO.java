@@ -1,13 +1,15 @@
 package es.unizar.iaaa.pid.service.dto;
 
 
-import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
+
+import javax.validation.constraints.NotNull;
+
+import es.unizar.iaaa.pid.domain.Feature;
+import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 
 /**
  * A DTO for the Change entity.
@@ -20,7 +22,7 @@ public class ChangeDTO implements Serializable {
 
     private ChangeAction action;
 
-    private String feature;
+    private Long featureId;
 
     @NotNull
     private String namespace;
@@ -41,7 +43,7 @@ public class ChangeDTO implements Serializable {
     private String locator;
 
     private Long taskId;
-
+    
     public Long getId() {
         return id;
     }
@@ -66,15 +68,15 @@ public class ChangeDTO implements Serializable {
         this.action = action;
     }
 
-    public String getFeature() {
-        return feature;
-    }
+    public Long getFeatureId() {
+		return featureId;
+	}
 
-    public void setFeature(String feature) {
-        this.feature = feature;
-    }
+	public void setFeatureId(Long featureId) {
+		this.featureId = featureId;
+	}
 
-    public String getNamespace() {
+	public String getNamespace() {
         return namespace;
     }
 
@@ -173,7 +175,7 @@ public class ChangeDTO implements Serializable {
             "id=" + getId() +
             ", changeTimestamp='" + getChangeTimestamp() + "'" +
             ", action='" + getAction() + "'" +
-            ", feature='" + getFeature() + "'" +
+            ", feature='" + getFeatureId() + "'" +
             ", namespace='" + getNamespace() + "'" +
             ", localId='" + getLocalId() + "'" +
             ", versionId='" + getVersionId() + "'" +

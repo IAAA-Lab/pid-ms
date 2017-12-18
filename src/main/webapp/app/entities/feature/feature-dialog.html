@@ -1,0 +1,132 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myFeatureLabel" data-translate="pidmsApp.feature.home.createOrEditLabel">Create or edit a Feature</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.feature.id">
+            <label for="id" data-translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.feature.id" disabled="true" />
+        </div>       
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.srsName" for="field_srsName">Srs Name</label>
+            <input type="text" class="form-control" name="srsName" id="field_srsName"
+                    ng-model="vm.feature.srsName"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.schemaUri" for="field_schemaUri">Schema Uri</label>
+            <input type="text" class="form-control" name="schemaUri" id="field_schemaUri"
+                    ng-model="vm.feature.schemaUri"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.schemaUriGML" for="field_schemaUriGML">Schema Uri GML</label>
+            <input type="text" class="form-control" name="schemaUriGML" id="field_schemaUriGML"
+                    ng-model="vm.feature.schemaUriGML"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.schemaUriBase" for="field_schemaUriBase">Schema Uri Base</label>
+            <input type="text" class="form-control" name="schemaUriBase" id="field_schemaUriBase"
+                    ng-model="vm.feature.schemaUriBase"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.schemaPrefix" for="field_schemaPrefix">Schema Prefix</label>
+            <input type="text" class="form-control" name="schemaPrefix" id="field_schemaPrefix"
+                    ng-model="vm.feature.schemaPrefix"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.featureType" for="field_featureType">Feature Type</label>
+            <input type="text" class="form-control" name="featureType" id="field_featureType"
+                    ng-model="vm.feature.featureType"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.geometryProperty" for="field_geometryProperty">Geometry Property</label>
+            <input type="text" class="form-control" name="geometryProperty" id="field_geometryProperty"
+                    ng-model="vm.feature.geometryProperty"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.beginLifespanVersionProperty" for="field_beginLifespanVersionProperty">Begin Lifespan Version Property</label>
+            <input type="text" class="form-control" name="beginLifespanVersionProperty" id="field_beginLifespanVersionProperty"
+                    ng-model="vm.feature.beginLifespanVersionProperty"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.featuresThreshold" for="field_featuresThreshold">Features Threshold</label>
+            <input type="number" class="form-control" name="featuresThreshold" id="field_featuresThreshold"
+                    ng-model="vm.feature.featuresThreshold"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.hitsRequest" for="field_hitsRequest">Hits Request</label>
+                <input type="checkbox" name="hitsRequest" id="field_hitsRequest"
+                          ng-model="vm.feature.hitsRequest"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.factorK" for="field_factorK">Factor K</label>
+            <input type="number" class="form-control" name="factorK" id="field_factorK"
+                    ng-model="vm.feature.factorK"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.xpath" for="field_xpath">Xpath</label>
+            <input type="text" class="form-control" name="xpath" id="field_xpath"
+                    ng-model="vm.feature.xpath"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.nameItem" for="field_nameItem">Name Item</label>
+            <input type="text" class="form-control" name="nameItem" id="field_nameItem"
+                    ng-model="vm.feature.nameItem"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.minX" for="field_minX">Min X</label>
+            <input type="number" class="form-control" name="minX" id="field_minX"
+                    ng-model="vm.feature.minX"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.minY" for="field_minY">Min Y</label>
+            <input type="number" class="form-control" name="minY" id="field_minY"
+                    ng-model="vm.feature.minY"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.maxX" for="field_maxX">Max X</label>
+            <input type="number" class="form-control" name="maxX" id="field_maxX"
+                    ng-model="vm.feature.maxX"
+                    />
+        </div>
+        <div class="form-group">
+            <label class="control-label" data-translate="pidmsApp.feature.maxY" for="field_maxY">Max Y</label>
+            <input type="number" class="form-control" name="maxY" id="field_maxY"
+                    ng-model="vm.feature.maxY"
+                    />
+        </div>
+        <div class="form-group">
+            <label data-translate="pidmsApp.feature.namespace" for="field_namespace">Namespace</label>
+            <select class="form-control" id="field_namespace" name="namespace" ng-model="vm.feature.namespaceId" ng-options="namespace.id as namespace.id for namespace in vm.namespaces">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

@@ -38,4 +38,8 @@ public interface ChangeRepository extends JpaRepository<Change, Long> {
     @Modifying
     @Query("delete from Change c1 where c1.task.id = ?1")
     void deleteAllByTaskId(Long taskId);
+    
+    @Modifying
+    @Query("delete from Change c1 where c1.feature.id = ?1")
+    void deleteAllByFeatureId(Long featureId);
 }

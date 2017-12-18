@@ -46,6 +46,7 @@ public class CacheConfiguration {
             cm.createCache(es.unizar.iaaa.pid.domain.Namespace.class.getName(), jcacheConfiguration);
             cm.createCache(es.unizar.iaaa.pid.domain.Task.class.getName(), jcacheConfiguration);
             cm.createCache(es.unizar.iaaa.pid.domain.Change.class.getName(), jcacheConfiguration);
+            cm.createCache(es.unizar.iaaa.pid.domain.Feature.class.getName(), jcacheConfiguration);
             cm.createCache(es.unizar.iaaa.pid.domain.PersistentIdentifier.class.getName(), jcacheConfiguration);
             cm.createCache(es.unizar.iaaa.pid.domain.Organization.class.getName(), jcacheConfiguration);
             cm.createCache(es.unizar.iaaa.pid.domain.Organization.class.getName() + ".members", jcacheConfiguration);

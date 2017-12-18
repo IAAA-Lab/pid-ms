@@ -38,6 +38,12 @@
                                 </a>
                             </li>
                         <li ui-sref-active="active" ng-switch-when="true">
+                                <a ui-sref="feature" ng-click="vm.collapseNavbar()">
+                                    <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+                                    <span data-translate="global.menu.entities.feature">Feature</span>
+                                </a>
+                            </li>
+                        <li ui-sref-active="active" ng-switch-when="true">
                                 <a ui-sref="task" ng-click="vm.collapseNavbar()">
                                     <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
                                     <span data-translate="global.menu.entities.task">Task</span>

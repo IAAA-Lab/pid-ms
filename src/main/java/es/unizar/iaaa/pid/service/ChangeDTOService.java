@@ -78,4 +78,12 @@ public interface ChangeDTOService {
      * @param taskId the id of the associate Task
      */
     void deleteAllByTaskId(Long taskId);
+    
+    
+    /**
+     * Delete all change associated with the Feature
+     * 
+     * @param featureId the id of the associate Feature
+     */
+    void deleteAllByFeatureId(Long featureId);
 }

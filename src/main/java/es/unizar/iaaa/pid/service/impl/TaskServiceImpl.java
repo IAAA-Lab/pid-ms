@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.repository.TaskRepository;
 import es.unizar.iaaa.pid.service.ChangeDTOService;

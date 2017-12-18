@@ -24,6 +24,7 @@ import com.ximpleware.XPathParseException;
 
 import es.unizar.iaaa.pid.domain.BoundingBox;
 import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Identifier;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.domain.Resource;
@@ -56,12 +57,12 @@ public class WFSSpatialHarvester implements SpatialHarvester {
     }
 
     @Override
-    public int getHitsTotal(String feature,BoundingBox boundingBox) {
+    public int getHitsTotal(Feature feature,BoundingBox boundingBox) {
     	String request;
     	WFSResponse response;
 
     	if(source.getMethodType() == MethodType.POST){
-	        request = WFSClient.createWfsGetFeatureRequestBodyPost(feature, source, boundingBox, "hits");
+	        request = WFSClient.createWfsGetFeatureRequestBodyPost(feature, boundingBox, "hits");
 	        response = WFSClient.executeRequestPOST(source.getEndpointLocation(), request);
     	}
     	else{
@@ -128,12 +129,12 @@ public class WFSSpatialHarvester implements SpatialHarvester {
 
 
     @Override
-    public int extractIdentifiers(String feature, BoundingBox boundingBox) {
+    public int extractIdentifiers(Feature feature, BoundingBox boundingBox) {
     	String request;
     	WFSResponse response;
 
     	if(source.getMethodType() == MethodType.POST){
-	        request = WFSClient.createWfsGetFeatureRequestBodyPost(feature, source, boundingBox, "results");
+	        request = WFSClient.createWfsGetFeatureRequestBodyPost(feature, boundingBox, "results");
 	        response = WFSClient.executeRequestPOST(source.getEndpointLocation(), request);
     	}
     	else{
@@ -167,11 +168,11 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         log("{} are expected to be retrieved", returned);
         try {
             AutoPilot ap = new AutoPilot(nav);
-            ap.declareXPathNameSpace("ns1", source.getXpath());
-            ap.selectXPath("//ns1:"+source.getNameItem());
+            ap.declareXPathNameSpace("ns1", feature.getXpath());
+            ap.selectXPath("//ns1:"+feature.getNameItem());
             while (ap.evalXPath() != -1) {
                 try {
-                    Identifier identifier = extractIdentifier(feature,nav);
+                    Identifier identifier = extractIdentifier(feature, nav);
                     Resource resource = new Resource();
                     resource.setResourceType(ResourceType.SPATIAL_OBJECT);
                     resource.setLocator(WFSClient.createWfsGetFeatureById(source, identifier));
@@ -214,7 +215,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         return valid;
     }
 
-    private Identifier extractIdentifier(String feature, VTDNav nav) throws NavException, FailedExtractionException {
+    private Identifier extractIdentifier(Feature feature, VTDNav nav) throws NavException, FailedExtractionException {
 
         nav.push();
         NodeRecorder member = new NodeRecorder(nav);
@@ -230,13 +231,13 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         member.iterate();
 
         AutoPilot apx1 = new AutoPilot(nav);
-        apx1.selectElementNS(source.getSchemaUri(), feature);
+        apx1.selectElementNS(feature.getSchemaUri(), feature.getFeatureType());
         String gmlId = null;
         boolean isCorrectFeature = false;
 
         if(apx1.iterate()){
         	isCorrectFeature = true;
-        	int gmlidx = nav.getAttrValNS(source.getSchemaUriGML(), "id");
+        	int gmlidx = nav.getAttrValNS(feature.getSchemaUriGML(), "id");
             if (gmlidx != -1) {
                 gmlId = nav.toNormalizedString(gmlidx);
             }
@@ -249,7 +250,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         // if(featureTypePos != 1){;}
 
         AutoPilot apx = new AutoPilot(nav);
-        apx.selectElementNS(source.getSchemaUriBase(), "localId");
+        apx.selectElementNS(feature.getSchemaUriBase(), "localId");
         String localId = null;
         if (apx.iterate()) {
         	int pos = nav.getText();
@@ -261,7 +262,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         member.iterate();
 
         apx = new AutoPilot(nav);
-        apx.selectElementNS(source.getSchemaUriBase(), "namespace");
+        apx.selectElementNS(feature.getSchemaUriBase(), "namespace");
         String namespace = null;
         if (apx.iterate()) {
         	int pos = nav.getText();
@@ -273,7 +274,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         member.iterate();
 
         apx = new AutoPilot(nav);
-        apx.selectElementNS(source.getSchemaUriBase(), "versionId");
+        apx.selectElementNS(feature.getSchemaUriBase(), "versionId");
         String versionId = null;
         if (apx.iterate()) {
         	int pos = nav.getText();
@@ -285,7 +286,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         member.iterate();
 
         apx = new AutoPilot(nav);
-        apx.selectElementNS(source.getSchemaUri(), source.getBeginLifespanVersionProperty());
+        apx.selectElementNS(feature.getSchemaUri(), feature.getBeginLifespanVersionProperty());
         Instant beginLifespanVersion = null;
         if (apx.iterate()) {
         	int pos = nav.getText();

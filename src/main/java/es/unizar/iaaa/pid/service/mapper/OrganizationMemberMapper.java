@@ -1,9 +1,14 @@
 package es.unizar.iaaa.pid.service.mapper;
 
-import es.unizar.iaaa.pid.domain.*;
-import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
+import java.util.Map;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import com.google.common.collect.ImmutableMap;
+
+import es.unizar.iaaa.pid.domain.OrganizationMember;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 
 /**
  * Mapper for the entity OrganizationMember and its DTO OrganizationMemberDTO.
@@ -17,8 +22,8 @@ public interface OrganizationMemberMapper extends EntityMapper <OrganizationMemb
     @Mapping(source = "organization.name", target = "organizationName")
     OrganizationMemberDTO toDto(OrganizationMember organizationMember);
 
-    @Mapping(source = "userId", target = "user")
-    @Mapping(source = "organizationId", target = "organization")
+    @Mapping(source = "userId", target = "user.id")
+    @Mapping(source = "organizationId", target = "organization.id")
     OrganizationMember toEntity(OrganizationMemberDTO organizationMemberDTO);
     default OrganizationMember fromId(Long id) {
         if (id == null) {
@@ -27,5 +32,15 @@ public interface OrganizationMemberMapper extends EntityMapper <OrganizationMemb
         OrganizationMember organizationMember = new OrganizationMember();
         organizationMember.setId(id);
         return organizationMember;
+    }
+    
+    Map<String, String> conversions = ImmutableMap.<String, String>builder().
+    		put("userId", "user.id").
+            put("organizationId", "organization.id").
+            build();
+    
+    @Override
+    default Map<String, String> getConversions() {
+        return conversions;
     }
 }

@@ -150,5 +150,16 @@ public class ChangeServiceImpl implements ChangeDTOService {
 		log.debug("Request to delete all Task associate with taskId : {}",taskId);
 		changeRepository.deleteAllByTaskId(taskId);
 	}
+	
+	/**
+     * Delete all change associated with the Feature
+     * 
+     * @param featureId the id of the associate Feature
+     */
+	@Override
+    public void deleteAllByFeatureId(Long featureId){
+		log.debug("Request to delete all Task associate with featureId: {}",featureId);
+		changeRepository.deleteAllByFeatureId(featureId);
+	}
 
 }

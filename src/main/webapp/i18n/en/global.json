@@ -15,6 +15,7 @@
                 "persistentIdentifier": "Persistent Identifier",
                 "organization": "Organization",
                 "organizationMember": "Organization Member",
+                "feature": "Feature",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
@@ -139,6 +140,9 @@
         "notCapacityToAddOrganizationMember": "It is necessary to be Admin in the Organization to add an User on it",
         "notCapacityToModifyOrganization": "It is necessary to be Admin in the Oganization to modify its details",
         "notCapacityToDeleteOrganization": "It is necessary to be Admin in the Organization to delete it",
+        "notCapacityToAddFeature": "It is necessary to be Admin or Editor in the Organization of its Namespace to add a Feature",
+        "notCapacityToModifyFeature": "It is necessary to be Admin or Editor in the Organization of its Namespace to modify a Feature",
+        "notCapacityToDeleteFeature": "It is necessary to be Admin or Editor in the Organization of its Namespace to delete a Feature",
         "notAuthenticated": "You must be authenticated to do this action"
     },
     "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad Zaragoza</a>"

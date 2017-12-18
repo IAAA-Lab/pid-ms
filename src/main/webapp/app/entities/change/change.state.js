@@ -110,7 +110,7 @@
                             return {
                                 changeTimestamp: null,
                                 action: null,
-                                feature: null,
+                                featureId: null,
                                 namespace: null,
                                 localId: null,
                                 versionId: null,
