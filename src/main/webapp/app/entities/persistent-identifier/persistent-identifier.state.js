@@ -111,7 +111,7 @@
                         entity: function () {
                             return {
                                 externalUrn: null,
-                                feature: null,
+                                featureId: null,
                                 resolverProxyMode: false,
                                 namespace: null,
                                 localId: null,

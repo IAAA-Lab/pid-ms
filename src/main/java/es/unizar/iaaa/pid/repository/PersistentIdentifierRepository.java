@@ -57,4 +57,8 @@ public interface PersistentIdentifierRepository extends JpaRepository<Persistent
     @Modifying
     @Query("delete from PersistentIdentifier p where p.identifier.namespace in (select ns.namespace from Namespace ns where ns.id = ?1)")
     void deleteAllByNamespaceId(Long namespaceId);
+    
+    @Modifying
+    @Query("delete from PersistentIdentifier p where p.feature.id = ?1")
+    void deleteAllByFeatureId(Long featureId);
 }

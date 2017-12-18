@@ -23,7 +23,7 @@ public class PersistentIdentifierDTO implements Serializable {
     private String externalUrn;
 
     @NotNull
-    private Feature feature;
+    private Long featureId;
 
     private Boolean resolverProxyMode;
 
@@ -75,15 +75,15 @@ public class PersistentIdentifierDTO implements Serializable {
         this.externalUrn = externalUrn;
     }
 
-    public Feature getFeature() {
-        return feature;
-    }
+    public Long getFeatureId() {
+		return featureId;
+	}
 
-    public void setFeature(Feature feature) {
-        this.feature = feature;
-    }
+	public void setFeatureId(Long featureId) {
+		this.featureId = featureId;
+	}
 
-    public Boolean isResolverProxyMode() {
+	public Boolean isResolverProxyMode() {
         return resolverProxyMode;
     }
 
@@ -237,7 +237,7 @@ public class PersistentIdentifierDTO implements Serializable {
         return "PersistentIdentifierDTO{" +
             "id=" + getId() +
             ", externalUrn='" + getExternalUrn() + "'" +
-            ", feature='" + getFeature() + "'" +
+            ", feature='" + getFeatureId() + "'" +
             ", resolverProxyMode='" + isResolverProxyMode() + "'" +
             ", namespace='" + getNamespace() + "'" +
             ", localId='" + getLocalId() + "'" +

@@ -63,7 +63,7 @@ class HarvestTask extends AbstractTaskRunner {
             Queue<Integer> timeOutQueue = new LinkedList<Integer>();
             timeOutQueue.add(0);
 	
-	        if(feature.thereIsHitsRequest()){
+	        if(feature.getHitsRequest()){
 	        	 while (!queue.isEmpty() && task.getNumErrors() < properties.getHarvester().getMAX_NUM_ERRORS()) {
 	                 sleepIntervalBetweenRequests();
 	

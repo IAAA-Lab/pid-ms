@@ -77,5 +77,6 @@ public interface TaskDTOService {
      * 
      * @param idNamespace id of the Namespace to be deleted
      */
-    void deleteAllByNamespaceId(Long idNamespace);
+    void deleteAllByNamespaceId(Long namespaceId);
+    
 }

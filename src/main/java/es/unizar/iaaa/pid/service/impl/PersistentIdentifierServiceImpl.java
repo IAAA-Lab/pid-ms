@@ -141,4 +141,15 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
     	log.debug("Request to delete All PersistentIdentifiers associated with the namespace: {}", namespaceId);
     	persistentIdentifierRepository.deleteAllByNamespaceId(namespaceId);
     }
+    
+    /**
+     * Delete all persistentIdentifier associated with the feature
+     * 
+     * @param featureId the id of the associate feature
+     */
+    @Override
+    public void deleteAllByFeatureId(Long featureId){
+    	log.debug("Request to delte All PersistentIdentifiers associated with the feature: {}", featureId);
+    	persistentIdentifierRepository.deleteAllByFeatureId(featureId);
+    }
 }

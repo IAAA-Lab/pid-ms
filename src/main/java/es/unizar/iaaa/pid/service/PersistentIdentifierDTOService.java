@@ -80,4 +80,11 @@ public interface PersistentIdentifierDTOService {
      * @param namespaceId the id of the associate namespace
      */
     void deleteAllByNamespaceId(Long namespaceId);
+    
+    /**
+     * Delete all persistentIdentifier associated with the feature
+     * 
+     * @param featureId the id of the associate feature
+     */
+    void deleteAllByFeatureId(Long featureId);
 }

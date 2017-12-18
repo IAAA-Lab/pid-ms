@@ -17,7 +17,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.apache.http.conn.util.PublicSuffixListParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,8 +34,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.unizar.iaaa.pid.PidmsApp;
-import es.unizar.iaaa.pid.domain.BoundingBox;
-import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.domain.Organization;
 import es.unizar.iaaa.pid.domain.OrganizationMember;
@@ -115,68 +112,11 @@ public class NamespaceResourceIntTest {
     private static final String DEFAULT_ENDPOINT_LOCATION = "AAAAAAAAAA";
     private static final String UPDATED_ENDPOINT_LOCATION = "BBBBBBBBBB";
 
-    private static final String DEFAULT_SRS_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_SRS_NAME = "BBBBBBBBBB";
-
-    private static final String DEFAULT_SCHEMA_URI = "AAAAAAAAAA";
-    private static final String UPDATED_SCHEMA_URI = "BBBBBBBBBB";
-
-    private static final String DEFAULT_SCHEMA_URI_GML = "AAAAAAAAAA";
-    private static final String UPDATED_SCHEMA_URI_GML = "BBBBBBBBBB";
-
-    private static final String DEFAULT_SCHEMA_URI_BASE = "AAAAAAAAAA";
-    private static final String UPDATED_SCHEMA_URI_BASE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_SCHEMA_PREFIX = "AAAAAAAAAA";
-    private static final String UPDATED_SCHEMA_PREFIX = "BBBBBBBBBB";
-
-    private static final String DEFAULT_FEATURE_TYPE = "AAAAAAAAAA";
-    private static final String UPDATED_FEATURE_TYPE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_GEOMETRY_PROPERTY = "AAAAAAAAAA";
-    private static final String UPDATED_GEOMETRY_PROPERTY = "BBBBBBBBBB";
-
-    private static final String DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY = "AAAAAAAAAA";
-    private static final String UPDATED_BEGIN_LIFESPAN_VERSION_PROPERTY = "BBBBBBBBBB";
-
-    private static final Integer DEFAULT_FEATURES_THRESHOLD = 1;
-    private static final Integer UPDATED_FEATURES_THRESHOLD = 2;
-
     private static final Boolean DEFAULT_RESOLVER_PROXY_MODE = false;
     private static final Boolean UPDATED_RESOLVER_PROXY_MODE = true;
 
-    private static final Boolean DEFAULT_HITS_REQUEST = false;
-    private static final Boolean UPDATED_HITS_REQUEST = true;
-
-    private static final Integer DEFAULT_FACTOR_K = 1;
-    private static final Integer UPDATED_FACTOR_K = 2;
-
-    private static final String DEFAULT_XPATH = "AAAAAAAAAA";
-    private static final String UPDATED_XPATH = "BBBBBBBBBB";
-
-    private static final String DEFAULT_NAME_ITEM = "AAAAAAAAAA";
-    private static final String UPDATED_NAME_ITEM = "BBBBBBBBBB";
-
     private static final Integer DEFAULT_MAX_NUM_REQUEST = 0;
     private static final Integer UPDATED_MAX_NUM_REQUEST = 1;
-
-    private static final Double DEFAULT_MIN_X = 1D;
-    private static final Double UPDATED_MIN_X = 2D;
-
-    private static final Double DEFAULT_MIN_Y = 1D;
-    private static final Double UPDATED_MIN_Y = 2D;
-
-    private static final Double DEFAULT_MAX_X = 1D;
-    private static final Double UPDATED_MAX_X = 2D;
-
-    private static final Double DEFAULT_MAX_Y = 1D;
-    private static final Double UPDATED_MAX_Y = 2D;
-
-    private static final BoundingBox DEFAULT_BOUNDING_BOX = new BoundingBox().
-        maxX(DEFAULT_MAX_X).maxY(DEFAULT_MAX_Y).minY(DEFAULT_MIN_Y).minX(DEFAULT_MIN_X);
-
-    private static final BoundingBox UPDATED_BOUNDING_BOX = new BoundingBox().
-        maxX(UPDATED_MAX_X).maxY(UPDATED_MAX_Y).minY(UPDATED_MIN_Y).minX(UPDATED_MIN_X);
 
     private static final Integer FIRST_VERSION = 0;
     private static final Integer NEXT_VERSION = 1;
@@ -239,9 +179,6 @@ public class NamespaceResourceIntTest {
     
     private OrganizationMember organizationMemberAdmin;
     
-    private OrganizationMember organizationMemberEditor;
-    
-    private OrganizationMember organizationMemberMember;
 
     @Before
     public void setup() {
@@ -267,33 +204,14 @@ public class NamespaceResourceIntTest {
             .maxNumRequest(DEFAULT_MAX_NUM_REQUEST)
             .endpointLocation(DEFAULT_ENDPOINT_LOCATION);
             
-        
-        Feature feature = new Feature()
-        		.srsName(DEFAULT_SRS_NAME)
-                .schemaUri(DEFAULT_SCHEMA_URI)
-                .schemaUriGML(DEFAULT_SCHEMA_URI_GML)
-                .schemaUriBase(DEFAULT_SCHEMA_URI_BASE)
-                .schemaPrefix(DEFAULT_SCHEMA_PREFIX)
-                .featureType(DEFAULT_FEATURE_TYPE)
-                .geometryProperty(DEFAULT_GEOMETRY_PROPERTY)
-                .beginLifespanVersionProperty(DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY)
-                .featuresThreshold(DEFAULT_FEATURES_THRESHOLD)
-                .hitsRequest(DEFAULT_HITS_REQUEST)
-                .factorK(DEFAULT_FACTOR_K)
-                .xpath(DEFAULT_XPATH)
-                .nameItem(DEFAULT_NAME_ITEM)
-                .boundingBox(DEFAULT_BOUNDING_BOX)
-                .source(source);
-        		
-
         Registration registration = new Registration()
-            .processStatus(DEFAULT_PROCESS_STATUS)
-            .itemStatus(DEFAULT_ITEM_STATUS)
-            .lastChangeDate(DEFAULT_LAST_CHANGE_DATE)
-            .registrationDate(DEFAULT_REGISTRATION_DATE)
-            .lastRevisionDate(DEFAULT_LAST_REVISION_DATE)
-            .nextRenewalDate(DEFAULT_NEXT_RENEWAL_DATE)
-            .annullationDate(DEFAULT_ANNULLATION_DATE);
+                .processStatus(DEFAULT_PROCESS_STATUS)
+                .itemStatus(DEFAULT_ITEM_STATUS)
+                .lastChangeDate(DEFAULT_LAST_CHANGE_DATE)
+                .registrationDate(DEFAULT_REGISTRATION_DATE)
+                .lastRevisionDate(DEFAULT_LAST_REVISION_DATE)
+                .nextRenewalDate(DEFAULT_NEXT_RENEWAL_DATE)
+                .annullationDate(DEFAULT_ANNULLATION_DATE);
 
         Namespace namespace = new Namespace()
             .namespace(DEFAULT_NAMESPACE)
@@ -303,6 +221,23 @@ public class NamespaceResourceIntTest {
             .namespaceStatus(DEFAULT_NAMESPACE_STATUS)
             .registration(registration)
             .source(source);
+        
+//        Feature feature = new Feature()
+//        		.srsName(DEFAULT_SRS_NAME)
+//                .schemaUri(DEFAULT_SCHEMA_URI)
+//                .schemaUriGML(DEFAULT_SCHEMA_URI_GML)
+//                .schemaUriBase(DEFAULT_SCHEMA_URI_BASE)
+//                .schemaPrefix(DEFAULT_SCHEMA_PREFIX)
+//                .featureType(DEFAULT_FEATURE_TYPE)
+//                .geometryProperty(DEFAULT_GEOMETRY_PROPERTY)
+//                .beginLifespanVersionProperty(DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY)
+//                .featuresThreshold(DEFAULT_FEATURES_THRESHOLD)
+//                .hitsRequest(DEFAULT_HITS_REQUEST)
+//                .factorK(DEFAULT_FACTOR_K)
+//                .xpath(DEFAULT_XPATH)
+//                .nameItem(DEFAULT_NAME_ITEM)
+//                .boundingBox(DEFAULT_BOUNDING_BOX)
+//                .namespace(namespace);
         
         return namespace;
     }
@@ -318,9 +253,6 @@ public class NamespaceResourceIntTest {
         //create organizationMembers
         organizationMemberAdmin = new OrganizationMember().user(user).organization(organization).capacity(Capacity.ADMIN);
         
-        organizationMemberEditor = new OrganizationMember().user(user).organization(organization).capacity(Capacity.EDITOR);
-        
-        organizationMemberMember = new OrganizationMember().user(user).organization(organization).capacity(Capacity.MEMBER);
     }
     
     private void populateDatabase() {
@@ -367,25 +299,8 @@ public class NamespaceResourceIntTest {
         assertThat(testNamespace.getSource().getMethodType()).isEqualTo(DEFAULT_METHOD_TYPE);
         assertThat(testNamespace.getSource().getSourceType()).isEqualTo(DEFAULT_SOURCE_TYPE);
         assertThat(testNamespace.getSource().getEndpointLocation()).isEqualTo(DEFAULT_ENDPOINT_LOCATION);
-        assertThat(testNamespace.getSource().getSrsName()).isEqualTo(DEFAULT_SRS_NAME);
-        assertThat(testNamespace.getSource().getSchemaUri()).isEqualTo(DEFAULT_SCHEMA_URI);
-        assertThat(testNamespace.getSource().getSchemaUriGML()).isEqualTo(DEFAULT_SCHEMA_URI_GML);
-        assertThat(testNamespace.getSource().getSchemaUriBase()).isEqualTo(DEFAULT_SCHEMA_URI_BASE);
-        assertThat(testNamespace.getSource().getSchemaPrefix()).isEqualTo(DEFAULT_SCHEMA_PREFIX);
-        assertThat(testNamespace.getSource().getFeatureType()).isEqualTo(DEFAULT_FEATURE_TYPE);
-        assertThat(testNamespace.getSource().getGeometryProperty()).isEqualTo(DEFAULT_GEOMETRY_PROPERTY);
-        assertThat(testNamespace.getSource().getBeginLifespanVersionProperty()).isEqualTo(DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY);
-        assertThat(testNamespace.getSource().getFeaturesThreshold()).isEqualTo(DEFAULT_FEATURES_THRESHOLD);
         assertThat(testNamespace.getSource().isResolverProxyMode()).isEqualTo(DEFAULT_RESOLVER_PROXY_MODE);
-        assertThat(testNamespace.getSource().isHitsRequest()).isEqualTo(DEFAULT_HITS_REQUEST);
-        assertThat(testNamespace.getSource().getFactorK()).isEqualTo(DEFAULT_FACTOR_K);
-        assertThat(testNamespace.getSource().getXpath()).isEqualTo(DEFAULT_XPATH);
-        assertThat(testNamespace.getSource().getNameItem()).isEqualTo(DEFAULT_NAME_ITEM);
         assertThat(testNamespace.getSource().getMaxNumRequest()).isEqualTo(DEFAULT_MAX_NUM_REQUEST);
-        assertThat(testNamespace.getSource().getBoundingBox().getMinX()).isEqualTo(DEFAULT_MIN_X);
-        assertThat(testNamespace.getSource().getBoundingBox().getMinY()).isEqualTo(DEFAULT_MIN_Y);
-        assertThat(testNamespace.getSource().getBoundingBox().getMaxX()).isEqualTo(DEFAULT_MAX_X);
-        assertThat(testNamespace.getSource().getBoundingBox().getMaxY()).isEqualTo(DEFAULT_MAX_Y);
         assertThat(testNamespace.getVersion()).isEqualTo(FIRST_VERSION);
     }
 
@@ -510,25 +425,8 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.[*].methodType").value(hasItem(DEFAULT_METHOD_TYPE.toString())))
             .andExpect(jsonPath("$.[*].sourceType").value(hasItem(DEFAULT_SOURCE_TYPE.toString())))
             .andExpect(jsonPath("$.[*].endpointLocation").value(hasItem(DEFAULT_ENDPOINT_LOCATION.toString())))
-            .andExpect(jsonPath("$.[*].srsName").value(hasItem(DEFAULT_SRS_NAME.toString())))
-            .andExpect(jsonPath("$.[*].schemaUri").value(hasItem(DEFAULT_SCHEMA_URI.toString())))
-            .andExpect(jsonPath("$.[*].schemaUriGML").value(hasItem(DEFAULT_SCHEMA_URI_GML.toString())))
-            .andExpect(jsonPath("$.[*].schemaUriBase").value(hasItem(DEFAULT_SCHEMA_URI_BASE.toString())))
-            .andExpect(jsonPath("$.[*].schemaPrefix").value(hasItem(DEFAULT_SCHEMA_PREFIX.toString())))
-            .andExpect(jsonPath("$.[*].featureType").value(hasItem(DEFAULT_FEATURE_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].geometryProperty").value(hasItem(DEFAULT_GEOMETRY_PROPERTY.toString())))
-            .andExpect(jsonPath("$.[*].beginLifespanVersionProperty").value(hasItem(DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY.toString())))
-            .andExpect(jsonPath("$.[*].featuresThreshold").value(hasItem(DEFAULT_FEATURES_THRESHOLD)))
             .andExpect(jsonPath("$.[*].resolverProxyMode").value(hasItem(DEFAULT_RESOLVER_PROXY_MODE.booleanValue())))
-            .andExpect(jsonPath("$.[*].hitsRequest").value(hasItem(DEFAULT_HITS_REQUEST.booleanValue())))
-            .andExpect(jsonPath("$.[*].factorK").value(hasItem(DEFAULT_FACTOR_K)))
-            .andExpect(jsonPath("$.[*].xpath").value(hasItem(DEFAULT_XPATH.toString())))
-            .andExpect(jsonPath("$.[*].nameItem").value(hasItem(DEFAULT_NAME_ITEM.toString())))
             .andExpect(jsonPath("$.[*].maxNumRequest").value(hasItem(DEFAULT_MAX_NUM_REQUEST)))
-            .andExpect(jsonPath("$.[*].minX").value(hasItem(DEFAULT_MIN_X.doubleValue())))
-            .andExpect(jsonPath("$.[*].minY").value(hasItem(DEFAULT_MIN_Y.doubleValue())))
-            .andExpect(jsonPath("$.[*].maxX").value(hasItem(DEFAULT_MAX_X.doubleValue())))
-            .andExpect(jsonPath("$.[*].maxY").value(hasItem(DEFAULT_MAX_Y.doubleValue())))
             .andExpect(jsonPath("$.[*].version").value(hasItem(FIRST_VERSION)));
     }
 
@@ -558,25 +456,8 @@ public class NamespaceResourceIntTest {
             .andExpect(jsonPath("$.methodType").value(DEFAULT_METHOD_TYPE.toString()))
             .andExpect(jsonPath("$.sourceType").value(DEFAULT_SOURCE_TYPE.toString()))
             .andExpect(jsonPath("$.endpointLocation").value(DEFAULT_ENDPOINT_LOCATION.toString()))
-            .andExpect(jsonPath("$.srsName").value(DEFAULT_SRS_NAME.toString()))
-            .andExpect(jsonPath("$.schemaUri").value(DEFAULT_SCHEMA_URI.toString()))
-            .andExpect(jsonPath("$.schemaUriGML").value(DEFAULT_SCHEMA_URI_GML.toString()))
-            .andExpect(jsonPath("$.schemaUriBase").value(DEFAULT_SCHEMA_URI_BASE.toString()))
-            .andExpect(jsonPath("$.schemaPrefix").value(DEFAULT_SCHEMA_PREFIX.toString()))
-            .andExpect(jsonPath("$.featureType").value(DEFAULT_FEATURE_TYPE.toString()))
-            .andExpect(jsonPath("$.geometryProperty").value(DEFAULT_GEOMETRY_PROPERTY.toString()))
-            .andExpect(jsonPath("$.beginLifespanVersionProperty").value(DEFAULT_BEGIN_LIFESPAN_VERSION_PROPERTY.toString()))
-            .andExpect(jsonPath("$.featuresThreshold").value(DEFAULT_FEATURES_THRESHOLD))
             .andExpect(jsonPath("$.resolverProxyMode").value(DEFAULT_RESOLVER_PROXY_MODE.booleanValue()))
-            .andExpect(jsonPath("$.hitsRequest").value(DEFAULT_HITS_REQUEST.booleanValue()))
-            .andExpect(jsonPath("$.factorK").value(DEFAULT_FACTOR_K))
-            .andExpect(jsonPath("$.xpath").value(DEFAULT_XPATH.toString()))
-            .andExpect(jsonPath("$.nameItem").value(DEFAULT_NAME_ITEM.toString()))
             .andExpect(jsonPath("$.maxNumRequest").value(DEFAULT_MAX_NUM_REQUEST))
-            .andExpect(jsonPath("$.minX").value(DEFAULT_MIN_X.doubleValue()))
-            .andExpect(jsonPath("$.minY").value(DEFAULT_MIN_Y.doubleValue()))
-            .andExpect(jsonPath("$.maxX").value(DEFAULT_MAX_X.doubleValue()))
-            .andExpect(jsonPath("$.maxY").value(DEFAULT_MAX_Y.doubleValue()))
             .andExpect(jsonPath("$.version").value(FIRST_VERSION));
     }
 
@@ -612,22 +493,8 @@ public class NamespaceResourceIntTest {
             .methodType(UPDATED_METHOD_TYPE)
             .sourceType(UPDATED_SOURCE_TYPE)
             .endpointLocation(UPDATED_ENDPOINT_LOCATION)
-            .srsName(UPDATED_SRS_NAME)
-            .schemaUri(UPDATED_SCHEMA_URI)
-            .schemaUriGML(UPDATED_SCHEMA_URI_GML)
-            .schemaUriBase(UPDATED_SCHEMA_URI_BASE)
-            .schemaPrefix(UPDATED_SCHEMA_PREFIX)
-            .featureType(UPDATED_FEATURE_TYPE)
-            .geometryProperty(UPDATED_GEOMETRY_PROPERTY)
-            .beginLifespanVersionProperty(UPDATED_BEGIN_LIFESPAN_VERSION_PROPERTY)
-            .featuresThreshold(UPDATED_FEATURES_THRESHOLD)
             .resolverProxyMode(UPDATED_RESOLVER_PROXY_MODE)
-            .hitsRequest(UPDATED_HITS_REQUEST)
-            .factorK(UPDATED_FACTOR_K)
-            .xpath(UPDATED_XPATH)
-            .nameItem(UPDATED_NAME_ITEM)
-            .maxNumRequest(UPDATED_MAX_NUM_REQUEST)
-            .boundingBox(UPDATED_BOUNDING_BOX);
+            .maxNumRequest(UPDATED_MAX_NUM_REQUEST);
 
         updatedNamespace.getRegistration()
             .processStatus(UPDATED_PROCESS_STATUS)
@@ -664,25 +531,8 @@ public class NamespaceResourceIntTest {
         assertThat(testNamespace.getSource().getMethodType()).isEqualTo(UPDATED_METHOD_TYPE);
         assertThat(testNamespace.getSource().getSourceType()).isEqualTo(UPDATED_SOURCE_TYPE);
         assertThat(testNamespace.getSource().getEndpointLocation()).isEqualTo(UPDATED_ENDPOINT_LOCATION);
-        assertThat(testNamespace.getSource().getSrsName()).isEqualTo(UPDATED_SRS_NAME);
-        assertThat(testNamespace.getSource().getSchemaUri()).isEqualTo(UPDATED_SCHEMA_URI);
-        assertThat(testNamespace.getSource().getSchemaUriGML()).isEqualTo(UPDATED_SCHEMA_URI_GML);
-        assertThat(testNamespace.getSource().getSchemaUriBase()).isEqualTo(UPDATED_SCHEMA_URI_BASE);
-        assertThat(testNamespace.getSource().getSchemaPrefix()).isEqualTo(UPDATED_SCHEMA_PREFIX);
-        assertThat(testNamespace.getSource().getFeatureType()).isEqualTo(UPDATED_FEATURE_TYPE);
-        assertThat(testNamespace.getSource().getGeometryProperty()).isEqualTo(UPDATED_GEOMETRY_PROPERTY);
-        assertThat(testNamespace.getSource().getBeginLifespanVersionProperty()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION_PROPERTY);
-        assertThat(testNamespace.getSource().getFeaturesThreshold()).isEqualTo(UPDATED_FEATURES_THRESHOLD);
         assertThat(testNamespace.getSource().isResolverProxyMode()).isEqualTo(UPDATED_RESOLVER_PROXY_MODE);
-        assertThat(testNamespace.getSource().isHitsRequest()).isEqualTo(UPDATED_HITS_REQUEST);
-        assertThat(testNamespace.getSource().getFactorK()).isEqualTo(UPDATED_FACTOR_K);
-        assertThat(testNamespace.getSource().getXpath()).isEqualTo(UPDATED_XPATH);
-        assertThat(testNamespace.getSource().getNameItem()).isEqualTo(UPDATED_NAME_ITEM);
         assertThat(testNamespace.getSource().getMaxNumRequest()).isEqualTo(UPDATED_MAX_NUM_REQUEST);
-        assertThat(testNamespace.getSource().getBoundingBox().getMinX()).isEqualTo(UPDATED_MIN_X);
-        assertThat(testNamespace.getSource().getBoundingBox().getMinY()).isEqualTo(UPDATED_MIN_Y);
-        assertThat(testNamespace.getSource().getBoundingBox().getMaxX()).isEqualTo(UPDATED_MAX_X);
-        assertThat(testNamespace.getSource().getBoundingBox().getMaxY()).isEqualTo(UPDATED_MAX_Y);
         assertThat(testNamespace.getVersion()).isEqualTo(NEXT_VERSION);
     }
 

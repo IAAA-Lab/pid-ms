@@ -31,7 +31,8 @@ public interface PersistentIdentifierMapper extends EntityMapper <PersistentIden
         @Mapping(source = "registration.registrationDate", target = "registrationDate"),
         @Mapping(source = "registration.lastRevisionDate", target = "lastRevisionDate"),
         @Mapping(source = "registration.nextRenewalDate", target = "nextRenewalDate"),
-        @Mapping(source = "registration.annullationDate", target = "annullationDate")
+        @Mapping(source = "registration.annullationDate", target = "annullationDate"),
+        @Mapping(source = "feature.id", target = "featureId")
     })
     PersistentIdentifierDTO toDto(PersistentIdentifier persistentIdentifier);
 
@@ -50,7 +51,8 @@ public interface PersistentIdentifierMapper extends EntityMapper <PersistentIden
         @Mapping(source = "registrationDate", target = "registration.registrationDate"),
         @Mapping(source = "lastRevisionDate", target = "registration.lastRevisionDate"),
         @Mapping(source = "nextRenewalDate", target = "registration.nextRenewalDate"),
-        @Mapping(source = "annullationDate", target = "registration.annullationDate")
+        @Mapping(source = "annullationDate", target = "registration.annullationDate"),
+        @Mapping(source = "featureId", target = "feature.id"),
     })
     PersistentIdentifier toEntity(PersistentIdentifierDTO persistentIdentifierDTO);
 
@@ -79,6 +81,7 @@ public interface PersistentIdentifierMapper extends EntityMapper <PersistentIden
         put("lastRevisionDate", "registration.lastRevisionDate").
         put("nextRenewalDate", "registration.nextRenewalDate").
         put("annullationDate", "registration.annullationDate").
+        put("featureId", "feature.id").
         build();
 
     @Override

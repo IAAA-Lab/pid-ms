@@ -1,5 +1,6 @@
 package es.unizar.iaaa.pid.service.impl;
 
+import es.unizar.iaaa.pid.service.FeatureDTOService;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
 import es.unizar.iaaa.pid.service.TaskDTOService;
@@ -35,13 +36,17 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
     private final PersistentIdentifierDTOService persistentIdentifierDTOService;
 
     private final NamespaceMapper namespaceMapper;
+    
+    private final FeatureDTOService featureDTOService;
 
     public NamespaceServiceImpl(NamespaceRepository namespaceRepository, NamespaceMapper namespaceMapper,
-    		TaskDTOService taskDTOService, PersistentIdentifierDTOService persistentIdentifierDTOService) {
+    		TaskDTOService taskDTOService, PersistentIdentifierDTOService persistentIdentifierDTOService,
+    		FeatureDTOService featureDTOService) {
         this.namespaceRepository = namespaceRepository;
         this.namespaceMapper = namespaceMapper;
         this.taskDTOService = taskDTOService;
         this.persistentIdentifierDTOService = persistentIdentifierDTOService;
+        this.featureDTOService = featureDTOService;
     }
 
     /**
@@ -128,6 +133,10 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
         
         //delete all persistentIdentifiers associated to the Namespace
         persistentIdentifierDTOService.deleteAllByNamespaceId(id);
+        
+        //borro todas features asociadas
+        featureDTOService.deleteAllByNamespaceId(id);
+        
         namespaceRepository.delete(id);
     }
     

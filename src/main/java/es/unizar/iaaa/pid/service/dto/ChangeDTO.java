@@ -22,7 +22,7 @@ public class ChangeDTO implements Serializable {
 
     private ChangeAction action;
 
-    private Feature feature;
+    private Long featureId;
 
     @NotNull
     private String namespace;
@@ -68,15 +68,15 @@ public class ChangeDTO implements Serializable {
         this.action = action;
     }
 
-    public Feature getFeature() {
-        return feature;
-    }
+    public Long getFeatureId() {
+		return featureId;
+	}
 
-    public void setFeature(Feature feature) {
-        this.feature = feature;
-    }
+	public void setFeatureId(Long featureId) {
+		this.featureId = featureId;
+	}
 
-    public String getNamespace() {
+	public String getNamespace() {
         return namespace;
     }
 
@@ -175,7 +175,7 @@ public class ChangeDTO implements Serializable {
             "id=" + getId() +
             ", changeTimestamp='" + getChangeTimestamp() + "'" +
             ", action='" + getAction() + "'" +
-            ", feature='" + getFeature() + "'" +
+            ", feature='" + getFeatureId() + "'" +
             ", namespace='" + getNamespace() + "'" +
             ", localId='" + getLocalId() + "'" +
             ", versionId='" + getVersionId() + "'" +

@@ -9,57 +9,53 @@
 
     function stateConfig($stateProvider) {
         $stateProvider
-        .state('change', {
+        .state('feature', {
             parent: 'entity',
-            url: '/change',
+            url: '/feature',
             data: {
                 authorities: [],
-                pageTitle: 'pidmsApp.change.home.title'
+                pageTitle: 'pidmsApp.feature.home.title'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/change/changes.html',
-                    controller: 'ChangeController',
+                    templateUrl: 'app/entities/feature/features.html',
+                    controller: 'FeatureController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('change');
-                    $translatePartialLoader.addPart('changeAction');
-                    $translatePartialLoader.addPart('resourceType');
+                    $translatePartialLoader.addPart('feature');
                     $translatePartialLoader.addPart('global');
                     return $translate.refresh();
                 }]
             }
         })
-        .state('change-detail', {
-            parent: 'change',
-            url: '/change/{id}',
+        .state('feature-detail', {
+            parent: 'feature',
+            url: '/{id}',
             data: {
-                authorities: ['ROLE_USER'],
-                pageTitle: 'pidmsApp.change.detail.title'
+                authorities: [],
+                pageTitle: 'pidmsApp.feature.detail.title'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/change/change-detail.html',
-                    controller: 'ChangeDetailController',
+                    templateUrl: 'app/entities/feature/feature-detail.html',
+                    controller: 'FeatureDetailController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('change');
-                    $translatePartialLoader.addPart('changeAction');
-                    $translatePartialLoader.addPart('resourceType');
+                    $translatePartialLoader.addPart('feature');
                     return $translate.refresh();
                 }],
-                entity: ['$stateParams', 'Change', function($stateParams, Change) {
-                    return Change.get({id : $stateParams.id}).$promise;
+                entity: ['$stateParams', 'Feature', function($stateParams, Feature) {
+                    return Feature.get({id : $stateParams.id}).$promise;
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
-                        name: $state.current.name || 'change',
+                        name: $state.current.name || 'feature',
                         params: $state.params,
                         url: $state.href($state.current.name, $state.params)
                     };
@@ -67,22 +63,22 @@
                 }]
             }
         })
-        .state('change-detail.edit', {
-            parent: 'change-detail',
+        .state('feature-detail.edit', {
+            parent: 'feature-detail',
             url: '/detail/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/change/change-dialog.html',
-                    controller: 'ChangeDialogController',
+                    templateUrl: 'app/entities/feature/feature-dialog.html',
+                    controller: 'FeatureDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['Change', function(Change) {
-                            return Change.get({id : $stateParams.id}).$promise;
+                        entity: ['Feature', function(Feature) {
+                            return Feature.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
@@ -92,88 +88,95 @@
                 });
             }]
         })
-        .state('change.new', {
-            parent: 'change',
+        .state('feature.new', {
+            parent: 'feature',
             url: '',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/change/change-dialog.html',
-                    controller: 'ChangeDialogController',
+                    templateUrl: 'app/entities/feature/feature-dialog.html',
+                    controller: 'FeatureDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
                         entity: function () {
                             return {
-                                changeTimestamp: null,
-                                action: null,
-                                featureId: null,
                                 namespace: null,
-                                localId: null,
-                                versionId: null,
-                                beginLifespanVersion: null,
-                                endLifespanVersion: null,
-                                alternateId: null,
-                                resourceType: null,
-                                locator: null,
+                                srsName: null,
+                                schemaUri: null,
+                                schemaUriGML: null,
+                                schemaUriBase: null,
+                                schemaPrefix: null,
+                                featureType: null,
+                                geometryProperty: null,
+                                beginLifespanVersionProperty: null,
+                                featuresThreshold: null,
+                                hitsRequest: false,
+                                factorK: null,
+                                xpath: null,
+                                nameItem: null,
+                                minX: null,
+                                minY: null,
+                                maxX: null,
+                                maxY: null,
                                 id: null
                             };
                         }
                     }
                 }).result.then(function() {
-                    $state.go('change', null, { reload: 'change' });
+                    $state.go('feature', null, { reload: 'feature' });
                 }, function() {
-                    $state.go('change');
+                    $state.go('feature');
                 });
             }]
         })
-        .state('change.edit', {
-            parent: 'change',
+        .state('feature.edit', {
+            parent: 'feature',
             url: '/{id}/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/change/change-dialog.html',
-                    controller: 'ChangeDialogController',
+                    templateUrl: 'app/entities/feature/feature-dialog.html',
+                    controller: 'FeatureDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['Change', function(Change) {
-                            return Change.get({id : $stateParams.id}).$promise;
+                        entity: ['Feature', function(Feature) {
+                            return Feature.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('change', null, { reload: 'change' });
+                    $state.go('feature', null, { reload: 'feature' });
                 }, function() {
                     $state.go('^');
                 });
             }]
         })
-        .state('change.delete', {
-            parent: 'change',
+        .state('feature.delete', {
+            parent: 'feature',
             url: '/{id}/delete',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/change/change-delete-dialog.html',
-                    controller: 'ChangeDeleteController',
+                    templateUrl: 'app/entities/feature/feature-delete-dialog.html',
+                    controller: 'FeatureDeleteController',
                     controllerAs: 'vm',
                     size: 'md',
                     resolve: {
-                        entity: ['Change', function(Change) {
-                            return Change.get({id : $stateParams.id}).$promise;
+                        entity: ['Feature', function(Feature) {
+                            return Feature.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('change', null, { reload: 'change' });
+                    $state.go('feature', null, { reload: 'feature' });
                 }, function() {
                     $state.go('^');
                 });

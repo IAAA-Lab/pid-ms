@@ -199,7 +199,7 @@ public class Feature {
 		return this;
 	}
 
-	public Boolean thereIsHitsRequest() {
+	public Boolean getHitsRequest() {
 		return hitsRequest;
 	}
 
@@ -207,7 +207,7 @@ public class Feature {
 		this.hitsRequest = hitsRequest;
 	}
 	
-	public Feature hitsRequest(Boolean hitsRequest) {
+	public Feature hitsRequest(boolean hitsRequest){
 		this.hitsRequest = hitsRequest;
 		return this;
 	}
@@ -280,7 +280,7 @@ public class Feature {
 		this.namespace = namespace;
 	}
 	
-	public Feature source(Namespace namespace) {
+	public Feature namespace(Namespace namespace){
 		this.namespace = namespace;
 		return this;
 	}

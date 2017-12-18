@@ -109,6 +109,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/api/tasks/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/persistent-identifiers").permitAll()
             .antMatchers(HttpMethod.GET, "/api/persistent-identifiers/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/features").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/features/**").permitAll()
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/authenticate").permitAll()
