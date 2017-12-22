@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.SourceType;
 import es.unizar.iaaa.pid.harvester.connectors.ValidatorById;
 import es.unizar.iaaa.pid.service.FeatureService;
 import es.unizar.iaaa.pid.service.NamespaceService;
@@ -37,6 +38,12 @@ public class ValidationByIdTask extends AbstractTaskRunner {
     
     @Override
     protected void doTask() {
+    	
+    	//En el caso de que se trate de un fuente SHP no se hace validacion
+    	if(task.getNamespace().getSource().getSourceType() == SourceType.SHP){
+    		return;
+    	}
+    	
         ValidatorById validatorById = getValidatorById();
 
         //get all features of the Namespaces

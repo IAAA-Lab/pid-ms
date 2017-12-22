@@ -48,9 +48,12 @@ import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.domain.enumeration.RenewalPolicy;
 import es.unizar.iaaa.pid.domain.enumeration.SourceType;
 import es.unizar.iaaa.pid.repository.NamespaceRepository;
+import es.unizar.iaaa.pid.service.FeatureService;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.OrganizationDTOService;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
+import es.unizar.iaaa.pid.service.PersistentIdentifierService;
+import es.unizar.iaaa.pid.service.TaskService;
 import es.unizar.iaaa.pid.service.UserService;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
@@ -140,6 +143,12 @@ public class NamespaceResourceIntTest {
     private NamespaceDTOService namespaceService;
     
     @Autowired
+    private TaskService taskService;
+    
+    @Autowired
+	private PersistentIdentifierService persistentIdentifierService;
+    
+    @Autowired
     private OrganizationMemberDTOService organizationMemberDTOService;
     
     @Autowired
@@ -153,6 +162,9 @@ public class NamespaceResourceIntTest {
     
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private FeatureService featureService;
     
     @Autowired
     private UserMapper userMapper;
@@ -183,7 +195,9 @@ public class NamespaceResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        NamespaceResource namespaceResource = new NamespaceResource(namespaceService, organizationMemberDTOService);
+        NamespaceResource namespaceResource = new NamespaceResource(namespaceService, namespaceMapper,
+        		         		organizationMemberDTOService, taskService,persistentIdentifierService,
+        		         		featureService);
         this.restNamespaceMockMvc = MockMvcBuilders.standaloneSetup(namespaceResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

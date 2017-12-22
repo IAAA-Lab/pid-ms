@@ -21,6 +21,7 @@ public interface NamespaceMapper extends EntityMapper <NamespaceDTO, Namespace> 
         @Mapping(source = "source.methodType", target = "methodType"),
         @Mapping(source = "source.sourceType", target = "sourceType"),
         @Mapping(source = "source.endpointLocation", target = "endpointLocation"),
+        @Mapping(source = "source.resolverProxyMode", target = "resolverProxyMode"),
         @Mapping(source = "source.maxNumRequest", target = "maxNumRequest"),
         @Mapping(source = "registration.processStatus", target = "processStatus"),
         @Mapping(source = "registration.itemStatus", target = "itemStatus"),

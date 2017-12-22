@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Namespace;
-import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.repository.FeatureRepository;
 import es.unizar.iaaa.pid.service.ChangeDTOService;
 import es.unizar.iaaa.pid.service.FeatureDTOService;

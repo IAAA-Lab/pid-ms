@@ -1,15 +1,17 @@
 package es.unizar.iaaa.pid.repository;
 
-import es.unizar.iaaa.pid.domain.Change;
-import es.unizar.iaaa.pid.domain.Task;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Task;
 
 
 /**
@@ -39,7 +41,5 @@ public interface ChangeRepository extends JpaRepository<Change, Long> {
     @Query("delete from Change c1 where c1.task.id = ?1")
     void deleteAllByTaskId(Long taskId);
     
-    @Modifying
-    @Query("delete from Change c1 where c1.feature.id = ?1")
-    void deleteAllByFeatureId(Long featureId);
+    void deleteByFeatureId(Long featureId);
 }

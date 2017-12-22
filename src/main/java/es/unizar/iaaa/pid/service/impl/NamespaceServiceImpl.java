@@ -1,15 +1,5 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.FeatureDTOService;
-import es.unizar.iaaa.pid.service.NamespaceDTOService;
-import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
-import es.unizar.iaaa.pid.service.TaskDTOService;
-import es.unizar.iaaa.pid.domain.Namespace;
-import es.unizar.iaaa.pid.domain.Task;
-import es.unizar.iaaa.pid.repository.NamespaceRepository;
-import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
-import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
-
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,6 +8,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.repository.NamespaceRepository;
+import es.unizar.iaaa.pid.service.FeatureDTOService;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
+import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
+import es.unizar.iaaa.pid.service.TaskDTOService;
+import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
+import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
 
 
 /**

@@ -2,7 +2,9 @@ package es.unizar.iaaa.pid.harvester.tasks;
 
 import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_TRANSFERRING_HARVEST;
 
+import java.io.File;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -17,8 +19,12 @@ import es.unizar.iaaa.pid.domain.BoundingBox;
 import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.TaskStatus;
+import es.unizar.iaaa.pid.harvester.connectors.FileHarvester;
 import es.unizar.iaaa.pid.harvester.connectors.SpatialHarvester;
+import es.unizar.iaaa.pid.harvester.connectors.shp.SHPHarvester;
 import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSSpatialHarvester;
+import es.unizar.iaaa.pid.harvester.tasks.util.FileToolsUtil;
 import es.unizar.iaaa.pid.service.FeatureService;
 import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.TaskService;
@@ -33,6 +39,10 @@ class HarvestTask extends AbstractTaskRunner {
 	private FeatureService featureService;
 	
     protected ApplicationContext context;
+    
+    private static final String TMP_PATH = "tmp";
+    private static final String ZIP_FILE_NAME = "shpZip.zip";
+    private static final String SHP_EXTENSION = ".shp";
 
     @Autowired
     public HarvestTask(ApplicationContext context, NamespaceService namespaceService, TaskService taskService,
@@ -45,8 +55,21 @@ class HarvestTask extends AbstractTaskRunner {
 
     @Override
     protected void doTask() {
-        SpatialHarvester harvester = getHarvester();
-
+    	//get what is the kind of harvert which is needed
+    	switch (task.getNamespace().getSource().getSourceType()){
+    	case WFS:
+    		doWFSHarvest();
+    		break;
+    	case SHP:
+    		doSHPHarvest();
+    		break;
+    	default:
+    		break;
+    	}
+    }
+    
+    public void doWFSHarvest(){
+    	SpatialHarvester harvester = getWFSHarvester();
         //Para cada una de las features de la fuente
         List<Feature> featureList = featureService.findAllByNamespace(task.getNamespace());
 
@@ -198,8 +221,75 @@ class HarvestTask extends AbstractTaskRunner {
         task.setNumErrors(task.getNumErrors() + 1);
     }
 
-    private SpatialHarvester getHarvester() {
+    private SpatialHarvester getWFSHarvester() {
         SpatialHarvester harvester = context.getBean(WFSSpatialHarvester.class);
+        harvester.setTask(task);
+        return harvester;
+    }
+    
+    public void doSHPHarvest(){
+    	FileHarvester harvester = getSHPHarvester();
+    	List<Feature> featureTypeList = featureService.findAllByNamespace(task.getNamespace());
+    	
+    	if(featureTypeList.size() == 0){
+    		return;
+    	}
+        
+    	//download zip with the SHP
+    	File tmpDirectory = new File(TMP_PATH + "_" + Calendar.getInstance().getTimeInMillis());
+    	String fileZipName = tmpDirectory + File.separator + ZIP_FILE_NAME;
+    	
+    	if(!FileToolsUtil.downloadFileHTTP(task.getNamespace().getSource().getEndpointLocation(), fileZipName)){
+    		taskService.changeStatus(task, TaskStatus.ERROR);
+    		log("Error descargando fichero " + task.getNamespace().getSource().getEndpointLocation());
+    		return;
+    	}
+    	
+    	File zipFile = new File(fileZipName);
+    	//descomprimo el zip
+    	if(!FileToolsUtil.unzipFile(zipFile, tmpDirectory.getAbsolutePath())){
+    		taskService.changeStatus(task, TaskStatus.ERROR);
+    		log("Error descomprimiendo fichero " + zipFile.getAbsolutePath());
+    		return;
+    	}
+    	//borro zip descargado
+    	zipFile.delete();
+    	
+        for(int index = 0; index< featureTypeList.size(); index++){
+        	Feature featureType = featureTypeList.get(index);
+        	
+			if(featureTypeList.get(index).getFeatureType().split("#").length != 2){
+				incNumErrors(task);
+				log("Error, la feature no posee el formato correcto.");
+				continue;
+			}
+    		
+        	String featureTypeName = featureTypeList.get(index).getFeatureType().split("#")[0].trim();
+        	String featureFile = featureTypeList.get(index).getFeatureType().split("#")[1].trim();
+        	
+        	//obtengo el nombre del SHP de la feature
+        	String shpFileName = FileToolsUtil.getFilePath(tmpDirectory,featureFile + SHP_EXTENSION);
+        	
+        	File shpFile = new File(shpFileName);
+	       
+        	//extraigo los identifiers
+        	log("Begin identifiers extraction");
+        	int ids = harvester.extractIdentifiers(featureType,shpFile);
+        	
+        	if(ids == -1){
+        		incNumErrors(task);
+        		log("fail, idendifier extraction was wrong");
+        	}
+        	else{
+        		log("feature={}, extracted={}", featureTypeName,ids);
+        	}
+        }
+        //borro directorio temporal
+        FileToolsUtil.deleteDirectory(tmpDirectory);
+    }
+    
+    private FileHarvester getSHPHarvester() {
+    	FileHarvester harvester = context.getBean(SHPHarvester.class);
         harvester.setTask(task);
         return harvester;
     }

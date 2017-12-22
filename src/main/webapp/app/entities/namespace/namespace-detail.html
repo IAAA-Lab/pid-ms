@@ -92,6 +92,14 @@
         <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
     </button>
     
+    <button type="button"
+             ui-sref="namespace.update({id:vm.namespace.id})"
+             class="btn btn-primary"
+             ng-switch-when="true">
+         <span class="glyphicon glyphicon-pencil"></span>
+         <span class="hidden-sm-down" data-translate="pidmsApp.namespace.updateCSV.csvData"> CSV data</span>
+    </button>
+    
     <button type="submit"
             ui-sref="namespace.delete({id:vm.namespace.id})"
             class="btn btn-danger"

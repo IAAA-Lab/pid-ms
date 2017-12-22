@@ -12,6 +12,14 @@
             "delete": {
                 "question": "Are you sure you want to delete Namespace {{ id }}?"
             },
+            "updateCSV": {
+             	"title": "Update namespace PIDs with CSV",
+             	"csvData": "CSV Data",
+             	"update": "Update",
+             	"addAction": "add,feature,schemaPrefix,localId,versionId,beginLifeSpan,endLifeSpan,alternateId,locator,proxyMode",
+             	"updateAction": "update,id,beginLifeSpanVersion,endLifeSpanVersion,alternateId,locator",
+             	"deleteAction": "delete,id"
+            },
             "detail": {
                 "title": "Namespace"
             },

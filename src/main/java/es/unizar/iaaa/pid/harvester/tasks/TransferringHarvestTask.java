@@ -57,12 +57,12 @@ public class TransferringHarvestTask extends AbstractTaskRunner {
         Task previousTask = taskService.findMostRecentHarvestTask(namespace);
         log("previousTask=\"{}:{}\"", previousTask.getType(), previousTask.getId());
 
-		boolean resolverProxyMode = namespace.getSource().isResolverProxyMode();
 
         Pageable pageable = new PageRequest(0,25000);
         Page<Change> page = changeService.findByTaskOrderById(previousTask, pageable);
 
         try{
+        	boolean resolverProxyMode = namespace.getSource().isResolverProxyMode();
             log("Processing page {} of {}", page.getNumber(), page.getTotalPages());
             if (page.hasContent()) {
                 processPage(page, resolverProxyMode);

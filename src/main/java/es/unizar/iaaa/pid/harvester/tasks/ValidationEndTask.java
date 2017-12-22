@@ -55,7 +55,7 @@ public class ValidationEndTask extends AbstractTaskRunner {
                 break;
             case CONTINUOUS:
             default:
-                renewal = now;
+                renewal = null;
         }
         namespace.getRegistration().setLastRevisionDate(now);
         namespace.getRegistration().setNextRenewalDate(renewal);

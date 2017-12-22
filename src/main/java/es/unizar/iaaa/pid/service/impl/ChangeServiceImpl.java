@@ -1,16 +1,17 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.domain.Change;
-import es.unizar.iaaa.pid.repository.ChangeRepository;
-import es.unizar.iaaa.pid.service.ChangeDTOService;
-import es.unizar.iaaa.pid.service.dto.ChangeDTO;
-import es.unizar.iaaa.pid.service.mapper.ChangeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.repository.ChangeRepository;
+import es.unizar.iaaa.pid.service.ChangeDTOService;
+import es.unizar.iaaa.pid.service.dto.ChangeDTO;
+import es.unizar.iaaa.pid.service.mapper.ChangeMapper;
 
 
 /**
@@ -159,7 +160,7 @@ public class ChangeServiceImpl implements ChangeDTOService {
 	@Override
     public void deleteAllByFeatureId(Long featureId){
 		log.debug("Request to delete all Task associate with featureId: {}",featureId);
-		changeRepository.deleteAllByFeatureId(featureId);
+		changeRepository.deleteByFeatureId(featureId);
 	}
 
 }

@@ -1,55 +1,38 @@
 {
     "pidmsApp": {
-        "namespace" : {
+        "feature" : {
             "home": {
-                "title": "Namespaces",
-                "createLabel": "Crear nuevo Namespace",
-                "createOrEditLabel": "Crear o editar Namespace"
+                "title": "Elementos",
+                "createLabel": "Crear nuevo Elemento",
+                "createOrEditLabel": "Crear o editar Elemento"
             },
-            "created": "Un nuevo Namespace ha sido creado con el identificador {{ param }}",
-            "updated": "Un Namespace ha sido actualizado con el identificador {{ param }}",
-            "deleted": "Un Namespace ha sido eliminado con el identificador {{ param }}",
+            "created": "Un nuevo Elemento ha sido creado con identificador {{ param }}",
+            "updated": "El Elemento ha sido actualizado con el identificador {{ param }}",
+            "deleted": "El Elemento ha sido borrado con el identificador {{ param }}",
             "delete": {
-                "question": "¿Seguro que quiere eliminar Namespace {{ id }}?"
+                "question": "¿Seguro que quiere eliminar el Elemento {{ id }}?"
             },
             "detail": {
-                "title": "Namespace"
+                "title": "Elemento"
             },
-            "namespace": "Namespace",
-            "title": "Título",
-            "publicNamespace": "Namespace público",
-            "renewalPolicy": "Política de actualización",
-            "namespaceStatus": "Estado del Namespace",
-            "processStatus": "Estado del proceso",
-            "itemStatus": "Estado",
-            "lastChangeDate": "Fecha del último cambio",
-            "registrationDate": "Fecha de registro",
-            "lastRevisionDate": "Fecha de última revisión",
-            "nextRenewalDate": "Fecha de siguiente actualización",
-            "annullationDate": "Fecha de anulación",
-            "methodType": "Tipo de método",
-            "sourceType": "Tipo de fuente",
-            "endpointLocation": "Localización",
             "srsName": "Nombre del SRS",
             "schemaUri": "Uri del Esquema",
             "schemaUriGML": "Uri del esquema GML",
             "schemaUriBase": "Uri del esquema Base",
             "schemaPrefix": "Prefijo del esquema",
             "featureType": "Tipo de elemento",
-            "geometryProperty": "Prodiedad geométrica",
+            "geometryProperty": "Propiedad geométrica",
             "beginLifespanVersionProperty": "Propiedad Comienzo de la vida util de la versión",
             "featuresThreshold": "Límite de elementos",
-            "resolverProxyMode": "Modo Proxy",
             "hitsRequest": "Peticón de número de resultados",
             "factorK": "Factor K",
             "xpath": "Xpath",
             "nameItem": "Nombre del elemento",
-            "maxNumRequest": "Máximo número de peticiones",
-            "minX": "Min X",
-            "minY": "Min Y",
-            "maxX": "Max X",
-            "maxY": "Max Y",
-            "owner": "Propietario"
+            "minX": "MinX",
+            "minY": "MinY",
+            "maxX": "MaxX",
+            "maxY": "MaxY",
+            "namespace": "Propietario"
         }
     }
 }

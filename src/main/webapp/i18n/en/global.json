@@ -130,6 +130,7 @@
         "emailexists": "Email is already in use!",
         "idexists": "A new {{ entityName }} cannot already have an ID",
         "namespaceExist": "Exist other Namespace with the same namespace value",
+        "featureExist": "Exist other Feature with the same featureType and schemaPrefix",
         "NamespaceNotExist": "The Namespace does not exist",
         "OrganizationNotExist": "The Organization does not exit",
         "notCapacityToAddNamespace": "It is necessary to be Admin or Editor in the Organization to add a new Namespace",
@@ -143,7 +144,9 @@
         "notCapacityToAddFeature": "It is necessary to be Admin or Editor in the Organization of its Namespace to add a Feature",
         "notCapacityToModifyFeature": "It is necessary to be Admin or Editor in the Organization of its Namespace to modify a Feature",
         "notCapacityToDeleteFeature": "It is necessary to be Admin or Editor in the Organization of its Namespace to delete a Feature",
-        "notAuthenticated": "You must be authenticated to do this action"
+        "notAuthenticated": "You must be authenticated to do this action",
+        "taskInExecuting": "The namespace has a executing task"
     },
-    "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad Zaragoza</a>"
+    "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad Zaragoza</a>",
+    "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>"
 }

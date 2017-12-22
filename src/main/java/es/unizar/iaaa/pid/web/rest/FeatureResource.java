@@ -87,7 +87,7 @@ public class FeatureResource {
         			"You must be Admin or Editor of the organization of its namespace to add a Feature")).body(null);
         }
         
-        //check if exist other namespace with the same id, if exist, return error
+        //check if exist other feature with the same id, if exist, return error
         FeatureDTO auxFeature = featureService.findOneByFeatureTypeAndSchemaPrefix(featureDTO.getFeatureType(),featureDTO.getSchemaPrefix());
         if(auxFeature != null){
         	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "featureExist", "Exist other Feature with the same FeaturyType and SchemaPrefix")).body(null);
@@ -131,6 +131,12 @@ public class FeatureResource {
         if(organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER){
         	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToModifyFeature", 
         			"You must be Admin or Editor of the organization of its namespace to modify a Feature")).body(null);
+        }
+        
+        //check if exist other feature with the same id, if exist, return error
+        FeatureDTO auxFeature = featureService.findOneByFeatureTypeAndSchemaPrefix(featureDTO.getFeatureType(),featureDTO.getSchemaPrefix());
+        if(auxFeature != null && auxFeature.getId().longValue() != featureDTO.getId().longValue()){
+        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "featureExist", "Exist other Feature with the same FeaturyType and SchemaPrefix")).body(null);
         }
         
         FeatureDTO result = featureService.save(featureDTO);

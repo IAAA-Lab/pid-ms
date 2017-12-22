@@ -15,6 +15,7 @@
             "PENDING_VALIDATION_END": "PENDING_VALIDATION_END",
             "VALIDATION_END": "VALIDATION_END",
             "VALIDATION_BEGIN": "VALIDATION_BEGIN",
+            "UPDATING_PIDS": "UPDATING_PIDS",
             "NONE": "NONE"
         }
     }

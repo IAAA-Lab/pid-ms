@@ -16,7 +16,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.ximpleware.AutoPilot;
-import com.ximpleware.NavException;
 import com.ximpleware.NodeRecorder;
 import com.ximpleware.VTDGen;
 import com.ximpleware.VTDNav;
@@ -75,7 +74,7 @@ public class WFSValidatorById implements ValidatorById {
             if (!ap.iterate()) {
                 log("{} is NOT_FOUND", PersistentIdentifier.computeExternalUrnFromIdentifier(identifier));
                 response(ChangeAction.NOT_FOUND, identifier,feature);
-                return 1;
+                return -1;
             }
             nav.push();
             NodeRecorder member = new NodeRecorder(nav);
@@ -134,10 +133,10 @@ public class WFSValidatorById implements ValidatorById {
                 .versionId(versionId)
                 .beginLifespanVersion(beginLifespanVersion)
                 .alternateId(gmlId);
-        } catch (NavException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             response(ChangeAction.NOT_FOUND, identifier, feature);
-            return 1;
+            return -1;
         }
 
 

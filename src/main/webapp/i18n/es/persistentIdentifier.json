@@ -7,8 +7,8 @@
                 "createOrEditLabel": "Crear o editar un Identificador Persistente"
             },
             "created": "Un nuevo Identificador Persistente ha sido creado con el identificador {{ param }}",
-            "updated": "Un Identificador Persistente con el identificador {{ param }} ha sido actualizado",
-            "deleted": "Un Identificador Persistente con el identificador {{ param }} ha sido eliminado",
+            "updated": "El Identificador Persistente con el identificador {{ param }} ha sido actualizado",
+            "deleted": "El Identificador Persistente con el identificador {{ param }} ha sido eliminado",
             "delete": {
                 "question": "¿Seguro que quiere eliminar el Identificador Persistente {{ id }}?"
             },
@@ -18,9 +18,9 @@
             "externalUrn": "URN",
             "feature": "Tipo de objeto espacial",
             "resolverProxyMode": "Modo proxy",
-            "namespace": "Namespace",
-            "localId": "Local Id",
-            "versionId": "Version Id",
+            "namespace": "Espacio de nombres",
+            "localId": "Id Local",
+            "versionId": "Version",
             "beginLifespanVersion": "Comienzo de la vida util de la versión",
             "endLifespanVersion": "Final de la vida util de la versión",
             "alternateId": "Id alternativo",

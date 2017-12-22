@@ -55,8 +55,8 @@ public class WFSClient {
     static String createWfsGetFeatureRequestGet(Feature feature,Source source, BoundingBox boundingBox, String type){
     	return source.getEndpointLocation() + "?request=GetFeature&service=WFS&typeNames=" 
     			+ feature.getSchemaPrefix() + ":" + feature.getFeatureType()  + "&resultType=" + type +"&version=2.0.0&srsName=" 
-    			+ feature.getSrsName() +"&BBOX="+ boundingBox.getMinX() +","+ boundingBox.getMinY() 
-    			+ "," + boundingBox.getMaxX() + ","+ boundingBox.getMaxY() + "&startIndex=0&count=" 
+    			+ feature.getSrsName() +"&BBOX="+ boundingBox.getMinY() +","+ boundingBox.getMinX()
+    			+ "," + boundingBox.getMaxY() + ","+ boundingBox.getMaxX() + "&startIndex=0&count=" 
     			+ feature.getFeaturesThreshold();
     }
 
