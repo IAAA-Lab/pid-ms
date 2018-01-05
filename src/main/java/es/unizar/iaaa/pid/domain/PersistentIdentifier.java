@@ -34,8 +34,7 @@ public class PersistentIdentifier implements Serializable {
     @Column(name = "external_urn", nullable = false)
     private String externalUrn;
 
-    @NotNull
-    @ManyToOne(optional=false)
+    @ManyToOne
     private Feature feature;
 
     @Column(name = "resolver_proxy_mode")
@@ -54,7 +53,7 @@ public class PersistentIdentifier implements Serializable {
         this.externalUrn = externalUrn;
         return this;
     }
-    
+
     public UUID getId() {
         return id;
     }

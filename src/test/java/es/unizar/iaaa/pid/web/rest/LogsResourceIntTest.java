@@ -1,6 +1,7 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import es.unizar.iaaa.pid.PidmsApp;
+import es.unizar.iaaa.pid.web.rest.util.TestUtil;
 import es.unizar.iaaa.pid.web.rest.vm.LoggerVM;
 import ch.qos.logback.classic.AsyncAppender;
 import ch.qos.logback.classic.LoggerContext;

@@ -153,6 +153,7 @@ public class Task implements Serializable {
             ", type='" + getType() + "'" +
             ", status='" + getStatus() + "'" +
             ", numErrors='" + getNumErrors() + "'" +
+            ", namespace='" + (getNamespace() != null? getNamespace().getId() : "null") + "'" +
             "}";
     }
 }

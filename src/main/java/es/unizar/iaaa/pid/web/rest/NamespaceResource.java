@@ -1,52 +1,28 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.Instant;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.codahale.metrics.annotation.Timed;
-
 import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.NamespaceStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.harvester.tasks.UpdatingTask;
-import es.unizar.iaaa.pid.security.SecurityUtils;
-import es.unizar.iaaa.pid.service.FeatureService;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
-import es.unizar.iaaa.pid.service.PersistentIdentifierService;
-import es.unizar.iaaa.pid.service.TaskService;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
-import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
-import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
-import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
-import es.unizar.iaaa.pid.web.rest.vm.CsvData;
-import io.github.jhipster.web.util.ResponseUtil;
+import es.unizar.iaaa.pid.web.rest.util.ControllerUtil;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.time.Instant;
+import java.util.Calendar;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * REST controller for managing Namespace.
@@ -60,69 +36,47 @@ public class NamespaceResource {
     private static final String ENTITY_NAME = "namespace";
 
     private final NamespaceDTOService namespaceService;
-    private final NamespaceMapper namespaceMapper;
     private final OrganizationMemberDTOService organizationMemberService;
-    private final TaskService taskService;
-    private final PersistentIdentifierService persistentIdentifierService;
-    private final FeatureService featureService;
-    
 
-    public NamespaceResource(NamespaceDTOService namespaceService, NamespaceMapper namespaceMapper,
-    		     		OrganizationMemberDTOService organizationMemberService,	TaskService taskService,
-    		     		PersistentIdentifierService persistentIdentifierService, FeatureService featureService) {
+
+    public NamespaceResource(NamespaceDTOService namespaceService,
+    		     		OrganizationMemberDTOService organizationMemberService) {
     	this.namespaceService = namespaceService;
-	    this.namespaceMapper = namespaceMapper;
 	    this.organizationMemberService = organizationMemberService;
-	    this.taskService = taskService;
-	    this.persistentIdentifierService = persistentIdentifierService;
-	    this.featureService = featureService;
 	}
 
     /**
      * POST  /namespaces : Create a new namespace.
      *
      * @param namespaceDTO the namespaceDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new namespaceDTO, or with status 400 (Bad Request) if the namespace has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @return the ResponseEntity with status 201 (Created) and with body the new DTO,
+     * with status 400 (Bad Request) if the DTO has already an ID,
+     * or with status 404 if yo are not an administrator or editor
      */
     @PostMapping("/namespaces")
     @Timed
-    public ResponseEntity<NamespaceDTO> createNamespace(@Valid @RequestBody NamespaceDTO namespaceDTO) throws URISyntaxException {
+    public ResponseEntity<NamespaceDTO> createNamespace(UriComponentsBuilder uriBuilder,  @Valid @RequestBody NamespaceDTO namespaceDTO) {
         log.debug("REST request to save Namespace : {}", namespaceDTO);
+        return ControllerUtil
+            .with(ENTITY_NAME, uriBuilder.path("/api/namespaces/{id}"), namespaceService)
+            .customise( (dto) -> {
+                dto.setNamespaceStatus(NamespaceStatus.STOP);
+                dto.setProcessStatus(ProcessStatus.NONE);
+                dto.setItemStatus(ItemStatus.PENDING_VALIDATION);
+                Calendar calendar = Calendar.getInstance();
+                Instant instant = calendar.toInstant();
+                dto.setLastChangeDate(instant);
+                dto.setRegistrationDate(instant);
+            })
+            .badRequestWhen(duplicatedNamespace(namespaceDTO),
+                "namespaceExist",
+                "Exist other Namespace with the same Namespace")
+            .forbidWhen(notAnAdminOrEditor(namespaceDTO))
+            .doPost(namespaceDTO);
+    }
 
-        if (namespaceDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new namespace cannot already have an ID")).body(null);
-        }
-
-        //check if user have capacity to add this namespace
-        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespaceDTO.getOwnerId());
-        
-        if(organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER){
-        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToAddNamespace", 
-        			"You must be Admin or Editor of the organization to add a Namespace")).body(null);
-        }
-        
-        //check if exist other namespace with the same id, if exist, return error
-        NamespaceDTO auxNamespace = namespaceService.findOneByNamespace(namespaceDTO.getNamespace());
-        if(auxNamespace != null){
-        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "namespaceExist", "Exist other Namespace with the same Namespace")).body(null);
-        }
-
-        //add the rest of the attributes for namespace
-        namespaceDTO.setNamespaceStatus(NamespaceStatus.STOP);
-        namespaceDTO.setProcessStatus(ProcessStatus.NONE);
-        namespaceDTO.setItemStatus(ItemStatus.PENDING_VALIDATION);
-
-        Calendar calendar = Calendar.getInstance();
-        Instant instant = calendar.toInstant();
-
-        namespaceDTO.setLastChangeDate(instant);
-        namespaceDTO.setRegistrationDate(instant);
-
-        NamespaceDTO result = namespaceService.save(namespaceDTO);
-        return ResponseEntity.created(new URI("/api/namespaces/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+    private Supplier<Boolean> duplicatedNamespace(@Valid @RequestBody NamespaceDTO namespaceDTO) {
+        return ()-> namespaceService.findOneByNamespace(namespaceDTO.getNamespace()) != null;
     }
 
     /**
@@ -130,43 +84,20 @@ public class NamespaceResource {
      *
      * @param namespaceDTO the namespaceDTO to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated namespaceDTO,
-     * or with status 400 (Bad Request) if the namespaceDTO is not valid,
-     * or with status 500 (Internal Server Error) if the namespaceDTO couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * or with status 404 (Not Found) if the DTO is not found,
+     * or with status 403 (Forbidden) if the you are not an administrator of the organization
      */
-    @PutMapping("/namespaces")
+    @PutMapping("/namespaces/{id}")
     @Timed
-    public ResponseEntity<NamespaceDTO> updateNamespace(@Valid @RequestBody NamespaceDTO namespaceDTO) throws URISyntaxException {
+    public ResponseEntity<NamespaceDTO> updateNamespace(@PathVariable Long id, @Valid @RequestBody NamespaceDTO namespaceDTO) {
         log.debug("REST request to update Namespace : {}", namespaceDTO);
-        if (namespaceDTO.getId() == null) {
-            return createNamespace(namespaceDTO);
-        }
-        
-        //get the Namespace which exists in the database
-        NamespaceDTO namespaceDTOprevious = namespaceService.findOne(namespaceDTO.getId());
-        if(namespaceDTOprevious == null){
-        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "NamespaceNotExist", 
-        			"The Namespace which want to be deleted does not exist")).body(null);
-        }
-        
-        //check if the user have capacity to modify the namespace
-        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespaceDTOprevious.getOwnerId());
-        
-        if(organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER){
-        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToModifyNamespace", 
-        			"You must be Admin or Editor of the organization to modify a Namespace")).body(null);
-        }
-        
-        //check if exist other namespace with the same namespace, if exist, return error
-        NamespaceDTO auxNamespace = namespaceService.findOneByNamespace(namespaceDTO.getNamespace());
-        if(auxNamespace != null && auxNamespace.getId().longValue() != namespaceDTO.getId().longValue()){
-        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "namespaceExist", "Exist other Namespace with the same Namespace")).body(null);
-        }
-        
-        NamespaceDTO result = namespaceService.save(namespaceDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, namespaceDTO.getId().toString()))
-            .body(result);
+        return ControllerUtil
+            .with(ENTITY_NAME, namespaceService)
+            .badRequestWhen(duplicatedNamespace(namespaceDTO),
+                "namespaceExist",
+                "Exist other Namespace with the same Namespace")
+            .forbidWhen(notAnAdminOrEditor(id))
+            .doPut(id, namespaceDTO);
     }
 
     /**
@@ -177,17 +108,13 @@ public class NamespaceResource {
      */
     @GetMapping("/namespaces")
     @Timed
-    public ResponseEntity<List<NamespaceDTO>> getAllNamespaces(@ApiParam Pageable pageable) {
+    public ResponseEntity<List<NamespaceDTO>> getAllNamespaces(UriComponentsBuilder uriBuilder, @ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Namespaces");
-
-        Page<NamespaceDTO> page;
-        if (SecurityUtils.isAuthenticated()) {
-            page = namespaceService.findAllInPrincipalOrganizationsOrPublic(pageable);
-        } else {
-            page = namespaceService.findPublic(pageable);
-        }
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/namespaces");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ControllerUtil
+            .with(uriBuilder.path("/api/namespaces"), namespaceService)
+            .list(namespaceService::findPublic)
+            .listAuthenticated(namespaceService::findAllInPrincipalOrganizationsOrPublic)
+            .doGet(pageable);
     }
 
     /**
@@ -200,13 +127,11 @@ public class NamespaceResource {
     @Timed
     public ResponseEntity<NamespaceDTO> getNamespace(@PathVariable Long id) {
         log.debug("REST request to get Namespace : {}", id);
-        NamespaceDTO namespaceDTO;
-        if (SecurityUtils.isAuthenticated()) {
-            namespaceDTO = namespaceService.findOneInPrincipalOrganizationsOrPublic(id);
-        } else {
-            namespaceDTO = namespaceService.findOnePublic(id);
-        }
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(namespaceDTO));
+        return ControllerUtil
+            .with(ENTITY_NAME, namespaceService)
+            .get(namespaceService::findOnePublic)
+            .getAuthenticated(namespaceService::findOneInPrincipalOrganizationsOrPublic)
+            .doGet(id);
     }
 
     /**
@@ -219,54 +144,25 @@ public class NamespaceResource {
     @Timed
     public ResponseEntity<Void> deleteNamespace(@PathVariable Long id) {
         log.debug("REST request to delete Namespace : {}", id);
-        
-        //get the Namespace which exists in the database
-        NamespaceDTO namespaceDTOprevious = namespaceService.findOne(id);
-        if(namespaceDTOprevious == null){
-        	return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "NamespaceNotExist", 
-        			"The Namespace which want to be deleted does not exist")).body(null);
-        }
-        
-        //check if the user have capacity to modify the namespace
-        OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespaceDTOprevious.getOwnerId());
-        
-        if(organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER){
-        	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "notCapacityToDeleteNamespace", 
-        			"You must be Admin or Editor of the organization to delete a Namespace")).body(null);
-        }
-        
-        namespaceService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ControllerUtil
+            .with(ENTITY_NAME, namespaceService)
+            .forbidWhen(notAnAdminOrEditor(id))
+            .doDelete(id);
     }
-    
 
-    /**
-     * UPDATE /namespace/updateCSV : update the PIDs
-     * 
-     * @param csvData the csvData information to update
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @PutMapping("/namespaces/updateCSV")
-    @Timed
-    public ResponseEntity<Void> updateCSVNamespace(@RequestBody CsvData csvData){
-    	log.debug("REST request to update with csv data the PIDs of namespace : {}", csvData.getNamespaceId());
-    	
-    	//check if there is a task executing over the namespace
-    	NamespaceDTO namespace = namespaceService.findOne(csvData.getNamespaceId());
-    	if(namespace.getProcessStatus() != ProcessStatus.NONE){
-    		return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert("Updating proccess", "taskInExecuting",
-    				"There is a task in executing over this Namespace")).body(null);
-    	}
-    	namespace.setProcessStatus(ProcessStatus.UPDATING_PIDS);
-    	namespace = namespaceService.save(namespace);
-    	
-    	
-    	UpdatingTask updatingTask = new UpdatingTask(taskService, namespaceService,namespaceMapper,
-    			persistentIdentifierService, featureService, csvData, namespace);
-    	
-		Thread thread = new Thread(updatingTask);
-		thread.start();
-		
-    	return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("Updating proccess", csvData.toString())).build();
+    private Supplier<Boolean> notAnAdminOrEditor(NamespaceDTO namespaceDTO) {
+        return () -> {
+            OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespaceDTO.getOwnerId());
+            return organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER;
+        };
+    }
+
+
+    private Supplier<Boolean> notAnAdminOrEditor(Long id) {
+        return () -> {
+            NamespaceDTO namespaceDTO = namespaceService.findOne(id);
+            OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespaceDTO.getOwnerId());
+            return organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER;
+        };
     }
 }

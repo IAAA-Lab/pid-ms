@@ -7,23 +7,7 @@ import org.springframework.data.domain.Pageable;
 /**
  * Service Interface for managing Namespace.
  */
-public interface NamespaceDTOService {
-
-    /**
-     * Save a namespace.
-     *
-     * @param namespaceDTO the entity to save
-     * @return the persisted entity
-     */
-    NamespaceDTO save(NamespaceDTO namespaceDTO);
-
-    /**
-     *  Get all the namespaces.
-     *
-     *  @param pageable the pagination information
-     *  @return the list of entities
-     */
-    Page<NamespaceDTO> findAll(Pageable pageable);
+public interface NamespaceDTOService  extends DTOService<Long, NamespaceDTO> {
 
     /**
      *  Get the public namespaces.
@@ -33,13 +17,6 @@ public interface NamespaceDTOService {
      */
     Page<NamespaceDTO> findPublic(Pageable pageable);
 
-    /**
-     *  Get the "id" namespace.
-     *
-     *  @param id the id of the entity
-     *  @return the entity
-     */
-    NamespaceDTO findOne(Long id);
 
     /**
      *  Get the "id" namespace if public.
@@ -49,12 +26,6 @@ public interface NamespaceDTOService {
      */
     NamespaceDTO findOnePublic(Long id);
 
-    /**
-     *  Delete the "id" namespace.
-     *
-     *  @param id the id of the entity
-     */
-    void delete(Long id);
 
     /**
      *  Get the "namespace" namespace.
@@ -79,11 +50,11 @@ public interface NamespaceDTOService {
      *  @return the entity
      */
     NamespaceDTO findOneInPrincipalOrganizationsOrPublic(Long id);
-    
+
     /**
      * Delete all namespace associate with the organization
-     * 
-     * @param oraganizationId id of the organization to be deleted
+     *
+     * @param organizationId id of the organization to be deleted
      */
     void deleteAllByOrganizationId(Long organizationId);
 }

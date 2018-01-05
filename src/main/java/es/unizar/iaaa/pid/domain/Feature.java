@@ -1,35 +1,26 @@
 package es.unizar.iaaa.pid.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
+import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import io.swagger.annotations.ApiModel;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @ApiModel(description = "Entity Feature")
 @Entity
 @Table(name = "feature")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Feature {
-	
+
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
-	
+
 	@ManyToOne
 	private Namespace namespace;
-	
+
 	@Column(name = "srs_name")
     private String srsName;
 
@@ -57,7 +48,7 @@ public class Feature {
 
     @Column(name = "features_threshold")
     private Integer featuresThreshold;
-    
+
     @Column(name = "hits_request")
     private Boolean hitsRequest;
 
@@ -73,7 +64,7 @@ public class Feature {
     @Embedded
     private BoundingBox boundingBox;
 
-    
+
 	public Long getId() {
 		return id;
 	}
@@ -89,7 +80,7 @@ public class Feature {
 	public void setSrsName(String srsName) {
 		this.srsName = srsName;
 	}
-	
+
 	public Feature srsName(String srsName){
 		this.srsName = srsName;
 		return this;
@@ -102,7 +93,7 @@ public class Feature {
 	public void setSchemaUri(String schemaUri) {
 		this.schemaUri = schemaUri;
 	}
-	
+
 	public Feature schemaUri(String schemaUri) {
 		this.schemaUri = schemaUri;
 		return this;
@@ -115,7 +106,7 @@ public class Feature {
 	public void setSchemaUriGML(String schemaUriGML) {
 		this.schemaUriGML = schemaUriGML;
 	}
-	
+
 	public Feature schemaUriGML(String schemaUriGML) {
 		this.schemaUriGML = schemaUriGML;
 		return this;
@@ -128,7 +119,7 @@ public class Feature {
 	public void setSchemaUriBase(String schemaUriBase) {
 		this.schemaUriBase = schemaUriBase;
 	}
-	
+
 	public Feature schemaUriBase(String schemaUriBase) {
 		this.schemaUriBase = schemaUriBase;
 		return this;
@@ -141,7 +132,7 @@ public class Feature {
 	public void setSchemaPrefix(String schemaPrefix) {
 		this.schemaPrefix = schemaPrefix;
 	}
-	
+
 	public Feature schemaPrefix(String schemaPrefix) {
 		this.schemaPrefix = schemaPrefix;
 		return this;
@@ -154,7 +145,7 @@ public class Feature {
 	public void setFeatureType(String featureType) {
 		this.featureType = featureType;
 	}
-	
+
 	public Feature featureType(String featureType) {
 		this.featureType = featureType;
 		return this;
@@ -167,7 +158,7 @@ public class Feature {
 	public void setGeometryProperty(String geometryProperty) {
 		this.geometryProperty = geometryProperty;
 	}
-	
+
 	public Feature geometryProperty(String geometryProperty) {
 		this.geometryProperty = geometryProperty;
 		return this;
@@ -180,7 +171,7 @@ public class Feature {
 	public void setBeginLifespanVersionProperty(String beginLifespanVersionProperty) {
 		this.beginLifespanVersionProperty = beginLifespanVersionProperty;
 	}
-	
+
 	public Feature beginLifespanVersionProperty(String beginLifespanVersionProperty) {
 		this.beginLifespanVersionProperty = beginLifespanVersionProperty;
 		return this;
@@ -193,7 +184,7 @@ public class Feature {
 	public void setFeaturesThreshold(Integer featuresThreshold) {
 		this.featuresThreshold = featuresThreshold;
 	}
-	
+
 	public Feature featuresThreshold(Integer featuresThreshold) {
 		this.featuresThreshold = featuresThreshold;
 		return this;
@@ -206,7 +197,7 @@ public class Feature {
 	public void setHitsRequest(Boolean hitsRequest) {
 		this.hitsRequest = hitsRequest;
 	}
-	
+
 	public Feature hitsRequest(boolean hitsRequest){
 		this.hitsRequest = hitsRequest;
 		return this;
@@ -219,7 +210,7 @@ public class Feature {
 	public void setFactorK(Integer factorK) {
 		this.factorK = factorK;
 	}
-	
+
 	public Feature factorK(Integer factorK) {
 		this.factorK = factorK;
 		return this;
@@ -232,7 +223,7 @@ public class Feature {
 	public void setXpath(String xpath) {
 		this.xpath = xpath;
 	}
-	
+
 	public Feature xpath(String xpath) {
 		this.xpath = xpath;
 		return this;
@@ -245,7 +236,7 @@ public class Feature {
 	public void setNameItem(String nameItem) {
 		this.nameItem = nameItem;
 	}
-	
+
 	public Feature nameItem(String nameItem) {
 		this.nameItem = nameItem;
 		return this;
@@ -258,12 +249,12 @@ public class Feature {
 	public void setBoundingBox(BoundingBox boundingBox) {
 		this.boundingBox = boundingBox;
 	}
-	
+
 	public Feature boundingBox(BoundingBox boundingBox) {
 		this.boundingBox = boundingBox;
 		return this;
 	}
-	
+
 	public String getQualifiedFeatureType() {
         return schemaPrefix + ":" + featureType;
     }
@@ -271,7 +262,7 @@ public class Feature {
     public String getQualifiedGeometryProperty() {
         return schemaPrefix + ":" + geometryProperty;
     }
-    
+
     public Namespace getNamespace() {
 		return namespace;
 	}
@@ -279,7 +270,7 @@ public class Feature {
 	public void setNamespace(Namespace namespace) {
 		this.namespace = namespace;
 	}
-	
+
 	public Feature namespace(Namespace namespace){
 		this.namespace = namespace;
 		return this;
@@ -288,6 +279,7 @@ public class Feature {
 	@Override
     public String toString() {
         return "Feature{" +
+            "id='" + getId() + "'" +
             ", srsName='" + getSrsName() + "'" +
             ", schemaUri='" + getSchemaUri() + "'" +
             ", schemaUriGML='" + getSchemaUriGML() + "'" +
