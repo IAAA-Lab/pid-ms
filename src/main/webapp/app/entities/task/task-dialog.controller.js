@@ -28,7 +28,7 @@
         function save () {
             vm.isSaving = true;
             if (vm.task.id !== null) {
-                Task.update(vm.task, onSaveSuccess, onSaveError);
+                Task.update({id : $stateParams.id}, vm.task, onSaveSuccess, onSaveError);
             } else {
                 Task.save(vm.task, onSaveSuccess, onSaveError);
             }

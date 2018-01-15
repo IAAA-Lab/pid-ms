@@ -27,7 +27,7 @@
         function save () {
             vm.isSaving = true;
             if (vm.organizationMember.id !== null) {
-                OrganizationMember.update(vm.organizationMember, onSaveSuccess, onSaveError);
+                OrganizationMember.update({id : $stateParams.id},vm.organizationMember, onSaveSuccess, onSaveError);
             } else {
                 OrganizationMember.save(vm.organizationMember, onSaveSuccess, onSaveError);
             }

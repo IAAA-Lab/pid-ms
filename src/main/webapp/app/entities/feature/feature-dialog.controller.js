@@ -27,7 +27,7 @@
         function save () {
             vm.isSaving = true;
             if (vm.feature.id !== null) {
-                Feature.update(vm.feature, onSaveSuccess, onSaveError);
+                Feature.update({id : $stateParams.id}, vm.feature, onSaveSuccess, onSaveError);
             } else {
                 Feature.save(vm.feature, onSaveSuccess, onSaveError);
             }
