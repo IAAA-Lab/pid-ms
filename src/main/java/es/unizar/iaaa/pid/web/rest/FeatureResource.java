@@ -73,7 +73,7 @@ public class FeatureResource {
      */
     @PutMapping("/features/{id}")
     @Timed
-    public ResponseEntity<FeatureDTO> updateNamespace(@PathVariable Long id, @Valid @RequestBody FeatureDTO featureDTO) {
+    public ResponseEntity<FeatureDTO> updateFeature(@PathVariable Long id, @Valid @RequestBody FeatureDTO featureDTO) {
         log.debug("REST request to update Feature : {}", featureDTO);
         return ControllerUtil
             .with(ENTITY_NAME, featureService)
@@ -145,15 +145,16 @@ public class FeatureResource {
         return () -> {
             NamespaceDTO namespace = namespaceDTOService.findOne(featureDTO.getNamespaceId());
             OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespace.getOwnerId());
-            return organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER;
+            return organizationMember == null || 
+            		(organizationMember.getCapacity() != Capacity.ADMIN && 
+            		organizationMember.getCapacity() != Capacity.EDITOR);
         };
     }
 
     private Supplier<Boolean> notAnAdminOrEditor(Long id) {
         return () -> {
-            NamespaceDTO namespace = namespaceDTOService.findOne(id);
-            OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespace.getOwnerId());
-            return organizationMember == null || organizationMember.getCapacity() == Capacity.MEMBER;
+        	FeatureDTO feature = featureService.findOne(id);
+        	return notAnAdminOrEditor(feature).get();
         };
     }
 }

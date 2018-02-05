@@ -124,7 +124,7 @@ public class ControllerUtil {
             if (forbidWhen.get()) {
                 return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
-                    .headers(alertForbiddenAccess())
+                    .headers(alertForbiddenAccessForAdd())
                     .build();
             }
             if (badRequestWhen.check.get()) {
@@ -156,7 +156,7 @@ public class ControllerUtil {
             if (forbidWhen.get()) {
                 return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
-                    .headers(alertForbiddenAccess())
+                    .headers(alertForbiddenAccessForModify())
                     .build();
             }
             overwriteProperty(dto, "id", id);
@@ -177,7 +177,7 @@ public class ControllerUtil {
             if (forbidWhen.get()) {
                 return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
-                    .headers(alertForbiddenAccess())
+                    .headers(alertForbiddenAccessForDelete())
                     .build();
 
             }
@@ -193,10 +193,20 @@ public class ControllerUtil {
                 "You must be authenticated to show the properties of an "+capitalLeter(entityName));
         }
 
-        private HttpHeaders alertForbiddenAccess() {
+        private HttpHeaders alertForbiddenAccessForAdd() {
+            return HeaderUtil.createFailureAlert(entityName,
+                "notCapacityToAdd" + capitalLeter(entityName),
+                "You don't have privileges to add "+capitalLeter(entityName));
+        }
+        private HttpHeaders alertForbiddenAccessForModify() {
             return HeaderUtil.createFailureAlert(entityName,
                 "notCapacityToModify" + capitalLeter(entityName),
                 "You don't have privileges to modify "+capitalLeter(entityName));
+        }
+        private HttpHeaders alertForbiddenAccessForDelete() {
+            return HeaderUtil.createFailureAlert(entityName,
+                "notCapacityToDelete" + capitalLeter(entityName),
+                "You don't have privileges to delete "+capitalLeter(entityName));
         }
 
         private HttpHeaders alertEntityDoesNotExist() {

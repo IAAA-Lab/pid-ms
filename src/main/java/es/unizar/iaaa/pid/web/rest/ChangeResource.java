@@ -1,19 +1,37 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import es.unizar.iaaa.pid.service.ChangeDTOService;
-import es.unizar.iaaa.pid.service.dto.ChangeDTO;
-import es.unizar.iaaa.pid.web.rest.util.ControllerUtil;
-import io.swagger.annotations.ApiParam;
+import java.util.List;
+import java.util.function.Supplier;
+
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.util.List;
+import com.codahale.metrics.annotation.Timed;
+
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
+import es.unizar.iaaa.pid.service.ChangeDTOService;
+import es.unizar.iaaa.pid.service.FeatureDTOService;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
+import es.unizar.iaaa.pid.service.dto.ChangeDTO;
+import es.unizar.iaaa.pid.service.dto.FeatureDTO;
+import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
+import es.unizar.iaaa.pid.web.rest.util.ControllerUtil;
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing Change.
@@ -27,9 +45,16 @@ public class ChangeResource {
     private static final String ENTITY_NAME = "change";
 
     private final ChangeDTOService changeService;
+    private final FeatureDTOService featureService;
+    private final NamespaceDTOService namespaceService;
+    private final OrganizationMemberDTOService organizationMemberService;
 
-    public ChangeResource(ChangeDTOService changeService) {
+    public ChangeResource(ChangeDTOService changeService, FeatureDTOService featureService, 
+    		NamespaceDTOService namespaceService, OrganizationMemberDTOService organizationMemberService) {
         this.changeService = changeService;
+        this.featureService = featureService;
+        this.namespaceService = namespaceService;
+        this.organizationMemberService = organizationMemberService;
     }
 
     /**
@@ -45,6 +70,7 @@ public class ChangeResource {
         log.debug("REST request to save Change : {}", changeDTO);
         return ControllerUtil
             .with(ENTITY_NAME, uriBuilder.path("/api/changes/{id}"), changeService)
+            .forbidWhen(notAdminOrEditor(changeDTO))
             .doPost(changeDTO);
     }
 
@@ -61,6 +87,7 @@ public class ChangeResource {
         log.debug("REST request to update Change : {}", changeDTO);
         return ControllerUtil
             .with(ENTITY_NAME, changeService)
+            .forbidWhen(notAdminOrEditor(id))
             .doPut(id, changeDTO);
     }
 
@@ -110,6 +137,25 @@ public class ChangeResource {
         log.debug("REST request to delete Change : {}", id);
         return ControllerUtil
             .with(ENTITY_NAME, changeService)
+            .forbidWhen(notAdminOrEditor(id))
             .doDelete(id);
+    }
+    
+    private Supplier<Boolean> notAdminOrEditor(ChangeDTO target) {
+        return () -> {
+        	FeatureDTO feature = featureService.findOne(target.getFeatureId());
+        	NamespaceDTO namespace = namespaceService.findOne(feature.getNamespaceId());
+            OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespace.getOwnerId());
+            return organizationMember == null || 
+            		(organizationMember.getCapacity() != Capacity.ADMIN && 
+            		organizationMember.getCapacity() != Capacity.EDITOR);
+        };
+    }
+    
+    private Supplier<Boolean> notAdminOrEditor(Long id) {
+        return () -> {
+        	ChangeDTO change = changeService.findOne(id);
+        	return notAdminOrEditor(change).get();
+        };
     }
 }

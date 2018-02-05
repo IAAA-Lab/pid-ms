@@ -151,17 +151,29 @@
         </div>
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.namespace.methodType" for="field_methodType">Method Type</label>
-            <select class="form-control" name="methodType" ng-model="vm.namespace.methodType" id="field_methodType">
+            <select class="form-control" name="methodType" ng-model="vm.namespace.methodType" id="field_methodType" required>
                 <option value="GET" data-translate="pidmsApp.MethodType.GET">GET</option>
                 <option value="POST" data-translate="pidmsApp.MethodType.POST">POST</option>
             </select>
+            <div ng-show="editForm.methodType.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.methodType.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
         </div>
-        <div class="form-group" ng-show="vm.namespace.nextRenewalDate">
+        <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.namespace.sourceType" for="field_sourceType">Source Type</label>
-            <select class="form-control" name="sourceType" ng-model="vm.namespace.sourceType" id="field_sourceType">
+            <select class="form-control" name="sourceType" ng-model="vm.namespace.sourceType" id="field_sourceType" required>
                 <option value="WFS" data-translate="pidmsApp.SourceType.WFS">WFS</option>
                 <option value="SHP" data-translate="pidmsApp.SourceType.SHP">SHP</option>
             </select>
+            <div ng-show="editForm.sourceType.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.sourceType.$error.required" data-translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
         </div>
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.namespace.endpointLocation" for="field_endpointLocation">Endpoint Location</label>

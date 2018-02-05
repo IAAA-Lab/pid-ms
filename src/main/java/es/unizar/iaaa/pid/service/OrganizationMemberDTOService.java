@@ -38,4 +38,12 @@ public interface OrganizationMemberDTOService extends DTOService<Long, Organizat
      * @param id id of the organization to be deleted
      */
     void deleteAllByOrganizationId(Long id);
+    
+    /**
+     * Find the organizationMember that has a specific user and specific organization
+     * 
+     * @param userId id of the organizationMember
+     * @param organizationId id of the organizationMember
+     */
+    OrganizationMemberDTO findOneByUserIdAndOrganizationId(Long userId, Long oraginzationId);
 }

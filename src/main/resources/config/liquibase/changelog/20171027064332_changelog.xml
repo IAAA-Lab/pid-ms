@@ -593,6 +593,11 @@
                   separator=";"
                   tableName="namespace">
         </loadData>
+        <loadData encoding="UTF-8"
+        		  file="config/liquibase/features.csv"
+        		  separator=";"
+        		  tableName="feature">
+        </loadData>
     </changeSet>
 
 </databaseChangeLog>

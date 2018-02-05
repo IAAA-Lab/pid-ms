@@ -143,4 +143,16 @@ public class OrganizationMemberServiceImpl implements OrganizationMemberDTOServi
     	log.debug("Request to delete all oragnizationMembers of the organization : {}", organizationId);
     	organizationMemberRepository.deleteAllByOrganizationId(organizationId);
     }
+    
+    /**
+     * Find the organizationMember that has a specific user and specific organization
+     * 
+     * @param userId id of the organizationMember
+     * @param organizationId id of the organizationMember
+     */
+    public OrganizationMemberDTO findOneByUserIdAndOrganizationId(Long userId, Long organizationId){
+    	log.debug("Request to get OrganizationMember filter by userId {} and organizationId {}",userId, organizationId);
+    	OrganizationMember organizationMember = organizationMemberRepository.findOneByUserIdAndOrganizationId(userId, organizationId);
+    	return organizationMemberMapper.toDto(organizationMember);
+    }
 }

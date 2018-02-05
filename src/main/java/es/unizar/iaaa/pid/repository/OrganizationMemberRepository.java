@@ -32,4 +32,7 @@ public interface OrganizationMemberRepository extends JpaRepository<Organization
     @Modifying
     @Query("delete from OrganizationMember om where om.organization.id = ?1")
     void deleteAllByOrganizationId(Long organizationId);
+    
+    @Query("select om from OrganizationMember om where om.user.id = ?1 and om.organization.id = ?2")
+    OrganizationMember findOneByUserIdAndOrganizationId(Long userId, Long organizationId);
 }

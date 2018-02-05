@@ -1,21 +1,31 @@
 package es.unizar.iaaa.pid.web.rest;
 
+import java.util.List;
+import java.util.function.Supplier;
+
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import com.codahale.metrics.annotation.Timed;
+
 import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.web.rest.util.ControllerUtil;
 import io.swagger.annotations.ApiParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import javax.validation.Valid;
-import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * REST controller for managing OrganizationMember.
@@ -46,6 +56,8 @@ public class OrganizationMemberResource {
         log.debug("REST request to save OrganizationMember : {}", organizationMemberDTO);
         return ControllerUtil
             .with(ENTITY_NAME, uriBuilder.path("/api/organization-members/{id}"), organizationMemberService)
+            .badRequestWhen(userIsMemberOfOrganization(organizationMemberDTO),"userIsMemberOfOrganization",
+                    "User is already part of the organization")
             .forbidWhen(notAnAdmin(organizationMemberDTO))
             .doPost(organizationMemberDTO);
     }
@@ -64,6 +76,8 @@ public class OrganizationMemberResource {
         log.debug("REST request to update OrganizationMember : {}", organizationMemberDTO);
         return ControllerUtil
             .with(ENTITY_NAME, organizationMemberService)
+            .badRequestWhen(userIsMemberOfOrganization(organizationMemberDTO),"userIsMemberOfOrganization",
+                    "User is already part of the organization")
             .forbidWhen(notAnAdmin(id))
             .doPut(id, organizationMemberDTO);
     }
@@ -113,7 +127,7 @@ public class OrganizationMemberResource {
     public ResponseEntity<Void> deleteOrganizationMember(@PathVariable Long id) {
         log.debug("REST request to delete OrganizationMember : {}", id);
         return ControllerUtil
-            .with(organizationMemberService)
+            .with(ENTITY_NAME,organizationMemberService)
             .forbidWhen(notAnAdmin(id))
             .doDelete(id);
     }
@@ -130,6 +144,13 @@ public class OrganizationMemberResource {
             long organizationId = organizationMemberService.findOne(id).getOrganizationId();
             OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(organizationId);
             return organizationMember == null || organizationMember.getCapacity() != Capacity.ADMIN;
+        };
+    }
+    
+    private Supplier<Boolean> userIsMemberOfOrganization(OrganizationMemberDTO organizationMember) {
+        return () -> {
+            OrganizationMemberDTO aux = organizationMemberService.findOneByUserIdAndOrganizationId(organizationMember.getUserId(),organizationMember.getOrganizationId());
+            return aux != null;
         };
     }
 }

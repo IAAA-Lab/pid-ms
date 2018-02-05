@@ -1,7 +1,13 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.service.TaskDTOService;
+import es.unizar.iaaa.pid.service.dto.ChangeDTO;
+import es.unizar.iaaa.pid.service.dto.FeatureDTO;
+import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.service.dto.TaskDTO;
 import es.unizar.iaaa.pid.web.rest.util.ControllerUtil;
 import io.swagger.annotations.ApiParam;
@@ -14,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * REST controller for managing Task.
@@ -44,6 +51,7 @@ public class TaskResource {
         log.debug("REST request to save Task : {}", taskDTO);
         return ControllerUtil
             .with(ENTITY_NAME, uriBuilder.path("/api/tasks/{id}"), taskService)
+            .forbidWhen(notallowed())
             .doPost(taskDTO);
     }
 
@@ -61,6 +69,7 @@ public class TaskResource {
         log.debug("REST request to update Task : {}", taskDTO);
         return ControllerUtil
             .with(ENTITY_NAME, taskService)
+            .forbidWhen(notallowed())
             .doPut(id, taskDTO);
     }
 
@@ -110,6 +119,13 @@ public class TaskResource {
         log.debug("REST request to delete Task : {}", id);
         return ControllerUtil
             .with(ENTITY_NAME, taskService)
+            .forbidWhen(notallowed())
             .doDelete(id);
+    }
+    
+    private Supplier<Boolean> notallowed() {
+        return () -> {
+        	return true;
+        };
     }
 }
