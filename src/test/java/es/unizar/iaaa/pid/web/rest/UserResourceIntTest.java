@@ -127,6 +127,19 @@ public class UserResourceIntTest {
         user.setLangKey(DEFAULT_LANGKEY);
         return user;
     }
+    
+    public static User createEntityAux(){
+    	User user = new User();
+    	user.setLogin(UPDATED_LOGIN);
+        user.setPassword(RandomStringUtils.random(60));
+        user.setActivated(true);
+        user.setEmail(UPDATED_EMAIL);
+        user.setFirstName(UPDATED_FIRSTNAME);
+        user.setLastName(UPDATED_LASTNAME);
+        user.setImageUrl(UPDATED_IMAGEURL);
+        user.setLangKey(UPDATED_LANGKEY);
+        return user;
+    }
 
     @Before
     public void initTest() {

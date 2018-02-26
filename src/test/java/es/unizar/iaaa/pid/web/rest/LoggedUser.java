@@ -15,12 +15,20 @@ public class LoggedUser {
     protected EntityManager em;
 
     protected User loggedUser;
+    
+    protected User loggedUserAux;
 
     protected User loggedUser() {
         loggedUser = UserResourceIntTest.createEntity();
         em.persist(loggedUser);
         em.flush();
         return loggedUser;
+    }
+    protected User loggedUserAux(){
+    	loggedUserAux = UserResourceIntTest.createEntityAux();
+    	em.persist(loggedUserAux);
+    	em.flush();
+    	return loggedUserAux;
     }
 
     @Before

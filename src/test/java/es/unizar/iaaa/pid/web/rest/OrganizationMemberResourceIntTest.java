@@ -1,18 +1,23 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import es.unizar.iaaa.pid.PidmsApp;
-import es.unizar.iaaa.pid.domain.Organization;
-import es.unizar.iaaa.pid.domain.OrganizationMember;
-import es.unizar.iaaa.pid.domain.enumeration.Capacity;
-import es.unizar.iaaa.pid.repository.OrganizationMemberRepository;
-import es.unizar.iaaa.pid.service.OrganizationDTOService;
-import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
-import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
-import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
-import es.unizar.iaaa.pid.service.mapper.OrganizationMemberMapper;
-import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
-import es.unizar.iaaa.pid.web.rest.util.MvcResultUtils;
-import es.unizar.iaaa.pid.web.rest.util.TestUtil;
+import static es.unizar.iaaa.pid.web.rest.util.HeaderUtil.ERROR_ID_ALREADY_EXIST;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_CAPACITY;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.ERROR_HEADER;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.ERROR_NULL_FIELD;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.FIELD_CAPACITY;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_CAPACITY;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.organization;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,12 +34,19 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.*;
-import static es.unizar.iaaa.pid.web.rest.util.HeaderUtil.ERROR_ID_ALREADY_EXIST;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import es.unizar.iaaa.pid.PidmsApp;
+import es.unizar.iaaa.pid.domain.Organization;
+import es.unizar.iaaa.pid.domain.OrganizationMember;
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
+import es.unizar.iaaa.pid.repository.OrganizationMemberRepository;
+import es.unizar.iaaa.pid.service.OrganizationDTOService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
+import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
+import es.unizar.iaaa.pid.service.mapper.OrganizationMemberMapper;
+import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
+import es.unizar.iaaa.pid.web.rest.util.MvcResultUtils;
+import es.unizar.iaaa.pid.web.rest.util.TestUtil;
 /**
  * Test class for the OrganizationMemberResource REST controller.
  *
@@ -108,8 +120,9 @@ public class OrganizationMemberResourceIntTest extends LoggedUser {
 
     @Test
     public void createOrganizationMember() throws Exception {
-        // Create the Task
-        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberNew);
+        OrganizationMember organizationMemberAdd = new OrganizationMember().user(loggedUserAux()).organization(organizationMemberNew.getOrganization()).capacity(DEFAULT_CAPACITY);
+
+        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberAdd);
 
         MvcResult result = restOrganizationMemberMockMvc.perform(post("/api/organization-members")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -190,8 +203,8 @@ public class OrganizationMemberResourceIntTest extends LoggedUser {
 
     @Test
     public void updateOrganizationMember() throws Exception {
-        // Initialize the database
-        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMember);
+    	OrganizationMember organizationMemberAdd = new OrganizationMember().user(loggedUserAux()).organization(organizationMemberNew.getOrganization()).capacity(DEFAULT_CAPACITY);
+    	OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberAdd);
         organizationMemberDTO = organizationMemberService.save(organizationMemberDTO);
 
         // Update the organizationMember
@@ -222,16 +235,19 @@ public class OrganizationMemberResourceIntTest extends LoggedUser {
 
     @Test
     public void deleteOrganizationMember() throws Exception {
+    	OrganizationMember organizationMemberAdd = new OrganizationMember().user(loggedUserAux()).organization(organizationMemberNew.getOrganization()).capacity(DEFAULT_CAPACITY);
+    	OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberAdd);
+        organizationMemberDTO = organizationMemberService.save(organizationMemberDTO);
 
-        restOrganizationMemberMockMvc.perform(get("/api/organization-members/{id}", organizationMember.getId())
+        restOrganizationMemberMockMvc.perform(get("/api/organization-members/{id}", organizationMemberDTO.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
-        restOrganizationMemberMockMvc.perform(delete("/api/organization-members/{id}", organizationMember.getId())
+        restOrganizationMemberMockMvc.perform(delete("/api/organization-members/{id}", organizationMemberDTO.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
-        restOrganizationMemberMockMvc.perform(get("/api/organization-members/{id}", organizationMember.getId())
+        restOrganizationMemberMockMvc.perform(get("/api/organization-members/{id}", organizationMemberDTO.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound());
     }
