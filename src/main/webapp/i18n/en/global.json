@@ -158,6 +158,13 @@
         "notAuthenticated": "You must be authenticated to do this action",
         "taskInExecuting": "The namespace has a executing task"
     },
+    "section": {
+        "description": "Description",
+        "source": "Source",
+        "registration": "Registration"
+    },
     "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad Zaragoza</a>",
-    "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>"
+    "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>",
+    "true": "Yes",
+    "false": "No"
 }

@@ -16,7 +16,7 @@
             "VALIDATION_END": "VALIDACION FINAL",
             "VALIDATION_BEGIN": "VALIDACION INICIAL",
             "UPDATING_PIDS": "ACTUALIZACIÓN PIDS",
-            "NONE": "NINGUNA"
+            "NONE": "ESPERANDO AL PRÓXIMO CICLO"
         }
     }
 }

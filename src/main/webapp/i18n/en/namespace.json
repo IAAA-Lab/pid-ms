@@ -24,8 +24,8 @@
                 "title": "Namespace"
             },
             "namespace": "Namespace",
-            "title": "Title",
-            "publicNamespace": "Public Namespace",
+            "title": "Descriptive Title",
+            "publicNamespace": "¿Is it Visible?",
             "renewalPolicy": "Renewal Policy",
             "namespaceStatus": "Namespace Status",
             "processStatus": "Process Status",

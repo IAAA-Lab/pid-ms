@@ -133,7 +133,7 @@
         "featureExist": "Existe otro Feature con el mismo atributo featureType y schemaPrefix",
         "NamespaceNotExist": "El Namespace no existe",
         "OrganizationNotExist": "La Organización no existe",
-        "notCapacityToAddNamespace": "Es necesario ser Administrador o Editor de la Organización para añadir un Namespace", 
+        "notCapacityToAddNamespace": "Es necesario ser Administrador o Editor de la Organización para añadir un Namespace",
         "notCapacityToModifyNamespace": "Es necesario ser Administrador o Editor de la Organización para modificar un Namespace",
         "notCapacityToDeleteNamespace": "Es necesario ser Administrador o Editor de la Organización para borrar un Namespace",
         "notCapacityToAddOrganizationMember": "Es necesario ser Administrador de la Organización para añádir capacidades a un usuario",
@@ -158,6 +158,13 @@
         "notAuthenticated": "Debes estar autentificado para realizar esta acción",
         "taskInExecuting": "El namespace tiene una tarea en ejecución"
     },
+    "section": {
+        "description": "Descripción",
+        "source": "Fuente",
+        "registration": "Registro"
+    },
     "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad de Zaragoza</a>",
-    "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>"
+    "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>",
+    "true": "Sí",
+    "false": "No"
 }
