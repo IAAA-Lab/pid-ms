@@ -1,12 +1,13 @@
 package es.unizar.iaaa.pid.service.impl;
 
+import es.unizar.iaaa.pid.domain.Organization;
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
+import es.unizar.iaaa.pid.repository.OrganizationMemberRepository;
+import es.unizar.iaaa.pid.repository.OrganizationRepository;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.OrganizationDTOService;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.service.UserService;
-import es.unizar.iaaa.pid.domain.Organization;
-import es.unizar.iaaa.pid.domain.enumeration.Capacity;
-import es.unizar.iaaa.pid.repository.OrganizationRepository;
 import es.unizar.iaaa.pid.service.dto.OrganizationDTO;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
@@ -30,23 +31,26 @@ public class OrganizationServiceImpl implements OrganizationDTOService {
     private final Logger log = LoggerFactory.getLogger(OrganizationServiceImpl.class);
 
     private final OrganizationRepository organizationRepository;
-    
+
+    private final OrganizationMemberRepository organizationMemberRepository;
+
     private final NamespaceDTOService namespaceDTOService;
-    
+
     private final OrganizationMemberDTOService organizationMemberDTOService;
-    
+
     private final UserService userService;
 
     private final OrganizationMapper organizationMapper;
 
     public OrganizationServiceImpl(OrganizationRepository organizationRepository, OrganizationMapper organizationMapper,
     		NamespaceDTOService namespaceDTOService, OrganizationMemberDTOService organizationMemberDTOService,
-    		UserService userService) {
+    		UserService userService, OrganizationMemberRepository organizationMemberRepository) {
         this.organizationRepository = organizationRepository;
         this.organizationMapper = organizationMapper;
         this.namespaceDTOService = namespaceDTOService;
         this.organizationMemberDTOService = organizationMemberDTOService;
         this.userService = userService;
+        this.organizationMemberRepository = organizationMemberRepository;
     }
 
     /**
@@ -59,18 +63,23 @@ public class OrganizationServiceImpl implements OrganizationDTOService {
     public OrganizationDTO save(OrganizationDTO organizationDTO) {
         log.debug("Request to save Organization : {}", organizationDTO);
         Organization organization = organizationMapper.toEntity(organizationDTO);
-        organization = organizationRepository.save(organization);
-        
-        //Add organization member
-        OrganizationMemberDTO organizationMemberDTO = new OrganizationMemberDTO();
-        organizationMemberDTO.setCapacity(Capacity.ADMIN);
-        organizationMemberDTO.setOrganizationId(organization.getId());
-        
-        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        organizationMemberDTO.setUserId(userService.getUserWithAuthoritiesByLogin(user.getUsername()).get().getId());
-        organizationMemberDTOService.save(organizationMemberDTO);
-        
-        return organizationMapper.toDto(organization);
+        Organization savedOrganization = organizationRepository.save(organization);
+
+        //Add organization member if none
+        if (organizationMemberRepository.findByOrganization(savedOrganization).isEmpty()) {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            userService.getUserWithAuthoritiesByLogin(user.getUsername()).ifPresent(u -> {
+                    OrganizationMemberDTO organizationMemberDTO = new OrganizationMemberDTO();
+                    organizationMemberDTO.setCapacity(Capacity.ADMIN);
+                    organizationMemberDTO.setOrganizationId(savedOrganization.getId());
+                    organizationMemberDTO.setUserId(u.getId());
+                    organizationMemberDTOService.save(organizationMemberDTO);
+                }
+            );
+        }
+
+        return organizationMapper.toDto(savedOrganization);
     }
 
     /**
@@ -109,10 +118,10 @@ public class OrganizationServiceImpl implements OrganizationDTOService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Organization : {}", id);
-        
+
         //delete all associated namespaces
         namespaceDTOService.deleteAllByOrganizationId(id);
-        
+
         //delete all associated organizationMember
         organizationMemberDTOService.deleteAllByOrganizationId(id);
         organizationRepository.delete(id);

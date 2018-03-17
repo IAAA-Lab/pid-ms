@@ -1,10 +1,9 @@
 package es.unizar.iaaa.pid.config;
 
-import es.unizar.iaaa.pid.security.*;
-import es.unizar.iaaa.pid.security.jwt.*;
-
-import io.github.jhipster.security.*;
-
+import es.unizar.iaaa.pid.security.AuthoritiesConstants;
+import es.unizar.iaaa.pid.security.jwt.JWTConfigurer;
+import es.unizar.iaaa.pid.security.jwt.TokenProvider;
+import io.github.jhipster.security.Http401UnauthorizedEntryPoint;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

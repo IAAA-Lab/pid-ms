@@ -1,16 +1,19 @@
 package es.unizar.iaaa.pid.domain;
 
+import es.unizar.iaaa.pid.domain.enumeration.MethodType;
+import es.unizar.iaaa.pid.domain.enumeration.SourceType;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.Min;
-
-import es.unizar.iaaa.pid.domain.enumeration.MethodType;
-import es.unizar.iaaa.pid.domain.enumeration.SourceType;
+import java.io.Serializable;
 
 @Embeddable
-public class Source {
+public class Source implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "source_type")
@@ -22,14 +25,14 @@ public class Source {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "method_type")
 	private MethodType methodType;
-	
+
     @Min(value = 0)
     @Column(name = "max_num_request")
     private Integer maxNumRequest;
-    
+
     @Column(name = "resolver_proxy_mode")
     private Boolean resolverProxyMode;
-    
+
     public SourceType getSourceType() {
         return sourceType;
     }
@@ -68,12 +71,12 @@ public class Source {
     public void setResolverProxyMode(Boolean resolverProxyMode) {
         this.resolverProxyMode = resolverProxyMode;
     }
-    
+
     public Source methodType(MethodType methodType){
     	this.methodType = methodType;
     	return this;
     }
-    
+
     public MethodType getMethodType() {
 		return methodType;
 	}
@@ -81,7 +84,7 @@ public class Source {
 	public void setMethodType(MethodType methodType) {
 		this.methodType = methodType;
 	}
-	
+
 	public Integer getMaxNumRequest() {
 		return maxNumRequest;
 	}
@@ -89,7 +92,7 @@ public class Source {
 	public void setMaxNumRequest(Integer maxNumRequest) {
 		this.maxNumRequest = maxNumRequest;
 	}
-	
+
 	public Source maxNumRequest(Integer maxNumRequest) {
 		this.maxNumRequest = maxNumRequest;
 		return this;

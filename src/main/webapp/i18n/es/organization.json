@@ -3,20 +3,20 @@
         "organization" : {
             "home": {
                 "title": "Organización",
-                "createLabel": "Crear nueva Organización",
-                "createOrEditLabel": "Crear o editar Organización"
+                "createLabel": "Crear una nueva Organización",
+                "editLabel": "Editar una Organización"
             },
-            "created": "Una nueva Organización con el identificador {{ param }} ha sido creada ",
-            "updated": "La Organización con el identificador {{ param }} ha sido actualizada ",
-            "deleted": "La Organización con el identificador {{ param }} ha sido eliminado ",
+            "created": "Una nueva Organización con el identificador {{ param }} ha sido creada",
+            "updated": "La Organización con el identificador {{ param }} ha sido actualizada",
+            "deleted": "La Organización con el identificador {{ param }} ha sido eliminada",
             "delete": {
-                "question": "¿Seguro que quiere eliminar la Organización {{ id }}?"
+                "question": "¿Seguro que quiere eliminar la Organización \"{{ name }}\" [id:{{ id }}]?"
             },
             "detail": {
                 "title": "Organización"
             },
-            "name": "Nombre",
-            "title": "Título",
+            "name": "Nombre corto",
+            "title": "Nombre completo",
             "member": "Miembro",
             "namespace": "Espacio de nombres",
             "slug": "Organización"

@@ -1,18 +1,17 @@
 package es.unizar.iaaa.pid.harvester.tasks;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.TaskService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractTaskRunner implements TaskRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunner.class);

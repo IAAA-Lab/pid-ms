@@ -3,14 +3,17 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="vm.clear()">&times;</button>
-        <h4 class="modal-title" id="myUserLabel" data-translate="userManagement.home.createOrEditLabel">
-            Create or edit a User</h4>
+        <h4 class="modal-title" id="myUserLabel">
+            <span ng-show="vm.user.id" data-translate="userManagement.home.editLabel">Create or edit a User</span>
+            <span ng-show="!vm.user.id" data-translate="userManagement.home.createLabel">Create or edit a User</span>
+            <small ng-show="vm.user.id">[id:{{vm.user.id}}]</small>
+        </h4>
+
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" ng-show="vm.user.id">
-            <label data-translate="global.field.id">ID</label>
-            <input type="text" class="form-control" name="id"
+            <input type="hidden" class="form-control" name="id"
                    ng-model="vm.user.id" readonly>
         </div>
 

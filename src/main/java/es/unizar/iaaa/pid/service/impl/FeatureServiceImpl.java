@@ -1,14 +1,5 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.repository.FeatureRepository;
@@ -18,6 +9,14 @@ import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
 import es.unizar.iaaa.pid.service.dto.FeatureDTO;
 import es.unizar.iaaa.pid.service.mapper.FeatureMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 /**
@@ -30,17 +29,17 @@ public class FeatureServiceImpl implements FeatureDTOService {
     private final Logger log = LoggerFactory.getLogger(FeatureServiceImpl.class);
 
     private final FeatureRepository featureRepository;
-    
+
     private final FeatureMapper featureMapper;
-    
+
     private final NamespaceService namespaceService;
-    
+
     private final ChangeDTOService changeDTOService;
-    
+
     private final PersistentIdentifierDTOService persistentIdentifierDTOService;
 
     public FeatureServiceImpl(FeatureRepository featureRepository, FeatureMapper featureMapper,
-    		NamespaceService namespaceService, ChangeDTOService changeDTOService, 
+    		NamespaceService namespaceService, ChangeDTOService changeDTOService,
     		PersistentIdentifierDTOService persistentIdentifierDTOService) {
         this.featureRepository = featureRepository;
         this.featureMapper = featureMapper;
@@ -129,13 +128,13 @@ public class FeatureServiceImpl implements FeatureDTOService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Feature : {}", id);
-        
+
         //borro todos los cambios asociados a la Feature
         changeDTOService.deleteAllByFeatureId(id);
-        
+
         //borro todos los PIDs asociados a la Feature
         persistentIdentifierDTOService.deleteAllByFeatureId(id);
-        
+
         //borro feature
         featureRepository.delete(id);
     }
@@ -167,7 +166,7 @@ public class FeatureServiceImpl implements FeatureDTOService {
         Feature feature = featureRepository.findByIdAndTheirNamespacePublicOrBelongsToPrincipalOrganizations(id);
         return featureMapper.toDto(feature);
     }
-    
+
     /**
      *  Get the "feature" feature
      *
@@ -181,10 +180,10 @@ public class FeatureServiceImpl implements FeatureDTOService {
 		Feature feature = featureRepository.findByFeatureTypeAndSchemaPrefix(featureType, schemaPrefix);
 		return featureMapper.toDto(feature);
 	}
-	
+
 	/**
      * Delete all features associate with the Namespace
-     * 
+     *
      * @param idNamespace id of the Namespace
      */
 	@Override
@@ -195,6 +194,6 @@ public class FeatureServiceImpl implements FeatureDTOService {
     		featureRepository.delete(feature);
     	}
 	}
-    
+
 
 }

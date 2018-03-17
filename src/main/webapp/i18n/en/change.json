@@ -17,7 +17,7 @@
             },
             "changeTimestamp": "Change Timestamp",
             "action": "Action",
-            "feature": "Feature",
+            "featureType": "Feature Type",
             "namespace": "Namespace",
             "localId": "Local Id",
             "versionId": "Version Id",

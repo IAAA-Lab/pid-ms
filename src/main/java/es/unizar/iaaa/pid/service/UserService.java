@@ -1,15 +1,14 @@
 package es.unizar.iaaa.pid.service;
 
+import es.unizar.iaaa.pid.config.Constants;
 import es.unizar.iaaa.pid.domain.Authority;
 import es.unizar.iaaa.pid.domain.User;
 import es.unizar.iaaa.pid.repository.AuthorityRepository;
-import es.unizar.iaaa.pid.config.Constants;
 import es.unizar.iaaa.pid.repository.UserRepository;
 import es.unizar.iaaa.pid.security.AuthoritiesConstants;
 import es.unizar.iaaa.pid.security.SecurityUtils;
-import es.unizar.iaaa.pid.service.util.RandomUtil;
 import es.unizar.iaaa.pid.service.dto.UserDTO;
-
+import es.unizar.iaaa.pid.service.util.RandomUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

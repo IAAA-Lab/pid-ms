@@ -1,6 +1,6 @@
 
 <div ng-switch="vm.isAuthenticated()">
-    <h2><span data-translate="pidmsApp.feature.detail.title">Feature</span> {{vm.feature.id}}</h2>
+    <h2><span data-translate="pidmsApp.feature.detail.title">Feature</span> {{vm.feature.featureType}}</h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
@@ -74,7 +74,7 @@
         </dd>
         <dt><span data-translate="pidmsApp.feature.namespace">Namespace</span></dt>
         <dd>
-            <a ui-sref="namespace-detail({id:vm.feature.namespaceId})">{{vm.feature.namespaceId}}</a>
+            <a ui-sref="namespace-detail({id:vm.feature.namespaceId})">{{vm.feature.namespaceName}}</a>
         </dd>
     </dl>
 
@@ -91,7 +91,7 @@
         <span class="glyphicon glyphicon-pencil"></span>
         <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
     </button>
-    
+
     <button type="submit"
             ui-sref="feature.delete({id:vm.feature.id})"
             class="btn btn-danger"

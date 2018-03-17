@@ -1,14 +1,10 @@
 package es.unizar.iaaa.pid.harvester.connectors.shp;
 
-import java.io.File;
-import java.nio.charset.Charset;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import es.unizar.iaaa.pid.domain.*;
+import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+import es.unizar.iaaa.pid.harvester.connectors.FileHarvester;
+import es.unizar.iaaa.pid.service.ChangeService;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.shapefile.ShapefileDataStore;
@@ -22,17 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import es.unizar.iaaa.pid.domain.Change;
-import es.unizar.iaaa.pid.domain.Feature;
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.PersistentIdentifier;
-import es.unizar.iaaa.pid.domain.Resource;
-import es.unizar.iaaa.pid.domain.Source;
-import es.unizar.iaaa.pid.domain.Task;
-import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-import es.unizar.iaaa.pid.harvester.connectors.FileHarvester;
-import es.unizar.iaaa.pid.service.ChangeService;
+import java.io.File;
+import java.nio.charset.Charset;
+import java.time.Instant;
+import java.util.*;
 
 @Component
 @Scope("prototype")
@@ -52,12 +41,12 @@ public class SHPHarvester implements FileHarvester {
         this.task = task;
         this.source = task.getNamespace().getSource();
     }
-    
+
     @Override
     public int extractIdentifiers(Feature featureType, File shpFile) {
     	int valid = 0;
-    	FeatureCollection<SimpleFeatureType, SimpleFeature> collection = null;
-    	
+    	FeatureCollection<SimpleFeatureType, SimpleFeature> collection;
+
     	try{
             Map<String, Object> map = new HashMap<>();
             map.put("url", shpFile.toURI().toURL());
@@ -65,18 +54,18 @@ public class SHPHarvester implements FileHarvester {
             dataStore.setCharset(Charset.forName("UTF-8"));
             String typeName = dataStore.getTypeNames()[0];
 
-            FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore
+            FeatureSource<SimpleFeatureType, SimpleFeature> featureSource = dataStore
                     .getFeatureSource(typeName);
-            
-            collection = source.getFeatures();
+
+            collection = featureSource.getFeatures();
     	}
     	catch(Exception e){
     		error("No se ha podido abrir el fichero DBF.",e);
     		return -1;
     	}
-    	
+
     	FeatureIterator<SimpleFeature> features = collection.features();
-    	
+
     	while (features.hasNext()) {
     		SimpleFeature feature = features.next();
     		//Se el identificador
@@ -92,19 +81,19 @@ public class SHPHarvester implements FileHarvester {
         		error("Error el atributo seleccionado como NameItem no existe");
         		continue;
         	}
-        	
+
         	Identifier identifier = new Identifier()
 						                    .namespace(task.getNamespace().getNamespace())
 						                    .localId(localId)
 						                    .versionId(null)
 						                    .beginLifespanVersion(null)
 						                    .alternateId(null);
-        	
+
         	Resource resource = new Resource()
         								.locator(source.getEndpointLocation() + "#" + shpFile.getName() +"/" +
         											task.getNamespace().getNamespace() +"/" + localId)
         								.resourceType(ResourceType.SPATIAL_OBJECT);
-        	
+
         	Change change = new Change();
         	change.setIdentifier(identifier);
         	change.setResource(resource);
@@ -120,25 +109,26 @@ public class SHPHarvester implements FileHarvester {
     	return valid;
     }
 
-    private void log(String msg, Object... objects) {
-        List<Object> l = new ArrayList<>();
-        l.addAll(Arrays.asList(task.getType(), task.getId(), task.getNamespace().getNamespace()));
-        l.addAll(Arrays.asList(objects));
-        LOGGER.info("Task \"{}:{}\" for namespace \"{}\" : " + msg, l.toArray());
+    private String TASK_FOR_NAMESPACE = "Task \"{}:{}\" for namespace \"{}\" : ";
+
+    public void log(String msg, Object... objects) {
+        LOGGER.info(TASK_FOR_NAMESPACE + msg, buildLoggerParameters(objects));
     }
 
-    private void error(String msg, Object... objects) {
-        List<Object> l = new ArrayList<>();
-        l.addAll(Arrays.asList(task.getType(), task.getId(), task.getNamespace().getNamespace()));
-        l.addAll(Arrays.asList(objects));
-        LOGGER.error("Task \"{}:{}\" for namespace \"{}\" : " + msg, l.toArray());
+    public void error(String msg, Object... objects) {
+        LOGGER.error(TASK_FOR_NAMESPACE + msg, buildLoggerParameters(objects));
     }
 
-    private void debug(String msg, Object... objects) {
-        List<Object> l = new ArrayList<>();
-        l.addAll(Arrays.asList(task.getType(), task.getId(), task.getNamespace().getNamespace()));
-        l.addAll(Arrays.asList(objects));
-        LOGGER.debug("Task \"{}:{}\" for namespace \"{}\" : " + msg, l.toArray());
+    public void debug(String msg, Object... objects) {
+        LOGGER.debug(TASK_FOR_NAMESPACE + msg, buildLoggerParameters(objects));
     }
 
+    private Object[] buildLoggerParameters(Object[] objects) {
+        List<Object> l = new ArrayList<>();
+        l.add(task.getType());
+        l.add(task.getId());
+        l.add(task.getNamespace().getNamespace());
+        l.addAll(Arrays.asList(objects));
+        return l.toArray();
+    }
 }

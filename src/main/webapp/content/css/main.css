@@ -289,6 +289,10 @@ entity tables helpers
     vertical-align: middle;
 }
 
+.jh-table > thead > tr > th {
+    white-space: nowrap;
+}
+
 .jh-table > thead > tr > th > .glyphicon-sort, .jh-table > thead > tr > th > .glyphicon-sort-by-attributes, .jh-table > thead > tr > th > .glyphicon-sort-by-attributes-alt {
     /* less visible sorting icons */
     opacity: 0.5;

@@ -12,9 +12,9 @@
         <dd>
             <span data-translate="{{'pidmsApp.ChangeAction.' + vm.change.action}}">{{vm.change.action}}</span>
         </dd>
-        <dt><span data-translate="pidmsApp.change.feature">Feature</span></dt>
+        <dt><span data-translate="pidmsApp.change.featureType">Feature Type</span></dt>
         <dd>
-        	<a ui-sref="feature-detail({id:vm.change.featureId})">{{vm.change.featureId}}</a>
+        	<a ui-sref="feature-detail({id:vm.change.featureId})">{{vm.change.featureType}}</a>
         </dd>
         <dt><span data-translate="pidmsApp.change.namespace">Namespace</span></dt>
         <dd>
@@ -46,7 +46,7 @@
         </dd>
         <dt><span data-translate="pidmsApp.change.locator">Locator</span></dt>
         <dd>
-            <span>{{vm.change.locator}}</span>
+            <span><a href="{{vm.change.locator}}" target="_blank">{{vm.change.locator}}</a></span>
         </dd>
         <dt><span data-translate="pidmsApp.change.task">Task</span></dt>
         <dd>

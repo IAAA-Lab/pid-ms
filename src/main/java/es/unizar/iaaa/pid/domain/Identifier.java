@@ -3,10 +3,13 @@ package es.unizar.iaaa.pid.domain;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.Instant;
 
 @Embeddable
-public class Identifier {
+public class Identifier implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private static final String DEFAULT_NAMESPACE = "catalogo";
 

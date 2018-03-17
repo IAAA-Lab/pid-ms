@@ -17,7 +17,7 @@
             },
             "changeTimestamp": "Fecha",
             "action": "Acción",
-            "feature": "Tipo",
+            "featureType": "Tipo Objeto Espacial",
             "namespace": "Espacio de nombres",
             "localId": "Id Local",
             "versionId": "Version",

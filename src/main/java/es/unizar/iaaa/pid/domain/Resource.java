@@ -6,9 +6,12 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.io.Serializable;
 
 @Embeddable
-public class Resource {
+public class Resource implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "resource_type")

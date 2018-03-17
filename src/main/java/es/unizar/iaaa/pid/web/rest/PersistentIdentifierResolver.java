@@ -25,7 +25,7 @@ import java.util.UUID;
  */
 @RestController
 public class PersistentIdentifierResolver {
-    private static MediaType PID_MEDIA_TYPE = MediaType.parseMediaType("application/vnd.inspire.pid");
+    private static final MediaType PID_MEDIA_TYPE = MediaType.parseMediaType("application/vnd.inspire.pid");
 
     private ApplicationProperties properties;
 

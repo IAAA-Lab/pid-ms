@@ -2,7 +2,6 @@ package es.unizar.iaaa.pid.web.rest;
 
 import es.unizar.iaaa.pid.PidmsApp;
 import es.unizar.iaaa.pid.domain.Namespace;
-import es.unizar.iaaa.pid.repository.OrganizationRepository;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
 import es.unizar.iaaa.pid.service.OrganizationDTOService;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
@@ -71,9 +70,6 @@ public class NamespaceResourceIntTest extends LoggedUser {
 
     @Autowired
     private NamespaceDTOService namespaceDTOService;
-
-    @Autowired
-    private OrganizationRepository organizationRepository;
 
     private MockMvc restNamespaceMockMvc;
 

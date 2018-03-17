@@ -119,6 +119,7 @@ public class TaskDTO implements Serializable {
             ", status='" + getStatus() + "'" +
             ", numErrors='" + getNumErrors() + "'" +
             ", namespaceId='" + getNamespaceId() + "'" +
+            ", namespaceName='" + getNamespaceName() + "'" +
             "}";
     }
 }

@@ -1,26 +1,6 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import java.util.List;
-import java.util.function.Supplier;
-
-import javax.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import com.codahale.metrics.annotation.Timed;
-
 import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.service.ChangeDTOService;
 import es.unizar.iaaa.pid.service.FeatureDTOService;
@@ -32,6 +12,16 @@ import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.web.rest.util.ControllerUtil;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * REST controller for managing Change.
@@ -49,7 +39,7 @@ public class ChangeResource {
     private final NamespaceDTOService namespaceService;
     private final OrganizationMemberDTOService organizationMemberService;
 
-    public ChangeResource(ChangeDTOService changeService, FeatureDTOService featureService, 
+    public ChangeResource(ChangeDTOService changeService, FeatureDTOService featureService,
     		NamespaceDTOService namespaceService, OrganizationMemberDTOService organizationMemberService) {
         this.changeService = changeService;
         this.featureService = featureService;
@@ -140,18 +130,18 @@ public class ChangeResource {
             .forbidWhen(notAdminOrEditor(id))
             .doDelete(id);
     }
-    
+
     private Supplier<Boolean> notAdminOrEditor(ChangeDTO target) {
         return () -> {
         	FeatureDTO feature = featureService.findOne(target.getFeatureId());
         	NamespaceDTO namespace = namespaceService.findOne(feature.getNamespaceId());
             OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespace.getOwnerId());
-            return organizationMember == null || 
-            		(organizationMember.getCapacity() != Capacity.ADMIN && 
+            return organizationMember == null ||
+            		(organizationMember.getCapacity() != Capacity.ADMIN &&
             		organizationMember.getCapacity() != Capacity.EDITOR);
         };
     }
-    
+
     private Supplier<Boolean> notAdminOrEditor(Long id) {
         return () -> {
         	ChangeDTO change = changeService.findOne(id);

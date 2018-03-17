@@ -147,10 +147,7 @@ public class PersistentIdentifier implements Serializable {
             return false;
         }
         PersistentIdentifier persistentIdentifier = (PersistentIdentifier) o;
-        if (persistentIdentifier.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), persistentIdentifier.getId());
+        return persistentIdentifier.getId() != null && getId() != null && Objects.equals(getId(), persistentIdentifier.getId());
     }
 
     @Override
@@ -171,6 +168,7 @@ public class PersistentIdentifier implements Serializable {
             "}";
     }
 
+    @Deprecated
     private String computeExternalUrnFromIdentifier() {
         return computeExternalUrnFromIdentifier(identifier);
     }
@@ -197,11 +195,12 @@ public class PersistentIdentifier implements Serializable {
         return sb.toString();
     }
 
+    @Deprecated
     private UUID computeIdFromExternal() {
         return UUID.nameUUIDFromBytes(getExternalUrn().getBytes());
     }
 
-    static public UUID computeSurrogateFromIdentifier(Identifier identifier) {
+    public static UUID computeSurrogateFromIdentifier(Identifier identifier) {
         return computeIdFromExternal(computeExternalUrnFromIdentifier(identifier));
     }
 
@@ -210,9 +209,9 @@ public class PersistentIdentifier implements Serializable {
     }
 
     public void autoId() {
-        String externalUrn = computeExternalUrnFromIdentifier(identifier);
-        UUID id = UUID.nameUUIDFromBytes(externalUrn.getBytes());
-        setExternalUrn(externalUrn);
-        setId(id);
+        String newExternalUrn = computeExternalUrnFromIdentifier(identifier);
+        UUID newId = UUID.nameUUIDFromBytes(newExternalUrn.getBytes());
+        setExternalUrn(newExternalUrn);
+        setId(newId);
     }
 }

@@ -3,14 +3,14 @@
         "organizationMember" : {
             "home": {
                 "title": "Organization members",
-                "createLabel": "Create a new Organization member",
-                "createOrEditLabel": "Create or edit a Organization member"
+                "createLabel": "Add a User to an Organization",
+                "EditLabel": "Edit the membership of a User"
             },
-            "created": "A new Organization member is created with identifier {{ param }}",
-            "updated": "A Organization member is updated with identifier {{ param }}",
-            "deleted": "A Organization member is deleted with identifier {{ param }}",
+            "created": "A User has been to an Organisation",
+            "updated": "A User membership have been updated",
+            "deleted": "A User has been removed from an Organization",
             "delete": {
-                "question": "Are you sure you want to delete Organization member {{ id }}?"
+                "question": "Are you sure you want the User to stop being a member of the Organization?"
             },
             "detail": {
                 "title": "Organization Member"

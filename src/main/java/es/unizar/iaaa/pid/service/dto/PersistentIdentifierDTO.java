@@ -1,17 +1,15 @@
 package es.unizar.iaaa.pid.service.dto;
 
 
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
-
-import javax.validation.constraints.NotNull;
-
-import es.unizar.iaaa.pid.domain.Feature;
-import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 
 /**
  * A DTO for the PersistentIdentifier entity.

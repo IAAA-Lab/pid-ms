@@ -24,23 +24,23 @@ public class ApplicationProperties {
     }
 
     public static class Harvester {
-    	private int MAX_NUM_ERRORS;
-    	private int MAX_NUM_TIMEOUTS;
-    	
-		public int getMAX_NUM_ERRORS() {
-			return MAX_NUM_ERRORS;
+    	private int maxNumErrors;
+    	private int maxNumTimeouts;
+
+		public int getMaxNumErrors() {
+			return maxNumErrors;
 		}
-		public void setMAX_NUM_ERRORS(int mAX_NUM_ERRORS) {
-			MAX_NUM_ERRORS = mAX_NUM_ERRORS;
+		public void setMaxNumErrors(int maxNumErrors) {
+			this.maxNumErrors = maxNumErrors;
 		}
-		public int getMAX_NUM_TIMEOUTS() {
-			return MAX_NUM_TIMEOUTS;
+		public int getMaxNumTimeouts() {
+			return maxNumTimeouts;
 		}
-		public void setMAX_NUM_TIMEOUTS(int mAX_NUM_TIMEOUTS) {
-			MAX_NUM_TIMEOUTS = mAX_NUM_TIMEOUTS;
+		public void setMaxNumTimeouts(int maxNumTimeouts) {
+			this.maxNumTimeouts = maxNumTimeouts;
 		}
     }
-    
+
     private Resolver resolver;
 
     public void setResolver(Resolver resolver) {
@@ -50,15 +50,15 @@ public class ApplicationProperties {
     public Resolver getResolver() {
         return resolver;
     }
-    
+
     private Harvester harvester;
-    
+
     public void setHarvester(Harvester harvester){
     	this.harvester = harvester;
     }
-    
+
     public Harvester getHarvester(){
     	return harvester;
     }
-    
+
 }

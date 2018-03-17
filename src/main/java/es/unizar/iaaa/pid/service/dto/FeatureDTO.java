@@ -3,9 +3,9 @@ package es.unizar.iaaa.pid.service.dto;
 import javax.validation.constraints.NotNull;
 
 public class FeatureDTO {
-	
+
 	private Long id;
-	
+
     private String srsName;
 
     private String schemaUri;
@@ -24,7 +24,7 @@ public class FeatureDTO {
     private String beginLifespanVersionProperty;
 
     private Integer featuresThreshold;
-    
+
     private Boolean hitsRequest;
 
     private Integer factorK;
@@ -32,7 +32,7 @@ public class FeatureDTO {
     private String xpath;
 
     private String nameItem;
-    
+
     private Double minX;
 
     private Double minY;
@@ -40,18 +40,19 @@ public class FeatureDTO {
     private Double maxX;
 
     private Double maxY;
-    
+
     private Long namespaceId;
-    
-    
+
+    private String namespaceName;
+
     public Long getId(){
     	return id;
     }
-    
+
     public void setId(Long id){
     	this.id = id;
     }
-    
+
 	public String getSrsName() {
 		return srsName;
 	}
@@ -196,6 +197,14 @@ public class FeatureDTO {
 		this.namespaceId = namespaceId;
 	}
 
+    public String getNamespaceName() {
+        return namespaceName;
+    }
+
+    public void setNamespaceName(String namespaceName) {
+        this.namespaceName = namespaceName;
+    }
+
 	@Override
 	public String toString() {
 		return "FeatureDTO [srsName=" + srsName + ", schemaUri=" + schemaUri + ", schemaUriGML=" + schemaUriGML
@@ -203,7 +212,8 @@ public class FeatureDTO {
 				+ ", geometryProperty=" + geometryProperty + ", beginLifespanVersionProperty="
 				+ beginLifespanVersionProperty + ", featuresThreshold=" + featuresThreshold + ", hitsRequest="
 				+ hitsRequest + ", factorK=" + factorK + ", xpath=" + xpath + ", nameItem=" + nameItem + ", minX="
-				+ minX + ", minY=" + minY + ", maxX=" + maxX + ", maxY=" + maxY + ", namespaceId=" + namespaceId + "]";
+				+ minX + ", minY=" + minY + ", maxX=" + maxX + ", maxY=" + maxY + ", namespaceId=" + namespaceId +
+                  ", namespaceName=" + namespaceName +"]";
 	}
-	
+
 }

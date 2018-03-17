@@ -2,11 +2,14 @@ package es.unizar.iaaa.pid.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
 @Embeddable
-public class BoundingBox {
+public class BoundingBox implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Column(name = "min_x")
     private Double minX;

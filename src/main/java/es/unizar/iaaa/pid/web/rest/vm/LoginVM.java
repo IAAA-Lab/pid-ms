@@ -1,6 +1,7 @@
 package es.unizar.iaaa.pid.web.rest.vm;
 
 import es.unizar.iaaa.pid.config.Constants;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;

@@ -1,10 +1,10 @@
 package es.unizar.iaaa.pid.service.mapper;
 
 import com.google.common.collect.ImmutableMap;
-import es.unizar.iaaa.pid.domain.*;
+import es.unizar.iaaa.pid.domain.Task;
 import es.unizar.iaaa.pid.service.dto.TaskDTO;
-
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.Map;
 
