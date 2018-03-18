@@ -18,15 +18,9 @@
             "changeTimestamp": "Change Timestamp",
             "action": "Action",
             "featureType": "Feature Type",
-            "namespace": "Namespace",
-            "localId": "Local Id",
-            "versionId": "Version Id",
-            "beginLifespanVersion": "Begin Lifespan Version",
-            "endLifespanVersion": "End Lifespan Version",
-            "alternateId": "Alternate Id",
             "resourceType": "Resource Type",
             "locator": "Locator",
-            "task": "Task"
+            "task": "Part of Task"
         }
     }
 }

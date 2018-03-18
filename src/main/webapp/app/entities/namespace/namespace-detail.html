@@ -58,25 +58,25 @@
                 <h3 class="panel-title" data-translate="section.registration">Registration Section</h3>
             </div>
             <div class="panel-body">
-                <dt><span data-translate="pidmsApp.namespace.itemStatus">Item Status</span></dt>
+                <dt><span data-translate="registration.itemStatus">Item Status</span></dt>
                 <dd><span data-translate="{{'pidmsApp.ItemStatus.' + vm.namespace.itemStatus}}">{{vm.namespace.itemStatus}}</span></dd>
                 <hr>
-                <dt><span data-translate="pidmsApp.namespace.lastChangeDate">Last Change Date</span></dt>
+                <dt><span data-translate="registration.lastChangeDate">Last Change Date</span></dt>
                 <dd><span>{{(vm.namespace.lastChangeDate | date:'medium') || "-"}}</span></dd>
                 <hr>
-                <dt><span data-translate="pidmsApp.namespace.registrationDate">Registration Date</span></dt>
+                <dt><span data-translate="registration.registrationDate">Registration Date</span></dt>
                 <dd><span>{{(vm.namespace.registrationDate | date:'medium') || "-"}}</span></dd>
                 <hr>
-                <dt><span data-translate="pidmsApp.namespace.lastRevisionDate">Last Revision Date</span></dt>
+                <dt><span data-translate="registration.lastRevisionDate">Last Revision Date</span></dt>
                 <dd><span>{{(vm.namespace.lastRevisionDate | date:'medium') || "-"}}</span></dd>
                 <hr>
-                <dt><span data-translate="pidmsApp.namespace.nextRenewalDate">Next Renewal Date</span></dt>
+                <dt><span data-translate="registration.nextRenewalDate">Next Renewal Date</span></dt>
                 <dd><span>{{(vm.namespace.nextRenewalDate | date:'medium') || "-"}}</span></dd>
                 <hr>
-                <dt><span data-translate="pidmsApp.namespace.annullationDate">Annullation Date</span></dt>
+                <dt><span data-translate="registration.annullationDate">Annullation Date</span></dt>
                 <dd><span>{{(vm.namespace.annullationDate | date:'medium') || "-"}}</span></dd>
                 <hr ng-switch-when="true">
-                <dt ng-switch-when="true"><span data-translate="pidmsApp.namespace.processStatus">Process Status</span></dt>
+                <dt ng-switch-when="true"><span data-translate="registration.processStatus">Process Status</span></dt>
                 <dd ng-switch-when="true"><span data-translate="{{'pidmsApp.ProcessStatus.' + vm.namespace.processStatus}}">{{vm.namespace.processStatus}}</span></dd>
             </div>
         </div>

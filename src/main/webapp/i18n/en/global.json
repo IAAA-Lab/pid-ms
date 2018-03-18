@@ -15,7 +15,7 @@
                 "persistentIdentifier": "Persistent Identifier",
                 "organization": "Organization",
                 "organizationMember": "Organization Member",
-                "feature": "Feature",
+                "feature": "Feature Type",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
@@ -161,7 +161,30 @@
     "section": {
         "description": "Description",
         "source": "Source",
-        "registration": "Registration"
+        "registration": "Registration",
+        "identifier": "Identifier",
+        "resource": "Identified resource"
+    },
+    "registration": {
+        "processStatus": "Process Status",
+        "itemStatus": "Item Status",
+        "lastChangeDate": "Last Change Date",
+        "registrationDate": "Registration Date",
+        "lastRevisionDate": "Last Revision Date",
+        "nextRenewalDate": "Next Renewal Date",
+        "annullationDate": "Annullation Date"
+    },
+    "identifier": {
+        "namespace": "Namespace",
+        "localId": "Local Id",
+        "versionId": "Version Id",
+        "beginLifespanVersion": "Begin Lifespan Version",
+        "endLifespanVersion": "End Lifespan Version",
+        "alternateId": "Alternate Local Id"
+    },
+    "resource": {
+        "resourceType": "Resource Type",
+        "locator": "Locator"
     },
     "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad Zaragoza</a>",
     "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>",

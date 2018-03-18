@@ -4,14 +4,17 @@
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span data-translate="pidmsApp.organization.name">Shortname</span></dt>
-        <dd>
-            <span>{{vm.organization.name}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.organization.title">Name</span></dt>
-        <dd>
-            <span>{{vm.organization.title}}</span>
-        </dd>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.description">Description Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="pidmsApp.organization.name">Shortname</span></dt>
+                <dd><span>{{vm.organization.name}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.organization.title">Name</span></dt>
+                <dd><span>{{vm.organization.title}}</span></dd>
+            </div>
     </dl>
 
     <button type="submit"

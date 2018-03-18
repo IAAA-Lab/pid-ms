@@ -1,199 +1,250 @@
 
 <form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
 
-    <!--<div class="modal-header">
+    <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="vm.clear()">&times;</button>
-        <h4 class="modal-title" id="myPersistentIdentifierLabel" data-translate="pidmsApp.persistentIdentifier.home.createOrEditLabel">Create or edit a Persistent Identifier</h4>
-    </div>-->
+        <h4 class="modal-title" id="myPersistentIdentifierLabel">
+            <span ng-show="vm.persistentIdentifier.id" data-translate="pidmsApp.persistentIdentifier.home.editLabel">Edit</span>
+            <span ng-show="!vm.persistentIdentifier.id" data-translate="pidmsApp.persistentIdentifier.home.createLabel">Create</span>
+            <small ng-show="vm.persistentIdentifier.id">[id:{{vm.persistentIdentifier.id}}]</small>
+        </h4>
+    </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" ng-show="vm.persistentIdentifier.id">
-            <label for="id" data-translate="global.field.id">ID</label>
-            <input type="text" class="form-control" id="id" name="id"
+            <input type="hidden" class="form-control" id="id" name="id"
                     ng-model="vm.persistentIdentifier.id" readonly />
         </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.externalUrn" for="field_externalUrn">External Urn</label>
-            <input type="text" class="form-control" name="externalUrn" id="field_externalUrn"
-                    ng-model="vm.persistentIdentifier.externalUrn"
-                    required/>
-            <div ng-show="editForm.externalUrn.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.externalUrn.$error.required" data-translate="entity.validation.required">
-                    This field is required.
-                </p>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.description">Description Section</h3>
             </div>
-        </div>
-        <div class="form-group">
-            <label data-translate="pidmsApp.persistentIdentifier.feature" for="field_feature">Feature</label>
-            <select class="form-control" id="field_feature" name="feature" ng-model="vm.persistentIdentifier.featureId" ng-options="feature.id as feature.id for feature in vm.features"            >
-                <option value=""></option>
-            </select>
-            <div ng-show="editForm.feature.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.feature.$error.required" data-translate="entity.validation.required">
-                    This field is required.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.resolverProxyMode" for="field_resolverProxyMode">Resolver Proxy Mode</label>
-                <input type="checkbox" name="resolverProxyMode" id="field_resolverProxyMode"
-                          ng-model="vm.persistentIdentifier.resolverProxyMode"/>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.namespace" for="field_namespace">Namespace</label>
-            <input type="text" class="form-control" name="namespace" id="field_namespace"
-                    ng-model="vm.persistentIdentifier.namespace"
-                    required/>
-            <div ng-show="editForm.namespace.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.namespace.$error.required" data-translate="entity.validation.required">
-                    This field is required.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.localId" for="field_localId">Local Id</label>
-            <input type="text" class="form-control" name="localId" id="field_localId"
-                    ng-model="vm.persistentIdentifier.localId"
-                    required/>
-            <div ng-show="editForm.localId.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.localId.$error.required" data-translate="entity.validation.required">
-                    This field is required.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.versionId" for="field_versionId">Version Id</label>
-            <input type="text" class="form-control" name="versionId" id="field_versionId"
-                    ng-model="vm.persistentIdentifier.versionId"
-                    />
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.beginLifespanVersion" for="field_beginLifespanVersion">Begin Lifespan Version</label>
-                <div class="input-group">
-                    <input id="field_beginLifespanVersion" type="text" class="form-control" name="beginLifespanVersion" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.beginLifespanVersion" is-open="vm.datePickerOpenStatus.beginLifespanVersion"
-                    />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('beginLifespanVersion')"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="control-label" data-translate="pidmsApp.persistentIdentifier.externalUrn" for="field_externalUrn">External Urn</label>
+                    <input type="text" class="form-control" name="externalUrn" disabled="{{vm.persistentIdentifier.id}}" id="field_externalUrn"
+                           ng-model="vm.persistentIdentifier.externalUrn"
+                           required/>
+                    <div ng-show="editForm.externalUrn.$invalid">
+                        <p class="help-block"
+                           ng-show="editForm.externalUrn.$error.required" data-translate="entity.validation.required">
+                            This field is required.
+                        </p>
+                    </div>
                 </div>
+                <hr>
+                <div class="form-group">
+                    <label data-translate="pidmsApp.persistentIdentifier.feature" for="field_feature">Feature</label>
+                    <select class="form-control" id="field_feature" name="feature" disabled="{{vm.persistentIdentifier.id}}" ng-model="vm.persistentIdentifier.featureId" ng-options="feature.id as feature.featureType for feature in vm.features"            >
+                        <option value=""></option>
+                    </select>
+                    <div ng-show="editForm.feature.$invalid">
+                        <p class="help-block"
+                           ng-show="editForm.feature.$error.required" data-translate="entity.validation.required">
+                            This field is required.
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="pidmsApp.persistentIdentifier.resolverProxyMode" for="field_resolverProxyMode">Resolver Proxy Mode</label>
+                    <input type="checkbox" name="resolverProxyMode" id="field_resolverProxyMode"
+                           ng-model="vm.persistentIdentifier.resolverProxyMode"/>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.endLifespanVersion" for="field_endLifespanVersion">End Lifespan Version</label>
-                <div class="input-group">
-                    <input id="field_endLifespanVersion" type="text" class="form-control" name="endLifespanVersion" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.endLifespanVersion" is-open="vm.datePickerOpenStatus.endLifespanVersion"
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.identifier">Identifier Section</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="control-label" data-translate="identifier.namespace" for="field_namespace">Namespace</label>
+                    <input type="text" class="form-control" name="namespace" disabled="{{vm.persistentIdentifier.id}}" id="field_namespace"
+                           ng-model="vm.persistentIdentifier.namespace"
+                           required/>
+                    <div ng-show="editForm.namespace.$invalid">
+                        <p class="help-block"
+                           ng-show="editForm.namespace.$error.required" data-translate="entity.validation.required">
+                            This field is required.
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="identifier.localId" for="field_localId">Local Id</label>
+                    <input type="text" class="form-control" name="localId" id="field_localId" disabled="{{vm.persistentIdentifier.id}}"
+                           ng-model="vm.persistentIdentifier.localId"
+                           required/>
+                    <div ng-show="editForm.localId.$invalid">
+                        <p class="help-block"
+                           ng-show="editForm.localId.$error.required" data-translate="entity.validation.required">
+                            This field is required.
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="identifier.versionId" for="field_versionId">Version Id</label>
+                    <input type="text" class="form-control" name="versionId" id="field_versionId" disabled="{{vm.persistentIdentifier.id}}"
+                           ng-model="vm.persistentIdentifier.versionId"
                     />
-                    <span class="input-group-btn">
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="identifier.beginLifespanVersion" for="field_beginLifespanVersion">Begin Lifespan Version</label>
+                    <div class="input-group">
+                        <input id="field_beginLifespanVersion" type="text" class="form-control" name="beginLifespanVersion" datetime-picker="{{dateformat}}"
+                               ng-model="vm.persistentIdentifier.beginLifespanVersion" is-open="vm.datePickerOpenStatus.beginLifespanVersion"
+                               disabled="{{vm.persistentIdentifier.id}}"
+                        />
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('beginLifespanVersion')" disabled="{{vm.persistentIdentifier.id}}" ><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="identifier.endLifespanVersion" for="field_endLifespanVersion">End Lifespan Version</label>
+                    <div class="input-group">
+                        <input id="field_endLifespanVersion" type="text" class="form-control" name="endLifespanVersion" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.endLifespanVersion" is-open="vm.datePickerOpenStatus.endLifespanVersion"
+                        />
+                        <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="vm.openCalendar('endLifespanVersion')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
+                    </div>
                 </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.alternateId" for="field_alternateId">Alternate Id</label>
-            <input type="text" class="form-control" name="alternateId" id="field_alternateId"
-                    ng-model="vm.persistentIdentifier.alternateId"
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="identifier.alternateId" for="field_alternateId">Alternate Id</label>
+                    <input type="text" class="form-control" name="alternateId" id="field_alternateId"
+                           ng-model="vm.persistentIdentifier.alternateId" disabled="{{vm.persistentIdentifier.id}}"
                     />
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.resourceType" for="field_resourceType">Resource Type</label>
-            <select class="form-control" name="resourceType" ng-model="vm.persistentIdentifier.resourceType" id="field_resourceType">
-                <option value="DATASET" data-translate="pidmsApp.ResourceType.DATASET">DATASET</option>
-                <option value="SPATIAL_OBJECT" data-translate="pidmsApp.ResourceType.SPATIAL_OBJECT">SPATIAL_OBJECT</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.locator" for="field_locator">Locator</label>
-            <input type="text" class="form-control" name="locator" id="field_locator"
-                    ng-model="vm.persistentIdentifier.locator"
-                    />
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.processStatus" for="field_processStatus">Process Status</label>
-            <select class="form-control" name="processStatus" disabled="true" ng-model="vm.persistentIdentifier.processStatus" id="field_processStatus">
-                <option value="PENDING_PREPARING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_PREPARING_HARVEST">PENDING_PREPARING_HARVEST</option>
-                <option value="PREPARING_HARVEST" data-translate="pidmsApp.ProcessStatus.PREPARING_HARVEST">PREPARING_HARVEST</option>
-                <option value="PENDING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_HARVEST">PENDING_HARVEST</option>
-                <option value="HARVEST" data-translate="pidmsApp.ProcessStatus.HARVEST">HARVEST</option>
-                <option value="PENDING_TRANSFERRING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_TRANSFERRING_HARVEST">PENDING_TRANSFERRING_HARVEST</option>
-                <option value="TRANSFERRING_HARVEST" data-translate="pidmsApp.ProcessStatus.TRANSFERRING_HARVEST">TRANSFERRING_HARVEST</option>
-                <option value="PENDING_VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.PENDING_VALIDATION_BY_ID">PENDING_VALIDATION_BY_ID</option>
-                <option value="VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.VALIDATION_BY_ID">VALIDATION_BY_ID</option>
-                <option value="PENDING_TRANSFERRING_VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.PENDING_TRANSFERRING_VALIDATION_BY_ID">PENDING_TRANSFERRING_VALIDATION_BY_ID</option>
-                <option value="TRANSFERRING_VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.TRANSFERRING_VALIDATION_BY_ID">TRANSFERRING_VALIDATION_BY_ID</option>
-                <option value="PENDING_VALIDATION_END" data-translate="pidmsApp.ProcessStatus.PENDING_VALIDATION_END">PENDING_VALIDATION_END</option>
-                <option value="VALIDATION_END" data-translate="pidmsApp.ProcessStatus.VALIDATION_END">VALIDATION_END</option>
-                <option value="VALIDATION_BEGIN" data-translate="pidmsApp.ProcessStatus.VALIDATION_BEGIN">VALIDATION_BEGIN</option>
-                <option value="NONE" data-translate="pidmsApp.ProcessStatus.NONE">NONE</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.itemStatus" for="field_itemStatus">Item Status</label>
-            <select class="form-control" name="itemStatus" disabled="true" ng-model="vm.persistentIdentifier.itemStatus" id="field_itemStatus">
-                <option value="ISSUED" data-translate="pidmsApp.ItemStatus.ISSUED">ISSUED</option>
-                <option value="LAPSED" data-translate="pidmsApp.ItemStatus.LAPSED">LAPSED</option>
-                <option value="RETIRED" data-translate="pidmsApp.ItemStatus.RETIRED">RETIRED</option>
-                <option value="PENDING_VALIDATION" data-translate="pidmsApp.ItemStatus.PENDING_VALIDATION">PENDING_VALIDATION</option>
-                <option value="ANNULLED" data-translate="pidmsApp.ItemStatus.ANNULLED">ANNULLED</option>
-                <option value="PENDING_RETIREMENT" data-translate="pidmsApp.ItemStatus.PENDING_RETIREMENT">PENDING_RETIREMENT</option>
-                <option value="NEW" data-translate="pidmsApp.ItemStatus.NEW">NEW</option>
-                <option value="VALIDATED" data-translate="pidmsApp.ItemStatus.VALIDATED">VALIDATED</option>
-                <option value="PENDING_ANNULLATION" data-translate="pidmsApp.ItemStatus.PENDING_ANNULLATION">PENDING_ANNULLATION</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.lastChangeDate" for="field_lastChangeDate">Last Change Date</label>
-                <div class="input-group">
-                    <input id="field_lastChangeDate" type="text" disabled="true" class="form-control" name="lastChangeDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.lastChangeDate" is-open="vm.datePickerOpenStatus.lastChangeDate"
-                    />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" disabled="true" ng-click="vm.openCalendar('lastChangeDate')"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
                 </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.registrationDate" for="field_registrationDate">Registration Date</label>
-                <div class="input-group">
-                    <input id="field_registrationDate" type="text" disabled="true" class="form-control" name="registrationDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.registrationDate" is-open="vm.datePickerOpenStatus.registrationDate"
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.resource">Resource Section</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="control-label" data-translate="resource.resourceType" for="field_resourceType">Resource Type</label>
+                    <select class="form-control" name="resourceType" ng-model="vm.persistentIdentifier.resourceType"
+                            id="field_resourceType" disabled="{{vm.persistentIdentifier.id}}">
+                        <option value="DATASET" data-translate="pidmsApp.ResourceType.DATASET">DATASET</option>
+                        <option value="SPATIAL_OBJECT" data-translate="pidmsApp.ResourceType.SPATIAL_OBJECT">SPATIAL_OBJECT</option>
+                    </select>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="resource.locator" for="field_locator">Locator</label>
+                    <input type="text" class="form-control" name="locator" id="field_locator"
+                           ng-model="vm.persistentIdentifier.locator" disabled="{{vm.persistentIdentifier.id}}"
                     />
-                    <span class="input-group-btn">
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.registration">Registration Section</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="control-label" data-translate="registration.processStatus" for="field_processStatus">Process Status</label>
+                    <select class="form-control" name="processStatus" disabled="true" ng-model="vm.persistentIdentifier.processStatus" id="field_processStatus">
+                        <option value="PENDING_PREPARING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_PREPARING_HARVEST">PENDING_PREPARING_HARVEST</option>
+                        <option value="PREPARING_HARVEST" data-translate="pidmsApp.ProcessStatus.PREPARING_HARVEST">PREPARING_HARVEST</option>
+                        <option value="PENDING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_HARVEST">PENDING_HARVEST</option>
+                        <option value="HARVEST" data-translate="pidmsApp.ProcessStatus.HARVEST">HARVEST</option>
+                        <option value="PENDING_TRANSFERRING_HARVEST" data-translate="pidmsApp.ProcessStatus.PENDING_TRANSFERRING_HARVEST">PENDING_TRANSFERRING_HARVEST</option>
+                        <option value="TRANSFERRING_HARVEST" data-translate="pidmsApp.ProcessStatus.TRANSFERRING_HARVEST">TRANSFERRING_HARVEST</option>
+                        <option value="PENDING_VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.PENDING_VALIDATION_BY_ID">PENDING_VALIDATION_BY_ID</option>
+                        <option value="VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.VALIDATION_BY_ID">VALIDATION_BY_ID</option>
+                        <option value="PENDING_TRANSFERRING_VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.PENDING_TRANSFERRING_VALIDATION_BY_ID">PENDING_TRANSFERRING_VALIDATION_BY_ID</option>
+                        <option value="TRANSFERRING_VALIDATION_BY_ID" data-translate="pidmsApp.ProcessStatus.TRANSFERRING_VALIDATION_BY_ID">TRANSFERRING_VALIDATION_BY_ID</option>
+                        <option value="PENDING_VALIDATION_END" data-translate="pidmsApp.ProcessStatus.PENDING_VALIDATION_END">PENDING_VALIDATION_END</option>
+                        <option value="VALIDATION_END" data-translate="pidmsApp.ProcessStatus.VALIDATION_END">VALIDATION_END</option>
+                        <option value="VALIDATION_BEGIN" data-translate="pidmsApp.ProcessStatus.VALIDATION_BEGIN">VALIDATION_BEGIN</option>
+                        <option value="NONE" data-translate="pidmsApp.ProcessStatus.NONE">NONE</option>
+                    </select>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="registration.itemStatus" for="field_itemStatus">Item Status</label>
+                    <select class="form-control" name="itemStatus" disabled="true" ng-model="vm.persistentIdentifier.itemStatus" id="field_itemStatus">
+                        <option value="ISSUED" data-translate="pidmsApp.ItemStatus.ISSUED">ISSUED</option>
+                        <option value="LAPSED" data-translate="pidmsApp.ItemStatus.LAPSED">LAPSED</option>
+                        <option value="RETIRED" data-translate="pidmsApp.ItemStatus.RETIRED">RETIRED</option>
+                        <option value="PENDING_VALIDATION" data-translate="pidmsApp.ItemStatus.PENDING_VALIDATION">PENDING_VALIDATION</option>
+                        <option value="ANNULLED" data-translate="pidmsApp.ItemStatus.ANNULLED">ANNULLED</option>
+                        <option value="PENDING_RETIREMENT" data-translate="pidmsApp.ItemStatus.PENDING_RETIREMENT">PENDING_RETIREMENT</option>
+                        <option value="NEW" data-translate="pidmsApp.ItemStatus.NEW">NEW</option>
+                        <option value="VALIDATED" data-translate="pidmsApp.ItemStatus.VALIDATED">VALIDATED</option>
+                        <option value="PENDING_ANNULLATION" data-translate="pidmsApp.ItemStatus.PENDING_ANNULLATION">PENDING_ANNULLATION</option>
+                    </select>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="registration.registrationDate" for="field_registrationDate">Registration Date</label>
+                    <div class="input-group">
+                        <input id="field_registrationDate" type="text" disabled="true" class="form-control" name="registrationDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.registrationDate" is-open="vm.datePickerOpenStatus.registrationDate"
+                        />
+                        <span class="input-group-btn">
                         <button type="button" class="btn btn-default" disabled="true" ng-click="vm.openCalendar('registrationDate')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
+                    </div>
                 </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.lastRevisionDate" for="field_lastRevisionDate">Last Revision Date</label>
-                <div class="input-group">
-                    <input id="field_lastRevisionDate" disabled="true" type="text" class="form-control" name="lastRevisionDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.lastRevisionDate" is-open="vm.datePickerOpenStatus.lastRevisionDate"
-                    />
-                    <span class="input-group-btn">
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="registration.lastChangeDate" for="field_lastChangeDate">Last Change Date</label>
+                    <div class="input-group">
+                        <input id="field_lastChangeDate" type="text" disabled="true" class="form-control" name="lastChangeDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.lastChangeDate" is-open="vm.datePickerOpenStatus.lastChangeDate"
+                        />
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" disabled="true" ng-click="vm.openCalendar('lastChangeDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="registration.lastRevisionDate" for="field_lastRevisionDate">Last Revision Date</label>
+                    <div class="input-group">
+                        <input id="field_lastRevisionDate" disabled="true" type="text" class="form-control" name="lastRevisionDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.lastRevisionDate" is-open="vm.datePickerOpenStatus.lastRevisionDate"
+                        />
+                        <span class="input-group-btn">
                         <button type="button" class="btn btn-default" disabled="true" ng-click="vm.openCalendar('lastRevisionDate')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
+                    </div>
                 </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.nextRenewalDate" for="field_nextRenewalDate">Next Renewal Date</label>
-                <div class="input-group">
-                    <input id="field_nextRenewalDate" type="text" class="form-control" name="nextRenewalDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.nextRenewalDate" is-open="vm.datePickerOpenStatus.nextRenewalDate"
-                    />
-                    <span class="input-group-btn">
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="registration.nextRenewalDate" for="field_nextRenewalDate">Next Renewal Date</label>
+                    <div class="input-group">
+                        <input id="field_nextRenewalDate" type="text" class="form-control" name="nextRenewalDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.nextRenewalDate" is-open="vm.datePickerOpenStatus.nextRenewalDate"
+                        />
+                        <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="vm.openCalendar('nextRenewalDate')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
+                    </div>
                 </div>
-        </div>
-        <div class="form-group" ng-show="vm.persistentIdentifier.annullationDate">
-            <label class="control-label" data-translate="pidmsApp.persistentIdentifier.annullationDate" for="field_annullationDate">Annullation Date</label>
-                <div class="input-group">
-                    <input id="field_annullationDate" type="text" class="form-control" name="annullationDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.annullationDate" is-open="vm.datePickerOpenStatus.annullationDate"
-                    />
-                    <span class="input-group-btn">
+                <hr>
+                <div class="form-group">
+                    <label class="control-label" data-translate="registration.annullationDate" for="field_annullationDate">Annullation Date</label>
+                    <div class="input-group">
+                        <input id="field_annullationDate" type="text" class="form-control" name="annullationDate" datetime-picker="{{dateformat}}" ng-model="vm.persistentIdentifier.annullationDate" is-open="vm.datePickerOpenStatus.annullationDate"
+                        />
+                        <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="vm.openCalendar('annullationDate')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
+                    </div>
                 </div>
+            </div>
         </div>
+
+
+
 
     </div>
     <div class="modal-footer">

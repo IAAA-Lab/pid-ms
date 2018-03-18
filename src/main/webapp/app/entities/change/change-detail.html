@@ -1,57 +1,63 @@
 
 <div ng-switch="vm.isAuthenticated()">
-    <h2><span data-translate="pidmsApp.change.detail.title">Change</span> {{vm.change.id}}</h2>
+    <h2><span data-translate="pidmsApp.change.detail.title">Change</span> "<b>{{vm.change.id}}</b>"</h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span data-translate="pidmsApp.change.changeTimestamp">Change Timestamp</span></dt>
-        <dd>
-            <span>{{vm.change.changeTimestamp | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.change.action">Action</span></dt>
-        <dd>
-            <span data-translate="{{'pidmsApp.ChangeAction.' + vm.change.action}}">{{vm.change.action}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.change.featureType">Feature Type</span></dt>
-        <dd>
-        	<a ui-sref="feature-detail({id:vm.change.featureId})">{{vm.change.featureType}}</a>
-        </dd>
-        <dt><span data-translate="pidmsApp.change.namespace">Namespace</span></dt>
-        <dd>
-            <span>{{vm.change.namespace}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.change.localId">Local Id</span></dt>
-        <dd>
-            <span>{{vm.change.localId}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.change.versionId">Version Id</span></dt>
-        <dd>
-            <span>{{vm.change.versionId}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.change.beginLifespanVersion">Begin Lifespan Version</span></dt>
-        <dd>
-            <span>{{vm.change.beginLifespanVersion | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.change.endLifespanVersion">End Lifespan Version</span></dt>
-        <dd>
-            <span>{{vm.change.endLifespanVersion | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.change.alternateId">Alternate Id</span></dt>
-        <dd>
-            <span>{{vm.change.alternateId}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.change.resourceType">Resource Type</span></dt>
-        <dd>
-            <span data-translate="{{'pidmsApp.ResourceType.' + vm.change.resourceType}}">{{vm.change.resourceType}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.change.locator">Locator</span></dt>
-        <dd>
-            <span><a href="{{vm.change.locator}}" target="_blank">{{vm.change.locator}}</a></span>
-        </dd>
-        <dt><span data-translate="pidmsApp.change.task">Task</span></dt>
-        <dd>
-            <a ui-sref="task-detail({id:vm.change.taskId})">{{vm.change.taskId}}</a>
-        </dd>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.description">Description Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="pidmsApp.change.changeTimestamp">Change Timestamp</span></dt>
+                <dd><span>{{vm.change.changeTimestamp | date:'medium'}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.change.action">Action</span></dt>
+                <dd><span data-translate="{{'pidmsApp.ChangeAction.' + vm.change.action}}">{{vm.change.action}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.change.featureType">Feature Type</span></dt>
+                <dd><a ui-sref="feature-detail({id:vm.change.featureId})">{{vm.change.featureType}}</a></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.change.task">Task</span></dt>
+                <dd><a ui-sref="task-detail({id:vm.change.taskId})">{{vm.change.taskId}}</a></dd>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.identifier">Identifier Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="identifier.namespace">Namespace</span></dt>
+                <dd><span>{{vm.change.namespace}}</span></dd>
+                <hr>
+                <dt><span data-translate="identifier.localId">Local Id</span></dt>
+                <dd><span>{{vm.change.localId}}</span></dd>
+                <hr>
+                <dt><span data-translate="identifier.versionId">Version Id</span></dt>
+                <dd><span>{{(vm.change.versionId) || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="identifier.beginLifespanVersion">Begin Lifespan Version</span></dt>
+                <dd><span>{{(vm.change.beginLifespanVersion | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="identifier.endLifespanVersion">End Lifespan Version</span></dt>
+                <dd><span>{{(vm.change.endLifespanVersion | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="identifier.alternateId">Alternate Id</span></dt>
+                <dd><span>{{(vm.change.alternateId) || "-"}}</span></dd>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.resource">Resource Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="resource.resourceType">Resource Type</span></dt>
+                <dd><span data-translate="{{'pidmsApp.ResourceType.' + vm.change.resourceType}}">{{vm.change.resourceType}}</span></dd>
+                <hr>
+                <dt><span data-translate="resource.locator">Locator</span></dt>
+                <dd><span><a href="{{vm.change.locator}}" target="_blank">{{vm.change.locator}}</a></span></dd>
+            </div>
+        </div>
     </dl>
 
     <button type="submit"
