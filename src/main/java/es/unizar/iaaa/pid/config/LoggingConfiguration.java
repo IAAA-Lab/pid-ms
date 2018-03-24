@@ -1,6 +1,5 @@
 package es.unizar.iaaa.pid.config;
 
-import ch.qos.logback.classic.AsyncAppender;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.boolex.OnMarkerEvaluator;
@@ -11,15 +10,11 @@ import ch.qos.logback.core.filter.EvaluatorFilter;
 import ch.qos.logback.core.spi.ContextAwareBase;
 import ch.qos.logback.core.spi.FilterReply;
 import io.github.jhipster.config.JHipsterProperties;
-import net.logstash.logback.appender.LogstashTcpSocketAppender;
-import net.logstash.logback.encoder.LogstashEncoder;
-import net.logstash.logback.stacktrace.ShortenedThrowableConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-import java.net.InetSocketAddress;
 import java.util.Iterator;
 
 @Configuration
@@ -38,12 +33,11 @@ public class LoggingConfiguration {
     private final JHipsterProperties jHipsterProperties;
 
     public LoggingConfiguration(@Value("${spring.application.name}") String appName, @Value("${server.port}") String serverPort,
-        JHipsterProperties jHipsterProperties, @Value("${info.project.version}") String version) {
+        JHipsterProperties jHipsterProperties) {
         this.appName = appName;
         this.serverPort = serverPort;
         this.jHipsterProperties = jHipsterProperties;
         if (jHipsterProperties.getLogging().getLogstash().isEnabled()) {
-            addLogstashAppender(context);
             addContextListener(context);
         }
         if (jHipsterProperties.getMetrics().getLogs().isEnabled()) {
@@ -57,39 +51,6 @@ public class LoggingConfiguration {
         context.addListener(loggerContextListener);
     }
 
-    private void addLogstashAppender(LoggerContext context) {
-        log.info("Initializing Logstash logging");
-
-        LogstashTcpSocketAppender logstashAppender = new LogstashTcpSocketAppender();
-        logstashAppender.setName("LOGSTASH");
-        logstashAppender.setContext(context);
-        String customFields = "{\"app_name\":\"" + appName + "\",\"app_port\":\"" + serverPort + "\"}";
-
-        // More documentation is available at: https://github.com/logstash/logstash-logback-encoder
-        LogstashEncoder logstashEncoder=new LogstashEncoder();
-        // Set the Logstash appender config from JHipster properties
-        logstashEncoder.setCustomFields(customFields);
-        // Set the Logstash appender config from JHipster properties
-        logstashAppender.addDestinations(new InetSocketAddress(jHipsterProperties.getLogging().getLogstash().getHost(),jHipsterProperties.getLogging().getLogstash().getPort()));
-
-        ShortenedThrowableConverter throwableConverter = new ShortenedThrowableConverter();
-        throwableConverter.setRootCauseFirst(true);
-        logstashEncoder.setThrowableConverter(throwableConverter);
-        logstashEncoder.setCustomFields(customFields);
-
-        logstashAppender.setEncoder(logstashEncoder);
-        logstashAppender.start();
-
-        // Wrap the appender in an Async appender for performance
-        AsyncAppender asyncLogstashAppender = new AsyncAppender();
-        asyncLogstashAppender.setContext(context);
-        asyncLogstashAppender.setName("ASYNC_LOGSTASH");
-        asyncLogstashAppender.setQueueSize(jHipsterProperties.getLogging().getLogstash().getQueueSize());
-        asyncLogstashAppender.addAppender(logstashAppender);
-        asyncLogstashAppender.start();
-
-        context.getLogger("ROOT").addAppender(asyncLogstashAppender);
-    }
 
     // Configure a log filter to remove "metrics" logs from all appenders except the "LOGSTASH" appender
     private void setMetricsMarkerLogbackFilter(LoggerContext context) {
@@ -131,12 +92,12 @@ public class LoggingConfiguration {
 
         @Override
         public void onStart(LoggerContext context) {
-            addLogstashAppender(context);
+            // Nothing to do.
         }
 
         @Override
         public void onReset(LoggerContext context) {
-            addLogstashAppender(context);
+            // Nothing to do.
         }
 
         @Override

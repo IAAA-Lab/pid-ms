@@ -1,13 +1,18 @@
 package es.unizar.iaaa.pid.harvester.tasks.util;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpClientParams;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -19,51 +24,40 @@ public class FileToolsUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileToolsUtil.class);
 
 	public static boolean downloadFileHTTP(String url, String pathFile) {
-		HttpClientParams clientParams = new HttpClientParams();
-        clientParams.setSoTimeout(TIMEOUT);
-        clientParams.setConnectionManagerTimeout(TIMEOUT);
-        //clientParams.setContentCharset("UTF-8");
-        HttpClient client = new HttpClient(clientParams);
-        HttpMethodBase http = new GetMethod(url);
+        File downloadFile = new File(pathFile);
+        File dir = new File (downloadFile.getParent());
+        dir.mkdirs();
 
-		try {
+		RequestConfig config = RequestConfig.custom()
+            .setSocketTimeout(TIMEOUT)
+            .setConnectionRequestTimeout(TIMEOUT)
+            .setConnectTimeout(TIMEOUT)
+            .build();
 
-			client.executeMethod(http);
-
-            File downloadFile = new File(pathFile);
-            File dir = new File (downloadFile.getParent());
-            dir.mkdirs();
-
-			try(InputStream responseInputStream = http.getResponseBodyAsStream();
-                FileOutputStream fos = new FileOutputStream(pathFile);
-                BufferedOutputStream bos = new BufferedOutputStream(fos)) {
-                byte[] buff = new byte[BUFFER_SIZE];
-                int read = responseInputStream.read(buff);
-                while (read != -1) {
-                    bos.write(buff, 0, read);
-                    read = responseInputStream.read(buff);
+		HttpGet request = new HttpGet(url);
+		request.setConfig(config);
+        CloseableHttpClient client = HttpClients.createDefault();
+        try(CloseableHttpResponse response = client.execute(request)){
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                try(FileOutputStream fos = new FileOutputStream(pathFile);
+                    InputStream is = entity.getContent()) {
+                    byte[] buff = new byte[BUFFER_SIZE];
+                    int inByte;
+                    while((inByte = is.read(buff)) != -1) {
+                        fos.write(buff, 0, inByte);
+                    }
                 }
-                bos.flush();
-                fos.flush();
+                return true;
             }
-
-			return true;
-		}
-		catch (Exception e) {
-			// System.err.println("Error descargando el fichero.");
-			// e1.printStackTrace();
-
-			LOGGER.error("Error downloading the file " + url, e);
-			File f = new File(pathFile);
-			if (f.exists() && f.isFile()) {
-				f.delete();
-			}
-			return false;
-		}
-		finally {
-            http.releaseConnection();
+        } catch (Exception e) {
+            LOGGER.error("Error downloading the file " + url, e);
+            File f = new File(pathFile);
+            if (f.exists() && f.isFile()) {
+                f.delete();
+            }
         }
-
+        return false;
 	}
 
 	public static boolean unzipFile(File zipFile, String unZipDirectory){

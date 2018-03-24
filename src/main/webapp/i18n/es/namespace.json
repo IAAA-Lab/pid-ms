@@ -3,8 +3,8 @@
         "namespace" : {
             "home": {
                 "title": "Espacio de nombres",
-                "createLabel": "Crear nuevo Espacio de nombres",
-                "createOrEditLabel": "Crear o editar Espacio de nombres"
+                "createLabel": "Crear un nuevo Espacio de nombres",
+                "editLabel": "Editar un Espacio de nombres"
             },
             "created": "Un nuevo Espacio de nombres ha sido creado con el identificador {{ param }}",
             "updated": "El Espacio de nombres ha sido actualizado con el identificador {{ param }}",
