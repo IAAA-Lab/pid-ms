@@ -25,7 +25,7 @@
                 <div class="form-group">
                     <label class="control-label" data-translate="pidmsApp.namespace.namespace" for="field_namespace">Namespace</label>
                     <input type="text" class="form-control" name="namespace" id="field_namespace"
-                           ng-model="vm.namespace.namespace" disabled="{{vm.namespace.id}}"
+                           ng-model="vm.namespace.namespace" ng-disabled="vm.namespace.namespace"
                            required/>
                     <div ng-show="editForm.namespace.$invalid">
                         <p class="help-block"

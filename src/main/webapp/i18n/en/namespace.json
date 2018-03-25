@@ -10,7 +10,7 @@
             "updated": "A Namespace is updated with identifier {{ param }}",
             "deleted": "A Namespace is deleted with identifier {{ param }}",
             "delete": {
-                "question": "Are you sure you want to delete Namespace {{ id }}?"
+                "question": "Are you sure you want to delete the Namespace \"{{ namespace }}\" [id:{{ id }}]?"
             },
             "updateCSV": {
              	"title": "Update namespace PIDs with CSV",

@@ -10,7 +10,7 @@
             "updated": "El Espacio de nombres ha sido actualizado con el identificador {{ param }}",
             "deleted": "El Espacio de nombres ha sido eliminado con el identificador {{ param }}",
             "delete": {
-                "question": "¿Seguro que quiere eliminar Espacio de nombres {{ id }}?"
+                "question": "¿Seguro que quiere eliminar el Espacio de Nombres \"{{ namespace }}\" [id:{{ id }}]?"
             },
             "updateCSV": {
              	"title": "Actualizar PIDs del Espacio de nombres a traves de CSV",
