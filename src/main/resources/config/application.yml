@@ -105,8 +105,8 @@ info:
 # ===================================================================
 
 application:
-    resolver:
-        metadata-base: http://pid.inspire.gob.es
+#    resolver:
+#        metadata-base: http://pid.inspire.gob.es
     harvester:
         max-num-errors: 20
         max-num-timeouts: 8

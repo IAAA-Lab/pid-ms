@@ -35,13 +35,13 @@
                 </div>
                 <hr>
                 <div class="form-group">
-                    <label data-translate="pidmsApp.persistentIdentifier.feature" for="field_feature">Feature</label>
-                    <select class="form-control" id="field_feature" name="feature" disabled="{{vm.persistentIdentifier.id}}" ng-model="vm.persistentIdentifier.featureId" ng-options="feature.id as feature.featureType for feature in vm.features"            >
-                        <option value=""></option>
-                    </select>
-                    <div ng-show="editForm.feature.$invalid">
+                    <label class="control-label" data-translate="pidmsApp.persistentIdentifier.proxyPid" for="field_proxyPid">Proxy PID</label>
+                    <input type="text" class="form-control" name="resolverLink" disabled="{{vm.persistentIdentifier.id}}" id="field_proxyPid"
+                           ng-model="vm.persistentIdentifier.resolverLink"
+                           required/>
+                    <div ng-show="editForm.resolverLink.$invalid">
                         <p class="help-block"
-                           ng-show="editForm.feature.$error.required" data-translate="entity.validation.required">
+                           ng-show="editForm.resolverLink.$error.required" data-translate="entity.validation.required">
                             This field is required.
                         </p>
                     </div>
@@ -136,6 +136,19 @@
                         <option value="DATASET" data-translate="pidmsApp.ResourceType.DATASET">DATASET</option>
                         <option value="SPATIAL_OBJECT" data-translate="pidmsApp.ResourceType.SPATIAL_OBJECT">SPATIAL_OBJECT</option>
                     </select>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label data-translate="pidmsApp.persistentIdentifier.feature" for="field_feature">Feature</label>
+                    <select class="form-control" id="field_feature" name="feature" disabled="{{vm.persistentIdentifier.id}}" ng-model="vm.persistentIdentifier.featureId" ng-options="feature.id as feature.featureType for feature in vm.features"            >
+                        <option value=""></option>
+                    </select>
+                    <div ng-show="editForm.feature.$invalid">
+                        <p class="help-block"
+                           ng-show="editForm.feature.$error.required" data-translate="entity.validation.required">
+                            This field is required.
+                        </p>
+                    </div>
                 </div>
                 <hr>
                 <div class="form-group">

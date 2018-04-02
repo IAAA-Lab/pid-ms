@@ -17,7 +17,8 @@
             },
             "externalUrn": "URN",
             "feature": "Feature Type",
-            "resolverProxyMode": "Resolver Proxy Mode"
+            "proxyPid": "Proxy PID",
+            "resolverProxyMode": "Is Proxy PID transparent?"
         }
     }
 }

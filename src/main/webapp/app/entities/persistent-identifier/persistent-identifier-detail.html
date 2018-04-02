@@ -1,6 +1,6 @@
 
 <div ng-switch="vm.isAuthenticated()">
-    <h2><span data-translate="pidmsApp.persistentIdentifier.detail.title">Persistent Identifier</span> "<b>{{vm.persistentIdentifier.id}}</b>"</h2>
+    <h2><span data-translate="pidmsApp.persistentIdentifier.detail.title">Persistent Identifier</span> "<b>{{vm.persistentIdentifier.externalUrn}}</b>" <small>[id:{{vm.persistentIdentifier.id}}]</small></h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
@@ -12,8 +12,8 @@
                 <dt><span data-translate="pidmsApp.persistentIdentifier.externalUrn">External Urn</span></dt>
                 <dd><span>{{vm.persistentIdentifier.externalUrn}}</span></dd>
                 <hr>
-                <dt><span data-translate="pidmsApp.persistentIdentifier.feature">Feature</span></dt>
-                <dd><a ui-sref="feature-detail({id:vm.persistentIdentifier.featureId})">{{vm.persistentIdentifier.featureType}}</a></dd>
+                <dt><span data-translate="pidmsApp.persistentIdentifier.proxyPid">Proxy PID</span></dt>
+                <dd><a href="{{vm.persistentIdentifier.resolverLink}}" target="_blank">{{vm.persistentIdentifier.resolverLink}}</a></dd>
                 <hr>
                 <dt><span data-translate="pidmsApp.persistentIdentifier.resolverProxyMode">Resolver Proxy Mode</span></dt>
                 <dd><span data-translate="{{vm.persistentIdentifier.resolverProxyMode}}">Boolean</span></dd>
@@ -50,6 +50,9 @@
             <div class="panel-body">
                 <dt><span data-translate="resource.resourceType">Resource Type</span></dt>
                 <dd><span data-translate="{{'pidmsApp.ResourceType.' + vm.persistentIdentifier.resourceType}}">{{vm.persistentIdentifier.resourceType}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.persistentIdentifier.feature">Feature</span></dt>
+                <dd><a ui-sref="feature-detail({id:vm.persistentIdentifier.featureId})">{{vm.persistentIdentifier.featureType}}</a></dd>
                 <hr>
                 <dt><span data-translate="resource.locator">Locator</span></dt>
                 <dd><span><a href="{{vm.persistentIdentifier.locator}}" target="_blank">{{vm.persistentIdentifier.locator}}</a></span></dd>

@@ -33,46 +33,48 @@
                     <ul class="dropdown-menu" uib-dropdown-menu>
                         <li ui-sref-active="active">
                                 <a ui-sref="namespace" ng-click="vm.collapseNavbar()">
-                                    <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+                                    <span class="glyphicon glyphicon-th-large"></span>&nbsp;
                                     <span data-translate="global.menu.entities.namespace">Namespace</span>
                                 </a>
                             </li>
                         <li ui-sref-active="active">
                                 <a ui-sref="feature" ng-click="vm.collapseNavbar()">
-                                    <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+                                    <span class="glyphicon glyphicon-tag"></span>&nbsp;
                                     <span data-translate="global.menu.entities.feature">Feature</span>
                                 </a>
                             </li>
-                        <li ui-sref-active="active" ng-switch-when="true">
-                                <a ui-sref="task" ng-click="vm.collapseNavbar()">
-                                    <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                    <span data-translate="global.menu.entities.task">Task</span>
-                                </a>
-                            </li>
-                        <li ui-sref-active="active" ng-switch-when="true">
-                                <a ui-sref="change" ng-click="vm.collapseNavbar()">
-                                    <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                    <span data-translate="global.menu.entities.change">Change</span>
-                                </a>
-                            </li>
                         <li ui-sref-active="active">
-                                <a ui-sref="persistent-identifier" ng-click="vm.collapseNavbar()">
-                                    <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                    <span data-translate="global.menu.entities.persistentIdentifier">Persistent Identifier</span>
-                                </a>
-                            </li>
+                            <a ui-sref="persistent-identifier" ng-click="vm.collapseNavbar()">
+                                <span class="glyphicon glyphicon-link"></span>&nbsp;
+                                <span data-translate="global.menu.entities.persistentIdentifier">Persistent Identifier</span>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
                         <li ui-sref-active="active">
                                 <a ui-sref="organization" ng-click="vm.collapseNavbar()">
-                                    <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+                                    <span class="glyphicon glyphicon-home"></span>&nbsp;
                                     <span data-translate="global.menu.entities.organization">Organization</span>
                                 </a>
                             </li>
                         <li ui-sref-active="active" ng-switch-when="true" >
                                 <a ui-sref="organization-member" ng-click="vm.collapseNavbar()">
-                                    <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+                                    <span class="glyphicon glyphicon glyphicon-user"></span>&nbsp;
                                     <span data-translate="global.menu.entities.organizationMember">Organization Member</span>
                                 </a>
                             </li>
+                        <li role="separator" class="divider" ng-switch-when="true"></li>
+                        <li ui-sref-active="active" ng-switch-when="true">
+                            <a ui-sref="task" ng-click="vm.collapseNavbar()">
+                                <span class="glyphicon glyphicon glyphicon-tasks"></span>&nbsp;
+                                <span data-translate="global.menu.entities.task">Task</span>
+                            </a>
+                        </li>
+                        <li ui-sref-active="active" ng-switch-when="true">
+                            <a ui-sref="change" ng-click="vm.collapseNavbar()">
+                                <span class="glyphicon glyphicon glyphicon-transfer"></span>&nbsp;
+                                <span data-translate="global.menu.entities.change">Change</span>
+                            </a>
+                        </li>
                         <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                     </ul>
                 </li>

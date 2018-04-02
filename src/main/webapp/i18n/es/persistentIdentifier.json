@@ -17,7 +17,8 @@
             },
             "externalUrn": "URN",
             "feature": "Tipo de Objeto Espacial",
-            "resolverProxyMode": "Modo proxy"
+            "proxyPid": "PID proxy",
+            "resolverProxyMode": "¿Es un PID proxy transparente?"
         }
     }
 }
