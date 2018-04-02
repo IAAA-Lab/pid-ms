@@ -24,7 +24,7 @@
                 <div class="form-group">
                     <label class="control-label" data-translate="pidmsApp.feature.featureType" for="field_featureType">Feature Type</label>
                     <input type="text" class="form-control" name="featureType" id="field_featureType"
-                           ng-model="vm.feature.featureType"
+                           ng-model="vm.feature.featureType" required
                     />
                     <div ng-show="editForm.featureType.$invalid">
                         <p class="help-block"
@@ -37,7 +37,7 @@
                 <div class="form-group">
                     <label class="control-label" data-translate="pidmsApp.feature.schemaPrefix" for="field_schemaPrefix">Schema Prefix</label>
                     <input type="text" class="form-control" name="schemaPrefix" id="field_schemaPrefix"
-                           ng-model="vm.feature.schemaPrefix"
+                           ng-model="vm.feature.schemaPrefix" required
                     />
                     <div ng-show="editForm.schemaPrefix.$invalid">
                         <p class="help-block"
@@ -50,7 +50,7 @@
                 <div class="form-group">
                     <label class="control-label" data-translate="pidmsApp.feature.schemaUri" for="field_schemaUri">Schema Uri</label>
                     <input type="text" class="form-control" name="schemaUri" id="field_schemaUri"
-                           ng-model="vm.feature.schemaUri"
+                           ng-model="vm.feature.schemaUri" required
                     />
                     <div ng-show="editForm.schemaUri.$invalid">
                         <p class="help-block"
@@ -62,7 +62,7 @@
                 <hr>
                 <div class="form-group">
                     <label data-translate="pidmsApp.feature.namespace" for="field_namespace">Namespace</label>
-                    <select class="form-control" id="field_namespace" name="namespace" ng-model="vm.feature.namespaceId" ng-options="namespace.id as namespace.namespace for namespace in vm.namespaces">
+                    <select class="form-control" id="field_namespace" name="namespace" ng-model="vm.feature.namespaceId" ng-options="namespace.id as namespace.namespace for namespace in vm.namespaces" required>
                         <option value=""></option>
                     </select>
                     <div ng-show="editForm.namespace.$invalid">
@@ -87,7 +87,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.schemaUriGML" for="field_schemaUriGML">Schema Uri GML</label>
                             <input type="text" class="form-control" name="schemaUriGML" id="field_schemaUriGML"
-                                   ng-model="vm.feature.schemaUriGML"
+                                   ng-model="vm.feature.schemaUriGML" required
                             />
                             <div ng-show="editForm.schemaUriGML.$invalid">
                                 <p class="help-block"
@@ -100,7 +100,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.schemaUriBase" for="field_schemaUriBase">Schema Uri Base</label>
                             <input type="text" class="form-control" name="schemaUriBase" id="field_schemaUriBase"
-                                   ng-model="vm.feature.schemaUriBase"
+                                   ng-model="vm.feature.schemaUriBase" required
                             />
                             <div ng-show="editForm.schemaUriBase.$invalid">
                                 <p class="help-block"
@@ -113,7 +113,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.xpath" for="field_xpath">Xpath</label>
                             <input type="text" class="form-control" name="xpath" id="field_xpath"
-                                   ng-model="vm.feature.xpath"
+                                   ng-model="vm.feature.xpath" required
                             />
                             <div ng-show="editForm.xpath.$invalid">
                                 <p class="help-block"
@@ -132,7 +132,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.geometryProperty" for="field_geometryProperty">Geometry Property</label>
                             <input type="text" class="form-control" name="geometryProperty" id="field_geometryProperty"
-                                   ng-model="vm.feature.geometryProperty"
+                                   ng-model="vm.feature.geometryProperty" required
                             />
                             <div ng-show="editForm.geometryProperty.$invalid">
                                 <p class="help-block"
@@ -145,7 +145,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.beginLifespanVersionProperty" for="field_beginLifespanVersionProperty">Begin Lifespan Version Property</label>
                             <input type="text" class="form-control" name="beginLifespanVersionProperty" id="field_beginLifespanVersionProperty"
-                                   ng-model="vm.feature.beginLifespanVersionProperty"
+                                   ng-model="vm.feature.beginLifespanVersionProperty" required
                             />
                             <div ng-show="editForm.beginLifespanVersionProperty.$invalid">
                                 <p class="help-block"
@@ -158,7 +158,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.nameItem" for="field_nameItem">Name Item</label>
                             <input type="text" class="form-control" name="nameItem" id="field_nameItem"
-                                   ng-model="vm.feature.nameItem"
+                                   ng-model="vm.feature.nameItem" required
                             />
                             <div ng-show="editForm.nameItem.$invalid">
                                 <p class="help-block"
@@ -177,7 +177,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.featuresThreshold" for="field_featuresThreshold">Features Threshold</label>
                             <input type="number" class="form-control" name="featuresThreshold" id="field_featuresThreshold"
-                                   ng-model="vm.feature.featuresThreshold"
+                                   ng-model="vm.feature.featuresThreshold" required
                             />
                             <div ng-show="editForm.featuresThreshold.$invalid">
                                 <p class="help-block"
@@ -189,7 +189,7 @@
                         <hr>
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.hitsRequest" for="field_hitsRequest">Hits Request</label>
-                            <input type="checkbox" name="hitsRequest" id="field_hitsRequest"
+                            <input type="checkbox" name="hitsRequest" id="field_hitsRequest" required
                                    ng-model="vm.feature.hitsRequest"/>
                             <div ng-show="editForm.hitsRequest.$invalid">
                                 <p class="help-block"
@@ -202,7 +202,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.factorK" for="field_factorK">Factor K</label>
                             <input type="number" class="form-control" name="factorK" id="field_factorK"
-                                   ng-model="vm.feature.factorK"
+                                   ng-model="vm.feature.factorK" required
                             />
                             <div ng-show="editForm.factorK.$invalid">
                                 <p class="help-block"
@@ -220,7 +220,7 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.srsName" for="field_srsName">Srs Name</label>
-                            <input type="text" class="form-control" name="srsName" id="field_srsName"
+                            <input type="text" class="form-control" name="srsName" id="field_srsName" required
                                    ng-model="vm.feature.srsName"
                             />
                             <div ng-show="editForm.srsName.$invalid">
@@ -234,7 +234,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.minX" for="field_minX">Min X</label>
                             <input type="number" class="form-control" name="minX" id="field_minX"
-                                   ng-model="vm.feature.minX"
+                                   ng-model="vm.feature.minX" required
                             />
                             <div ng-show="editForm.minX.$invalid">
                                 <p class="help-block"
@@ -247,7 +247,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.minY" for="field_minY">Min Y</label>
                             <input type="number" class="form-control" name="minY" id="field_minY"
-                                   ng-model="vm.feature.minY"
+                                   ng-model="vm.feature.minY" required
                             />
                             <div ng-show="editForm.minY.$invalid">
                                 <p class="help-block"
@@ -260,7 +260,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.maxX" for="field_maxX">Max X</label>
                             <input type="number" class="form-control" name="maxX" id="field_maxX"
-                                   ng-model="vm.feature.maxX"
+                                   ng-model="vm.feature.maxX" required
                             />
                             <div ng-show="editForm.maxX.$invalid">
                                 <p class="help-block"
@@ -273,7 +273,7 @@
                         <div class="form-group">
                             <label class="control-label" data-translate="pidmsApp.feature.maxY" for="field_maxY">Max Y</label>
                             <input type="number" class="form-control" name="maxY" id="field_maxY"
-                                   ng-model="vm.feature.maxY"
+                                   ng-model="vm.feature.maxY" required
                             />
                             <div ng-show="editForm.maxY.$invalid">
                                 <p class="help-block"

@@ -20,7 +20,7 @@
             "featureType": "Tipo de Objeto Espacial",
             "resourceType": "Tipo de Recurso",
             "locator": "Localizador",
-            "task": "PArte de la Tarea"
+            "task": "Tarea"
         }
     }
 }

@@ -15,12 +15,12 @@
             "detail": {
                 "title": "Change"
             },
-            "changeTimestamp": "Change Timestamp",
+            "changeTimestamp": "Timestamp",
             "action": "Action",
             "featureType": "Feature Type",
             "resourceType": "Resource Type",
             "locator": "Locator",
-            "task": "Part of Task"
+            "task": "Task"
         }
     }
 }

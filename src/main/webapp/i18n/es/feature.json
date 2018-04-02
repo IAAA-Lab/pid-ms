@@ -3,14 +3,14 @@
         "feature" : {
             "home": {
                 "title": "Tipos de Objetos Espaciales",
-                "createLabel": "Crear nuevo Elemento",
-                "createOrEditLabel": "Crear o editar Elemento"
+                "createLabel": "Crear nuevo Tipo de Objeto Espacial",
+                "editLabel": "Editar un Tipo de Objeto Espacial"
             },
-            "created": "Un nuevo Elemento ha sido creado con identificador {{ param }}",
-            "updated": "El Elemento ha sido actualizado con el identificador {{ param }}",
-            "deleted": "El Elemento ha sido borrado con el identificador {{ param }}",
+            "created": "Un nuevo Tipo de Objeto Espacial ha sido creado con identificador {{ param }}",
+            "updated": "El Tipo de Objeto Espacial ha sido actualizado con el identificador {{ param }}",
+            "deleted": "El Tipo de Objeto Espacial ha sido borrado con el identificador {{ param }}",
             "delete": {
-                "question": "¿Seguro que quiere eliminar el Elemento {{ id }}?"
+                "question": "¿Seguro que quiere eliminar el Tipo de Objeto Espacial {{ id }}?"
             },
             "detail": {
                 "title": "Tipo de Objeto Espacial"
