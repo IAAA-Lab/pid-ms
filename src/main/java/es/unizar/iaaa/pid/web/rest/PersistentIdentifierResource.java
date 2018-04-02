@@ -129,7 +129,9 @@ public class PersistentIdentifierResource {
     private Function<UUID, PersistentIdentifierDTO> findOnePublicOrInPrincipal() {
         return _id -> {
                 PersistentIdentifierDTO dto = persistentIdentifierService.findOnePublicOrInPrincipalOrganizations(_id);
-                setResolverLink(dto);
+                if (dto != null) {
+                    setResolverLink(dto);
+                }
                 return dto;
             };
     }
@@ -137,7 +139,9 @@ public class PersistentIdentifierResource {
     private Function<UUID, PersistentIdentifierDTO> findOnePublic() {
         return _id -> {
             PersistentIdentifierDTO dto = persistentIdentifierService.findOnePublic(_id);
-            setResolverLink(dto);
+            if (dto != null) {
+                setResolverLink(dto);
+            }
             return dto;
         };
     }
