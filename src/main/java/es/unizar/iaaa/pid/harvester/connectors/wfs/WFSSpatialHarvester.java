@@ -136,11 +136,6 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         	return -1;
         }
 
-        // FIXME Extraer esta solución ad-hoc fuera de aquí
-        if(response.getSrc().contains("No se han encontrado inmuebles")){
-        	return 0;
-        }
-
         VTDGen document = response.getDocument();
         VTDNav nav = document.getNav();
 
