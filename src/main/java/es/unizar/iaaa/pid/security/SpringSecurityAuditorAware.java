@@ -1,7 +1,6 @@
 package es.unizar.iaaa.pid.security;
 
 import es.unizar.iaaa.pid.config.Constants;
-
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 

@@ -3,8 +3,8 @@
         "task" : {
             "home": {
                 "title": "Tareas",
-                "createLabel": "Crear nueva Tarea",
-                "createOrEditLabel": "Crear o editar Tarea"
+                "createLabel": "Crear una nueva Tarea",
+                "editLabel": "Editar una Tarea"
             },
             "created": "Una nueva Tarea con el identificador {{ param }} ha sido creada",
             "updated": "La Tarea con el identificador {{ param }} ha sido actualizado",

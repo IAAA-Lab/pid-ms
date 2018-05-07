@@ -3,14 +3,14 @@
         "namespace" : {
             "home": {
                 "title": "Espacio de nombres",
-                "createLabel": "Crear nuevo Espacio de nombres",
-                "createOrEditLabel": "Crear o editar Espacio de nombres"
+                "createLabel": "Crear un nuevo Espacio de nombres",
+                "editLabel": "Editar un Espacio de nombres"
             },
             "created": "Un nuevo Espacio de nombres ha sido creado con el identificador {{ param }}",
             "updated": "El Espacio de nombres ha sido actualizado con el identificador {{ param }}",
             "deleted": "El Espacio de nombres ha sido eliminado con el identificador {{ param }}",
             "delete": {
-                "question": "¿Seguro que quiere eliminar Espacio de nombres {{ id }}?"
+                "question": "¿Seguro que quiere eliminar el Espacio de Nombres \"{{ namespace }}\" [id:{{ id }}]?"
             },
             "updateCSV": {
              	"title": "Actualizar PIDs del Espacio de nombres a traves de CSV",
@@ -24,17 +24,10 @@
                 "title": "Espacio de nombres"
             },
             "namespace": "Espacio de nombres",
-            "title": "Título",
-            "publicNamespace": "Espacio de nombres público",
+            "title": "Nombre descriptivo",
+            "publicNamespace": "¿Es visible?",
             "renewalPolicy": "Política de actualización",
             "namespaceStatus": "Estado del Espacio de nombres",
-            "processStatus": "Estado del proceso",
-            "itemStatus": "Estado",
-            "lastChangeDate": "Fecha del último cambio",
-            "registrationDate": "Fecha de registro",
-            "lastRevisionDate": "Fecha de última revisión",
-            "nextRenewalDate": "Fecha de siguiente actualización",
-            "annullationDate": "Fecha de anulación",
             "methodType": "Tipo de método",
             "sourceType": "Tipo de fuente",
             "endpointLocation": "Localización",

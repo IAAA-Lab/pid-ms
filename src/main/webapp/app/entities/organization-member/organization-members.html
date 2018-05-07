@@ -18,21 +18,23 @@
         <table class="jh-table table table-striped">
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
-                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="organizationId"><span data-translate="pidmsApp.organizationMember.organization">Organization</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="userId"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="userId"><span data-translate="pidmsApp.organizationMember.user">User</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="organizationId"><span data-translate="pidmsApp.organizationMember.organization">Organization</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="capacity"><span data-translate="pidmsApp.organizationMember.capacity">Capacity</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody infinite-scroll="vm.loadPage(vm.page + 1)" infinite-scroll-disabled="vm.page >= vm.links['last']">
                 <tr ng-repeat="organizationMember in vm.organizationMembers track by organizationMember.id">
-                    <td><a ui-sref="organization-member-detail({id:organizationMember.id})">{{organizationMember.id}}</a></td>
                     <td>
-                        <a ui-sref="organization-detail({id:organizationMember.organizationId})">{{organizationMember.organizationName}}</a>
+                        {{organizationMember.id}}
                     </td>
                     <td>
-                        <a ui-sref="user-management-detail({id:organizationMember.userId})">{{organizationMember.userLogin}}</a>
+                        <a ui-sref="user-management-detail({login:organizationMember.userLogin})">{{organizationMember.userLogin}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="organization-detail({id:organizationMember.organizationId})">{{organizationMember.organizationName}}</a>
                     </td>
                     <td data-translate="{{'pidmsApp.Capacity.' + organizationMember.capacity}}">{{organizationMember.capacity}}</td>
                     <td class="text-right">

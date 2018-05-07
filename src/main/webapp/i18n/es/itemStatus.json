@@ -2,7 +2,7 @@
     "pidmsApp": {
         "ItemStatus" : {
             "null": "",
-            "ISSUED": "PUBLICADO",
+            "ISSUED": "EXPEDIDO",
             "LAPSED": "CADUCADO",
             "RETIRED": "RETIRADO",
             "PENDING_VALIDATION": "PENDIENTE DE VALIDACIÓN",

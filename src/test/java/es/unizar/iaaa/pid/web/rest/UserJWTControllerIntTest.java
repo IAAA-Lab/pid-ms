@@ -4,6 +4,7 @@ import es.unizar.iaaa.pid.PidmsApp;
 import es.unizar.iaaa.pid.domain.User;
 import es.unizar.iaaa.pid.repository.UserRepository;
 import es.unizar.iaaa.pid.security.jwt.TokenProvider;
+import es.unizar.iaaa.pid.web.rest.util.TestUtil;
 import es.unizar.iaaa.pid.web.rest.vm.LoginVM;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PidmsApp.class)
+@Transactional
 public class UserJWTControllerIntTest {
 
     @Autowired
@@ -52,7 +54,6 @@ public class UserJWTControllerIntTest {
     }
 
     @Test
-    @Transactional
     public void testAuthorize() throws Exception {
         User user = new User();
         user.setLogin("user-jwt-controller");
@@ -74,7 +75,6 @@ public class UserJWTControllerIntTest {
     }
 
     @Test
-    @Transactional
     public void testAuthorizeWithRememberMe() throws Exception {
         User user = new User();
         user.setLogin("user-jwt-controller-remember-me");
@@ -97,7 +97,6 @@ public class UserJWTControllerIntTest {
     }
 
     @Test
-    @Transactional
     public void testAuthorizeFails() throws Exception {
         LoginVM login = new LoginVM();
         login.setUsername("wrong-user");

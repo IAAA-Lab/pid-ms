@@ -10,24 +10,24 @@ Característica: Los metadatos de un PID deben tener un PID propio y diferente q
     Y que contiene el PID de un conjunto de datos o una serie con "code" "dataset"
     Y que dicho PID está activo
     Y se resuelve a "http://example.com/remote/dataset"
-    Cuando un cliente resuelve "/catalogo/dataset" con cabecera "Accept" "application/vnd.inspire.pid"
+    Cuando un cliente resuelve "/catalogo/dataset" con cabecera "Accept" "application/vnd.inspire.pid+json"
     Entonces el cliente recibe una respuesta con el estado 307
     Y la cabecera "Vary" contiene "Accept"
-    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/catalogo/dataset"
+    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/api/persistent-identifiers/56a5fb83-46e2-3387-8d61-1536bba54c52"
 
   Escenario: un cliente resuelve un PID dado de baja de un conjunto de datos o una serie a su metadato
     Dado un repositorio de PID
     Y que contiene el PID de un conjunto de datos o una serie con "code" "dataset"
     Y que dicho PID no está activo
-    Cuando un cliente resuelve "/catalogo/dataset" con cabecera "Accept" "application/vnd.inspire.pid"
+    Cuando un cliente resuelve "/catalogo/dataset" con cabecera "Accept" "application/vnd.inspire.pid+json"
     Entonces el cliente recibe una respuesta con el estado 307
     Y la cabecera "Vary" contiene "Accept"
-    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/catalogo/dataset"
+    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/api/persistent-identifiers/56a5fb83-46e2-3387-8d61-1536bba54c52"
 
   Escenario: un cliente resuelve un PID que no existe de un conjunto de datos o una serie a su metadato
     Dado un repositorio de PID
     Y que no contiene el PID de un conjunto de datos o una serie con "code" "dataset"
-    Cuando un cliente resuelve "/catalogo/dataset" con cabecera "Accept" "application/vnd.inspire.pid"
+    Cuando un cliente resuelve "/catalogo/dataset" con cabecera "Accept" "application/vnd.inspire.pid+json"
     Entonces el cliente recibe una respuesta con el estado 404
 
   # Escenarios para asegurar que el comportamiento normal de la resolución de PID a conjuntos de datos se ve afectado
@@ -56,24 +56,24 @@ Característica: Los metadatos de un PID deben tener un PID propio y diferente q
     Y que contiene el PID de un objeto espacial con "namespace" "ns" y "localId" "id"
     Y que dicho PID está activo
     Y se resuelve a "http://example.com/remote/so"
-    Cuando un cliente resuelve "/recurso/ns/id" con cabecera "Accept" "application/vnd.inspire.pid"
+    Cuando un cliente resuelve "/recurso/ns/id" con cabecera "Accept" "application/vnd.inspire.pid+json"
     Entonces el cliente recibe una respuesta con el estado 307
     Y la cabecera "Vary" contiene "Accept"
-    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/recurso/ns/id"
+    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/api/persistent-identifiers/0fac955e-6ffc-3a61-ae8d-c69a9c7551aa"
 
   Escenario: un cliente resuelve un PID dado de baja de objeto espacial no versionado a su metadato
     Dado un repositorio de PID
     Y que contiene el PID de un objeto espacial con "namespace" "ns" y "localId" "id"
     Y que dicho PID no está activo
-    Cuando un cliente resuelve "/recurso/ns/id" con cabecera "Accept" "application/vnd.inspire.pid"
+    Cuando un cliente resuelve "/recurso/ns/id" con cabecera "Accept" "application/vnd.inspire.pid+json"
     Entonces el cliente recibe una respuesta con el estado 307
     Y la cabecera "Vary" contiene "Accept"
-    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/recurso/ns/id"
+    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/api/persistent-identifiers/0fac955e-6ffc-3a61-ae8d-c69a9c7551aa"
 
   Escenario: un cliente resuelve un PID que no existe de un objeto espacial no versionado a su metadato
     Dado un repositorio de PID
     Y que no contiene el PID de un objeto espacial con "namespace" "ns" y "localId" "id"
-    Cuando un cliente resuelve "/recurso/ns/id" con cabecera "Accept" "application/vnd.inspire.pid"
+    Cuando un cliente resuelve "/recurso/ns/id" con cabecera "Accept" "application/vnd.inspire.pid+json"
     Entonces el cliente recibe una respuesta con el estado 404
 
   # Escenarios para asegurar que el comportamiento normal de la resolución de PID de objetos espaciales no versionados se ve afectado
@@ -102,19 +102,19 @@ Característica: Los metadatos de un PID deben tener un PID propio y diferente q
     Y que contiene el PID de un objeto espacial con "namespace" "ns", "localId" "id" y "versionId" "ver"
     Y que dicho PID está activo
     Y se resuelve a "http://example.com/remote/so/v"
-    Cuando un cliente resuelve "/recurso/ns/id/ver" con cabecera "Accept" "application/vnd.inspire.pid"
+    Cuando un cliente resuelve "/recurso/ns/id/ver" con cabecera "Accept" "application/vnd.inspire.pid+json"
     Entonces el cliente recibe una respuesta con el estado 307
     Y la cabecera "Vary" contiene "Accept"
-    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/recurso/ns/id/ver"
+    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/api/persistent-identifiers/bbaee546-bc5e-3d27-989b-b4a02cfcae0f"
 
   Escenario: un cliente resuelve un PID dado de baja de objeto espacial versionado a su metadato
     Dado un repositorio de PID
     Y que contiene el PID de un objeto espacial con "namespace" "ns", "localId" "id" y "versionId" "ver"
     Y que dicho PID no está activo
-    Cuando un cliente resuelve "/recurso/ns/id/ver" con cabecera "Accept" "application/vnd.inspire.pid"
+    Cuando un cliente resuelve "/recurso/ns/id/ver" con cabecera "Accept" "application/vnd.inspire.pid+json"
     Entonces el cliente recibe una respuesta con el estado 307
     Y la cabecera "Vary" contiene "Accept"
-    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/recurso/ns/id/ver"
+    Y la cabecera "Location" contiene "http://pid.inspire.gob.es/api/persistent-identifiers/bbaee546-bc5e-3d27-989b-b4a02cfcae0f"
 
   Escenario: un cliente resuelve un PID que no existe de un objeto espacial no versionado a su metadato
     Dado un repositorio de PID

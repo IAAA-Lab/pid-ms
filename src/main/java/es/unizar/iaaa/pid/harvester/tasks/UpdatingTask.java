@@ -1,25 +1,6 @@
 package es.unizar.iaaa.pid.harvester.tasks;
 
-import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.ISSUED;
-import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.LAPSED;
-import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.VALIDATED;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import es.unizar.iaaa.pid.domain.Feature;
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.PersistentIdentifier;
-import es.unizar.iaaa.pid.domain.Registration;
-import es.unizar.iaaa.pid.domain.Resource;
-import es.unizar.iaaa.pid.domain.Task;
+import es.unizar.iaaa.pid.domain.*;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
@@ -31,19 +12,26 @@ import es.unizar.iaaa.pid.service.TaskService;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
 import es.unizar.iaaa.pid.web.rest.vm.CsvData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.Instant;
+import java.util.*;
+
+import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.*;
 
 public class UpdatingTask implements Runnable{
 	private static final Logger LOGGER = LoggerFactory.getLogger(UpdatingTask.class);
-	
+
 	TaskService taskService;
 	NamespaceDTOService namespaceDTOService;
 	FeatureService featureService;
 	NamespaceMapper namespaceMapper;
 	PersistentIdentifierService persistentIdentifierService;
-	
+
 	CsvData csvData;
 	NamespaceDTO namespace;
-	
+
 	private static String DELETE_ACTION = "delete";
 	private static String ADD_ACTION = "add";
 	private static String UPDATE_ACTION = "update";
@@ -58,39 +46,39 @@ public class UpdatingTask implements Runnable{
 		this.featureService = featureService;
 		this.csvData = csvData;
 		this.namespace = namespace;
-		
+
 	}
-	
+
 	@Override
 	public void run() {
 		Task task = taskService.createTask(namespaceMapper.toEntity(namespace),ProcessStatus.UPDATING_PIDS ,Instant.now());
 		taskService.changeStatus(task, TaskStatus.EXECUTING);
-    	
+
     	//llamo al proceso de actualizacion
     	updatePIDs(task);
-		
+
     	//actualizo el estado de la tarea
     	taskService.changeStatus(task, TaskStatus.DONE);
-    	
+
     	//actualizo el estado del namespace
     	namespace = namespaceDTOService.findOne(namespace.getId());
     	namespace.setProcessStatus(ProcessStatus.NONE);
     	namespaceDTOService.save(namespace);
 	}
-	
+
 	private void updatePIDs(Task task){
 		Scanner scanner = new Scanner(csvData.getData());
-		
+
 		while(scanner.hasNextLine()){
 			String line = scanner.nextLine();
 			String[] parameters = line.split(",");
-			
+
 			if(parameters.length < 2){
 				error(task, "El formato de la línea no es correcto, debe poseer como mínimo dos atributos");
 				task.setNumErrors(task.getNumErrors()+1);
 				continue;
 			}
-			
+
 			String action = parameters[0];
 			if(action.equalsIgnoreCase(DELETE_ACTION)){
 				if(!deteleAction(parameters,task)){
@@ -116,13 +104,13 @@ public class UpdatingTask implements Runnable{
 		scanner.close();
 		log(task,"Tarea de actualizacion de PIDs finalizada");
 	}
-	
+
 	private boolean deteleAction(String[] parameters, Task task){
 		UUID identifier = UUID.fromString(parameters[1]);
-		
+
 		//borro el PID con dicho identificador y dicho namespace
 		PersistentIdentifier pid = persistentIdentifierService.findByUUID(identifier);
-		
+
 		if(pid.getIdentifier().getNamespace().equals(namespace.getNamespace())){
 			log(task,"Borrado PIDs con id {}, del namespace {}",identifier.toString(), namespace.getNamespace());
 			persistentIdentifierService.delete(identifier);
@@ -133,7 +121,7 @@ public class UpdatingTask implements Runnable{
 			return false;
 		}
 	}
-	
+
 	private boolean addAction(String[] parameters, Task task){
 		//parametros necesarios -> add,featureType, schemaPrefix, localId,versionId,beginLifeSpanVersion,endLifeSpanVersion,alternateId,locator
 		if(parameters.length != 10){
@@ -141,42 +129,42 @@ public class UpdatingTask implements Runnable{
 					+ "versionId,beginLifeSpanVersion,endLifeSpanVersion,alternateId,locator,resolveProxyMode");
 			return false;
 		}
-		
+
 		//compruebo si la feature se encuentra entre las disponibles en el Namespace
 		String feature = parameters[1];
 		String schemaPrefix = parameters[2];
-		
+
 		boolean isFeature = false;
-		
+
 		//obtengo la lista de features del namespace
 		List<Feature> featureList = featureService.findAllByNamespace(namespaceMapper.toEntity(namespace));
 		Feature featureType = null;
-		for(int i = 0; i < featureList.size() ; i++){
-			String featureAux = featureList.get(i).getFeatureType().trim();
-			String schemaPrefixAux = featureList.get(i).getSchemaPrefix().trim();
-			if(featureAux.equals(feature.trim()) && schemaPrefixAux.equals(schemaPrefix.trim())){
-				isFeature = true;
-				featureType = featureList.get(i);
-				break;
-			}
-		}
+        for (Feature aFeatureList : featureList) {
+            String featureAux = aFeatureList.getFeatureType().trim();
+            String schemaPrefixAux = aFeatureList.getSchemaPrefix().trim();
+            if (featureAux.equals(feature.trim()) && schemaPrefixAux.equals(schemaPrefix.trim())) {
+                isFeature = true;
+                featureType = aFeatureList;
+                break;
+            }
+        }
 		if(!isFeature){
 			error(task,"El tipo de feature tiene que encontrarse en el namespace, {}",featureList.toString());
 			return false;
 		}
-		
+
 		//compruebo que el elemento localId esta, ya que es obligatorio
 		String localId = parameters[3];
 		if(localId.equals("") || localId.equals("#")){
 			error(task,"El atributo LocalId no puede estar vacío");
 			return false;
 		}
-		
+
 		String versionId = parameters[4];
 		if(versionId.equals("") || versionId.equals("#")){
 			versionId = "";
 		}
-		
+
 		//compruebo si el elemento beginLifeSpanVersion posee un formato correcto
 		String beginLifeSpanVersion = parameters[5];
 		Instant beginInstant = null;
@@ -189,7 +177,7 @@ public class UpdatingTask implements Runnable{
 			error(task,"El formato del attributo beginLifeSpanVersion no es correcto, ej:2017-11-23T09:40:53.440Z");
 			return false;
 		}
-		
+
 		//compruebo si el elemento endLifeSpanVersion posee un formato correcto
 		String endLifeSpanVersion = parameters[6];
 		Instant endInstant = null;
@@ -202,17 +190,17 @@ public class UpdatingTask implements Runnable{
 			error(task,"El formato del attributo endLifeSpanVersion no es correcto, ej:2017-11-23T09:40:53.440Z");
 			return false;
 		}
-		
+
 		String alternateId = parameters[7];
 		if(alternateId.equals("") || alternateId.equals("#")){
 			alternateId ="";
 		}
-		
+
 		String locator = parameters[8];
 		if(locator.equals("") || alternateId.equals("#")){
 			locator ="";
 		}
-		
+
 		//compruebo si el elemento resolveProxyMode posee un formato correcto
 		String resolveProxyMode = parameters[9];
 		boolean resolve = false;
@@ -222,7 +210,7 @@ public class UpdatingTask implements Runnable{
 		catch(Exception e){
 			error(task,"El formato del attributo resolverProxyMode no es correcto,ej: false ej; true");
 		}
-		
+
 		//genero el identificador persisten
 		Identifier identifier = new Identifier()
 				.namespace(task.getNamespace().getNamespace())
@@ -231,14 +219,14 @@ public class UpdatingTask implements Runnable{
 		 		.beginLifespanVersion(beginInstant)
 		 		.endLifespanVersion(endInstant)
 		 		.alternateId(alternateId);
-		
+
 		Resource resource = new Resource()
 				.locator(locator)
 				.resourceType(ResourceType.SPATIAL_OBJECT);
-		
+
 		UUID uuid = PersistentIdentifier.computeSurrogateFromIdentifier(identifier);
         PersistentIdentifier pid = persistentIdentifierService.findByUUID(uuid);
-        
+
         if(pid == null){
         	Registration registration = new Registration();
             registration.setItemStatus(ItemStatus.ISSUED);
@@ -262,22 +250,22 @@ public class UpdatingTask implements Runnable{
         	return false;
         }
 	}
-	
+
 	private boolean updateAction(String[]parameters, Task task){
-		
+
 		//parametros necesarios -> update,id,beginLifeSpanVersion,endLifeSpanVersion,alternateId,locator
 		if(parameters.length != 6){
 			error(task,"El número de parámetros no coincide con el necesario.\n update,id"
 					+ ",beginLifeSpanVersion,endLifeSpanVersion,alternateId,locator");
 			return false;
 		}
-		
+
 		UUID uuid = UUID.fromString(parameters[1]);
 		PersistentIdentifier pid = persistentIdentifierService.findByUUID(uuid);
-		
+
 		if(pid != null){
 			String beginLifeSpanVersion = parameters[2];
-			Instant beginInstant = null;
+			Instant beginInstant;
 			try{
 				// si es vacio se deja el valor existente en el pid
 				if(beginLifeSpanVersion.equals("") || beginLifeSpanVersion.equals("#")){
@@ -306,23 +294,23 @@ public class UpdatingTask implements Runnable{
 				error(task,"El formato del attributo endLifeSpanVersion no es correcto, ej:2017-11-23T09:40:53.440Z");
 				return false;
 			}
-			
+
 			String alternateId = parameters[4];
 			// si es vacio se deja el valor existente en el pid
-			if(alternateId.equals("") | alternateId.equals("#")){
+			if(alternateId.equals("") || alternateId.equals("#")){
 				alternateId = pid.getIdentifier().getAlternateId();
 			}
-			
+
 			String locator = parameters[5];
 			// si es vacio se deja el valor existente en el pid
 			if(locator.equals("") || locator.equals("#")){
 				locator = pid.getResource().getLocator();
 			}
-		
+
 			Instant instant = Instant.now();
 			if(canUpdateExtingingPid(pid,instant)){
 				Registration registration = pid.getRegistration();
-	            
+
 	            registration.setLastRevisionDate(instant);
 	            registration.setLastChangeDate(instant);
 	            registration.setProcessStatus(ProcessStatus.NONE);
@@ -345,12 +333,12 @@ public class UpdatingTask implements Runnable{
 	}
 
 	private boolean canUpdateExtingingPid(PersistentIdentifier pid, Instant timeStamp) {
-        return (pid.getRegistration().getItemStatus() == VALIDATED) || 
+        return (pid.getRegistration().getItemStatus() == VALIDATED) ||
         		pid.getRegistration().getItemStatus() == ISSUED ||
                 (pid.getRegistration().getItemStatus() == LAPSED &&
                         timeStamp.isAfter(pid.getRegistration().getLastRevisionDate()));
     }
-	
+
 
 	private void log(Task task, String msg, Object... objects) {
         List<Object> l = new ArrayList<>();
@@ -365,5 +353,5 @@ public class UpdatingTask implements Runnable{
         l.addAll(Arrays.asList(objects));
         LOGGER.error("Task \"{}:{}\" for namespace \"{}\" : " + msg, l.toArray());
     }
-	
+
 }

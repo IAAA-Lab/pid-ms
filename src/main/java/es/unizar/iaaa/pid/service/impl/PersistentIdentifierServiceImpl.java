@@ -1,5 +1,6 @@
 package es.unizar.iaaa.pid.service.impl;
 
+import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.repository.PersistentIdentifierRepository;
 import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.UUID;
 
 
@@ -28,9 +30,14 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
 
     private final PersistentIdentifierMapper persistentIdentifierMapper;
 
-    public PersistentIdentifierServiceImpl(PersistentIdentifierRepository persistentIdentifierRepository, PersistentIdentifierMapper persistentIdentifierMapper) {
+    private final EntityManager entityManager;
+
+    public PersistentIdentifierServiceImpl(PersistentIdentifierRepository persistentIdentifierRepository,
+                                           PersistentIdentifierMapper persistentIdentifierMapper,
+                                           EntityManager entityManager) {
         this.persistentIdentifierRepository = persistentIdentifierRepository;
         this.persistentIdentifierMapper = persistentIdentifierMapper;
+        this.entityManager = entityManager;
     }
 
     /**
@@ -44,6 +51,7 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
         log.debug("Request to save PersistentIdentifier : {}", persistentIdentifierDTO);
         PersistentIdentifier persistentIdentifier = persistentIdentifierMapper.toEntity(persistentIdentifierDTO);
         persistentIdentifier.autoId();
+        persistentIdentifier.setFeature(entityManager.getReference(Feature.class, persistentIdentifierDTO.getFeatureId()));
         persistentIdentifier = persistentIdentifierRepository.save(persistentIdentifier);
         return persistentIdentifierMapper.toDto(persistentIdentifier);
     }
@@ -94,7 +102,7 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
         return persistentIdentifierRepository.findAllPublicOrInPrincipalOrganizations(persistentIdentifierMapper.toPage(pageable))
             .map(persistentIdentifierMapper::toDto);
     }
-    
+
     /**
      *  Get all the persistentIdentifiers public.
      *
@@ -116,7 +124,7 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
         PersistentIdentifier persistentIdentifier = persistentIdentifierRepository.findOnePublicOrInPrincipalOrganizations(id);
         return persistentIdentifierMapper.toDto(persistentIdentifier);
     }
-    
+
     /**
      *  Get the "id" persistentIdentifier public.
      *
@@ -130,10 +138,10 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
     	PersistentIdentifier persistentIdentifier = persistentIdentifierRepository.findOnePublic(id);
         return persistentIdentifierMapper.toDto(persistentIdentifier);
     }
-    
+
     /**
      * Delete all persistentIdentifier associated with the namespace
-     * 
+     *
      * @param namespaceId the id of the associate namespace
      */
     @Override
@@ -141,10 +149,10 @@ public class PersistentIdentifierServiceImpl implements PersistentIdentifierDTOS
     	log.debug("Request to delete All PersistentIdentifiers associated with the namespace: {}", namespaceId);
     	persistentIdentifierRepository.deleteAllByNamespaceId(namespaceId);
     }
-    
+
     /**
      * Delete all persistentIdentifier associated with the feature
-     * 
+     *
      * @param featureId the id of the associate feature
      */
     @Override

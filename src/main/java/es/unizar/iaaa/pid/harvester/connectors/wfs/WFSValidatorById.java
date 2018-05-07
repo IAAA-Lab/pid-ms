@@ -1,10 +1,15 @@
 package es.unizar.iaaa.pid.harvester.connectors.wfs;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.ximpleware.AutoPilot;
+import com.ximpleware.NodeRecorder;
+import com.ximpleware.VTDGen;
+import com.ximpleware.VTDNav;
+import es.unizar.iaaa.pid.domain.*;
+import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+import es.unizar.iaaa.pid.harvester.connectors.ValidatorById;
+import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSResponse.ResponseStatus;
+import es.unizar.iaaa.pid.service.ChangeService;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,23 +20,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.ximpleware.AutoPilot;
-import com.ximpleware.NodeRecorder;
-import com.ximpleware.VTDGen;
-import com.ximpleware.VTDNav;
-
-import es.unizar.iaaa.pid.domain.Change;
-import es.unizar.iaaa.pid.domain.Feature;
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.PersistentIdentifier;
-import es.unizar.iaaa.pid.domain.Resource;
-import es.unizar.iaaa.pid.domain.Source;
-import es.unizar.iaaa.pid.domain.Task;
-import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-import es.unizar.iaaa.pid.harvester.connectors.ValidatorById;
-import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSResponse.ResponseStatus;
-import es.unizar.iaaa.pid.service.ChangeService;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 @Scope("prototype")
@@ -134,7 +126,7 @@ public class WFSValidatorById implements ValidatorById {
                 .beginLifespanVersion(beginLifespanVersion)
                 .alternateId(gmlId);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Can't extract the identifier", e);
             response(ChangeAction.NOT_FOUND, identifier, feature);
             return -1;
         }

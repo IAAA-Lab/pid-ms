@@ -1,15 +1,7 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.domain.Organization;
 import es.unizar.iaaa.pid.repository.NamespaceRepository;
 import es.unizar.iaaa.pid.service.FeatureDTOService;
 import es.unizar.iaaa.pid.service.NamespaceDTOService;
@@ -17,6 +9,15 @@ import es.unizar.iaaa.pid.service.PersistentIdentifierDTOService;
 import es.unizar.iaaa.pid.service.TaskDTOService;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import java.util.List;
 
 
 /**
@@ -29,23 +30,26 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
     private final Logger log = LoggerFactory.getLogger(NamespaceServiceImpl.class);
 
     private final NamespaceRepository namespaceRepository;
-    
+
     private final TaskDTOService taskDTOService;
-    
+
     private final PersistentIdentifierDTOService persistentIdentifierDTOService;
 
     private final NamespaceMapper namespaceMapper;
-    
+
     private final FeatureDTOService featureDTOService;
+
+    private final EntityManager entityManager;
 
     public NamespaceServiceImpl(NamespaceRepository namespaceRepository, NamespaceMapper namespaceMapper,
     		TaskDTOService taskDTOService, PersistentIdentifierDTOService persistentIdentifierDTOService,
-    		FeatureDTOService featureDTOService) {
+    		FeatureDTOService featureDTOService, EntityManager entityManager) {
         this.namespaceRepository = namespaceRepository;
         this.namespaceMapper = namespaceMapper;
         this.taskDTOService = taskDTOService;
         this.persistentIdentifierDTOService = persistentIdentifierDTOService;
         this.featureDTOService = featureDTOService;
+        this.entityManager = entityManager;
     }
 
     /**
@@ -58,6 +62,7 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
     public NamespaceDTO save(NamespaceDTO namespaceDTO) {
         log.debug("Request to save Namespace : {}", namespaceDTO);
         Namespace namespace = namespaceMapper.toEntity(namespaceDTO);
+        namespace.setOwner(entityManager.getReference(Organization.class, namespace.getOwner().getId()));
         namespace = namespaceRepository.save(namespace);
         return namespaceMapper.toDto(namespace);
     }
@@ -126,23 +131,23 @@ public class NamespaceServiceImpl implements NamespaceDTOService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Namespace : {}", id);
-        
+
         //delete the task asociate to the Namespace
         taskDTOService.deleteAllByNamespaceId(id);
-        
+
         //delete all persistentIdentifiers associated to the Namespace
         persistentIdentifierDTOService.deleteAllByNamespaceId(id);
-        
+
         //borro todas features asociadas
         featureDTOService.deleteAllByNamespaceId(id);
-        
+
         namespaceRepository.delete(id);
     }
-    
+
     /**
      * Delete all namespace associate with the organization
-     * 
-     * @param oraganizationId id of the organization to be deleted
+     *
+     * @param organizationId id of the organization to be deleted
      */
     @Override
     public void deleteAllByOrganizationId(Long organizationId){

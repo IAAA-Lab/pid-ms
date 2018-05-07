@@ -148,12 +148,12 @@
                                  referencedColumnNames="event_id"
                                  referencedTableName="jhi_persistent_audit_event"/>
     </changeSet>
-    
+
     <!--
         Added the entity Namespace.
     -->
     <changeSet id="20170802153709-1" author="jhipster">
-    
+
    		<createTable tableName="namespace">
             <column name="id" type="BIGINT" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
@@ -194,7 +194,7 @@
         <dropDefaultValue tableName="namespace" columnName="annullation_date" columnDataType="datetime"/>
 
     </changeSet>
-    
+
     <!--
         Added the entity Task.
     -->
@@ -226,9 +226,9 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         <dropDefaultValue tableName="task" columnName="jhi_timestamp" columnDataType="datetime"/>
-        
+
     </changeSet>
-    
+
     <!--
         Added the entity Change.
     -->
@@ -280,7 +280,7 @@
             <column name="task_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-            
+
             <column name="feature_id" type="bigint">
             	<constraints nullable="true" />
             </column>
@@ -290,9 +290,9 @@
         <dropDefaultValue tableName="change" columnName="change_timestamp" columnDataType="datetime"/>
         <dropDefaultValue tableName="change" columnName="begin_lifespan_version" columnDataType="datetime"/>
         <dropDefaultValue tableName="change" columnName="end_lifespan_version" columnDataType="datetime"/>
-        
+
     </changeSet>
-    
+
     <!--
         Added the entity Organization.
     -->
@@ -311,9 +311,9 @@
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        
+
     </changeSet>
-    
+
     <!--
         Added the entity PersistentIdentifier.
     -->
@@ -389,9 +389,9 @@
             <column name="annullation_date" type="timestamp">
                 <constraints nullable="true" />
             </column>
-            
+
             <column name="feature_id" type="bigint">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
@@ -405,7 +405,7 @@
         <dropDefaultValue tableName="persistent_identifier" columnName="annullation_date" columnDataType="datetime"/>
 
     </changeSet>
-    
+
     <!--
         Added the entity OrganizationMember.
     -->
@@ -428,13 +428,13 @@
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        
+
     </changeSet>
-    
-    <!-- 
+
+    <!--
     	Added the entity Feature
      -->
-     
+
      <changeSet author="sergioib (generated)" id="1509086622436-3">
         <createTable tableName="feature">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
@@ -494,51 +494,51 @@
             </column>
         </createTable>
     </changeSet>
-    
+
     <changeSet id="20171027153709-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="owner_id"
                                  baseTableName="namespace"
                                  constraintName="fk_namespace_owner_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="organization"/>             
+                                 referencedTableName="organization"/>
     </changeSet>
-    
+
     <!--
         Added the constraints for entity Task.
     -->
     <changeSet id="20170802155452-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="namespace_id"
                                  baseTableName="task"
                                  constraintName="fk_task_namespace_id"
                                  referencedColumnNames="id"
                                  referencedTableName="namespace"/>
     </changeSet>
-    
+
     <!--
         Added the constraints for entity Change.
     -->
     <changeSet id="20170802160033-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="task_id"
                                  baseTableName="change"
                                  constraintName="fk_change_task_id"
                                  referencedColumnNames="id"
                                  referencedTableName="task"/>
-                                 
+
 		<addForeignKeyConstraint baseColumnNames="feature_id"
                                  baseTableName="change"
                                  constraintName="fk_change_feature_id"
                                  referencedColumnNames="id"
                                  referencedTableName="feature"/>
     </changeSet>
-    
+
     <!--
         Added the constraints for entity OrganizationMember.
     -->
     <changeSet id="20170808131640-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="organization_member"
                                  constraintName="fk_organization_member_user_id"
@@ -552,31 +552,31 @@
                                  referencedTableName="organization"/>
 
     </changeSet>
-    
+
     <!--
         Added the constraints for entity Feature.
     -->
     <changeSet id="1509086622436-4" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="namespace_id"
                                  baseTableName="feature"
                                  constraintName="fk_feature_namespace_id"
                                  referencedColumnNames="id"
                                  referencedTableName="namespace"/>
     </changeSet>
-    
+
     <!--
         Added the constraints for entity PersistentIdentifier.
     -->
     <changeSet id="1509086622436-5" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="feature_id"
                                  baseTableName="persistent_identifier"
                                  constraintName="fk_persistent_identifier_feature_id"
                                  referencedColumnNames="id"
                                  referencedTableName="feature"/>
     </changeSet>
-    
+
     <changeSet id="201708080144300-1" author="fjlopez" context="!test">
         <loadData encoding="UTF-8"
                   file="config/liquibase/organizations.csv"
@@ -589,9 +589,14 @@
                   tableName="organization_member">
         </loadData>
         <loadData encoding="UTF-8"
-                  file="config/liquibase/namespaces.csv"
+                  file="config/liquibase/namespaces-dev.csv"
                   separator=";"
                   tableName="namespace">
+        </loadData>
+        <loadData encoding="UTF-8"
+        		  file="config/liquibase/features-dev.csv"
+        		  separator=";"
+        		  tableName="feature">
         </loadData>
     </changeSet>
 

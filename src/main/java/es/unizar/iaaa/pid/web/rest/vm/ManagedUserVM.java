@@ -1,8 +1,8 @@
 package es.unizar.iaaa.pid.web.rest.vm;
 
 import es.unizar.iaaa.pid.service.dto.UserDTO;
-import javax.validation.constraints.Size;
 
+import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.Set;
 

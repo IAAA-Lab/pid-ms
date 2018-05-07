@@ -1,30 +1,13 @@
 package es.unizar.iaaa.pid.service;
 
+import es.unizar.iaaa.pid.service.dto.FeatureDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import es.unizar.iaaa.pid.service.dto.FeatureDTO;
 
 /**
  * Service Interface for managing Feature.
  */
-public interface FeatureDTOService {
-
-    /**
-     * Save a feature.
-     *
-     * @param featureDTO the entity to save
-     * @return the persisted entity
-     */
-    FeatureDTO save(FeatureDTO featureDTO);
-
-    /**
-     *  Get all the features.
-     *
-     *  @param pageable the pagination information
-     *  @return the list of entities
-     */
-    Page<FeatureDTO> findAll(Pageable pageable);
+public interface FeatureDTOService extends  DTOService<Long, FeatureDTO> {
 
     /**
      *  Get the public features.
@@ -35,27 +18,12 @@ public interface FeatureDTOService {
     Page<FeatureDTO> findPublic(Pageable pageable);
 
     /**
-     *  Get the "id" feature.
-     *
-     *  @param id the id of the entity
-     *  @return the entity
-     */
-    FeatureDTO findOne(Long id);
-
-    /**
      *  Get the "id" feature if public.
      *
      *  @param id the id of the entity
      *  @return the entity
      */
     FeatureDTO findOnePublic(Long id);
-
-    /**
-     *  Delete the "id" feature.
-     *
-     *  @param id the id of the entity
-     */
-    void delete(Long id);
 
     /**
      *  Get the "feature" feature
@@ -81,12 +49,12 @@ public interface FeatureDTOService {
      *  @return the entity
      */
     FeatureDTO findOneInPrincipalOrganizationsOrPublic(Long id);
-    
+
     /**
      * Delete all features associate with the Namespace
-     * 
-     * @param idNamespace id of the Namespace
+     *
+     * @param namespaceId id of the Namespace
      */
     void deleteAllByNamespaceId(Long namespaceId);
-    
+
 }

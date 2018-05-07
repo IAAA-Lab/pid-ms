@@ -272,7 +272,7 @@ public class NamespaceDTO implements Serializable {
             ", maxNumRequest='" + getMaxNumRequest() + "'" +
             ", version='" + getVersion() + "'" +
             ", ownerId='" + getOwnerId() + "'" +
-            ", ownerName='" + getOwnerTitle() + "'" +
+            ", ownerTitle='" + getOwnerTitle() + "'" +
             "}";
     }
 }

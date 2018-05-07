@@ -1,41 +1,5 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.persistence.EntityManager;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-
 import es.unizar.iaaa.pid.PidmsApp;
 import es.unizar.iaaa.pid.domain.Authority;
 import es.unizar.iaaa.pid.domain.User;
@@ -46,8 +10,35 @@ import es.unizar.iaaa.pid.service.UserService;
 import es.unizar.iaaa.pid.service.dto.UserDTO;
 import es.unizar.iaaa.pid.service.mapper.UserMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
+import es.unizar.iaaa.pid.web.rest.util.TestUtil;
 import es.unizar.iaaa.pid.web.rest.vm.ManagedUserVM;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the UserResource REST controller.
@@ -56,6 +47,7 @@ import org.springframework.util.StringUtils;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PidmsApp.class)
+@Transactional
 public class UserResourceIntTest {
 
     private static final Long DEFAULT_ID = 1L;
@@ -102,9 +94,6 @@ public class UserResourceIntTest {
     @Autowired
     private ExceptionTranslator exceptionTranslator;
 
-    @Autowired
-    private EntityManager em;
-
     private MockMvc restUserMockMvc;
 
     private User user;
@@ -126,7 +115,7 @@ public class UserResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which has a required relationship to the User entity.
      */
-    public static User createEntity(EntityManager em) {
+    public static User createEntity() {
         User user = new User();
         user.setLogin(DEFAULT_LOGIN);
         user.setPassword(RandomStringUtils.random(60));
@@ -138,14 +127,26 @@ public class UserResourceIntTest {
         user.setLangKey(DEFAULT_LANGKEY);
         return user;
     }
+    
+    public static User createEntityAux(){
+    	User user = new User();
+    	user.setLogin(UPDATED_LOGIN);
+        user.setPassword(RandomStringUtils.random(60));
+        user.setActivated(true);
+        user.setEmail(UPDATED_EMAIL);
+        user.setFirstName(UPDATED_FIRSTNAME);
+        user.setLastName(UPDATED_LASTNAME);
+        user.setImageUrl(UPDATED_IMAGEURL);
+        user.setLangKey(UPDATED_LANGKEY);
+        return user;
+    }
 
     @Before
     public void initTest() {
-        user = createEntity(em);
+        user = createEntity();
     }
 
     @Test
-    @Transactional
     public void createUser() throws Exception {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
@@ -186,7 +187,6 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void createUserWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
@@ -220,7 +220,6 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void createUserWithExistingLogin() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -256,7 +255,6 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void createUserWithExistingEmail() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -292,7 +290,6 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void getAllUsers() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -311,7 +308,6 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void getUser() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -329,14 +325,12 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void getNonExistingUser() throws Exception {
         restUserMockMvc.perform(get("/api/users/unknown"))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    @Transactional
     public void updateUser() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -380,7 +374,6 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void updateUserLogin() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -425,7 +418,6 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void updateUserExistingEmail() throws Exception {
         // Initialize the database with 2 users
         userRepository.saveAndFlush(user);
@@ -469,7 +461,6 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void updateUserExistingLogin() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -513,7 +504,6 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void deleteUser() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
@@ -530,7 +520,6 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void getAllAuthorities() throws Exception {
         restUserMockMvc.perform(get("/api/users/authorities")
             .accept(TestUtil.APPLICATION_JSON_UTF8)
@@ -542,7 +531,6 @@ public class UserResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void testUserEquals() throws Exception {
         TestUtil.equalsVerifier(User.class);
         User user1 = new User();
@@ -627,7 +615,7 @@ public class UserResourceIntTest {
     }
 
     @Test
-    public void testAuthorityEquals() throws Exception {
+    public void testAuthorityEquals() {
         Authority authorityA = new Authority();
         assertThat(authorityA).isEqualTo(authorityA);
         assertThat(authorityA).isNotEqualTo(null);

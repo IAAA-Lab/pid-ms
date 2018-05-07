@@ -1,19 +1,18 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import es.unizar.iaaa.pid.config.Constants;
 import com.codahale.metrics.annotation.Timed;
+import es.unizar.iaaa.pid.config.Constants;
 import es.unizar.iaaa.pid.domain.User;
 import es.unizar.iaaa.pid.repository.UserRepository;
 import es.unizar.iaaa.pid.security.AuthoritiesConstants;
 import es.unizar.iaaa.pid.service.MailService;
 import es.unizar.iaaa.pid.service.UserService;
 import es.unizar.iaaa.pid.service.dto.UserDTO;
-import es.unizar.iaaa.pid.web.rest.vm.ManagedUserVM;
 import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
 import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
+import es.unizar.iaaa.pid.web.rest.vm.ManagedUserVM;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.ApiParam;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -27,7 +26,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing users.

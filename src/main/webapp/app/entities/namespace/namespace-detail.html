@@ -1,82 +1,82 @@
 
 <div ng-switch="vm.isAuthenticated()">
-    <h2><span data-translate="pidmsApp.namespace.detail.title">Namespace</span> {{vm.namespace.id}}</h2>
+    <h2><span data-translate="pidmsApp.namespace.detail.title">Namespace</span> "<b>{{vm.namespace.namespace}}</b>" <small>[id:{{vm.namespace.id}}]</small></h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span data-translate="pidmsApp.namespace.namespace">Namespace</span></dt>
-        <dd>
-            <span>{{vm.namespace.namespace}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.namespace.title">Title</span></dt>
-        <dd>
-            <span>{{vm.namespace.title}}</span>
-        </dd>
-        <dt ng-switch-when="true"><span data-translate="pidmsApp.namespace.publicNamespace">Public Namespace</span></dt>
-        <dd ng-switch-when="true">
-            <span>{{vm.namespace.publicNamespace}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.namespace.renewalPolicy">Renewal Policy</span></dt>
-        <dd>
-            <span data-translate="{{'pidmsApp.RenewalPolicy.' + vm.namespace.renewalPolicy}}">{{vm.namespace.renewalPolicy}}</span>
-        </dd>
-        <dt ng-switch-when="true"><span data-translate="pidmsApp.namespace.namespaceStatus">Namespace Status</span></dt>
-        <dd ng-switch-when="true">
-            <span data-translate="{{'pidmsApp.NamespaceStatus.' + vm.namespace.namespaceStatus}}">{{vm.namespace.namespaceStatus}}</span>
-        </dd>
-        <dt ng-switch-when="true"><span data-translate="pidmsApp.namespace.processStatus">Process Status</span></dt>
-        <dd ng-switch-when="true">
-            <span data-translate="{{'pidmsApp.ProcessStatus.' + vm.namespace.processStatus}}">{{vm.namespace.processStatus}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.namespace.itemStatus">Item Status</span></dt>
-        <dd>
-            <span data-translate="{{'pidmsApp.ItemStatus.' + vm.namespace.itemStatus}}">{{vm.namespace.itemStatus}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.namespace.lastChangeDate">Last Change Date</span></dt>
-        <dd>
-            <span>{{vm.namespace.lastChangeDate | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.namespace.registrationDate">Registration Date</span></dt>
-        <dd>
-            <span>{{vm.namespace.registrationDate | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.namespace.lastRevisionDate">Last Revision Date</span></dt>
-        <dd>
-            <span>{{vm.namespace.lastRevisionDate | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.namespace.nextRenewalDate">Next Renewal Date</span></dt>
-        <dd>
-            <span>{{vm.namespace.nextRenewalDate | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.namespace.annullationDate">Annullation Date</span></dt>
-        <dd>
-            <span>{{vm.namespace.annullationDate | date:'medium'}}</span>
-        </dd>
-        <dt ng-switch-when="true"><span data-translate="pidmsApp.namespace.methodType">Method Type</span></dt>
-        <dd ng-switch-when="true">
-            <span data-translate="{{'pidmsApp.MethodType.' + vm.namespace.methodType}}">{{vm.namespace.methodType}}</span>
-        </dd>
-        <dt ng-switch-when="true"><span data-translate="pidmsApp.namespace.sourceType">Source Type</span></dt>
-        <dd ng-switch-when="true">
-            <span data-translate="{{'pidmsApp.SourceType.' + vm.namespace.sourceType}}">{{vm.namespace.sourceType}}</span>
-        </dd>
-        <dt ng-switch-when="true"><span data-translate="pidmsApp.namespace.endpointLocation">Endpoint Location</span></dt>
-        <dd ng-switch-when="true">
-            <span>{{vm.namespace.endpointLocation}}</span>
-        </dd>
-        <dt ng-switch-when="true"><span data-translate="pidmsApp.namespace.resolverProxyMode">Resolver Proxy Mode</span></dt>
-        <dd ng-switch-when="true">
-            <span>{{vm.namespace.resolverProxyMode}}</span>
-        </dd>
-        <dt ng-switch-when="true"><span data-translate="pidmsApp.namespace.maxNumRequest">Max Num Request</span></dt>
-        <dd ng-switch-when="true">
-            <span>{{vm.namespace.maxNumRequest}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.namespace.owner">Owner</span></dt>
-        <dd>
-            <a ui-sref="organization-detail({id:vm.namespace.ownerId})">{{vm.namespace.ownerId}}</a>
-        </dd>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.description">Description Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="pidmsApp.namespace.namespace">Namespace</span></dt>
+                <dd><span>{{vm.namespace.namespace}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.namespace.title">Title</span></dt>
+                <dd><span>{{vm.namespace.title}}</span></dd>
+                <hr>
+                <dt ng-switch-when="true"><span data-translate="pidmsApp.namespace.publicNamespace">Public Namespace</span></dt>
+                <dd ng-switch-when="true"><span data-translate="{{vm.namespace.publicNamespace}}">Boolean</span></dd>
+                <hr ng-switch-when="true">
+                <dt><span data-translate="pidmsApp.namespace.renewalPolicy">Renewal Policy</span></dt>
+                <dd><span data-translate="{{'pidmsApp.RenewalPolicy.' + vm.namespace.renewalPolicy}}">{{vm.namespace.renewalPolicy}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.namespace.owner">Owner</span></dt>
+                <dd><a ui-sref="organization-detail({id:vm.namespace.ownerId})">{{vm.namespace.ownerTitle}}</a></dd>
+            </div>
+        </div>
+
+        <div class="panel panel-default" ng-switch-when="true">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.source">Source Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="pidmsApp.namespace.endpointLocation">Endpoint Location</span></dt>
+                <dd><span>{{vm.namespace.endpointLocation}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.namespace.sourceType">Source Type</span></dt>
+                <dd><span data-translate="{{'pidmsApp.SourceType.' + vm.namespace.sourceType}}">{{vm.namespace.sourceType}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.namespace.methodType">Method Type</span></dt>
+                <dd><span data-translate="{{'pidmsApp.MethodType.' + vm.namespace.methodType}}">{{vm.namespace.methodType}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.namespace.resolverProxyMode">Resolver Proxy Mode</span></dt>
+                <dd><span>{{vm.namespace.resolverProxyMode}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.namespace.maxNumRequest">Max Num Request</span></dt>
+                <dd><span>{{vm.namespace.maxNumRequest}}</span></dd>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.registration">Registration Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="registration.itemStatus">Item Status</span></dt>
+                <dd><span data-translate="{{'pidmsApp.ItemStatus.' + vm.namespace.itemStatus}}">{{vm.namespace.itemStatus}}</span></dd>
+                <hr>
+                <dt><span data-translate="registration.lastChangeDate">Last Change Date</span></dt>
+                <dd><span>{{(vm.namespace.lastChangeDate | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="registration.registrationDate">Registration Date</span></dt>
+                <dd><span>{{(vm.namespace.registrationDate | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="registration.lastRevisionDate">Last Revision Date</span></dt>
+                <dd><span>{{(vm.namespace.lastRevisionDate | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="registration.nextRenewalDate">Next Renewal Date</span></dt>
+                <dd><span>{{(vm.namespace.nextRenewalDate | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="registration.annullationDate">Annullation Date</span></dt>
+                <dd><span>{{(vm.namespace.annullationDate | date:'medium') || "-"}}</span></dd>
+                <hr ng-switch-when="true">
+                <dt ng-switch-when="true"><span data-translate="registration.processStatus">Process Status</span></dt>
+                <dd ng-switch-when="true"><span data-translate="{{'pidmsApp.ProcessStatus.' + vm.namespace.processStatus}}">{{vm.namespace.processStatus}}</span></dd>
+            </div>
+        </div>
     </dl>
+
+
 
     <button type="submit"
             ui-sref="{{ vm.previousState }}"
@@ -91,7 +91,7 @@
         <span class="glyphicon glyphicon-pencil"></span>
         <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
     </button>
-    
+
     <button type="button"
              ui-sref="namespace.update({id:vm.namespace.id})"
              class="btn btn-primary"
@@ -99,7 +99,7 @@
          <span class="glyphicon glyphicon-pencil"></span>
          <span class="hidden-sm-down" data-translate="pidmsApp.namespace.updateCSV.csvData"> CSV data</span>
     </button>
-    
+
     <button type="submit"
             ui-sref="namespace.delete({id:vm.namespace.id})"
             class="btn btn-danger"

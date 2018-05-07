@@ -27,7 +27,7 @@
         function save () {
             vm.isSaving = true;
             if (vm.organization.id !== null) {
-                Organization.update(vm.organization, onSaveSuccess, onSaveError);
+                Organization.update({id : $stateParams.id}, vm.organization, onSaveSuccess, onSaveError);
             } else {
                 Organization.save(vm.organization, onSaveSuccess, onSaveError);
             }

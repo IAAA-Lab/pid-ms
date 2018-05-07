@@ -17,14 +17,8 @@
             },
             "changeTimestamp": "Fecha",
             "action": "Acción",
-            "feature": "Tipo",
-            "namespace": "Espacio de nombres",
-            "localId": "Id Local",
-            "versionId": "Version",
-            "beginLifespanVersion": "Comienzo de inicio de versión",
-            "endLifespanVersion": "Fecha de fin de versión",
-            "alternateId": "Identificador alternativo",
-            "resourceType": "Tipo de recurso",
+            "featureType": "Tipo de Objeto Espacial",
+            "resourceType": "Tipo de Recurso",
             "locator": "Localizador",
             "task": "Tarea"
         }

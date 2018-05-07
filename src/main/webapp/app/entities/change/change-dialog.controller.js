@@ -29,7 +29,7 @@
         function save () {
             vm.isSaving = true;
             if (vm.change.id !== null) {
-                Change.update(vm.change, onSaveSuccess, onSaveError);
+                Change.update({id : $stateParams.id}, vm.change, onSaveSuccess, onSaveError);
             } else {
                 Change.save(vm.change, onSaveSuccess, onSaveError);
             }

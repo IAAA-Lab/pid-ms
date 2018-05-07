@@ -1,9 +1,11 @@
 package es.unizar.iaaa.pid.service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
+import es.unizar.iaaa.pid.domain.Feature;
+import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.domain.PersistentIdentifier;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.repository.PersistentIdentifierRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,12 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.unizar.iaaa.pid.domain.Feature;
-import es.unizar.iaaa.pid.domain.Namespace;
-import es.unizar.iaaa.pid.domain.PersistentIdentifier;
-import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.repository.PersistentIdentifierRepository;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Service class for managing Persistent Identifiers.
@@ -74,7 +73,7 @@ public class PersistentIdentifierService {
     public List<PersistentIdentifier> findByNamespaceLapsed(Namespace namespace) {
         return persistentIdentifierRepository.findByNamespaceValidated(namespace.getNamespace(), Arrays.asList(ItemStatus.LAPSED));
     }
-    
+
     public List<PersistentIdentifier> findByFeatureAndNamespaceLapsed(Feature feature, Namespace namespace){
     	return persistentIdentifierRepository.findByFeatureAndNamespaceLapsed(feature, namespace.getNamespace(), Arrays.asList(ItemStatus.LAPSED));
     }

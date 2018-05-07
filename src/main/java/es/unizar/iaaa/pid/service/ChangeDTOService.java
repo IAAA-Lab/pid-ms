@@ -7,38 +7,7 @@ import org.springframework.data.domain.Pageable;
 /**
  * Service Interface for managing Change.
  */
-public interface ChangeDTOService {
-
-    /**
-     * Save a change.
-     *
-     * @param changeDTO the entity to save
-     * @return the persisted entity
-     */
-    ChangeDTO save(ChangeDTO changeDTO);
-
-    /**
-     *  Get all the changes.
-     *
-     *  @param pageable the pagination information
-     *  @return the list of entities
-     */
-    Page<ChangeDTO> findAll(Pageable pageable);
-
-    /**
-     *  Get the "id" change.
-     *
-     *  @param id the id of the entity
-     *  @return the entity
-     */
-    ChangeDTO findOne(Long id);
-
-    /**
-     *  Delete the "id" change.
-     *
-     *  @param id the id of the entity
-     */
-    void delete(Long id);
+public interface ChangeDTOService extends DTOService<Long, ChangeDTO> {
 
     /**
      *  Get all the change that belongs to organizations where the Principal is a member.
@@ -47,10 +16,10 @@ public interface ChangeDTOService {
      *  @return the list of entities
      */
     Page<ChangeDTO> findAllInPrincipalOrganizations(Pageable pageable);
-    
+
     /**
      * Get all the change that Namespace is public
-     * 
+     *
      * @param pageable the pagination information
      * @return the list of entities
      */
@@ -63,26 +32,26 @@ public interface ChangeDTOService {
      *  @return the entity
      */
     ChangeDTO findOneInPrincipalOrganizations(Long id);
-    
+
     /**
      * Get the "id" change that belong a public namespace
-     * 
+     *
      * @param id the id of the entity
      * @return the entity
      */
     ChangeDTO findOnePublic(Long id);
-    
+
     /**
      * Delete all change associated with the task
-     * 
+     *
      * @param taskId the id of the associate Task
      */
     void deleteAllByTaskId(Long taskId);
-    
-    
+
+
     /**
      * Delete all change associated with the Feature
-     * 
+     *
      * @param featureId the id of the associate Feature
      */
     void deleteAllByFeatureId(Long featureId);

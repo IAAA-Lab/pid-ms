@@ -10,7 +10,7 @@
         var resourceUrl =  'api/namespaces/:id/updateCSV';
 
         return $resource(resourceUrl, {}, {
-            'updateCSV': { method:'PUT' }
+            'updateCSV': { method:'POST' }
         });
     }
 })();

@@ -1,5 +1,11 @@
 package es.unizar.iaaa.pid.service.impl;
 
+import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Feature;
+import es.unizar.iaaa.pid.repository.ChangeRepository;
+import es.unizar.iaaa.pid.service.ChangeDTOService;
+import es.unizar.iaaa.pid.service.dto.ChangeDTO;
+import es.unizar.iaaa.pid.service.mapper.ChangeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -7,11 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.unizar.iaaa.pid.domain.Change;
-import es.unizar.iaaa.pid.repository.ChangeRepository;
-import es.unizar.iaaa.pid.service.ChangeDTOService;
-import es.unizar.iaaa.pid.service.dto.ChangeDTO;
-import es.unizar.iaaa.pid.service.mapper.ChangeMapper;
+import javax.persistence.EntityManager;
 
 
 /**
@@ -27,9 +29,12 @@ public class ChangeServiceImpl implements ChangeDTOService {
 
     private final ChangeMapper changeMapper;
 
-    public ChangeServiceImpl(ChangeRepository changeRepository, ChangeMapper changeMapper) {
+    private final EntityManager entityManager;
+
+    public ChangeServiceImpl(ChangeRepository changeRepository, ChangeMapper changeMapper, EntityManager entityManager) {
         this.changeRepository = changeRepository;
         this.changeMapper = changeMapper;
+        this.entityManager = entityManager;
     }
 
     /**
@@ -42,6 +47,7 @@ public class ChangeServiceImpl implements ChangeDTOService {
     public ChangeDTO save(ChangeDTO changeDTO) {
         log.debug("Request to save Change : {}", changeDTO);
         Change change = changeMapper.toEntity(changeDTO);
+        change.setFeature(entityManager.getReference(Feature.class, change.getFeature().getId()));
         change = changeRepository.save(change);
         return changeMapper.toDto(change);
     }
@@ -98,10 +104,10 @@ public class ChangeServiceImpl implements ChangeDTOService {
         return changeRepository.findAllInPrincipalOrganizations(changeMapper.toPage(pageable))
             .map(changeMapper::toDto);
     }
-    
+
     /**
      * Get all the change that Namespace is public
-     * 
+     *
      * @param pageable the pagination information
      * @return the list of entities
      */
@@ -126,10 +132,10 @@ public class ChangeServiceImpl implements ChangeDTOService {
         Change change = changeRepository.findOneInPrincipalOrganizations(id);
         return changeMapper.toDto(change);
     }
-    
+
     /**
      * Get the "id" change that belong a public namespace
-     * 
+     *
      * @param id the id of the entity
      * @return the entity
      */
@@ -143,7 +149,7 @@ public class ChangeServiceImpl implements ChangeDTOService {
 
     /**
      * Delete all change associated with the task
-     * 
+     *
      * @param taskId the id of the associate Task
      */
 	@Override
@@ -151,10 +157,10 @@ public class ChangeServiceImpl implements ChangeDTOService {
 		log.debug("Request to delete all Task associate with taskId : {}",taskId);
 		changeRepository.deleteAllByTaskId(taskId);
 	}
-	
+
 	/**
      * Delete all change associated with the Feature
-     * 
+     *
      * @param featureId the id of the associate Feature
      */
 	@Override

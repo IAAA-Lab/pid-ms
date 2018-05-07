@@ -12,6 +12,9 @@ public final class HeaderUtil {
 
     private static final String APPLICATION_NAME = "pidmsApp";
 
+    public static final String ERROR_HEADER = "X-pidmsApp-error";
+    public static final String ERROR_ID_ALREADY_EXIST = "error.idexists";
+
     private HeaderUtil() {
     }
 
@@ -37,7 +40,7 @@ public final class HeaderUtil {
     public static HttpHeaders createFailureAlert(String entityName, String errorKey, String defaultMessage) {
         log.error("Entity processing failed, {}", defaultMessage);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("X-pidmsApp-error", "error." + errorKey);
+        headers.add(ERROR_HEADER, "error." + errorKey);
         headers.add("X-pidmsApp-params", entityName);
         return headers;
     }

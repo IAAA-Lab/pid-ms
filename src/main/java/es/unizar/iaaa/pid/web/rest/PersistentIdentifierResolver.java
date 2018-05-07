@@ -3,7 +3,6 @@ package es.unizar.iaaa.pid.web.rest;
 import es.unizar.iaaa.pid.config.ApplicationProperties;
 import es.unizar.iaaa.pid.domain.Identifier;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 import es.unizar.iaaa.pid.service.PersistentIdentifierService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,20 +19,23 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.util.UUID;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 /**
  * REST controller for resolving PersistentIdentifier.
  */
 @RestController
 public class PersistentIdentifierResolver {
-    private static MediaType PID_MEDIA_TYPE = MediaType.parseMediaType("application/vnd.inspire.pid");
+    private static final MediaType PID_MEDIA_TYPE = MediaType.parseMediaType("application/vnd.inspire.pid+json");
 
-    private ApplicationProperties properties;
+    private final PersistentIdentifierService persistentIdentifierService;
 
-    PersistentIdentifierService persistentIdentifierService;
+    private final ApplicationProperties applicationProperties;
 
-    public PersistentIdentifierResolver(PersistentIdentifierService persistentIdentifierService, ApplicationProperties properties) {
+    public PersistentIdentifierResolver(PersistentIdentifierService persistentIdentifierService, ApplicationProperties applicationProperties) {
         this.persistentIdentifierService = persistentIdentifierService;
-        this.properties = properties;
+        this.applicationProperties = applicationProperties;
     }
 
     @RequestMapping(path = "/catalogo/{code}", produces = MediaType.ALL_VALUE)
@@ -102,44 +104,40 @@ public class PersistentIdentifierResolver {
     }
 
     private ResponseEntity<byte[]> resolverRedireccionPid(PersistentIdentifier pid) {
-        HttpHeaders cabeceras = new HttpHeaders();
-        HttpStatus estado = HttpStatus.NOT_FOUND;
+        HttpHeaders headers = new HttpHeaders();
+        HttpStatus status = HttpStatus.NOT_FOUND;
         if (pid != null) {
-            String resourceLocator = pid.getResource().getLocator();
-            cabeceras.set("Vary", "Accept");
+            headers.set("Vary", "Accept");
             switch (pid.getRegistration().getItemStatus()) {
                 case ISSUED:
                 case LAPSED:
-                    cabeceras.setLocation(URI.create(resourceLocator));
-                    estado = HttpStatus.TEMPORARY_REDIRECT;
+                    String resourceLocator = pid.getResource().getLocator();
+                    headers.setLocation(URI.create(resourceLocator));
+                    status = HttpStatus.TEMPORARY_REDIRECT;
                     break;
                 case RETIRED:
                 case ANNULLED:
-                    estado = HttpStatus.GONE;
+                    status = HttpStatus.GONE;
             }
         }
-        return new ResponseEntity<>(cabeceras, estado);
+        return new ResponseEntity<>(headers, status);
     }
 
     private ResponseEntity<byte[]> resolverMetadatoPid(PersistentIdentifier pid) {
         HttpHeaders cabeceras = new HttpHeaders();
         HttpStatus estado = HttpStatus.NOT_FOUND;
-        String metadatosBase = properties.getResolver().getMetadataBase();
         if (pid != null) {
-            ResourceType resourceType = pid.getResource().getResourceType();
-
-            String localizacion = null;
-            switch (resourceType) {
-                case DATASET:
-                    localizacion = String.format("%s/%s/%s", metadatosBase, pid.getIdentifier().getNamespace(), pid.getIdentifier().getLocalId());
-                    break;
-                case SPATIAL_OBJECT:
-                    localizacion = String.format("%s/recurso/%s/%s", metadatosBase, pid.getIdentifier().getNamespace(), pid.getIdentifier().getLocalId());
-                    if (pid.getIdentifier().getVersionId() != null) {
-                        localizacion = String.format("%s/%s", localizacion, pid.getIdentifier().getVersionId());
-                    }
+            URI link = linkTo(methodOn(PersistentIdentifierResource.class)
+                .getPersistentIdentifier(pid.getId())).toUri();
+            if (applicationProperties.getResolver()!=null &&
+                !StringUtils.isEmpty(applicationProperties.getResolver().getMetadataBase())) {
+                String base = linkTo(PersistentIdentifierResource.class).toUri().toASCIIString();
+                link = URI.create(
+                    applicationProperties.getResolver().getMetadataBase() +
+                    link.toASCIIString().substring(base.length())
+                );
             }
-            cabeceras.setLocation(URI.create(localizacion));
+            cabeceras.setLocation(link);
             cabeceras.set("Vary", "Accept");
             estado = HttpStatus.TEMPORARY_REDIRECT;
         }

@@ -1,5 +1,12 @@
 package es.unizar.iaaa.pid.web.rest;
 
+import static es.unizar.iaaa.pid.web.rest.util.HeaderUtil.ERROR_ID_ALREADY_EXIST;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_CAPACITY;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.ERROR_HEADER;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.ERROR_NULL_FIELD;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.FIELD_CAPACITY;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_CAPACITY;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.organization;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -10,10 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-
-import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,17 +37,16 @@ import org.springframework.transaction.annotation.Transactional;
 import es.unizar.iaaa.pid.PidmsApp;
 import es.unizar.iaaa.pid.domain.Organization;
 import es.unizar.iaaa.pid.domain.OrganizationMember;
-import es.unizar.iaaa.pid.domain.User;
 import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.repository.OrganizationMemberRepository;
 import es.unizar.iaaa.pid.service.OrganizationDTOService;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
-import es.unizar.iaaa.pid.service.UserService;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMemberMapper;
-import es.unizar.iaaa.pid.service.mapper.UserMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
+import es.unizar.iaaa.pid.web.rest.util.MvcResultUtils;
+import es.unizar.iaaa.pid.web.rest.util.TestUtil;
 /**
  * Test class for the OrganizationMemberResource REST controller.
  *
@@ -52,17 +54,10 @@ import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PidmsApp.class)
-public class OrganizationMemberResourceIntTest {
+@Transactional
+@WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
+public class OrganizationMemberResourceIntTest extends LoggedUser {
 
-    private static final Capacity DEFAULT_CAPACITY = Capacity.ADMIN;
-    private static final Capacity UPDATED_CAPACITY = Capacity.EDITOR;
-
-    private static final String ERROR_HEADER = "X-pidmsApp-error";
-    private static final String ERROR_ID_ALREADY_EXIST = "error.idexists";
-
-    private static final String FIELD_CAPACITY = "\"field\" : \"capacity\"";
-
-    private static final String ERROR_NULL_FIELD = "\"message\" : \"NotNull\"";
 
     @Autowired
     private OrganizationMemberRepository organizationMemberRepository;
@@ -80,12 +75,6 @@ public class OrganizationMemberResourceIntTest {
     private OrganizationMapper organizationMapper;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -94,16 +83,11 @@ public class OrganizationMemberResourceIntTest {
     @Autowired
     private ExceptionTranslator exceptionTranslator;
 
-    @Autowired
-    private EntityManager em;
-
     private MockMvc restOrganizationMemberMockMvc;
 
     private OrganizationMember organizationMember;
 
-    private User user;
-    private Organization organization;
-    private OrganizationMember organizationMemberAdmin;
+    private OrganizationMember organizationMemberNew;
 
     @Before
     public void setup() {
@@ -121,258 +105,154 @@ public class OrganizationMemberResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static OrganizationMember createEntity(EntityManager em) {
-        OrganizationMember organizationMember = new OrganizationMember()
-            .capacity(DEFAULT_CAPACITY);
-        return organizationMember;
-    }
 
     @Before
     public void initTest() {
-        organizationMember = createEntity(em);
+        Organization organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization())));
 
-        //add user
-        user = UserResourceIntTest.createEntity(em);
-        //create organization
-        organization = OrganizationResourceIntTest.createEntity(em);
+        em.flush();
+
+        organizationMember = organizationMemberRepository.findAll().stream().findFirst().get();
+
         //create organizationMembers
-        organizationMemberAdmin = new OrganizationMember().user(user).organization(organization).capacity(Capacity.ADMIN);
+        organizationMemberNew = new OrganizationMember().user(loggedUser).organization(organization).capacity(Capacity.ADMIN);
     }
 
     @Test
-    @Transactional
-    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void createOrganizationMember() throws Exception {
-        //add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+        OrganizationMember organizationMemberAdd = new OrganizationMember().user(loggedUserAux()).organization(organizationMemberNew.getOrganization()).capacity(DEFAULT_CAPACITY);
 
-        int databaseSizeBeforeCreate = organizationMemberRepository.findAll().size();
-
-        organizationMember.setOrganization(organization);
-
-        // Create the OrganizationMember
-        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMember);
-        restOrganizationMemberMockMvc.perform(post("/api/organization-members")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(organizationMemberDTO)))
-            .andExpect(status().isCreated());
-
-        // Validate the OrganizationMember in the database
-        List<OrganizationMember> organizationMemberList = organizationMemberRepository.findAll();
-        assertThat(organizationMemberList).hasSize(databaseSizeBeforeCreate + 1);
-        OrganizationMember testOrganizationMember = organizationMemberList.get(organizationMemberList.size() - 1);
-        assertThat(testOrganizationMember.getCapacity()).isEqualTo(DEFAULT_CAPACITY);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
-    public void createOrganizationMemberWithExistingId() throws Exception {
-
-    	//add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-
-        int databaseSizeBeforeCreate = organizationMemberRepository.findAll().size();
-
-        organizationMember.setOrganization(organization);
-
-        // Create the OrganizationMember with an existing ID
-        organizationMember.setId(1L);
-        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMember);
-
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restOrganizationMemberMockMvc.perform(post("/api/organization-members")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(organizationMemberDTO)))
-            .andExpect(status().isBadRequest()).andExpect(header().string(ERROR_HEADER,ERROR_ID_ALREADY_EXIST ));
-
-        // Validate the Alice in the database
-        List<OrganizationMember> organizationMemberList = organizationMemberRepository.findAll();
-        assertThat(organizationMemberList).hasSize(databaseSizeBeforeCreate);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
-    public void checkCapacityIsRequired() throws Exception {
-    	//add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-
-        int databaseSizeBeforeTest = organizationMemberRepository.findAll().size();
-
-        organizationMember.setOrganization(organization);
-        // set the field null
-        organizationMember.setCapacity(null);
-
-        // Create the OrganizationMember, which fails.
-        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMember);
+        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberAdd);
 
         MvcResult result = restOrganizationMemberMockMvc.perform(post("/api/organization-members")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(organizationMemberDTO)))
-            .andExpect(status().isBadRequest()).andReturn();
+            .andExpect(status().isCreated()).andReturn();
 
-        List<OrganizationMember> organizationMemberList = organizationMemberRepository.findAll();
-        assertThat(organizationMemberList).hasSize(databaseSizeBeforeTest);
+        // Extract current id from Location
+        Long id = MvcResultUtils.extractIdFromLocation(result);
 
-        String content = result.getResponse().getContentAsString();
-        assertThat(content.contains(FIELD_CAPACITY));
-        assertThat(content.contains(ERROR_NULL_FIELD));
+        // Validate the Task in the database
+        OrganizationMemberDTO testOrganizationMember = organizationMemberService.findOne(id);
+        assertThat(testOrganizationMember).isNotNull();
+        assertThat(testOrganizationMember.getCapacity()).isEqualTo(DEFAULT_CAPACITY);
     }
 
     @Test
-    @Transactional
-    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
+    public void createOrganizationMemberTaskWithIdMustFail() throws Exception {
+        // Create the Task with an existing ID
+        organizationMemberNew.setId(1L);
+        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberNew);
+
+        // An entity with an  ID cannot be created, so this API call must fail
+        restOrganizationMemberMockMvc.perform(post("/api/organization-members")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(organizationMemberDTO)))
+            .andExpect(status().isBadRequest())
+            .andExpect(header().string(ERROR_HEADER,ERROR_ID_ALREADY_EXIST));
+    }
+
+    @Test
+    public void checkCapacityIsRequired() throws Exception {
+        // Create the Task with an existing ID
+        organizationMemberNew.setCapacity(null);
+        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberNew);
+
+        // An entity with an  ID cannot be created, so this API call must fail
+        restOrganizationMemberMockMvc.perform(post("/api/organization-members")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(organizationMemberDTO)))
+            .andExpect(status().isBadRequest())
+            .andExpect(TestUtil.checkError(FIELD_CAPACITY, ERROR_NULL_FIELD));
+    }
+
+    @Test
     public void getAllOrganizationMembers() throws Exception {
-
-    	//add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-
-        organizationMember.setOrganization(organization);
-
         // Initialize the database
-        organizationMemberRepository.saveAndFlush(organizationMember);
+        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberNew);
+        organizationMemberDTO = organizationMemberService.save(organizationMemberDTO);
 
         // Get all the organizationMemberList
         restOrganizationMemberMockMvc.perform(get("/api/organization-members?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(organizationMember.getId().intValue())))
-            .andExpect(jsonPath("$.[*].capacity").value(hasItem(DEFAULT_CAPACITY.toString())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(organizationMemberDTO.getId().intValue())))
+            .andExpect(jsonPath("$.[*].capacity").value(hasItem(organizationMemberDTO.getCapacity().toString())));
     }
 
     @Test
-    @Transactional
-    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void getOrganizationMember() throws Exception {
-    	//add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-
-        organizationMember.setOrganization(organization);
         // Initialize the database
-        organizationMemberRepository.saveAndFlush(organizationMember);
+        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberNew);
+        organizationMemberDTO = organizationMemberService.save(organizationMemberDTO);
 
         // Get the organizationMember
-        restOrganizationMemberMockMvc.perform(get("/api/organization-members/{id}", organizationMember.getId()))
+        restOrganizationMemberMockMvc.perform(get("/api/organization-members/{id}", organizationMemberDTO.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(organizationMember.getId().intValue()))
-            .andExpect(jsonPath("$.capacity").value(DEFAULT_CAPACITY.toString()));
+            .andExpect(jsonPath("$.id").value(organizationMemberDTO.getId().intValue()))
+            .andExpect(jsonPath("$.capacity").value(organizationMemberDTO.getCapacity().toString()));
     }
 
     @Test
-    @Transactional
-    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void getNonExistingOrganizationMember() throws Exception {
-    	//add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-
-        organizationMember.setOrganization(organization);
-
-        // Get the organizationMember
+        // Get the task
         restOrganizationMemberMockMvc.perform(get("/api/organization-members/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    @Transactional
-    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void updateOrganizationMember() throws Exception {
-        // Initialize the database
-    	//add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-
-        organizationMember.setOrganization(organization);
-
-        organizationMemberRepository.saveAndFlush(organizationMember);
-        int databaseSizeBeforeUpdate = organizationMemberRepository.findAll().size();
+    	OrganizationMember organizationMemberAdd = new OrganizationMember().user(loggedUserAux()).organization(organizationMemberNew.getOrganization()).capacity(DEFAULT_CAPACITY);
+    	OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberAdd);
+        organizationMemberDTO = organizationMemberService.save(organizationMemberDTO);
 
         // Update the organizationMember
-        OrganizationMember updatedOrganizationMember = organizationMemberRepository.findOne(organizationMember.getId());
-        updatedOrganizationMember
-            .capacity(UPDATED_CAPACITY);
-        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(updatedOrganizationMember);
+        OrganizationMemberDTO updated = organizationMemberService.findOne(organizationMemberDTO.getId());
+        updated.setCapacity(UPDATED_CAPACITY);
 
-        restOrganizationMemberMockMvc.perform(put("/api/organization-members")
+        restOrganizationMemberMockMvc.perform(put("/api/organization-members/{id}", updated.getId())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(organizationMemberDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(updated)))
             .andExpect(status().isOk());
 
         // Validate the OrganizationMember in the database
-        List<OrganizationMember> organizationMemberList = organizationMemberRepository.findAll();
-        assertThat(organizationMemberList).hasSize(databaseSizeBeforeUpdate);
-        OrganizationMember testOrganizationMember = organizationMemberList.get(organizationMemberList.size() - 1);
+        OrganizationMemberDTO testOrganizationMember = organizationMemberService.findOne(organizationMemberDTO.getId());
         assertThat(testOrganizationMember.getCapacity()).isEqualTo(UPDATED_CAPACITY);
     }
 
     @Test
-    @Transactional
-    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
-    public void updateNonExistingOrganizationMember() throws Exception {
-    	//add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
-
-        organizationMember.setOrganization(organization);
-
-        int databaseSizeBeforeUpdate = organizationMemberRepository.findAll().size();
-
-        // Create the OrganizationMember
-        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMember);
+    public void updateNonExistingOrganizationMemberFails() throws Exception {
+        OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberNew);
+        Long id = Long.MAX_VALUE;
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
-        restOrganizationMemberMockMvc.perform(put("/api/organization-members")
+        restOrganizationMemberMockMvc.perform(put("/api/organization-members/{id}", id)
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(organizationMemberDTO)))
-            .andExpect(status().isCreated());
-
-        // Validate the OrganizationMember in the database
-        List<OrganizationMember> organizationMemberList = organizationMemberRepository.findAll();
-        assertThat(organizationMemberList).hasSize(databaseSizeBeforeUpdate + 1);
+            .andExpect(status().isNotFound());
     }
 
     @Test
-    @Transactional
-    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void deleteOrganizationMember() throws Exception {
-    	//add organization, user and organizationMember in the database
-        userService.createUser(userMapper.userToUserDTO(user));
-        organization = organizationMapper.toEntity(organizationDTOService.save(organizationMapper.toDto(organization)));
-        organizationMemberService.save(organizationMemberMapper.toDto(organizationMemberAdmin));
+    	OrganizationMember organizationMemberAdd = new OrganizationMember().user(loggedUserAux()).organization(organizationMemberNew.getOrganization()).capacity(DEFAULT_CAPACITY);
+    	OrganizationMemberDTO organizationMemberDTO = organizationMemberMapper.toDto(organizationMemberAdd);
+        organizationMemberDTO = organizationMemberService.save(organizationMemberDTO);
 
-        organizationMember.setOrganization(organization);
-
-        // Initialize the database
-        organizationMemberRepository.saveAndFlush(organizationMember);
-        int databaseSizeBeforeDelete = organizationMemberRepository.findAll().size();
-
-        // Get the organizationMember
-        restOrganizationMemberMockMvc.perform(delete("/api/organization-members/{id}", organizationMember.getId())
+        restOrganizationMemberMockMvc.perform(get("/api/organization-members/{id}", organizationMemberDTO.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
-        // Validate the database is empty
-        List<OrganizationMember> organizationMemberList = organizationMemberRepository.findAll();
-        assertThat(organizationMemberList).hasSize(databaseSizeBeforeDelete - 1);
+        restOrganizationMemberMockMvc.perform(delete("/api/organization-members/{id}", organizationMemberDTO.getId())
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
+
+        restOrganizationMemberMockMvc.perform(get("/api/organization-members/{id}", organizationMemberDTO.getId())
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isNotFound());
     }
 
     @Test
-    @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(OrganizationMember.class);
         OrganizationMember organizationMember1 = new OrganizationMember();
@@ -387,7 +267,6 @@ public class OrganizationMemberResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(OrganizationMemberDTO.class);
         OrganizationMemberDTO organizationMemberDTO1 = new OrganizationMemberDTO();
@@ -403,7 +282,6 @@ public class OrganizationMemberResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void testEntityFromId() {
         assertThat(organizationMemberMapper.fromId(42L).getId()).isEqualTo(42);
         assertThat(organizationMemberMapper.fromId(null)).isNull();

@@ -1,18 +1,14 @@
 package es.unizar.iaaa.pid.cucumber.stepdefs;
 
-import static es.unizar.iaaa.pid.domain.enumeration.ResourceType.DATASET;
-import static es.unizar.iaaa.pid.domain.enumeration.ResourceType.SPATIAL_OBJECT;
+import es.unizar.iaaa.pid.domain.*;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import es.unizar.iaaa.pid.domain.Feature;
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.PersistentIdentifier;
-import es.unizar.iaaa.pid.domain.Registration;
-import es.unizar.iaaa.pid.domain.Resource;
-import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import static es.unizar.iaaa.pid.domain.enumeration.ResourceType.DATASET;
+import static es.unizar.iaaa.pid.domain.enumeration.ResourceType.SPATIAL_OBJECT;
 
 public class FixturesConstructorPid {
     public static PersistentIdentifier creaConjunto(String code) {
@@ -30,11 +26,7 @@ public class FixturesConstructorPid {
         registration.setNextRenewalDate(renew);
         Resource resource = new Resource().resourceType(DATASET).locator("");
 
-        Feature feature = new Feature();
-        feature.setFeatureType("feature");
-        
         return new PersistentIdentifier()
-            .feature(feature)
             .identifier(identifier)
             .resource(resource)
             .registration(registration)
@@ -60,11 +52,7 @@ public class FixturesConstructorPid {
             .resourceType(SPATIAL_OBJECT)
             .locator("");
 
-        Feature feature = new Feature();
-        feature.setFeatureType("feature");
-        
         return new PersistentIdentifier()
-            .feature(feature)
             .identifier(identifier)
             .resource(resource)
             .registration(registration)
@@ -92,11 +80,7 @@ public class FixturesConstructorPid {
             .resourceType(SPATIAL_OBJECT)
             .locator("");
 
-        Feature feature = new Feature();
-        feature.setFeatureType("feature");
-        
         return new PersistentIdentifier()
-            .feature(feature)
             .identifier(identifier)
             .resource(resource)
             .registration(registration)

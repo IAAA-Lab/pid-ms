@@ -1,9 +1,9 @@
-<div ng-switch="vm.isAuthenticated()">
+<div>
     <h2 data-translate="pidmsApp.feature.home.title">Features</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-4 no-padding-left">
+            <div class="col-xs-4 no-padding-left"  ng-switch="vm.isAuthenticated()">
                 <button class="btn btn-primary"
                         ui-sref="feature.new"
                         ng-switch-when="true">
@@ -22,7 +22,7 @@
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
                 	<th jh-sort-by="featureType"><span data-translate="pidmsApp.feature.featureType">Feature Type</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="schemaPrefix"><span data-translate="pidmsApp.feature.schemaPrefix">Schema Prefix</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="namespaceId"><span data-translate="pidmsApp.feature.namespace">Namespace</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="namespaceName"><span data-translate="pidmsApp.feature.namespace">Namespace</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -30,9 +30,9 @@
                 <tr ng-repeat="feature in vm.features track by feature.id">
                     <td><a ui-sref="feature-detail({id:feature.id})">{{feature.featureType}}</a></td>
                     <td>{{feature.schemaPrefix}}</td>
-                    <td><a ui-sref="namespace-detail({id:namespace.id})">{{feature.namespaceId}}</a></td>
+                    <td><a ui-sref="namespace-detail({id:feature.namespaceId})">{{feature.namespaceName}}</a></td>
                     <td class="text-right">
-                        <div class="btn-group flex-btn-group-container">
+                        <div class="btn-group flex-btn-group-container"  ng-switch="vm.isAuthenticated()">
                             <button type="submit"
                                     ui-sref="feature.edit({id:feature.id})"
                                     class="btn btn-primary btn-sm"

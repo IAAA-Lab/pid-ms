@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
@@ -43,12 +42,13 @@ public class HarvesterSMConfiguration extends StateMachineConfigurerAdapter<Stat
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HarvesterSMConfiguration.class);
 
+    @Override
     public void configure(StateMachineConfigurationConfigurer<States, Events> config) throws Exception {
         config.withConfiguration()
                 .autoStartup(true);
     }
 
-
+    @Override
     public void configure(StateMachineStateConfigurer<States, Events> states) throws Exception {
       states
         .withStates()
@@ -68,6 +68,7 @@ public class HarvesterSMConfiguration extends StateMachineConfigurerAdapter<Stat
 
     }
 
+    @Override
     public void configure(StateMachineTransitionConfigurer<States, Events> transitions) throws Exception {
       transitions
         .withExternal()

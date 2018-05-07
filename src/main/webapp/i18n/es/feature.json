@@ -2,37 +2,42 @@
     "pidmsApp": {
         "feature" : {
             "home": {
-                "title": "Elementos",
-                "createLabel": "Crear nuevo Elemento",
-                "createOrEditLabel": "Crear o editar Elemento"
+                "title": "Tipos de Objetos Espaciales",
+                "createLabel": "Crear nuevo Tipo de Objeto Espacial",
+                "editLabel": "Editar un Tipo de Objeto Espacial"
             },
-            "created": "Un nuevo Elemento ha sido creado con identificador {{ param }}",
-            "updated": "El Elemento ha sido actualizado con el identificador {{ param }}",
-            "deleted": "El Elemento ha sido borrado con el identificador {{ param }}",
+            "created": "Un nuevo Tipo de Objeto Espacial ha sido creado con identificador {{ param }}",
+            "updated": "El Tipo de Objeto Espacial ha sido actualizado con el identificador {{ param }}",
+            "deleted": "El Tipo de Objeto Espacial ha sido borrado con el identificador {{ param }}",
             "delete": {
-                "question": "¿Seguro que quiere eliminar el Elemento {{ id }}?"
+                "question": "¿Seguro que quiere eliminar el Tipo de Objeto Espacial {{ id }}?"
             },
             "detail": {
-                "title": "Elemento"
+                "title": "Tipo de Objeto Espacial"
             },
-            "srsName": "Nombre del SRS",
-            "schemaUri": "Uri del Esquema",
-            "schemaUriGML": "Uri del esquema GML",
-            "schemaUriBase": "Uri del esquema Base",
-            "schemaPrefix": "Prefijo del esquema",
-            "featureType": "Tipo de elemento",
-            "geometryProperty": "Propiedad geométrica",
-            "beginLifespanVersionProperty": "Propiedad Comienzo de la vida util de la versión",
-            "featuresThreshold": "Límite de elementos",
-            "hitsRequest": "Peticón de número de resultados",
-            "factorK": "Factor K",
-            "xpath": "Xpath",
-            "nameItem": "Nombre del elemento",
+            "featureType": "Nombre",
+            "schemaPrefix": "Prefijo del Espacio de Nombres",
+            "schemaUri": "Espacio de Nombres",
+            "namespace": "Parte de",
+            "technicalSection": "Detalles Técnicos",
+            "namespaceMappings": "Correspondencia de Espacios de Nombres",
+            "schemaUriGML": "GML",
+            "schemaUriBase": "INSPIRE",
+            "xpath": "WFS",
+            "attributeMappings": "Correspondencia de Atributos",
+            "geometryProperty": "INSPIRE Geometry",
+            "beginLifespanVersionProperty": "INSPIRE BeginLifespanVersion",
+            "nameItem": "WFS member",
+            "harvestSection": "Estrategia de Recolección",
+            "featuresThreshold": "Límite Para Teselar Próxima Petición",
+            "srsName": "CRS",
+            "hitsRequest": "Usar Petición Hits",
+            "factorK": "Ratio de Telesado",
+            "boundingBoxSection": "Caja",
             "minX": "MinX",
             "minY": "MinY",
             "maxX": "MaxX",
-            "maxY": "MaxY",
-            "namespace": "Propietario"
+            "maxY": "MaxY"
         }
     }
 }
