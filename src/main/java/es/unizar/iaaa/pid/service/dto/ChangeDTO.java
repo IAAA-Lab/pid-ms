@@ -42,6 +42,8 @@ public class ChangeDTO implements Serializable {
 
     private Long taskId;
 
+    private String featureType;
+
     public Long getId() {
         return id;
     }
@@ -73,6 +75,14 @@ public class ChangeDTO implements Serializable {
 	public void setFeatureId(Long featureId) {
 		this.featureId = featureId;
 	}
+
+    public String getFeatureType() {
+        return featureType;
+    }
+
+    public void setFeatureType(String featureType) {
+        this.featureType = featureType;
+    }
 
 	public String getNamespace() {
         return namespace;
@@ -156,10 +166,7 @@ public class ChangeDTO implements Serializable {
         }
 
         ChangeDTO changeDTO = (ChangeDTO) o;
-        if(changeDTO.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), changeDTO.getId());
+        return changeDTO.getId() != null && getId() != null && Objects.equals(getId(), changeDTO.getId());
     }
 
     @Override
@@ -174,6 +181,7 @@ public class ChangeDTO implements Serializable {
             ", changeTimestamp='" + getChangeTimestamp() + "'" +
             ", action='" + getAction() + "'" +
             ", feature='" + getFeatureId() + "'" +
+            ", featureType='" + getFeatureType() + "'" +
             ", namespace='" + getNamespace() + "'" +
             ", localId='" + getLocalId() + "'" +
             ", versionId='" + getVersionId() + "'" +

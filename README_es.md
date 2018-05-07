@@ -4,6 +4,17 @@
 
 Esta aplicación ha sido generada usando JHipster 4.7.0, puede encontrar documentación y ayuda en [https://jhipster.github.io/documentation-archive/v4.7.0](https://jhipster.github.io/documentation-archive/v4.7.0).
 
+## Antes de empezar
+
+Esta configurada con datos de prueba para que se pueda entender mejor su funcionamiento.
+Tras arrancar se requiere que el usuario se autentique para poder ver toda la información:
+* _admin_:_admin_, administrador de la organización _ign_. 
+  Tiene plenos poderes sobre los espacios de nombres y los miembros gestionados por la organización _ign_. 
+* _user_:_user_, editor de la organización _ign_.
+  Tiene plenos poderes sobre los espacios de nombres y los miembros gestionados por la organización _ign_.
+
+
+
 
 ## Desarrollo
 
@@ -13,6 +24,8 @@ Antes de pode compilar este proyecto, debe instalar y configurar las siguiente d
 	Dependiento de su sistema, usted puede instalar Node a partir de los fuentes o una distribución pre-enpaquetada.
 2. [Yarn][]: Se usa Yarn para gestionar las dependencias de Node.
 	Dependiento de su sistema, usted puede instalar Yarn a partir de los fuentes o una distribución pre-enpaquetada.
+3. [PostgreSQL][]: La aplicación está configurada por defecto para utilizar PostgreSQL como base de datos de desarrollo. 
+    Opcionalmente incluimos Docker para quien quiera mejorar su experiencia de desarrollo. 
 
 Después de instalar Node, debería ser capaz de ejecutar el siguiente comando para instalar las herramientas de desarrollo.
 Solamente necesitará ejecutar este comando cuando las dependencias cambien en [package.json](package.json).
@@ -23,7 +36,7 @@ Se usa [Gulp][] como sistema de compilación. Instale la herramienta Gulp comman
 
     yarn global add gulp-cli
 
-Ejecute los siguientes comandos en dos terminales separados para crear una esperiencia de desarrollo donde su navegador autorecargue cuando los ficheros cambien en su disco duro.
+Ejecute los siguientes comandos en dos terminales separados para crear una experiencia de desarrollo donde su navegador autorecargue cuando los ficheros cambien en su disco duro.
 
     ./mvnw
     gulp
@@ -65,8 +78,9 @@ Los test unitarios son ejecutados por [Karma][] y escritos con [Jasmine][]. Esta
 Para más información, diríjase a [Running tests page][].
 
 ## Usando docker para simplificar el desarrollo (opcional)
-Puede usar Docker para mejorar su experiencia de desarrollo con JHipster. Un gran número de configuraciones docker-compose estan disponibles en el directorio [src/main/docker](src/main/docker) para lanzar servicios de terceros.
-Por ejemplo, para inicilaizar una base de datos postgresql en un contenedor de docker, ejecute:
+
+Puede usar Docker para mejorar su experiencia de desarrollo. Un gran número de configuraciones docker-compose estan disponibles en el directorio [src/main/docker](src/main/docker) para lanzar servicios de terceros.
+Por ejemplo, para inicializar una base de datos PostgreSQL en un contenedor de docker, ejecute:
 
     docker-compose -f src/main/docker/postgresql.yml up -d
 
@@ -110,3 +124,4 @@ Para configurar CI para su proyecto, ejecute el sub-generador ci-cd (`jhipster c
 [Protractor]: https://angular.github.io/protractor/
 [Leaflet]: http://leafletjs.com/
 [DefinitelyTyped]: http://definitelytyped.org/
+[PostgreSQL]: https://www.postgresql.org/

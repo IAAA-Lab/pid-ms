@@ -3,10 +3,11 @@ package es.unizar.iaaa.pid.service.mapper;
 import es.unizar.iaaa.pid.domain.Authority;
 import es.unizar.iaaa.pid.domain.User;
 import es.unizar.iaaa.pid.service.dto.UserDTO;
-
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

@@ -1,8 +1,8 @@
-<div ng-switch="vm.isAuthenticated()">
+<div>
     <h2 data-translate="pidmsApp.namespace.home.title">Namespaces</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
-        <div class="row">
+        <div class="row" ng-switch="vm.isAuthenticated()">
             <div class="col-xs-4 no-padding-left">
                 <button class="btn btn-primary"
                         ui-sref="namespace.new"
@@ -20,8 +20,9 @@
         <table class="jh-table table table-striped">
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
+                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="namespace"><span data-translate="pidmsApp.namespace.namespace">Namespace</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="itemStatus"><span data-translate="pidmsApp.namespace.itemStatus">Item Status</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="itemStatus"><span data-translate="registration.itemStatus">Item Status</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="sourceType"><span data-translate="pidmsApp.namespace.sourceType">Source Type</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="endpointLocation"><span data-translate="pidmsApp.namespace.endpointLocation">Endpoint Location</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="ownerId"><span data-translate="pidmsApp.namespace.owner">Owner</span> <span class="glyphicon glyphicon-sort"></span></th>
@@ -30,7 +31,8 @@
             </thead>
             <tbody infinite-scroll="vm.loadPage(vm.page + 1)" infinite-scroll-disabled="vm.page >= vm.links['last']">
                 <tr ng-repeat="namespace in vm.namespaces track by namespace.id">
-                    <td><a ui-sref="namespace-detail({id:namespace.id})">{{namespace.namespace}}</a></td>
+                    <td><a ui-sref="namespace-detail({id:namespace.id})">{{namespace.id}}</a></td>
+                    <td>{{namespace.namespace}}</td>
                     <td data-translate="{{'pidmsApp.ItemStatus.' + namespace.itemStatus}}">{{namespace.itemStatus}}</td>
                     <td data-translate="{{'pidmsApp.SourceType.' + namespace.sourceType}}">{{namespace.sourceType}}</td>
                     <td>{{namespace.endpointLocation}}</td>
@@ -38,7 +40,7 @@
                         <a ui-sref="organization-detail({id:namespace.ownerId})">{{namespace.ownerTitle}}</a>
                     </td>
                     <td class="text-right">
-                        <div class="btn-group flex-btn-group-container">
+                        <div class="btn-group flex-btn-group-container" ng-switch="vm.isAuthenticated()">
                             <button type="submit"
                                     ui-sref="namespace.edit({id:namespace.id})"
                                     class="btn btn-primary btn-sm"

@@ -1,26 +1,20 @@
 package es.unizar.iaaa.pid.harvester.tasks;
 
-import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.VALIDATED;
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_VALIDATION_END;
-
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import es.unizar.iaaa.pid.domain.Change;
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.Namespace;
-import es.unizar.iaaa.pid.domain.PersistentIdentifier;
-import es.unizar.iaaa.pid.domain.Registration;
-import es.unizar.iaaa.pid.domain.Task;
+import es.unizar.iaaa.pid.domain.*;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.service.ChangeService;
 import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.PersistentIdentifierService;
 import es.unizar.iaaa.pid.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import java.util.UUID;
+
+import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.VALIDATED;
+import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_VALIDATION_END;
 
 @Component
 @Scope("prototype")
@@ -53,7 +47,7 @@ public class TransferringValidationByIdTask extends AbstractTaskRunner {
             registration.setLastRevisionDate(change.getChangeTimestamp());
             registration.setLastChangeDate(change.getChangeTimestamp());
             registration.setProcessStatus(PENDING_VALIDATION_END);
-            
+
             switch (change.getAction()) {
                 case UNCHANGED:
                     registration.setItemStatus(VALIDATED);

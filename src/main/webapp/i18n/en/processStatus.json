@@ -16,7 +16,7 @@
             "VALIDATION_END": "VALIDATION_END",
             "VALIDATION_BEGIN": "VALIDATION_BEGIN",
             "UPDATING_PIDS": "UPDATING_PIDS",
-            "NONE": "NONE"
+            "NONE": "WAITING TO THE NEXT CYCLE"
         }
     }
 }

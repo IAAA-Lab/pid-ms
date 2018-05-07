@@ -1,13 +1,7 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-
-import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.service.TaskDTOService;
-import es.unizar.iaaa.pid.service.dto.ChangeDTO;
-import es.unizar.iaaa.pid.service.dto.FeatureDTO;
-import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
-import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.service.dto.TaskDTO;
 import es.unizar.iaaa.pid.web.rest.util.ControllerUtil;
 import io.swagger.annotations.ApiParam;
@@ -122,7 +116,7 @@ public class TaskResource {
             .forbidWhen(notallowed())
             .doDelete(id);
     }
-    
+
     private Supplier<Boolean> notallowed() {
         return () -> {
         	return true;

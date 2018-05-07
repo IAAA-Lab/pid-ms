@@ -1,6 +1,7 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import es.unizar.iaaa.pid.PidmsApp;
+import es.unizar.iaaa.pid.config.ApplicationProperties;
 import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
@@ -62,7 +63,7 @@ public class PersistentIdentifierResourceIntTest extends LoggedUser {
 
     @Autowired
     private OrganizationDTOService organizationDTOService;
-    
+
     @Autowired
     private OrganizationMemberDTOService organizationMemberDTOService;
 
@@ -90,6 +91,9 @@ public class PersistentIdentifierResourceIntTest extends LoggedUser {
     @Autowired
     private ExceptionTranslator exceptionTranslator;
 
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
     private MockMvc restPersistentIdentifierMockMvc;
 
     private PersistentIdentifier persistentIdentifier;
@@ -98,7 +102,7 @@ public class PersistentIdentifierResourceIntTest extends LoggedUser {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         PersistentIdentifierResource persistentIdentifierResource = new PersistentIdentifierResource(persistentIdentifierService,
-        		featureDTOService, namespaceDTOService, organizationMemberDTOService);
+        		featureDTOService, namespaceDTOService, organizationMemberDTOService, applicationProperties);
         this.restPersistentIdentifierMockMvc = MockMvcBuilders.standaloneSetup(persistentIdentifierResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)

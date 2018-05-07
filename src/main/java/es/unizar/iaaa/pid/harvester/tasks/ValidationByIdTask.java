@@ -1,12 +1,5 @@
 package es.unizar.iaaa.pid.harvester.tasks;
 
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_TRANSFERRING_VALIDATION_BY_ID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
@@ -16,6 +9,12 @@ import es.unizar.iaaa.pid.service.FeatureService;
 import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.PersistentIdentifierService;
 import es.unizar.iaaa.pid.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_TRANSFERRING_VALIDATION_BY_ID;
 
 @Component
 @Scope("prototype")
@@ -25,7 +24,7 @@ public class ValidationByIdTask extends AbstractTaskRunner {
 
     private PersistentIdentifierService persistentIdentifierService;
     private FeatureService featureService;
-    
+
     @Autowired
     public ValidationByIdTask(NamespaceService namespaceService, TaskService taskService,
                               PersistentIdentifierService persistentIdentifierService,
@@ -35,15 +34,15 @@ public class ValidationByIdTask extends AbstractTaskRunner {
         this.featureService = featureService;
         this.context = context;
     }
-    
+
     @Override
     protected void doTask() {
-    	
+
     	//En el caso de que se trate de un fuente SHP no se hace validacion
     	if(task.getNamespace().getSource().getSourceType() == SourceType.SHP){
     		return;
     	}
-    	
+
         ValidatorById validatorById = getValidatorById();
 
         //get all features of the Namespaces

@@ -1,5 +1,15 @@
 package es.unizar.iaaa.pid.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
+import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.harvester.tasks.UpdatingTask;
+import es.unizar.iaaa.pid.service.*;
+import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
+import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
+import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
+import es.unizar.iaaa.pid.web.rest.vm.CsvData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -8,22 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.codahale.metrics.annotation.Timed;
-
-import es.unizar.iaaa.pid.domain.enumeration.Capacity;
-import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.harvester.tasks.UpdatingTask;
-import es.unizar.iaaa.pid.service.FeatureService;
-import es.unizar.iaaa.pid.service.NamespaceDTOService;
-import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
-import es.unizar.iaaa.pid.service.PersistentIdentifierService;
-import es.unizar.iaaa.pid.service.TaskService;
-import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
-import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
-import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
-import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
-import es.unizar.iaaa.pid.web.rest.vm.CsvData;
 
 @RestController
 @RequestMapping("/api")
@@ -59,16 +53,16 @@ public class BulkLoadOperations {
     @Timed
     public ResponseEntity<Void> updateCSVNamespace(@RequestBody CsvData csvData) {
         log.debug("REST request to update with csv data the PIDs of namespace : {}", csvData.getNamespaceId());
-        
+
     	NamespaceDTO namespace = namespaceService.findOne(csvData.getNamespaceId());
         OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespace.getOwnerId());
-        
-        if(organizationMember == null || (organizationMember.getCapacity() != Capacity.ADMIN && 
+
+        if(organizationMember == null || (organizationMember.getCapacity() != Capacity.ADMIN &&
         		organizationMember.getCapacity() != Capacity.EDITOR)){
         	return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert("Updatin proccess",
         			"notCapacityForCSVLoad","You must be Admin or Editor in the namespace organization")).body(null);
         }
-        
+
         //check if there is a task executing over the namespace
         if (namespace.getProcessStatus() != ProcessStatus.NONE) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).headers(HeaderUtil.createFailureAlert("Updating proccess", "taskInExecuting",

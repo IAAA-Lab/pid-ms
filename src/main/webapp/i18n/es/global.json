@@ -9,13 +9,13 @@
                 "main": "Entidades",
                 "groupMember": "Miembro del grupo",
                 "group": "Grupo",
-                "namespace": "Espacio de nombres",
+                "namespace": "Espacio de Nombres",
                 "task": "Tarea",
                 "change": "Cambio",
-                "persistentIdentifier": "Identificador persistente",
+                "persistentIdentifier": "Identificador Persistente",
                 "organization": "Organización",
-                "organizationMember": "Miembro de la organización",
-                "feature": "Feature",
+                "organizationMember": "Miembro de la Organización",
+                "feature": "Tipo de Objeto Espacial",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
@@ -58,7 +58,7 @@
                 "register": "¿No tienes una cuenta todavía? <a class=\"alert-link\" href=\"\" ng-click=\"vm.register()\">Crea una cuenta</a>"
             },
             "error": {
-                "dontmatch" : "¡La contraseña y la confirmación de contraseña no coinciden!"
+                "dontmatch": "¡La contraseña y la confirmación de contraseña no coinciden!"
             },
             "validate": {
                 "newpassword": {
@@ -81,10 +81,10 @@
             }
         },
         "field": {
-            "id" : "ID"
+            "id": "ID"
         },
         "ribbon": {
-            "dev":"Development"
+            "dev": "Development"
         },
         "item-count": "Mostrando {{first}}..{{second}} de {{total}}"
     },
@@ -133,7 +133,7 @@
         "featureExist": "Existe otro Feature con el mismo atributo featureType y schemaPrefix",
         "NamespaceNotExist": "El Namespace no existe",
         "OrganizationNotExist": "La Organización no existe",
-        "notCapacityToAddNamespace": "Es necesario ser Administrador o Editor de la Organización para añadir un Namespace", 
+        "notCapacityToAddNamespace": "Es necesario ser Administrador o Editor de la Organización para añadir un Namespace",
         "notCapacityToModifyNamespace": "Es necesario ser Administrador o Editor de la Organización para modificar un Namespace",
         "notCapacityToDeleteNamespace": "Es necesario ser Administrador o Editor de la Organización para borrar un Namespace",
         "notCapacityToAddOrganizationMember": "Es necesario ser Administrador de la Organización para añádir capacidades a un usuario",
@@ -158,6 +158,36 @@
         "notAuthenticated": "Debes estar autentificado para realizar esta acción",
         "taskInExecuting": "El namespace tiene una tarea en ejecución"
     },
+    "section": {
+        "description": "Descripción",
+        "source": "Fuente",
+        "registration": "Registro",
+        "identifier": "Identificador",
+        "resource": "Recurso identificado"
+    },
+    "registration": {
+        "processStatus": "Estado del proceso",
+        "itemStatus": "Estado del registro",
+        "lastChangeDate": "Fecha del último cambio",
+        "registrationDate": "Fecha de registro",
+        "lastRevisionDate": "Fecha de última revisión",
+        "nextRenewalDate": "Fecha de siguiente actualización",
+        "annullationDate": "Fecha de anulación"
+    },
+    "identifier": {
+        "namespace": "Espacio de nombres",
+        "localId": "Id Local",
+        "versionId": "Version",
+        "beginLifespanVersion": "Inicio de esta versión",
+        "endLifespanVersion": "Final de esta versión",
+        "alternateId": "Id Local alternativo"
+    },
+    "resource": {
+        "resourceType": "Tipo de recurso",
+        "locator": "Localizador"
+    },
     "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad de Zaragoza</a>",
-    "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>"
+    "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>",
+    "true": "Sí",
+    "false": "No"
 }

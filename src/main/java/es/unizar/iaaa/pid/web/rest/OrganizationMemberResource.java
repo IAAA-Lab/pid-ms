@@ -1,31 +1,21 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import java.util.List;
-import java.util.function.Supplier;
-
-import javax.validation.Valid;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import com.codahale.metrics.annotation.Timed;
-
 import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.web.rest.util.ControllerUtil;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * REST controller for managing OrganizationMember.
@@ -146,7 +136,7 @@ public class OrganizationMemberResource {
             return organizationMember == null || organizationMember.getCapacity() != Capacity.ADMIN;
         };
     }
-    
+
     private Supplier<Boolean> userIsMemberOfOrganization(OrganizationMemberDTO organizationMember) {
         return () -> {
             OrganizationMemberDTO aux = organizationMemberService.findOneByUserIdAndOrganizationId(organizationMember.getUserId(),organizationMember.getOrganizationId());

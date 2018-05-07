@@ -1,193 +1,132 @@
 package es.unizar.iaaa.pid.harvester.tasks.util;
 
-import java.io.BufferedOutputStream;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpClientParams;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class FileToolsUtil {
 
-	protected static final int	TIMEOUT		= 20000;									
-	protected static final int	BUFFER_SIZE	= 102400;									// 100Kb
+	private static final int	TIMEOUT		= 20000;
+	private static final int	BUFFER_SIZE	= 102400;									// 100Kb
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileToolsUtil.class);
-	
+
 	public static boolean downloadFileHTTP(String url, String pathFile) {
-		HttpClientParams clientParams = null;
-		HttpClient client = null;
-		HttpMethodBase http = null;
+        File downloadFile = new File(pathFile);
+        File dir = new File (downloadFile.getParent());
+        dir.mkdirs();
 
-		InputStream responseInputStream = null;
+		RequestConfig config = RequestConfig.custom()
+            .setSocketTimeout(TIMEOUT)
+            .setConnectionRequestTimeout(TIMEOUT)
+            .setConnectTimeout(TIMEOUT)
+            .build();
 
-		FileOutputStream fos = null;
-		BufferedOutputStream bos = null;
-
-		try {
-
-			clientParams = new HttpClientParams();
-			clientParams.setSoTimeout(TIMEOUT);
-			clientParams.setConnectionManagerTimeout(TIMEOUT);
-			//clientParams.setContentCharset("UTF-8");
-			client = new HttpClient(clientParams);
-
-			http = new GetMethod(url);
-
-			client.executeMethod(http);
-
-			responseInputStream = http.getResponseBodyAsStream();
-
-			File downloadFile = new File(pathFile);
-			File dir = new File (downloadFile.getParent());
-			dir.mkdirs();
-			
-			fos = new FileOutputStream(pathFile);
-			bos = new BufferedOutputStream(fos);
-
-			byte[] buff = new byte[BUFFER_SIZE];
-			int read = responseInputStream.read(buff);
-			while (read != -1) {
-				bos.write(buff, 0, read);
-				read = responseInputStream.read(buff);
-			}
-
-			bos.flush();
-			fos.flush();
-
-			return true;
-		}
-		catch (Exception e) {
-			// System.err.println("Error descargando el fichero.");
-			// e1.printStackTrace();
-			
-			LOGGER.error("Error downloading the file " + url, e);
-			File f = new File(pathFile);
-			if (f.exists() && f.isFile()) {
-				f.delete();
-			}
-			return false;
-		}
-		finally {
-
-			if (bos != null) {
-				try {
-					bos.close();
-				}
-				catch (IOException e) {
-					LOGGER.error("",e);
-				}
-			}
-
-			if (fos != null) {
-				try {
-					fos.close();
-				}
-				catch (IOException e) {
-					LOGGER.error("",e);
-				}
-			}
-
-			if (responseInputStream != null) {
-				try {
-					responseInputStream.close();
-				}
-				catch (IOException e) {
-					LOGGER.error("",e);
-				}
-			}
-
-			if (http != null) {
-				http.releaseConnection();
-			}
-
-		}
-
+		HttpGet request = new HttpGet(url);
+		request.setConfig(config);
+        CloseableHttpClient client = HttpClients.createDefault();
+        try(CloseableHttpResponse response = client.execute(request)){
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                try(FileOutputStream fos = new FileOutputStream(pathFile);
+                    InputStream is = entity.getContent()) {
+                    byte[] buff = new byte[BUFFER_SIZE];
+                    int inByte;
+                    while((inByte = is.read(buff)) != -1) {
+                        fos.write(buff, 0, inByte);
+                    }
+                }
+                return true;
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error downloading the file " + url, e);
+            File f = new File(pathFile);
+            if (f.exists() && f.isFile()) {
+                f.delete();
+            }
+        }
+        return false;
 	}
-	
+
 	public static boolean unzipFile(File zipFile, String unZipDirectory){
 
 		byte[] buffer = new byte[1024];
-		
-		try{
+
+		try(FileInputStream fis = new FileInputStream(zipFile);
+            ZipInputStream zis = new ZipInputStream(fis)
+        ){
 			//create output directory is not exists
 			File folder = new File(unZipDirectory);
 			if(!folder.exists()){
 				folder.mkdir();
 			}
-			
+
 			//get the zip file content
-			ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
 			//get the zipped file list entry
 			ZipEntry ze = zis.getNextEntry();
-			
+
 			while(ze!=null){
 				if(!ze.isDirectory()){
 					//create parents directories
 					String fileName = ze.getName();
-					
+
 					File newFile = new File(unZipDirectory + File.separator + fileName);
 					newFile.getParentFile().mkdirs();
-					
-					FileOutputStream fos = new FileOutputStream(newFile);
-					
-					int len;
-					while ((len = zis.read(buffer)) > 0) {
-						fos.write(buffer, 0, len);
-					}
-					
-					fos.close();
-					
+
+					try(FileOutputStream fos = new FileOutputStream(newFile)) {
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                    }
+
 				}
 				ze = zis.getNextEntry();
 			}
-			
+
 			zis.closeEntry();
-			zis.close();
-			
+
 			return true;
-			
+
 		}
 		catch(Exception e){
 			LOGGER.error("Error descomprimiendo fichero " + zipFile.getAbsolutePath(),e);
 			return false;
 		}
 	}
-	
-	public static String getFilePath(File dir, String fileName){		
+
+	public static String getFilePath(File dir, String fileName){
 		if(dir.exists() && dir.isDirectory()){
 			File[] fileList = dir.listFiles();
-			
-			for(int i = 0; i < fileList.length; i++){
-				File file = fileList[i];
-				if(file.isFile()){
-					if(file.getName().equals(fileName)){
-						return file.getAbsolutePath();
-					}
-				}
-				else if(file.isDirectory()){
-					String result = getFilePath(file,fileName);
-					if(!result.equals("")){
-						return result;
-					}
-				}
-			}
-			return "";
+
+            for (File file : fileList) {
+                if (file.isFile()) {
+                    if (file.getName().equals(fileName)) {
+                        return file.getAbsolutePath();
+                    }
+                } else if (file.isDirectory()) {
+                    String result = getFilePath(file, fileName);
+                    if (!result.equals("")) {
+                        return result;
+                    }
+                }
+            }
 		}
-		else{
-			return "";
-		}
+		return "";
 	}
-	
+
 	public static void deleteDirectory(File directory){
 		File[] entries = directory.listFiles();
 		for(File entry : entries){
@@ -198,5 +137,5 @@ public class FileToolsUtil {
 		}
 		directory.delete();
 	}
-	
+
 }

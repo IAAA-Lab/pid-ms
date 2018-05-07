@@ -2,7 +2,6 @@ package es.unizar.iaaa.pid.web.rest;
 
 import es.unizar.iaaa.pid.service.AuditEventService;
 import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
-
 import io.github.jhipster.web.util.ResponseUtil;
 import io.swagger.annotations.ApiParam;
 import org.springframework.boot.actuate.audit.AuditEvent;

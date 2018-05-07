@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-md-4">
           <button class="btn btn-primary" ui-sref="user-management.new">
-              <span class="glyphicon glyphicon-flash"></span> <span data-translate="userManagement.home.createLabel">Create a new User</span>
+              <span class="glyphicon glyphicon-plus"></span> <span data-translate="userManagement.home.createLabel">Create a new User</span>
           </button>
       </div>
     </div>
@@ -44,12 +44,6 @@
                 <td>{{user.lastModifiedDate | date:'dd/MM/yy HH:mm'}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
-                        <button type="submit"
-                                ui-sref="user-management-detail({login:user.login})"
-                                class="btn btn-info btn-sm">
-                            <span class="glyphicon glyphicon-eye-open"></span>
-                            <span class="hidden-xs hidden-sm" data-translate="entity.action.view"></span>
-                        </button>
                         <button type="submit"
                                 ui-sref="user-management.edit({login:user.login})"
                                 class="btn btn-primary btn-sm">

@@ -59,7 +59,7 @@ public class NamespaceResource {
         log.debug("REST request to save Namespace : {}", namespaceDTO);
         return ControllerUtil
             .with(ENTITY_NAME, uriBuilder.path("/api/namespaces/{id}"), namespaceService)
-            .customise( (dto) -> {
+            .customise( dto -> {
                 dto.setNamespaceStatus(NamespaceStatus.STOP);
                 dto.setProcessStatus(ProcessStatus.NONE);
                 dto.setItemStatus(ItemStatus.PENDING_VALIDATION);

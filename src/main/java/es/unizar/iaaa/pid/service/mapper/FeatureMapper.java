@@ -1,15 +1,13 @@
 package es.unizar.iaaa.pid.service.mapper;
 
-import java.util.Map;
-
+import com.google.common.collect.ImmutableMap;
+import es.unizar.iaaa.pid.domain.Feature;
+import es.unizar.iaaa.pid.service.dto.FeatureDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import com.google.common.collect.ImmutableMap;
-
-import es.unizar.iaaa.pid.domain.Feature;
-import es.unizar.iaaa.pid.service.dto.FeatureDTO;
+import java.util.Map;
 
 /**
  * Mapper for the entity Feature and its DTO FeatureDTO.
@@ -35,10 +33,11 @@ public interface FeatureMapper extends EntityMapper <FeatureDTO, Feature>{
       @Mapping(source = "boundingBox.maxY", target = "maxY"),
       @Mapping(source = "boundingBox.minX", target = "minX"),
       @Mapping(source = "boundingBox.minY", target = "minY"),
-      @Mapping(source = "namespace.id", target = "namespaceId")
+      @Mapping(source = "namespace.id", target = "namespaceId"),
+      @Mapping(source = "namespace.namespace", target = "namespaceName"),
 	})
 	FeatureDTO toDto(Feature feature);
-	
+
 	@Mappings({
       @Mapping(source = "srsName", target = "srsName"),
       @Mapping(source = "schemaUri", target = "schemaUri"),
@@ -58,8 +57,9 @@ public interface FeatureMapper extends EntityMapper <FeatureDTO, Feature>{
       @Mapping(source = "minX", target = "boundingBox.minX"),
       @Mapping(source = "minY", target = "boundingBox.minY"),
       @Mapping(source = "namespaceId", target = "namespace.id"),
+      @Mapping(source = "namespaceName", target = "namespace.namespace"),
 	})
-	Feature toEntity(FeatureDTO featureDTO); 
+	Feature toEntity(FeatureDTO featureDTO);
     default Feature fromId(Long id) {
         if (id == null) {
             return null;
@@ -68,7 +68,7 @@ public interface FeatureMapper extends EntityMapper <FeatureDTO, Feature>{
         feature.setId(id);
         return feature;
     }
-    
+
     Map<String, String> conversions = ImmutableMap.<String, String>builder().
         put("srsName", "srsName").
         put("schemaUri", "schemaUri").

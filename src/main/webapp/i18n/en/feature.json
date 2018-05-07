@@ -2,37 +2,42 @@
     "pidmsApp": {
         "feature" : {
             "home": {
-                "title": "Features",
-                "createLabel": "Create a new Feature",
-                "createOrEditLabel": "Create or edit a Feature"
+                "title": "Feature Types",
+                "createLabel": "Create a new Feature Type",
+                "editLabel": "Create or edit a Feature Type"
             },
-            "created": "A new Feature is created with identifier {{ param }}",
-            "updated": "A Feature is updated with identifier {{ param }}",
-            "deleted": "A Feature is deleted with identifier {{ param }}",
+            "created": "A new Feature Type is created with identifier {{ param }}",
+            "updated": "A Feature Type is updated with identifier {{ param }}",
+            "deleted": "A Feature Type is deleted with identifier {{ param }}",
             "delete": {
-                "question": "Are you sure you want to delete Feature {{ id }}?"
+                "question": "Are you sure you want to delete Feature Type {{ id }}?"
             },
             "detail": {
-                "title": "Feature"
+                "title": "Feature Type"
             },
-            "srsName": "Srs Name",
-            "schemaUri": "Schema Uri",
-            "schemaUriGML": "Schema Uri GML",
-            "schemaUriBase": "Schema Uri Base",
-            "schemaPrefix": "Schema Prefix",
-            "featureType": "Feature Type",
-            "geometryProperty": "Geometry Property",
-            "beginLifespanVersionProperty": "Begin Lifespan Version Property",
-            "featuresThreshold": "Features Threshold",
-            "hitsRequest": "Hits Request",
-            "factorK": "Factor K",
-            "xpath": "Xpath",
-            "nameItem": "Name Item",
+            "featureType": "Name",
+            "schemaPrefix": "Namespace Prefix",
+            "schemaUri": "Namespace",
+            "namespace": "Part of",
+            "technicalSection": "Technical Details",
+            "namespaceMappings": "Namespace Mappings",
+            "schemaUriGML": "GML",
+            "schemaUriBase": "INSPIRE",
+            "xpath": "WFS",
+            "attributeMappings": "Attribute Mappings",
+            "geometryProperty": "INSPIRE Geometry",
+            "beginLifespanVersionProperty": "INSPIRE BeginLifespanVersion",
+            "nameItem": "WFS member",
+            "harvestSection": "Harvest Strategy",
+            "featuresThreshold": "Tile Next Request Threshold",
+            "srsName": "CRS",
+            "hitsRequest": "Use Hits Request",
+            "factorK": "Tiling Ratio",
+            "boundingBoxSection": "Bounding Box",
             "minX": "MinX",
             "minY": "MinY",
             "maxX": "MaxX",
-            "maxY": "MaxY",
-            "namespace": "Namespace"
+            "maxY": "MaxY"
         }
     }
 }

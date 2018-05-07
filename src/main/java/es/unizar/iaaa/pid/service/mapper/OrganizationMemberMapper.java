@@ -1,14 +1,12 @@
 package es.unizar.iaaa.pid.service.mapper;
 
-import java.util.Map;
-
+import com.google.common.collect.ImmutableMap;
+import es.unizar.iaaa.pid.domain.OrganizationMember;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import com.google.common.collect.ImmutableMap;
-
-import es.unizar.iaaa.pid.domain.OrganizationMember;
-import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
+import java.util.Map;
 
 /**
  * Mapper for the entity OrganizationMember and its DTO OrganizationMemberDTO.
@@ -33,12 +31,12 @@ public interface OrganizationMemberMapper extends EntityMapper <OrganizationMemb
         organizationMember.setId(id);
         return organizationMember;
     }
-    
+
     Map<String, String> conversions = ImmutableMap.<String, String>builder().
     		put("userId", "user.id").
             put("organizationId", "organization.id").
             build();
-    
+
     @Override
     default Map<String, String> getConversions() {
         return conversions;

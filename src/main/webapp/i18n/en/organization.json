@@ -4,19 +4,19 @@
             "home": {
                 "title": "Organizations",
                 "createLabel": "Create a new Organization",
-                "createOrEditLabel": "Create or edit a Organization"
+                "editLabel": "Edit an Organization"
             },
             "created": "A new Organization is created with identifier {{ param }}",
             "updated": "A Organization is updated with identifier {{ param }}",
             "deleted": "A Organization is deleted with identifier {{ param }}",
             "delete": {
-                "question": "Are you sure you want to delete Organization {{ id }}?"
+                "question": "Are you sure you want to delete the Organization \"{{ name }}\" [id:{{ id }}]?"
             },
             "detail": {
                 "title": "Organization"
             },
-            "name": "Name",
-            "title": "Title",
+            "name": "Short name",
+            "title": "Full name",
             "member": "Member",
             "namespace": "Namespace",
             "slug": "Organisation"

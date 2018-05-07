@@ -1,81 +1,90 @@
 
 <div ng-switch="vm.isAuthenticated()">
-    <h2><span data-translate="pidmsApp.persistentIdentifier.detail.title">Persistent Identifier</span> {{vm.persistentIdentifier.id}}</h2>
+    <h2><span data-translate="pidmsApp.persistentIdentifier.detail.title">Persistent Identifier</span> "<b>{{vm.persistentIdentifier.externalUrn}}</b>" <small>[id:{{vm.persistentIdentifier.id}}]</small></h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span data-translate="pidmsApp.persistentIdentifier.externalUrn">External Urn</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.externalUrn}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.feature">Feature</span></dt>
-        <dd>
-            <a ui-sref="feature-detail({id:vm.persistentIdentifier.featureId})">{{vm.persistentIdentifier.featureId}}</a>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.resolverProxyMode">Resolver Proxy Mode</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.resolverProxyMode}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.namespace">Namespace</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.namespace}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.localId">Local Id</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.localId}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.versionId">Version Id</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.versionId}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.beginLifespanVersion">Begin Lifespan Version</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.beginLifespanVersion | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.endLifespanVersion">End Lifespan Version</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.endLifespanVersion | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.alternateId">Alternate Id</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.alternateId}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.resourceType">Resource Type</span></dt>
-        <dd>
-            <span data-translate="{{'pidmsApp.ResourceType.' + vm.persistentIdentifier.resourceType}}">{{vm.persistentIdentifier.resourceType}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.locator">Locator</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.locator}}</span>
-        </dd>
-        <dt ng-switch-when="true"><span data-translate="pidmsApp.persistentIdentifier.processStatus">Process Status</span></dt>
-        <dd ng-switch-when="true">
-            <span data-translate="{{'pidmsApp.ProcessStatus.' + vm.persistentIdentifier.processStatus}}">{{vm.persistentIdentifier.processStatus}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.itemStatus">Item Status</span></dt>
-        <dd>
-            <span data-translate="{{'pidmsApp.ItemStatus.' + vm.persistentIdentifier.itemStatus}}">{{vm.persistentIdentifier.itemStatus}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.lastChangeDate">Last Change Date</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.lastChangeDate | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.registrationDate">Registration Date</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.registrationDate | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.lastRevisionDate">Last Revision Date</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.lastRevisionDate | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.nextRenewalDate">Next Renewal Date</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.nextRenewalDate | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.persistentIdentifier.annullationDate">Annullation Date</span></dt>
-        <dd>
-            <span>{{vm.persistentIdentifier.annullationDate | date:'medium'}}</span>
-        </dd>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.description">Description Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="pidmsApp.persistentIdentifier.externalUrn">External Urn</span></dt>
+                <dd><span>{{vm.persistentIdentifier.externalUrn}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.persistentIdentifier.proxyPid">Proxy PID</span></dt>
+                <dd><a href="{{vm.persistentIdentifier.resolverLink}}" target="_blank">{{vm.persistentIdentifier.resolverLink}}</a></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.persistentIdentifier.resolverProxyMode">Resolver Proxy Mode</span></dt>
+                <dd><span data-translate="{{vm.persistentIdentifier.resolverProxyMode}}">Boolean</span></dd>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.identifier">Identifier Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="identifier.namespace">Namespace</span></dt>
+                <dd><span>{{vm.persistentIdentifier.namespace}}</span></dd>
+                <hr>
+                <dt><span data-translate="identifier.localId">Local Id</span></dt>
+                <dd><span>{{vm.persistentIdentifier.localId}}</span></dd>
+                <hr>
+                <dt><span data-translate="identifier.versionId">Version Id</span></dt>
+                <dd><span>{{(vm.persistentIdentifier.versionId) || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="identifier.beginLifespanVersion">Begin Lifespan Version</span></dt>
+                <dd><span>{{(vm.persistentIdentifier.beginLifespanVersion | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="identifier.endLifespanVersion">End Lifespan Version</span></dt>
+                <dd><span>{{(vm.persistentIdentifier.endLifespanVersion | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="identifier.alternateId">Alternate Id</span></dt>
+                <dd><span>{{(vm.persistentIdentifier.alternateId) || "-"}}</span></dd>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.resource">Resource Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="resource.resourceType">Resource Type</span></dt>
+                <dd><span data-translate="{{'pidmsApp.ResourceType.' + vm.persistentIdentifier.resourceType}}">{{vm.persistentIdentifier.resourceType}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.persistentIdentifier.feature">Feature</span></dt>
+                <dd><a ui-sref="feature-detail({id:vm.persistentIdentifier.featureId})">{{vm.persistentIdentifier.featureType}}</a></dd>
+                <hr>
+                <dt><span data-translate="resource.locator">Locator</span></dt>
+                <dd><span><a href="{{vm.persistentIdentifier.locator}}" target="_blank">{{vm.persistentIdentifier.locator}}</a></span></dd>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.registration">Registration Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="registration.itemStatus">Item Status</span></dt>
+                <dd><span data-translate="{{'pidmsApp.ItemStatus.' + vm.persistentIdentifier.itemStatus}}">{{vm.persistentIdentifier.itemStatus}}</span></dd>
+                <hr>
+                <dt><span data-translate="registration.lastChangeDate">Last Change Date</span></dt>
+                <dd><span>{{(vm.persistentIdentifier.lastChangeDate | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="registration.registrationDate">Registration Date</span></dt>
+                <dd><span>{{(vm.persistentIdentifier.registrationDate | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="registration.lastRevisionDate">Last Revision Date</span></dt>
+                <dd><span>{{(vm.persistentIdentifier.lastRevisionDate | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="registration.nextRenewalDate">Next Renewal Date</span></dt>
+                <dd><span>{{(vm.persistentIdentifier.nextRenewalDate | date:'medium') || "-"}}</span></dd>
+                <hr>
+                <dt><span data-translate="registration.annullationDate">Annullation Date</span></dt>
+                <dd><span>{{(vm.persistentIdentifier.annullationDate | date:'medium') || "-"}}</span></dd>
+                <hr ng-switch-when="true">
+                <dt ng-switch-when="true"><span data-translate="registration.processStatus">Process Status</span></dt>
+                <dd ng-switch-when="true"><span data-translate="{{'pidmsApp.ProcessStatus.' + vm.persistentIdentifier.processStatus}}">{{vm.persistentIdentifier.processStatus}}</span></dd>
+            </div>
+        </div>
     </dl>
 
     <button type="submit"

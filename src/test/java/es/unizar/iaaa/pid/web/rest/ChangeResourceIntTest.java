@@ -1,43 +1,16 @@
 package es.unizar.iaaa.pid.web.rest;
 
-import static es.unizar.iaaa.pid.web.rest.util.HeaderUtil.ERROR_ID_ALREADY_EXIST;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_ACTION;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_ALTERNATE_ID;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_BEGIN_LIFESPAN_VERSION;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_CHANGE_TIMESTAMP;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_END_LIFESPAN_VERSION;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_LOCAL_ID;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_LOCATOR;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_NAMESPACE;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_RESOURCE_TYPE;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.DEFAULT_VERSION_ID;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.ERROR_HEADER;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_ACTION;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_ALTERNATE_ID;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_BEGIN_LIFESPAN_VERSION;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_CHANGE_TIMESTAMP;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_END_LIFESPAN_VERSION;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_FEATURE;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_LOCAL_ID;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_LOCATOR;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_NAMESPACE;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_RESOURCE_TYPE;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.UPDATED_VERSION_ID;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.change;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.feature;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.namespace;
-import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.task;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import es.unizar.iaaa.pid.PidmsApp;
+import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Feature;
+import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.domain.Task;
+import es.unizar.iaaa.pid.service.*;
+import es.unizar.iaaa.pid.service.dto.ChangeDTO;
+import es.unizar.iaaa.pid.service.mapper.*;
+import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
+import es.unizar.iaaa.pid.web.rest.util.MvcResultUtils;
+import es.unizar.iaaa.pid.web.rest.util.TestUtil;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,26 +28,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.unizar.iaaa.pid.PidmsApp;
-import es.unizar.iaaa.pid.domain.Change;
-import es.unizar.iaaa.pid.domain.Feature;
-import es.unizar.iaaa.pid.domain.Namespace;
-import es.unizar.iaaa.pid.domain.Task;
-import es.unizar.iaaa.pid.service.ChangeDTOService;
-import es.unizar.iaaa.pid.service.FeatureDTOService;
-import es.unizar.iaaa.pid.service.NamespaceDTOService;
-import es.unizar.iaaa.pid.service.OrganizationDTOService;
-import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
-import es.unizar.iaaa.pid.service.TaskDTOService;
-import es.unizar.iaaa.pid.service.dto.ChangeDTO;
-import es.unizar.iaaa.pid.service.mapper.ChangeMapper;
-import es.unizar.iaaa.pid.service.mapper.FeatureMapper;
-import es.unizar.iaaa.pid.service.mapper.NamespaceMapper;
-import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
-import es.unizar.iaaa.pid.service.mapper.TaskMapper;
-import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
-import es.unizar.iaaa.pid.web.rest.util.MvcResultUtils;
-import es.unizar.iaaa.pid.web.rest.util.TestUtil;
+import static es.unizar.iaaa.pid.web.rest.util.HeaderUtil.ERROR_ID_ALREADY_EXIST;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the ChangeResource REST controller.
@@ -101,7 +60,7 @@ public class ChangeResourceIntTest extends LoggedUser {
 
     @Autowired
     private OrganizationDTOService organizationDTOService;
-    
+
     @Autowired
     private OrganizationMemberDTOService organizationMemberDTOService;
 
@@ -136,7 +95,7 @@ public class ChangeResourceIntTest extends LoggedUser {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ChangeResource changeResource = new ChangeResource(changeService, featureDTOService, 
+        ChangeResource changeResource = new ChangeResource(changeService, featureDTOService,
         		namespaceDTOService, organizationMemberDTOService);
         this.restChangeMockMvc = MockMvcBuilders.standaloneSetup(changeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -320,7 +279,6 @@ public class ChangeResourceIntTest extends LoggedUser {
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(testChange.getChangeTimestamp()).isEqualTo(UPDATED_CHANGE_TIMESTAMP);
         softly.assertThat(testChange.getAction()).isEqualTo(UPDATED_ACTION);
-        softly.assertThat(testChange.getFeature()).isEqualTo(UPDATED_FEATURE);
         softly.assertThat(testChange.getIdentifier().getNamespace()).isEqualTo(UPDATED_NAMESPACE);
         softly.assertThat(testChange.getIdentifier().getLocalId()).isEqualTo(UPDATED_LOCAL_ID);
         softly.assertThat(testChange.getIdentifier().getVersionId()).isEqualTo(UPDATED_VERSION_ID);
@@ -329,6 +287,7 @@ public class ChangeResourceIntTest extends LoggedUser {
         softly.assertThat(testChange.getIdentifier().getAlternateId()).isEqualTo(UPDATED_ALTERNATE_ID);
         softly.assertThat(testChange.getResource().getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
         softly.assertThat(testChange.getResource().getLocator()).isEqualTo(UPDATED_LOCATOR);
+        softly.assertAll();
     }
 
     @Test

@@ -4,7 +4,7 @@
             "home": {
                 "title": "Tasks",
                 "createLabel": "Create a new Task",
-                "createOrEditLabel": "Create or edit a Task"
+                "editLabel": "Edit a Task"
             },
             "created": "A new Task is created with identifier {{ param }}",
             "updated": "A Task is updated with identifier {{ param }}",

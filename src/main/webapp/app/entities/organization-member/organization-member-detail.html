@@ -10,11 +10,11 @@
         </dd>
         <dt><span data-translate="pidmsApp.organizationMember.user">User</span></dt>
         <dd>
-            {{vm.organizationMember.userId}}
+            {{vm.organizationMember.userLogin}}
         </dd>
         <dt><span data-translate="pidmsApp.organizationMember.organization">Organization</span></dt>
         <dd>
-            <a ui-sref="organization-detail({id:vm.organizationMember.organizationId})">{{vm.organizationMember.organizationId}}</a>
+            <a ui-sref="organization-detail({id:vm.organizationMember.organizationId})">{{vm.organizationMember.organizationName}}</a>
         </dd>
     </dl>
 

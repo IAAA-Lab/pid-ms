@@ -1,17 +1,16 @@
 package es.unizar.iaaa.pid.service.dto;
 
 
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.Objects;
-import java.util.UUID;
-
-import javax.validation.constraints.NotNull;
-
-import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.net.URI;
+import java.time.Instant;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A DTO for the PersistentIdentifier entity.
@@ -24,6 +23,8 @@ public class PersistentIdentifierDTO implements Serializable {
 
     @NotNull
     private Long featureId;
+
+    private String featureType;
 
     private Boolean resolverProxyMode;
 
@@ -59,6 +60,8 @@ public class PersistentIdentifierDTO implements Serializable {
 
     private Instant annullationDate;
 
+    private URI resolverLink;
+
     public UUID getId() {
         return id;
     }
@@ -75,13 +78,21 @@ public class PersistentIdentifierDTO implements Serializable {
         this.externalUrn = externalUrn;
     }
 
-    public Long getFeatureId() {
-		return featureId;
+    public String getFeatureType() {
+		return featureType;
 	}
 
-	public void setFeatureId(Long featureId) {
-		this.featureId = featureId;
+	public void setFeatureType(String featureType) {
+		this.featureType = featureType;
 	}
+
+    public Long getFeatureId() {
+        return featureId;
+    }
+
+    public void setFeatureId(Long featureId) {
+        this.featureId = featureId;
+    }
 
 	public Boolean isResolverProxyMode() {
         return resolverProxyMode;
@@ -211,6 +222,14 @@ public class PersistentIdentifierDTO implements Serializable {
         this.annullationDate = annullationDate;
     }
 
+    public void setResolverLink(URI link) {
+        resolverLink = link;
+    }
+
+    public URI getResolverLink() {
+        return resolverLink;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -237,7 +256,9 @@ public class PersistentIdentifierDTO implements Serializable {
         return "PersistentIdentifierDTO{" +
             "id=" + getId() +
             ", externalUrn='" + getExternalUrn() + "'" +
+            ", resolverLink='" + getResolverLink() + "'" +
             ", feature='" + getFeatureId() + "'" +
+            ", featureType='" + getFeatureType() + "'" +
             ", resolverProxyMode='" + isResolverProxyMode() + "'" +
             ", namespace='" + getNamespace() + "'" +
             ", localId='" + getLocalId() + "'" +
@@ -256,4 +277,5 @@ public class PersistentIdentifierDTO implements Serializable {
             ", annullationDate='" + getAnnullationDate() + "'" +
             "}";
     }
+
 }

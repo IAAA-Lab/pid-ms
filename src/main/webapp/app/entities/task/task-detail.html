@@ -1,29 +1,30 @@
 
 <div ng-switch="vm.isAuthenticated()">
-    <h2><span data-translate="pidmsApp.task.detail.title">Task</span> {{vm.task.id}}</h2>
+    <h2><span data-translate="pidmsApp.task.detail.title">Task</span> "<b>{{vm.task.id}}</b>"  <small>[id:{{vm.task.id}}]</small></h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span data-translate="pidmsApp.task.timestamp">Timestamp</span></dt>
-        <dd>
-            <span>{{vm.task.timestamp | date:'medium'}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.task.type">Type</span></dt>
-        <dd>
-            <span data-translate="{{'pidmsApp.ProcessStatus.' + vm.task.type}}">{{vm.task.type}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.task.status">Status</span></dt>
-        <dd>
-            <span data-translate="{{'pidmsApp.TaskStatus.' + vm.task.status}}">{{vm.task.status}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.task.numErrors">Num Errors</span></dt>
-        <dd>
-            <span>{{vm.task.numErrors}}</span>
-        </dd>
-        <dt><span data-translate="pidmsApp.task.namespace">Namespace</span></dt>
-        <dd>
-            <a ui-sref="namespace-detail({id:vm.task.namespaceId})">{{vm.task.namespaceId}}</a>
-        </dd>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.description">Description Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="pidmsApp.task.timestamp">Timestamp</span></dt>
+                <dd><span>{{vm.task.timestamp | date:'medium'}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.task.type">Type</span></dt>
+                <dd><span data-translate="{{'pidmsApp.ProcessStatus.' + vm.task.type}}">{{vm.task.type}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.task.status">Status</span></dt>
+                <dd><span data-translate="{{'pidmsApp.TaskStatus.' + vm.task.status}}">{{vm.task.status}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.task.numErrors">Num Errors</span></dt>
+                <dd><span>{{vm.task.numErrors}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.task.namespace">Namespace</span></dt>
+                <dd><a ui-sref="namespace-detail({id:vm.task.namespaceId})">{{vm.task.namespaceName}}</a></dd>
+            </div>
+        </div>
     </dl>
 
     <button type="submit"
