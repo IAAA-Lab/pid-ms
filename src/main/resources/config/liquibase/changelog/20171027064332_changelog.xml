@@ -589,12 +589,12 @@
                   tableName="organization_member">
         </loadData>
         <loadData encoding="UTF-8"
-                  file="config/liquibase/namespaces.csv"
+                  file="config/liquibase/namespaces-dev.csv"
                   separator=";"
                   tableName="namespace">
         </loadData>
         <loadData encoding="UTF-8"
-        		  file="config/liquibase/features.csv"
+        		  file="config/liquibase/features-dev.csv"
         		  separator=";"
         		  tableName="feature">
         </loadData>
