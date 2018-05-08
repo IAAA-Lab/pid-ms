@@ -4,15 +4,19 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="vm.clear()">&times;</button>
-        <h4 class="modal-title" id="myOrganizationLabel" data-translate="pidmsApp.organization.home.createOrEditLabel">Create or edit a Organization</h4>
+        <h4 class="modal-title" id="myOrganizationLabel">
+            <span ng-show="vm.organization.id" data-translate="pidmsApp.organization.home.editLabel">Create or edit a Organization</span>
+            <span ng-show="!vm.organization.id" data-translate="pidmsApp.organization.home.createLabel">Create or edit a Organization</span>
+            <small ng-show="vm.organization.id">[id:{{vm.organization.id}}]</small>
+        </h4>
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" ng-show="vm.organization.id">
-            <label for="id" data-translate="global.field.id">ID</label>
-            <input type="text" class="form-control" id="id" name="id"
+            <input type="hidden" class="form-control" id="id" name="id"
                     ng-model="vm.organization.id" readonly />
         </div>
+
         <div class="form-group">
             <label class="control-label" data-translate="pidmsApp.organization.name" for="field_name">Name</label>
             <input type="text" class="form-control" name="name" id="field_name"

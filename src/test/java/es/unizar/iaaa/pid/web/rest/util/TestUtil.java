@@ -1,4 +1,4 @@
-package es.unizar.iaaa.pid.web.rest;
+package es.unizar.iaaa.pid.web.rest.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -13,6 +14,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 /**
  * Utility class for testing REST controllers.
@@ -118,4 +121,9 @@ public class TestUtil {
         // HashCodes are equals because the objects are not persisted yet
         assertThat(domainObject1.hashCode()).isEqualTo(domainObject2.hashCode());
     }
+
+    public static ResultMatcher checkError(String field, String message) {
+        return jsonPath("$.fieldErrors[?(@.field == '"+field+"')].message", containsInAnyOrder(message));
+    }
+
 }

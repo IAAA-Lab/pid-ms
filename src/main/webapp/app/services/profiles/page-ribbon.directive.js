@@ -22,6 +22,7 @@
                 if (response.ribbonEnv) {
                     scope.ribbonEnv = response.ribbonEnv;
                     element.addClass(response.ribbonEnv);
+                    //comentar en caso de querer eliminar etiqueta "	Desarrollo"
                     element.removeClass('hidden');
                 }
             });

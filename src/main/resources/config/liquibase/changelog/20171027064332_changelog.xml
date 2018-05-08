@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <changeSet id="00000000000000" author="jhipster">
+        <createSequence sequenceName="hibernate_sequence" startValue="1000" incrementBy="50"/>
+    </changeSet>
+
+    <!--
+        JHipster core tables.
+        The initial schema has the '00000000000001' id, so that it is over-written if we re-generate it.
+    -->
+    <changeSet id="00000000000001" author="jhipster">
+        <createTable tableName="jhi_user">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="varchar(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password_hash" type="varchar(60)"/>
+            <column name="first_name" type="varchar(50)"/>
+            <column name="last_name" type="varchar(50)"/>
+            <column name="email" type="varchar(100)">
+                <constraints unique="true" nullable="true"/>
+            </column>
+            <column name="image_url" type="varchar(256)"/>
+            <column name="activated" type="boolean" valueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="lang_key" type="varchar(5)"/>
+            <column name="activation_key" type="varchar(20)"/>
+            <column name="reset_key" type="varchar(20)"/>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp" defaultValueDate="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reset_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+        </createTable>
+        <createIndex indexName="idx_user_login"
+            tableName="jhi_user"
+            unique="true">
+            <column name="login" type="varchar(50)"/>
+        </createIndex>
+
+        <createIndex indexName="idx_user_email"
+            tableName="jhi_user"
+            unique="true">
+            <column name="email" type="varchar(100)"/>
+        </createIndex>
+        <createTable tableName="jhi_authority">
+            <column name="name" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="jhi_user_authority">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="user_id, authority_name" tableName="jhi_user_authority"/>
+
+        <addForeignKeyConstraint baseColumnNames="authority_name"
+                                 baseTableName="jhi_user_authority"
+                                 constraintName="fk_authority_name"
+                                 referencedColumnNames="name"
+                                 referencedTableName="jhi_authority"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="jhi_user_authority"
+                                 constraintName="fk_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/users.csv"
+                  separator=";"
+                  tableName="jhi_user">
+            <column name="activated" type="boolean"/>
+            <column name="created_date" type="timestamp"/>
+        </loadData>
+        <dropDefaultValue tableName="jhi_user" columnName="created_date" columnDataType="datetime"/>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/authorities.csv"
+                  separator=";"
+                  tableName="jhi_authority"/>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/users_authorities.csv"
+                  separator=";"
+                  tableName="jhi_user_authority"/>
+        <createTable tableName="jhi_persistent_audit_event">
+            <column name="event_id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="principal" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="event_date" type="timestamp"/>
+            <column name="event_type" type="varchar(255)"/>
+        </createTable>
+
+        <createTable tableName="jhi_persistent_audit_evt_data">
+            <column name="event_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="varchar(255)"/>
+        </createTable>
+        <addPrimaryKey columnNames="event_id, name" tableName="jhi_persistent_audit_evt_data"/>
+
+        <createIndex indexName="idx_persistent_audit_event"
+                     tableName="jhi_persistent_audit_event"
+                     unique="false">
+            <column name="principal" type="varchar(50)"/>
+            <column name="event_date" type="timestamp"/>
+        </createIndex>
+
+        <createIndex indexName="idx_persistent_audit_evt_data"
+                     tableName="jhi_persistent_audit_evt_data"
+                     unique="false">
+            <column name="event_id" type="bigint"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="event_id"
+                                 baseTableName="jhi_persistent_audit_evt_data"
+                                 constraintName="fk_evt_pers_audit_evt_data"
+                                 referencedColumnNames="event_id"
+                                 referencedTableName="jhi_persistent_audit_event"/>
+    </changeSet>
+
+    <!--
+        Added the entity Namespace.
+    -->
+    <changeSet id="20170802153709-1" author="jhipster">
+
+   		<createTable tableName="namespace">
+            <column name="id" type="BIGINT" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="namespace" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="namespace_status" type="VARCHAR(255)"/>
+            <column name="public_namespace" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="annullation_date" type="timestamp"/>
+            <column name="item_status" type="VARCHAR(255)"/>
+            <column name="last_change_date" type="timestamp"/>
+            <column name="last_revision_date" type="timestamp"/>
+            <column name="next_renewal_date" type="timestamp"/>
+            <column name="process_status" type="VARCHAR(255)"/>
+            <column name="registration_date" type="timestamp"/>
+            <column name="renewal_policy" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="endpoint_location" type="VARCHAR(255)"/>
+            <column name="max_num_request" type="INT"/>
+            <column name="method_type" type="VARCHAR(255)"/>
+            <column name="resolver_proxy_mode" type="BOOLEAN"/>
+            <column name="source_type" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="version_lock" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_id" type="BIGINT"/>
+        </createTable>
+
+        <dropDefaultValue tableName="namespace" columnName="last_change_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="namespace" columnName="registration_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="namespace" columnName="last_revision_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="namespace" columnName="next_renewal_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="namespace" columnName="annullation_date" columnDataType="datetime"/>
+
+    </changeSet>
+
+    <!--
+        Added the entity Task.
+    -->
+    <changeSet id="20170802155452-1" author="jhipster">
+        <createTable tableName="task">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="jhi_timestamp" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="jhi_type" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="num_errors" type="integer">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="namespace_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        <dropDefaultValue tableName="task" columnName="jhi_timestamp" columnDataType="datetime"/>
+
+    </changeSet>
+
+    <!--
+        Added the entity Change.
+    -->
+    <changeSet id="20170802160033-1" author="jhipster">
+        <createTable tableName="change">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="change_timestamp" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="action" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="namespace" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="local_id" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="version_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="begin_lifespan_version" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="end_lifespan_version" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="alternate_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="resource_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="locator" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="task_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="feature_id" type="bigint">
+            	<constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        <dropDefaultValue tableName="change" columnName="change_timestamp" columnDataType="datetime"/>
+        <dropDefaultValue tableName="change" columnName="begin_lifespan_version" columnDataType="datetime"/>
+        <dropDefaultValue tableName="change" columnName="end_lifespan_version" columnDataType="datetime"/>
+
+    </changeSet>
+
+    <!--
+        Added the entity Organization.
+    -->
+    <changeSet id="20170808131639-1" author="jhipster">
+        <createTable tableName="organization">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="title" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+
+    </changeSet>
+
+    <!--
+        Added the entity PersistentIdentifier.
+    -->
+    <changeSet id="20170802162142-1" author="jhipster">
+        <createTable tableName="persistent_identifier">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="external_urn" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="resolver_proxy_mode" type="boolean">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="namespace" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="local_id" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="version_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="begin_lifespan_version" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="end_lifespan_version" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="alternate_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="resource_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="locator" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="process_status" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="item_status" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="last_change_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="registration_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="last_revision_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="next_renewal_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="annullation_date" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="feature_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        <dropDefaultValue tableName="persistent_identifier" columnName="begin_lifespan_version" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="end_lifespan_version" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="last_change_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="registration_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="last_revision_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="next_renewal_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="persistent_identifier" columnName="annullation_date" columnDataType="datetime"/>
+
+    </changeSet>
+
+    <!--
+        Added the entity OrganizationMember.
+    -->
+    <changeSet id="20170808131640-1" author="jhipster">
+        <createTable tableName="organization_member">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="capacity" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="user_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="organization_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+
+    </changeSet>
+
+    <!--
+    	Added the entity Feature
+     -->
+
+     <changeSet author="sergioib (generated)" id="1509086622436-3">
+        <createTable tableName="feature">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="begin_lifespan_version_property" type="VARCHAR(255)"/>
+            <column name="max_x" type="DOUBLE">
+            	<constraints nullable="true" />
+            </column>
+            <column name="max_y" type="DOUBLE">
+            	<constraints nullable="true" />
+            </column>
+            <column name="min_x" type="DOUBLE">
+            <constraints nullable="true" />
+            </column>
+            <column name="min_y" type="DOUBLE">
+            <constraints nullable="true" />
+            </column>
+            <column name="factor_k" type="INT">
+            <constraints nullable="true" />
+            </column>
+            <column name="feature_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="features_threshold" type="INT">
+            	<constraints nullable="true" />
+            </column>
+            <column name="geometry_property" type="VARCHAR(255)">
+            	<constraints nullable="true" />
+            </column>
+            <column name="hits_request" type="BOOLEAN">
+           		<constraints nullable="true" />
+            </column>
+            <column name="name_item" type="VARCHAR(255)">
+            	<constraints nullable="true" />
+            </column>
+            	<column name="schema_prefix" type="VARCHAR(255)">
+            <constraints nullable="true" />
+            	</column>
+            <column name="schema_uri" type="VARCHAR(255)">
+            	<constraints nullable="true" />
+            </column>
+            <column name="schema_uri_base" type="VARCHAR(255)">
+            	<constraints nullable="true" />
+            </column>
+            <column name="schema_uri_gml" type="VARCHAR(255)">
+            	<constraints nullable="true" />
+            </column>
+            <column name="srs_name" type="VARCHAR(255)">
+           		<constraints nullable="true" />
+            </column>
+            <column name="xpath" type="VARCHAR(255)">
+            	<constraints nullable="true" />
+            </column>
+            <column name="namespace_id" type="BIGINT">
+            	<constraints nullable="true" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20171027153709-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="owner_id"
+                                 baseTableName="namespace"
+                                 constraintName="fk_namespace_owner_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="organization"/>
+    </changeSet>
+
+    <!--
+        Added the constraints for entity Task.
+    -->
+    <changeSet id="20170802155452-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="namespace_id"
+                                 baseTableName="task"
+                                 constraintName="fk_task_namespace_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="namespace"/>
+    </changeSet>
+
+    <!--
+        Added the constraints for entity Change.
+    -->
+    <changeSet id="20170802160033-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="task_id"
+                                 baseTableName="change"
+                                 constraintName="fk_change_task_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="task"/>
+
+		<addForeignKeyConstraint baseColumnNames="feature_id"
+                                 baseTableName="change"
+                                 constraintName="fk_change_feature_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="feature"/>
+    </changeSet>
+
+    <!--
+        Added the constraints for entity OrganizationMember.
+    -->
+    <changeSet id="20170808131640-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="organization_member"
+                                 constraintName="fk_organization_member_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="organization_id"
+                                 baseTableName="organization_member"
+                                 constraintName="fk_organization_member_organization_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="organization"/>
+
+    </changeSet>
+
+    <!--
+        Added the constraints for entity Feature.
+    -->
+    <changeSet id="1509086622436-4" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="namespace_id"
+                                 baseTableName="feature"
+                                 constraintName="fk_feature_namespace_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="namespace"/>
+    </changeSet>
+
+    <!--
+        Added the constraints for entity PersistentIdentifier.
+    -->
+    <changeSet id="1509086622436-5" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="feature_id"
+                                 baseTableName="persistent_identifier"
+                                 constraintName="fk_persistent_identifier_feature_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="feature"/>
+    </changeSet>
+
+    <changeSet id="201708080144300-1" author="fjlopez" context="!test">
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/organizations.csv"
+                  separator=";"
+                  tableName="organization">
+        </loadData>
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/organizations_members.csv"
+                  separator=";"
+                  tableName="organization_member">
+        </loadData>
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/namespaces-dev.csv"
+                  separator=";"
+                  tableName="namespace">
+        </loadData>
+        <loadData encoding="UTF-8"
+        		  file="config/liquibase/features-dev.csv"
+        		  separator=";"
+        		  tableName="feature">
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>

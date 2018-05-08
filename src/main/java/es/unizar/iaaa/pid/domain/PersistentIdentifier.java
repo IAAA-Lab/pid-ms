@@ -34,9 +34,8 @@ public class PersistentIdentifier implements Serializable {
     @Column(name = "external_urn", nullable = false)
     private String externalUrn;
 
-    @NotNull
-    @Column(name = "feature", nullable = false)
-    private String feature;
+    @ManyToOne
+    private Feature feature;
 
     @Column(name = "resolver_proxy_mode")
     private Boolean resolverProxyMode;
@@ -50,6 +49,11 @@ public class PersistentIdentifier implements Serializable {
     @Embedded
     private Resource resource;
 
+    public PersistentIdentifier externalUrn(String externalUrn) {
+        this.externalUrn = externalUrn;
+        return this;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -62,25 +66,20 @@ public class PersistentIdentifier implements Serializable {
         return externalUrn;
     }
 
-    public PersistentIdentifier externalUrn(String externalUrn) {
-        this.externalUrn = externalUrn;
-        return this;
-    }
-
     public void setExternalUrn(String externalUrn) {
         this.externalUrn = externalUrn;
     }
 
-    public String getFeature() {
+    public Feature getFeature() {
         return feature;
     }
 
-    public PersistentIdentifier feature(String feature) {
+    public PersistentIdentifier feature(Feature feature) {
         this.feature = feature;
         return this;
     }
 
-    public void setFeature(String feature) {
+    public void setFeature(Feature feature) {
         this.feature = feature;
     }
 
@@ -148,10 +147,7 @@ public class PersistentIdentifier implements Serializable {
             return false;
         }
         PersistentIdentifier persistentIdentifier = (PersistentIdentifier) o;
-        if (persistentIdentifier.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), persistentIdentifier.getId());
+        return persistentIdentifier.getId() != null && getId() != null && Objects.equals(getId(), persistentIdentifier.getId());
     }
 
     @Override
@@ -172,6 +168,7 @@ public class PersistentIdentifier implements Serializable {
             "}";
     }
 
+    @Deprecated
     private String computeExternalUrnFromIdentifier() {
         return computeExternalUrnFromIdentifier(identifier);
     }
@@ -198,11 +195,12 @@ public class PersistentIdentifier implements Serializable {
         return sb.toString();
     }
 
+    @Deprecated
     private UUID computeIdFromExternal() {
         return UUID.nameUUIDFromBytes(getExternalUrn().getBytes());
     }
 
-    static public UUID computeSurrogateFromIdentifier(Identifier identifier) {
+    public static UUID computeSurrogateFromIdentifier(Identifier identifier) {
         return computeIdFromExternal(computeExternalUrnFromIdentifier(identifier));
     }
 
@@ -211,9 +209,9 @@ public class PersistentIdentifier implements Serializable {
     }
 
     public void autoId() {
-        String externalUrn = computeExternalUrnFromIdentifier(identifier);
-        UUID id = UUID.nameUUIDFromBytes(externalUrn.getBytes());
-        setExternalUrn(externalUrn);
-        setId(id);
+        String newExternalUrn = computeExternalUrnFromIdentifier(identifier);
+        UUID newId = UUID.nameUUIDFromBytes(newExternalUrn.getBytes());
+        setExternalUrn(newExternalUrn);
+        setId(newId);
     }
 }

@@ -33,8 +33,8 @@ public class Change implements Serializable {
     @Column(name = "action")
     private ChangeAction action;
 
-    @Column(name = "feature")
-    private String feature;
+    @ManyToOne
+    private Feature feature;
 
     @Embedded
     private Identifier identifier;
@@ -79,16 +79,16 @@ public class Change implements Serializable {
         this.action = action;
     }
 
-    public String getFeature() {
+    public Feature getFeature() {
         return feature;
     }
 
-    public Change feature(String feature) {
+    public Change feature(Feature feature) {
         this.feature = feature;
         return this;
     }
 
-    public void setFeature(String feature) {
+    public void setFeature(Feature feature) {
         this.feature = feature;
     }
 

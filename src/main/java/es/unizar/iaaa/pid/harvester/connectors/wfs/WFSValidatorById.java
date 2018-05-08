@@ -1,10 +1,15 @@
 package es.unizar.iaaa.pid.harvester.connectors.wfs;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.ximpleware.AutoPilot;
+import com.ximpleware.NodeRecorder;
+import com.ximpleware.VTDGen;
+import com.ximpleware.VTDNav;
+import es.unizar.iaaa.pid.domain.*;
+import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
+import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
+import es.unizar.iaaa.pid.harvester.connectors.ValidatorById;
+import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSResponse.ResponseStatus;
+import es.unizar.iaaa.pid.service.ChangeService;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,23 +20,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.ximpleware.AutoPilot;
-import com.ximpleware.NavException;
-import com.ximpleware.NodeRecorder;
-import com.ximpleware.VTDGen;
-import com.ximpleware.VTDNav;
-
-import es.unizar.iaaa.pid.domain.Change;
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.PersistentIdentifier;
-import es.unizar.iaaa.pid.domain.Resource;
-import es.unizar.iaaa.pid.domain.Source;
-import es.unizar.iaaa.pid.domain.Task;
-import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-import es.unizar.iaaa.pid.harvester.connectors.ValidatorById;
-import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSResponse.ResponseStatus;
-import es.unizar.iaaa.pid.service.ChangeService;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 @Scope("prototype")
@@ -56,7 +48,7 @@ public class WFSValidatorById implements ValidatorById {
     }
 
     @Override
-    public int validateGmlId(String feature, Identifier identifier) {
+    public int validateGmlId(Feature feature, Identifier identifier) {
         String request = WFSClient.createWfsGetFeatureById(source, identifier);
         WFSResponse response = WFSClient.executeRequestGET(request);
         if (response.getResponseStatus() == ResponseStatus.FAIL || response.getResponseStatus() == ResponseStatus.TIMEOUT) {
@@ -67,14 +59,14 @@ public class WFSValidatorById implements ValidatorById {
         VTDGen document = response.getDocument();
         VTDNav nav = document.getNav();
         AutoPilot ap = new AutoPilot(nav);
-        ap.selectElementNS(source.getSchemaUri(), feature);
+        ap.selectElementNS(feature.getSchemaUri(), feature.getFeatureType());
 
         Identifier remoteIdentifier = null;
         try {
             if (!ap.iterate()) {
                 log("{} is NOT_FOUND", PersistentIdentifier.computeExternalUrnFromIdentifier(identifier));
                 response(ChangeAction.NOT_FOUND, identifier,feature);
-                return 1;
+                return -1;
             }
             nav.push();
             NodeRecorder member = new NodeRecorder(nav);
@@ -108,7 +100,7 @@ public class WFSValidatorById implements ValidatorById {
             member.iterate();
 
             apx = new AutoPilot(nav);
-            apx.selectElementNS(source.getSchemaUri(),  source.getBeginLifespanVersionProperty());
+            apx.selectElementNS(feature.getSchemaUri(), feature.getBeginLifespanVersionProperty());
             Instant beginLifespanVersion = null;
             if (apx.iterate()) {
                 beginLifespanVersion = Instant.parse(nav.toNormalizedString(nav.getText()));
@@ -117,7 +109,7 @@ public class WFSValidatorById implements ValidatorById {
             member.iterate();
 
             apx = new AutoPilot(nav);
-            apx.selectElementNS(source.getSchemaUri(), feature);
+            apx.selectElementNS(feature.getSchemaUri(), feature.getFeatureType());
             String gmlId = null;
             if (apx.iterate()) {
                 int gmlidx  = nav.getAttrValNS("http://www.opengis.net/gml/3.2", "id");
@@ -133,10 +125,10 @@ public class WFSValidatorById implements ValidatorById {
                 .versionId(versionId)
                 .beginLifespanVersion(beginLifespanVersion)
                 .alternateId(gmlId);
-        } catch (NavException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.error("Can't extract the identifier", e);
             response(ChangeAction.NOT_FOUND, identifier, feature);
-            return 1;
+            return -1;
         }
 
 
@@ -155,7 +147,7 @@ public class WFSValidatorById implements ValidatorById {
         return 1;
     }
 
-    private void response(ChangeAction action, Identifier identifier, String feature) {
+    private void response(ChangeAction action, Identifier identifier, Feature feature) {
         Resource resource = new Resource();
         resource.setResourceType(ResourceType.SPATIAL_OBJECT);
         resource.setLocator(WFSClient.createWfsGetFeatureById(source, identifier));

@@ -3,36 +3,22 @@
         "persistentIdentifier" : {
             "home": {
                 "title": "Identificadores Persistentes",
-                "createLabel": "Crear nuevo Identificador Persistente",
-                "createOrEditLabel": "Crear o editar un Identificador Persistente"
+                "createLabel": "Crear un nuevo Identificador Persistente",
+                "editLabel": "Editar un Identificador Persistente"
             },
             "created": "Un nuevo Identificador Persistente ha sido creado con el identificador {{ param }}",
-            "updated": "Un Identificador Persistente con el identificador {{ param }} ha sido actualizado",
-            "deleted": "Un Identificador Persistente con el identificador {{ param }} ha sido eliminado",
+            "updated": "El Identificador Persistente con el identificador {{ param }} ha sido actualizado",
+            "deleted": "El Identificador Persistente con el identificador {{ param }} ha sido eliminado",
             "delete": {
                 "question": "¿Seguro que quiere eliminar el Identificador Persistente {{ id }}?"
             },
             "detail": {
-                "title": "Identificador Persistente"
+                "title": "Identificador persistente"
             },
             "externalUrn": "URN",
-            "feature": "Tipo de objeto espacial",
-            "resolverProxyMode": "Resolver Proxy Mode",
-            "namespace": "Namespace",
-            "localId": "Local Id",
-            "versionId": "Version Id",
-            "beginLifespanVersion": "Begin Lifespan Version",
-            "endLifespanVersion": "End Lifespan Version",
-            "alternateId": "Alternate Id",
-            "resourceType": "Resource Type",
-            "locator": "Locator",
-            "processStatus": "Process Status",
-            "itemStatus": "Estado",
-            "lastChangeDate": "Last Change Date",
-            "registrationDate": "Registration Date",
-            "lastRevisionDate": "Last Revision Date",
-            "nextRenewalDate": "Next Renewal Date",
-            "annullationDate": "Annullation Date"
+            "feature": "Tipo de Objeto Espacial",
+            "proxyPid": "PID proxy",
+            "resolverProxyMode": "¿Es un PID proxy transparente?"
         }
     }
 }

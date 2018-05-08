@@ -2,26 +2,19 @@ package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import es.unizar.iaaa.pid.service.TaskDTOService;
-import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
-import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
 import es.unizar.iaaa.pid.service.dto.TaskDTO;
+import es.unizar.iaaa.pid.web.rest.util.ControllerUtil;
 import io.swagger.annotations.ApiParam;
-import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * REST controller for managing Task.
@@ -45,41 +38,33 @@ public class TaskResource {
      *
      * @param taskDTO the taskDTO to create
      * @return the ResponseEntity with status 201 (Created) and with body the new taskDTO, or with status 400 (Bad Request) if the task has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/tasks")
     @Timed
-    public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskDTO taskDTO) throws URISyntaxException {
+    public ResponseEntity<TaskDTO> createTask(UriComponentsBuilder uriBuilder, @Valid @RequestBody TaskDTO taskDTO) {
         log.debug("REST request to save Task : {}", taskDTO);
-        if (taskDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new task cannot already have an ID")).body(null);
-        }
-        TaskDTO result = taskService.save(taskDTO);
-        return ResponseEntity.created(new URI("/api/tasks/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        return ControllerUtil
+            .with(ENTITY_NAME, uriBuilder.path("/api/tasks/{id}"), taskService)
+            .forbidWhen(notallowed())
+            .doPost(taskDTO);
     }
 
     /**
-     * PUT  /tasks : Updates an existing task.
+     * PUT  /tasks/:id : get the "id" task.
      *
+     * @param id the id of the taskDTO to update
      * @param taskDTO the taskDTO to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated taskDTO,
-     * or with status 400 (Bad Request) if the taskDTO is not valid,
-     * or with status 500 (Internal Server Error) if the taskDTO couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * or with status 404 (Not Found) if the taskDTO is not valid,
      */
-    @PutMapping("/tasks")
+    @PutMapping("/tasks/{id}")
     @Timed
-    public ResponseEntity<TaskDTO> updateTask(@Valid @RequestBody TaskDTO taskDTO) throws URISyntaxException {
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable Long id, @Valid @RequestBody TaskDTO taskDTO) {
         log.debug("REST request to update Task : {}", taskDTO);
-        if (taskDTO.getId() == null) {
-            return createTask(taskDTO);
-        }
-        TaskDTO result = taskService.save(taskDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, taskDTO.getId().toString()))
-            .body(result);
+        return ControllerUtil
+            .with(ENTITY_NAME, taskService)
+            .forbidWhen(notallowed())
+            .doPut(id, taskDTO);
     }
 
     /**
@@ -90,11 +75,13 @@ public class TaskResource {
      */
     @GetMapping("/tasks")
     @Timed
-    public ResponseEntity<List<TaskDTO>> getAllTasks(@ApiParam Pageable pageable) {
+    public ResponseEntity<List<TaskDTO>> getAllTasks(UriComponentsBuilder uriBuilder, @ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Tasks");
-        Page<TaskDTO> page = taskService.findAllInPrincipalOrganizations(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/tasks");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ControllerUtil
+            .with(uriBuilder.path("/api/tasks"), taskService)
+            .list(taskService::findAllPublic)
+            .listAuthenticated(taskService::findAllInPrincipalOrganizations)
+            .doGet(pageable);
     }
 
     /**
@@ -107,8 +94,11 @@ public class TaskResource {
     @Timed
     public ResponseEntity<TaskDTO> getTask(@PathVariable Long id) {
         log.debug("REST request to get Task : {}", id);
-        TaskDTO taskDTO = taskService.findOneInPrincipalOrganizations(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(taskDTO));
+        return ControllerUtil
+            .with(taskService)
+            .get(taskService::findOnePublic)
+            .getAuthenticated(taskService::findOneInPrincipalOrganizations)
+            .doGet(id);
     }
 
     /**
@@ -121,7 +111,15 @@ public class TaskResource {
     @Timed
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         log.debug("REST request to delete Task : {}", id);
-        taskService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ControllerUtil
+            .with(ENTITY_NAME, taskService)
+            .forbidWhen(notallowed())
+            .doDelete(id);
+    }
+
+    private Supplier<Boolean> notallowed() {
+        return () -> {
+        	return true;
+        };
     }
 }

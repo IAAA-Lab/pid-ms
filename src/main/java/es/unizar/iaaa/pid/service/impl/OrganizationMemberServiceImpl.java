@@ -1,8 +1,9 @@
 package es.unizar.iaaa.pid.service.impl;
 
-import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.domain.OrganizationMember;
+import es.unizar.iaaa.pid.domain.User;
 import es.unizar.iaaa.pid.repository.OrganizationMemberRepository;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMemberMapper;
 import org.slf4j.Logger;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
 
 
 /**
@@ -26,9 +29,13 @@ public class OrganizationMemberServiceImpl implements OrganizationMemberDTOServi
 
     private final OrganizationMemberMapper organizationMemberMapper;
 
-    public OrganizationMemberServiceImpl(OrganizationMemberRepository organizationMemberRepository, OrganizationMemberMapper organizationMemberMapper) {
+    private final EntityManager entityManager;
+
+    public OrganizationMemberServiceImpl(OrganizationMemberRepository organizationMemberRepository,
+                                         OrganizationMemberMapper organizationMemberMapper, EntityManager entityManager) {
         this.organizationMemberRepository = organizationMemberRepository;
         this.organizationMemberMapper = organizationMemberMapper;
+        this.entityManager = entityManager;
     }
 
     /**
@@ -41,6 +48,7 @@ public class OrganizationMemberServiceImpl implements OrganizationMemberDTOServi
     public OrganizationMemberDTO save(OrganizationMemberDTO organizationMemberDTO) {
         log.debug("Request to save OrganizationMember : {}", organizationMemberDTO);
         OrganizationMember organizationMember = organizationMemberMapper.toEntity(organizationMemberDTO);
+         organizationMember.setUser(entityManager.getReference(User.class, organizationMember.getUser().getId()));
         organizationMember = organizationMemberRepository.save(organizationMember);
         return organizationMemberMapper.toDto(organizationMember);
     }
@@ -99,6 +107,20 @@ public class OrganizationMemberServiceImpl implements OrganizationMemberDTOServi
     }
 
     /**
+     *  Get the organizationMember that belongs to a specific organization where the Principal is a member.
+     *
+     *  @param organizationId the organization id
+     *  @return the list of entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public OrganizationMemberDTO findOneByOrganizationInPrincipal(Long organizationId) {
+        log.debug("Request to get the OrganizationMember that belonging to a specific organization where the Principal is a member");
+        OrganizationMember organizationMember = organizationMemberRepository.findOneByOrganizationInPrincipal(organizationId);
+        return organizationMemberMapper.toDto(organizationMember);
+    }
+
+    /**
      *  Get the "id" organizationMember that belongs to an organization where the Principal is a member.
      *
      *  @param id the id of the entity
@@ -110,5 +132,27 @@ public class OrganizationMemberServiceImpl implements OrganizationMemberDTOServi
         log.debug("Request to get OrganizationMember : {}", id);
         OrganizationMember organizationMember = organizationMemberRepository.findOneInPrincipalOrganizations(id);
         return organizationMemberMapper.toDto(organizationMember);
+    }
+
+    /**
+     * Delete all organizationMembers associate with the organization
+     *
+     * @param organizationId id of the organization to be deleted
+     */
+    public void deleteAllByOrganizationId(Long organizationId){
+    	log.debug("Request to delete all oragnizationMembers of the organization : {}", organizationId);
+    	organizationMemberRepository.deleteAllByOrganizationId(organizationId);
+    }
+    
+    /**
+     * Find the organizationMember that has a specific user and specific organization
+     * 
+     * @param userId id of the organizationMember
+     * @param organizationId id of the organizationMember
+     */
+    public OrganizationMemberDTO findOneByUserIdAndOrganizationId(Long userId, Long organizationId){
+    	log.debug("Request to get OrganizationMember filter by userId {} and organizationId {}",userId, organizationId);
+    	OrganizationMember organizationMember = organizationMemberRepository.findOneByUserIdAndOrganizationId(userId, organizationId);
+    	return organizationMemberMapper.toDto(organizationMember);
     }
 }

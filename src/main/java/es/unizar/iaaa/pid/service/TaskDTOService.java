@@ -7,38 +7,7 @@ import org.springframework.data.domain.Pageable;
 /**
  * Service Interface for managing Task.
  */
-public interface TaskDTOService {
-
-    /**
-     * Save a task.
-     *
-     * @param taskDTO the entity to save
-     * @return the persisted entity
-     */
-    TaskDTO save(TaskDTO taskDTO);
-
-    /**
-     *  Get all the tasks.
-     *
-     *  @param pageable the pagination information
-     *  @return the list of entities
-     */
-    Page<TaskDTO> findAll(Pageable pageable);
-
-    /**
-     *  Get the "id" task.
-     *
-     *  @param id the id of the entity
-     *  @return the entity
-     */
-    TaskDTO findOne(Long id);
-
-    /**
-     *  Delete the "id" task.
-     *
-     *  @param id the id of the entity
-     */
-    void delete(Long id);
+public interface TaskDTOService extends DTOService<Long, TaskDTO> {
 
     /**
      *  Get all the tasks that belongs to organizations where the Principal is a member.
@@ -49,10 +18,34 @@ public interface TaskDTOService {
     Page<TaskDTO> findAllInPrincipalOrganizations(Pageable pageable);
 
     /**
+     * Get all the task that are related with public namespaces
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    Page<TaskDTO> findAllPublic(Pageable pageable);
+
+    /**
      *  Get the "id" task that belongs to an organization where the Principal is a member.
      *
      *  @param id the id of the entity
      *  @return the entity
      */
     TaskDTO findOneInPrincipalOrganizations(Long id);
+
+    /**
+     * Get the "id" task that belong to a public namespace
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    TaskDTO findOnePublic(Long id);
+
+    /**
+     * Delete all task associate with the Namespace
+     *
+     * @param namespaceId id of the Namespace to be deleted
+     */
+    void deleteAllByNamespaceId(Long namespaceId);
+
 }

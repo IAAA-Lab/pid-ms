@@ -124,4 +124,8 @@ public class NamespaceService {
             namespace.getId(), ItemStatus.ISSUED, ProcessStatus.NONE, now, now, next);
         taskService.done(task, now);
     }
+    
+    public Namespace findById(Long namespaceId){
+    	return namespaceRepository.findOne(namespaceId);
+    }
 }

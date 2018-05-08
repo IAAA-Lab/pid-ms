@@ -1,9 +1,7 @@
 package es.unizar.iaaa.pid.service;
 
 import es.unizar.iaaa.pid.domain.User;
-
 import io.github.jhipster.config.JHipsterProperties;
-
 import org.apache.commons.lang3.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

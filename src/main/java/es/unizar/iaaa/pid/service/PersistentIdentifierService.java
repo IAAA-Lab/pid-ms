@@ -1,5 +1,6 @@
 package es.unizar.iaaa.pid.service;
 
+import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.Namespace;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
@@ -71,5 +72,9 @@ public class PersistentIdentifierService {
 
     public List<PersistentIdentifier> findByNamespaceLapsed(Namespace namespace) {
         return persistentIdentifierRepository.findByNamespaceValidated(namespace.getNamespace(), Arrays.asList(ItemStatus.LAPSED));
+    }
+
+    public List<PersistentIdentifier> findByFeatureAndNamespaceLapsed(Feature feature, Namespace namespace){
+    	return persistentIdentifierRepository.findByFeatureAndNamespaceLapsed(feature, namespace.getNamespace(), Arrays.asList(ItemStatus.LAPSED));
     }
 }

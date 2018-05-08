@@ -2,18 +2,18 @@
     "pidmsApp": {
         "organizationMember" : {
             "home": {
-                "title": "Miembros de grupo",
-                "createLabel": "Añadir un nuevo miembro",
-                "createOrEditLabel": "Crear o editar un miembro"
+                "title": "Miembros de la Organización",
+                "createLabel": "Añadir un Usuario a una Organización",
+                "editLabel": "Editar la pertenencia de un Usuario"
             },
-            "created": "Un nuevo miembro ha sido añadido con el identificador {{ param }}",
-            "updated": "Un miembro con el identificador {{ param }} ha sido actualizado ",
-            "deleted": "Un miembro con el identificador {{ param }} ha sido dado de baja ",
+            "created": "Un Usuario ha sido añadido a una Organización",
+            "updated": "La pertenencia de un Usuario a una Organización ha sido actualizada",
+            "deleted": "Se ha dado de baja a un Usuario de una Organización",
             "delete": {
-                "question": "¿Seguro que quiere darle de baja al miembro con el identificador {{ id }}?"
+                "question": "¿Seguro que quiere que el Usuario deje de ser miembro de la Organización?"
             },
             "detail": {
-                "title": "Miembro de grupo"
+                "title": "Miembro de Organización"
             },
             "capacity": "Perfil",
             "user": "Usuario",

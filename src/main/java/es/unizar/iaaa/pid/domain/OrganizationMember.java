@@ -111,6 +111,8 @@ public class OrganizationMember implements Serializable {
         return "OrganizationMember{" +
             "id=" + getId() +
             ", capacity='" + getCapacity() + "'" +
+            ", user.id='" + (getUser() == null? "null" : getUser().getId()) + "'" +
+            ", organization.id='" + (getOrganization() == null? "null" : getOrganization().getId()) + "'" +
             "}";
     }
 }

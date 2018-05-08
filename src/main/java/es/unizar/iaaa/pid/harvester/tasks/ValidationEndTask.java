@@ -55,7 +55,7 @@ public class ValidationEndTask extends AbstractTaskRunner {
                 break;
             case CONTINUOUS:
             default:
-                renewal = now;
+                renewal = null;
         }
         namespace.getRegistration().setLastRevisionDate(now);
         namespace.getRegistration().setNextRenewalDate(renewal);
@@ -64,18 +64,20 @@ public class ValidationEndTask extends AbstractTaskRunner {
         Page<PersistentIdentifier> page = persistentIdentifierService.findByNamespaceValidatedOrderById(namespace, pageable);
 
         try{
+        	int currentPage = page.getNumber();
+        	int totalPages = page.getTotalPages();
         	log("Processing page {} of {}", page.getNumber(), page.getTotalPages());
             if (page.hasContent()) {
                 processPage(page);
             }
-            while(page.hasNext()){
-                pageable = page.nextPageable();
-                page = persistentIdentifierService.findByNamespaceValidatedOrderById(namespace, pageable);
-                log("Processing page {} of {}", page.getNumber(), page.getTotalPages());
-				if (page.hasContent()) {
+            while(currentPage < totalPages){
+            	currentPage +=1;
+            	log("Processing page {} of {}", currentPage, totalPages);
+            	page = persistentIdentifierService.findByNamespaceValidatedOrderById(namespace, pageable);
+            	if (page.hasContent()) {
 					processPage(page);
 				}
-	        }
+            }
         }
 	    catch(Exception e){
 	    	log("Transferring Harvest Task", e);

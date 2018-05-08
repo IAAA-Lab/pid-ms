@@ -4,29 +4,30 @@
             "home": {
                 "title": "Namespaces",
                 "createLabel": "Create a new Namespace",
-                "createOrEditLabel": "Create or edit a Namespace"
+                "editLabel": "Edit a Namespace"
             },
             "created": "A new Namespace is created with identifier {{ param }}",
             "updated": "A Namespace is updated with identifier {{ param }}",
             "deleted": "A Namespace is deleted with identifier {{ param }}",
             "delete": {
-                "question": "Are you sure you want to delete Namespace {{ id }}?"
+                "question": "Are you sure you want to delete the Namespace \"{{ namespace }}\" [id:{{ id }}]?"
+            },
+            "updateCSV": {
+             	"title": "Update namespace PIDs with CSV",
+             	"csvData": "CSV Data",
+             	"update": "Update",
+             	"addAction": "add,feature,schemaPrefix,localId,versionId,beginLifeSpan,endLifeSpan,alternateId,locator,proxyMode",
+             	"updateAction": "update,id,beginLifeSpanVersion,endLifeSpanVersion,alternateId,locator",
+             	"deleteAction": "delete,id"
             },
             "detail": {
                 "title": "Namespace"
             },
             "namespace": "Namespace",
-            "title": "Title",
-            "publicNamespace": "Public Namespace",
+            "title": "Descriptive Title",
+            "publicNamespace": "¿Is it Visible?",
             "renewalPolicy": "Renewal Policy",
             "namespaceStatus": "Namespace Status",
-            "processStatus": "Process Status",
-            "itemStatus": "Item Status",
-            "lastChangeDate": "Last Change Date",
-            "registrationDate": "Registration Date",
-            "lastRevisionDate": "Last Revision Date",
-            "nextRenewalDate": "Next Renewal Date",
-            "annullationDate": "Annullation Date",
             "methodType": "Method Type",
             "sourceType": "Source Type",
             "endpointLocation": "Endpoint Location",

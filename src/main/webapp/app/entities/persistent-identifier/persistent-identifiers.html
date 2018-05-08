@@ -1,9 +1,9 @@
-<div ng-switch="vm.isAuthenticated()">
+<div>
     <h2 data-translate="pidmsApp.persistentIdentifier.home.title">Persistent Identifiers</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-4 no-padding-left">
+            <div class="col-xs-4 no-padding-left" ng-switch="vm.isAuthenticated()">
                 <button class="btn btn-primary"
                         ui-sref="persistent-identifier.new"
                         ng-switch-when="true">
@@ -21,22 +21,18 @@
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
                     <th jh-sort-by="externalUrn"><span data-translate="pidmsApp.persistentIdentifier.externalUrn">External Urn</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="namespace"><span data-translate="pidmsApp.persistentIdentifier.namespace">Namespace</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="localId"><span data-translate="pidmsApp.persistentIdentifier.localId">Local Id</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="versionId"><span data-translate="pidmsApp.persistentIdentifier.versionId">Version Id</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="itemStatus"><span data-translate="pidmsApp.persistentIdentifier.itemStatus">Item Status</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="featureId"><span data-translate="pidmsApp.persistentIdentifier.feature">Feature Id</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="itemStatus"><span data-translate="registration.itemStatus">Item Status</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody infinite-scroll="vm.loadPage(vm.page + 1)" infinite-scroll-disabled="vm.page >= vm.links['last']">
                 <tr ng-repeat="persistentIdentifier in vm.persistentIdentifiers track by persistentIdentifier.id">
                     <td><a ui-sref="persistent-identifier-detail({id:persistentIdentifier.id})">{{persistentIdentifier.externalUrn}}</a></td>
-                    <td>{{persistentIdentifier.namespace}}</td>
-                    <td>{{persistentIdentifier.localId}}</td>
-                    <td>{{persistentIdentifier.versionId}}</td>
+                    <td><a ui-sref="feature-detail({id:persistentIdentifier.featureId})">{{persistentIdentifier.featureType}}</a></td>
                     <td data-translate="{{'pidmsApp.ItemStatus.' + persistentIdentifier.itemStatus}}">{{persistentIdentifier.itemStatus}}</td>
                     <td class="text-right">
-                        <div class="btn-group flex-btn-group-container">
+                        <div class="btn-group flex-btn-group-container" ng-switch="vm.isAuthenticated()">
                             <button type="submit"
                                     ui-sref="persistent-identifier.edit({id:persistentIdentifier.id})"
                                     class="btn btn-primary btn-sm"

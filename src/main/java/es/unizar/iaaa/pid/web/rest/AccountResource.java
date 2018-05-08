@@ -1,17 +1,15 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-
 import es.unizar.iaaa.pid.domain.User;
 import es.unizar.iaaa.pid.repository.UserRepository;
 import es.unizar.iaaa.pid.security.SecurityUtils;
 import es.unizar.iaaa.pid.service.MailService;
 import es.unizar.iaaa.pid.service.UserService;
 import es.unizar.iaaa.pid.service.dto.UserDTO;
+import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
 import es.unizar.iaaa.pid.web.rest.vm.KeyAndPasswordVM;
 import es.unizar.iaaa.pid.web.rest.vm.ManagedUserVM;
-import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Optional;
 
 /**
  * REST controller for managing the current user's account.

@@ -9,6 +9,7 @@ import es.unizar.iaaa.pid.security.AuthoritiesConstants;
 import es.unizar.iaaa.pid.service.MailService;
 import es.unizar.iaaa.pid.service.UserService;
 import es.unizar.iaaa.pid.service.dto.UserDTO;
+import es.unizar.iaaa.pid.web.rest.util.TestUtil;
 import es.unizar.iaaa.pid.web.rest.vm.KeyAndPasswordVM;
 import es.unizar.iaaa.pid.web.rest.vm.ManagedUserVM;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -29,7 +30,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,40 +1,24 @@
 package es.unizar.iaaa.pid.harvester.connectors.wfs;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import com.ximpleware.AutoPilot;
-import com.ximpleware.NavException;
-import com.ximpleware.NodeRecorder;
-import com.ximpleware.VTDGen;
-import com.ximpleware.VTDNav;
-import com.ximpleware.XPathEvalException;
-import com.ximpleware.XPathParseException;
-
-import es.unizar.iaaa.pid.domain.BoundingBox;
-import es.unizar.iaaa.pid.domain.Change;
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.PersistentIdentifier;
-import es.unizar.iaaa.pid.domain.Resource;
-import es.unizar.iaaa.pid.domain.Source;
-import es.unizar.iaaa.pid.domain.Task;
+import com.ximpleware.*;
+import es.unizar.iaaa.pid.domain.*;
 import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
 import es.unizar.iaaa.pid.domain.enumeration.MethodType;
 import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
 import es.unizar.iaaa.pid.harvester.connectors.SpatialHarvester;
 import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSResponse.ResponseStatus;
 import es.unizar.iaaa.pid.service.ChangeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 @Scope("prototype")
@@ -56,12 +40,12 @@ public class WFSSpatialHarvester implements SpatialHarvester {
     }
 
     @Override
-    public int getHitsTotal(String feature,BoundingBox boundingBox) {
+    public int getHitsTotal(Feature feature,BoundingBox boundingBox) {
     	String request;
     	WFSResponse response;
 
     	if(source.getMethodType() == MethodType.POST){
-	        request = WFSClient.createWfsGetFeatureRequestBodyPost(feature, source, boundingBox, "hits");
+	        request = WFSClient.createWfsGetFeatureRequestBodyPost(feature, boundingBox, "hits");
 	        response = WFSClient.executeRequestPOST(source.getEndpointLocation(), request);
     	}
     	else{
@@ -75,7 +59,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
     	else if(response.getResponseStatus() == ResponseStatus.TIMEOUT){
     		return -2;
     	}
-        
+
         VTDGen document = response.getDocument();
         VTDNav nav = document.getNav();
         Integer numResults = getNumberMatched(nav);
@@ -99,7 +83,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
             }
             return Integer.parseInt(numResultString);
         } catch (NavException | XPathParseException | XPathEvalException e) {
-            e.printStackTrace();
+            LOGGER.error("Can't parse numberMatched", e);
         }
         return null;
     }
@@ -121,19 +105,19 @@ public class WFSSpatialHarvester implements SpatialHarvester {
             }
             return Optional.of(Integer.parseInt(numResultString));
         } catch (NavException | XPathParseException | XPathEvalException e) {
-            e.printStackTrace();
+            LOGGER.error("Can't parse numberReturned", e);
         }
         return Optional.empty();
     }
 
 
     @Override
-    public int extractIdentifiers(String feature, BoundingBox boundingBox) {
+    public int extractIdentifiers(Feature feature, BoundingBox boundingBox) {
     	String request;
     	WFSResponse response;
 
     	if(source.getMethodType() == MethodType.POST){
-	        request = WFSClient.createWfsGetFeatureRequestBodyPost(feature, source, boundingBox, "results");
+	        request = WFSClient.createWfsGetFeatureRequestBodyPost(feature, boundingBox, "results");
 	        response = WFSClient.executeRequestPOST(source.getEndpointLocation(), request);
     	}
     	else{
@@ -147,14 +131,9 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         else if(response.getResponseStatus() == ResponseStatus.TIMEOUT){
         	return -2;
         }
-        else if(response.getSrc().startsWith("<error>") || response.getSrc().contains("Runtime Error") 
+        else if(response.getSrc().startsWith("<error>") || response.getSrc().contains("Runtime Error")
         		|| response.getSrc().contains("ows:Exception")){
         	return -1;
-        }
-
-        //ñappa para hacer que funcione el catastro
-        if(response.getSrc().contains("No se han encontrado inmuebles")){
-        	return 0;
         }
 
         VTDGen document = response.getDocument();
@@ -167,11 +146,11 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         log("{} are expected to be retrieved", returned);
         try {
             AutoPilot ap = new AutoPilot(nav);
-            ap.declareXPathNameSpace("ns1", source.getXpath());
-            ap.selectXPath("//ns1:"+source.getNameItem());
+            ap.declareXPathNameSpace("ns1", feature.getXpath());
+            ap.selectXPath("//ns1:"+feature.getNameItem());
             while (ap.evalXPath() != -1) {
                 try {
-                    Identifier identifier = extractIdentifier(feature,nav);
+                    Identifier identifier = extractIdentifier(feature, nav);
                     Resource resource = new Resource();
                     resource.setResourceType(ResourceType.SPATIAL_OBJECT);
                     resource.setLocator(WFSClient.createWfsGetFeatureById(source, identifier));
@@ -214,7 +193,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         return valid;
     }
 
-    private Identifier extractIdentifier(String feature, VTDNav nav) throws NavException, FailedExtractionException {
+    private Identifier extractIdentifier(Feature feature, VTDNav nav) throws NavException, FailedExtractionException {
 
         nav.push();
         NodeRecorder member = new NodeRecorder(nav);
@@ -230,13 +209,13 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         member.iterate();
 
         AutoPilot apx1 = new AutoPilot(nav);
-        apx1.selectElementNS(source.getSchemaUri(), feature);
+        apx1.selectElementNS(feature.getSchemaUri(), feature.getFeatureType());
         String gmlId = null;
         boolean isCorrectFeature = false;
 
         if(apx1.iterate()){
         	isCorrectFeature = true;
-        	int gmlidx = nav.getAttrValNS(source.getSchemaUriGML(), "id");
+        	int gmlidx = nav.getAttrValNS(feature.getSchemaUriGML(), "id");
             if (gmlidx != -1) {
                 gmlId = nav.toNormalizedString(gmlidx);
             }
@@ -249,7 +228,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         // if(featureTypePos != 1){;}
 
         AutoPilot apx = new AutoPilot(nav);
-        apx.selectElementNS(source.getSchemaUriBase(), "localId");
+        apx.selectElementNS(feature.getSchemaUriBase(), "localId");
         String localId = null;
         if (apx.iterate()) {
         	int pos = nav.getText();
@@ -261,7 +240,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         member.iterate();
 
         apx = new AutoPilot(nav);
-        apx.selectElementNS(source.getSchemaUriBase(), "namespace");
+        apx.selectElementNS(feature.getSchemaUriBase(), "namespace");
         String namespace = null;
         if (apx.iterate()) {
         	int pos = nav.getText();
@@ -273,7 +252,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         member.iterate();
 
         apx = new AutoPilot(nav);
-        apx.selectElementNS(source.getSchemaUriBase(), "versionId");
+        apx.selectElementNS(feature.getSchemaUriBase(), "versionId");
         String versionId = null;
         if (apx.iterate()) {
         	int pos = nav.getText();
@@ -285,7 +264,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         member.iterate();
 
         apx = new AutoPilot(nav);
-        apx.selectElementNS(source.getSchemaUri(), source.getBeginLifespanVersionProperty());
+        apx.selectElementNS(feature.getSchemaUri(), feature.getBeginLifespanVersionProperty());
         Instant beginLifespanVersion = null;
         if (apx.iterate()) {
         	int pos = nav.getText();
@@ -328,53 +307,6 @@ public class WFSSpatialHarvester implements SpatialHarvester {
         return Instant.parse(formattedDate+"Z");
     }
 
-    private void log(String msg, Object... objects) {
-        List<Object> l = new ArrayList<>();
-        l.addAll(Arrays.asList(task.getType(), task.getId(), task.getNamespace().getNamespace()));
-        l.addAll(Arrays.asList(objects));
-        LOGGER.info("Task \"{}:{}\" for namespace \"{}\" : " + msg, l.toArray());
-    }
-
-    private void error(String msg, Object... objects) {
-        List<Object> l = new ArrayList<>();
-        l.addAll(Arrays.asList(task.getType(), task.getId(), task.getNamespace().getNamespace()));
-        l.addAll(Arrays.asList(objects));
-        LOGGER.error("Task \"{}:{}\" for namespace \"{}\" : " + msg, l.toArray());
-    }
-
-    private void debug(String msg, Object... objects) {
-        List<Object> l = new ArrayList<>();
-        l.addAll(Arrays.asList(task.getType(), task.getId(), task.getNamespace().getNamespace()));
-        l.addAll(Arrays.asList(objects));
-        LOGGER.debug("Task \"{}:{}\" for namespace \"{}\" : " + msg, l.toArray());
-    }
-
-    private void warning(String msg, Object... objects) {
-        List<Object> l = new ArrayList<>();
-        l.addAll(Arrays.asList(task.getType(), task.getId(), task.getNamespace().getNamespace()));
-        l.addAll(Arrays.asList(objects));
-        LOGGER.warn("Task \"{}:{}\" for namespace \"{}\" : " + msg, l.toArray());
-    }
-
-//    private DateTime extractDateTime(Element element, String ns, String name) {
-//        String s = extractContent(element, ns, name);
-//        return s != null ? DateTime.parse(s) : null;
-//    }
-
-    private String extractContent(Element element, String ns, String name) {
-        NodeList nl = element.getElementsByTagNameNS(ns, name);
-        return nl.getLength() > 0 ? nl.item(0).getTextContent() : null;
-    }
-
-//    private String extractAttribute(Element element, String nsElement, String nameElement, String nsAttribute, String nameAttribute) {
-//        NodeList nl = element.getElementsByTagNameNS(nsElement, nameElement);
-//        if (nl.getLength() == 0) {
-//            return null;
-//        }
-//        Node n = nl.item(0).getAttributes().getNamedItemNS(nsAttribute, nameAttribute);
-//        return n != null ? n.getNodeValue() : null;
-//    }
-
     private class FailedExtractionException extends Exception {
         private boolean skip;
 
@@ -387,5 +319,32 @@ public class WFSSpatialHarvester implements SpatialHarvester {
             return skip;
         }
 
+    }
+
+    private String TASK_FOR_NAMESPACE = "Task \"{}:{}\" for namespace \"{}\" : ";
+
+    public void log(String msg, Object... objects) {
+        LOGGER.info(TASK_FOR_NAMESPACE + msg, buildLoggerParameters(objects));
+    }
+
+    public void error(String msg, Object... objects) {
+        LOGGER.error(TASK_FOR_NAMESPACE + msg, buildLoggerParameters(objects));
+    }
+
+    public void debug(String msg, Object... objects) {
+        LOGGER.debug(TASK_FOR_NAMESPACE + msg, buildLoggerParameters(objects));
+    }
+
+    public void warning(String msg, Object... objects) {
+        LOGGER.debug(TASK_FOR_NAMESPACE + msg, buildLoggerParameters(objects));
+    }
+
+    private Object[] buildLoggerParameters(Object[] objects) {
+        List<Object> l = new ArrayList<>();
+        l.add(task.getType());
+        l.add(task.getId());
+        l.add(task.getNamespace().getNamespace());
+        l.addAll(Arrays.asList(objects));
+        return l.toArray();
     }
 }

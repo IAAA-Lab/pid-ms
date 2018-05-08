@@ -3,11 +3,11 @@
         "home": {
             "title": "Usuarios",
             "createLabel": "Crear un nuevo usuario",
-            "createOrEditLabel": "Crear o editar un usuario"
+            "editLabel": "Editar un usuario"
         },
-        "created": "A new user is created with identifier {{ param }}",
-        "updated": "An user is updated with identifier {{ param }}",
-        "deleted": "An user is deleted with identifier {{ param }}",
+        "created": "Un nuevo usuario ha sido creado con identificador {{ param }}",
+        "updated": "Usuario con identificador {{ param }} ha sido actualizado con identificador",
+        "deleted": "Usuario con identificador {{ param }} ha sido borrado",
         "delete": {
             "question": "¿Seguro que quieres eliminar el usuario {{ login }}?"
         },

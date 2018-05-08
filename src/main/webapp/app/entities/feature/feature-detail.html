@@ -1,0 +1,121 @@
+
+<div ng-switch="vm.isAuthenticated()">
+    <h2><span data-translate="pidmsApp.feature.detail.title">Feature</span> "<b>{{vm.feature.featureType}}</b>"  <small>[id:{{vm.feature.id}}]</small></h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="section.description">Description Section</h3>
+            </div>
+            <div class="panel-body">
+                <dt><span data-translate="pidmsApp.feature.featureType">Feature Type</span></dt>
+                <dd><span>{{vm.feature.featureType}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.feature.schemaPrefix">Schema Prefix</span></dt>
+                <dd><span>{{vm.feature.schemaPrefix}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.feature.schemaUri">Schema Uri</span></dt>
+                <dd><span>{{vm.feature.schemaUri}}</span></dd>
+                <hr>
+                <dt><span data-translate="pidmsApp.feature.namespace">Namespace</span></dt>
+                <dd><a ui-sref="namespace-detail({id:vm.feature.namespaceId})">{{vm.feature.namespaceName}}</a></dd>
+            </div>
+        </div>
+        <div ng-switch-when="true" class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" data-translate="pidmsApp.feature.technicalSection">Technical Section</h3>
+            </div>
+            <div class="panel-body">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-translate="pidmsApp.feature.namespaceMappings">Namespace mapping</h3>
+                    </div>
+                    <div class="panel-body">
+                        <dt><span data-translate="pidmsApp.feature.schemaUriGML">Schema Uri GML</span></dt>
+                        <dd><span>{{vm.feature.schemaUriGML}}</span></dd>
+                        <hr>
+                        <dt><span data-translate="pidmsApp.feature.schemaUriBase">Schema Uri Base</span></dt>
+                        <dd><span>{{vm.feature.schemaUriBase}}</span></dd>
+                        <hr>
+                        <dt><span data-translate="pidmsApp.feature.xpath">Xpath</span></dt>
+                        <dd><span>{{vm.feature.xpath}}</span></dd>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-translate="pidmsApp.feature.attributeMappings">Attribute mapping</h3>
+                    </div>
+                    <div class="panel-body">
+                        <dt><span data-translate="pidmsApp.feature.geometryProperty">Geometry Property</span></dt>
+                        <dd><span>{{vm.feature.geometryProperty}}</span></dd>
+                        <hr>
+                        <dt><span data-translate="pidmsApp.feature.beginLifespanVersionProperty">Begin Lifespan Version Property</span></dt>
+                        <dd><span>{{vm.feature.beginLifespanVersionProperty}}</span></dd>
+                        <hr>
+                        <dt><span data-translate="pidmsApp.feature.nameItem">Name Item</span></dt>
+                        <dd><span>{{vm.feature.nameItem}}</span></dd>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-translate="pidmsApp.feature.harvestSection">Harvest strategy</h3>
+                    </div>
+                    <div class="panel-body">
+                        <dt><span data-translate="pidmsApp.feature.featuresThreshold">Features Threshold</span></dt>
+                        <dd><span>{{vm.feature.featuresThreshold}}</span></dd>
+                        <hr>
+                        <dt><span data-translate="pidmsApp.feature.hitsRequest">Hits Request</span></dt>
+                        <dd><span data-translate="{{vm.feature.hitsRequest}}">Boolean</span></dd>
+                        <hr>
+                        <dt><span data-translate="pidmsApp.feature.factorK">Factor K</span></dt>
+                        <dd><span>{{vm.feature.factorK}}</span></dd>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-translate="pidmsApp.feature.boundingBoxSection">Bounding Box</h3>
+                    </div>
+                    <div class="panel-body">
+                        <dt><span data-translate="pidmsApp.feature.srsName">Srs Name</span></dt>
+                        <dd><span>{{vm.feature.srsName}}</span></dd>
+                        <hr>
+                        <dt><span data-translate="pidmsApp.feature.minX">Min X</span></dt>
+                        <dd><span>{{vm.feature.minX | number:2}}</span></dd>
+                        <hr>
+                        <dt><span data-translate="pidmsApp.feature.minY">Min Y</span></dt>
+                        <dd><span>{{vm.feature.minY | number:2}}</span></dd>
+                        <hr>
+                        <dt><span data-translate="pidmsApp.feature.maxX">Max X</span></dt>
+                        <dd><span>{{vm.feature.maxX | number:2}}</span></dd>
+                        <hr>
+                        <dt><span data-translate="pidmsApp.feature.maxY">Max Y</span></dt>
+                        <dd><span>{{vm.feature.maxY | number:2}}</span></dd>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            ui-sref="feature-detail.edit({id:vm.feature.id})"
+            class="btn btn-primary"
+            ng-switch-when="true">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
+    </button>
+
+    <button type="submit"
+            ui-sref="feature.delete({id:vm.feature.id})"
+            class="btn btn-danger"
+            ng-switch-when="true">
+        <span class="glyphicon glyphicon-remove-circle"></span>
+        <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
+    </button>
+</div>

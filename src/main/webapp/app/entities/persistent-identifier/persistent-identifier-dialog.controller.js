@@ -5,9 +5,9 @@
         .module('pidmsApp')
         .controller('PersistentIdentifierDialogController', PersistentIdentifierDialogController);
 
-    PersistentIdentifierDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'PersistentIdentifier'];
+    PersistentIdentifierDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'PersistentIdentifier','Feature'];
 
-    function PersistentIdentifierDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, PersistentIdentifier) {
+    function PersistentIdentifierDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, PersistentIdentifier, Feature) {
         var vm = this;
 
         vm.persistentIdentifier = entity;
@@ -15,6 +15,7 @@
         vm.datePickerOpenStatus = {};
         vm.openCalendar = openCalendar;
         vm.save = save;
+        vm.features = Feature.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -27,7 +28,7 @@
         function save () {
             vm.isSaving = true;
             if (vm.persistentIdentifier.id !== null) {
-                PersistentIdentifier.update(vm.persistentIdentifier, onSaveSuccess, onSaveError);
+                PersistentIdentifier.update({id : $stateParams.id},vm.persistentIdentifier, onSaveSuccess, onSaveError);
             } else {
                 PersistentIdentifier.save(vm.persistentIdentifier, onSaveSuccess, onSaveError);
             }

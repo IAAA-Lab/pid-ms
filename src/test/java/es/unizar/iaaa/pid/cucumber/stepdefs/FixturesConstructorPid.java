@@ -1,9 +1,6 @@
 package es.unizar.iaaa.pid.cucumber.stepdefs;
 
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.PersistentIdentifier;
-import es.unizar.iaaa.pid.domain.Registration;
-import es.unizar.iaaa.pid.domain.Resource;
+import es.unizar.iaaa.pid.domain.*;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 
@@ -30,7 +27,6 @@ public class FixturesConstructorPid {
         Resource resource = new Resource().resourceType(DATASET).locator("");
 
         return new PersistentIdentifier()
-            .feature("feature")
             .identifier(identifier)
             .resource(resource)
             .registration(registration)
@@ -57,7 +53,6 @@ public class FixturesConstructorPid {
             .locator("");
 
         return new PersistentIdentifier()
-            .feature("feature")
             .identifier(identifier)
             .resource(resource)
             .registration(registration)
@@ -86,7 +81,6 @@ public class FixturesConstructorPid {
             .locator("");
 
         return new PersistentIdentifier()
-            .feature("feature")
             .identifier(identifier)
             .resource(resource)
             .registration(registration)

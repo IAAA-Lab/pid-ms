@@ -1,14 +1,15 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import es.unizar.iaaa.pid.PidmsApp;
-
 import es.unizar.iaaa.pid.domain.Organization;
 import es.unizar.iaaa.pid.repository.OrganizationRepository;
 import es.unizar.iaaa.pid.service.OrganizationDTOService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.service.dto.OrganizationDTO;
 import es.unizar.iaaa.pid.service.mapper.OrganizationMapper;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
-
+import es.unizar.iaaa.pid.web.rest.util.MvcResultUtils;
+import es.unizar.iaaa.pid.web.rest.util.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,14 +19,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.*;
+import static es.unizar.iaaa.pid.web.rest.util.HeaderUtil.ERROR_HEADER;
+import static es.unizar.iaaa.pid.web.rest.util.HeaderUtil.ERROR_ID_ALREADY_EXIST;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -38,13 +43,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PidmsApp.class)
-public class OrganizationResourceIntTest {
-
-    private static final String DEFAULT_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_NAME = "BBBBBBBBBB";
-
-    private static final String DEFAULT_TITLE = "AAAAAAAAAA";
-    private static final String UPDATED_TITLE = "BBBBBBBBBB";
+@Transactional
+public class OrganizationResourceIntTest extends LoggedUser {
 
     @Autowired
     private OrganizationRepository organizationRepository;
@@ -56,6 +56,10 @@ public class OrganizationResourceIntTest {
     private OrganizationDTOService organizationService;
 
     @Autowired
+    private OrganizationMemberDTOService organizationMemberDTOService;
+
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -64,203 +68,180 @@ public class OrganizationResourceIntTest {
     @Autowired
     private ExceptionTranslator exceptionTranslator;
 
-    @Autowired
-    private EntityManager em;
 
     private MockMvc restOrganizationMockMvc;
-
-    private Organization organization;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        OrganizationResource organizationResource = new OrganizationResource(organizationService);
+        OrganizationResource organizationResource = new OrganizationResource(organizationService,
+        		organizationMemberDTOService);
         this.restOrganizationMockMvc = MockMvcBuilders.standaloneSetup(organizationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Organization createEntity(EntityManager em) {
-        Organization organization = new Organization()
-            .name(DEFAULT_NAME)
-            .title(DEFAULT_TITLE);
-        return organization;
-    }
 
-    @Before
-    public void initTest() {
-        organization = createEntity(em);
-    }
 
     @Test
-    @Transactional
-    public void createOrganization() throws Exception {
-        int databaseSizeBeforeCreate = organizationRepository.findAll().size();
-
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
+    public void basicCreationWorks() throws Exception {
         // Create the Organization
-        OrganizationDTO organizationDTO = organizationMapper.toDto(organization);
-        restOrganizationMockMvc.perform(post("/api/organizations")
+        OrganizationDTO organizationDTO = organizationMapper.toDto(organization());
+        MvcResult result = restOrganizationMockMvc.perform(post("/api/organizations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(organizationDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated()).andReturn();
+
+        // Extract current id from Location
+        Long id = MvcResultUtils.extractIdFromLocation(result);
 
         // Validate the Organization in the database
-        List<Organization> organizationList = organizationRepository.findAll();
-        assertThat(organizationList).hasSize(databaseSizeBeforeCreate + 1);
-        Organization testOrganization = organizationList.get(organizationList.size() - 1);
-        assertThat(testOrganization.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testOrganization.getTitle()).isEqualTo(DEFAULT_TITLE);
+        Organization organization = organizationRepository.findOne(id);
+        assertThat(organization).isNotNull();
+        assertThat(organization.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(organization.getTitle()).isEqualTo(DEFAULT_TITLE);
     }
 
     @Test
-    @Transactional
-    public void createOrganizationWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = organizationRepository.findAll().size();
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
+    public void creationFailWhenContainsId() throws Exception {
+        List<Organization> previousState = organizationRepository.findAll();
 
-        // Create the Organization with an existing ID
-        organization.setId(1L);
-        OrganizationDTO organizationDTO = organizationMapper.toDto(organization);
+        // Create the Organization with an ID
+        OrganizationDTO organizationDTO = organizationMapper.toDto(organization(1L));
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restOrganizationMockMvc.perform(post("/api/organizations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(organizationDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest()).andExpect(header().string(ERROR_HEADER,ERROR_ID_ALREADY_EXIST));
 
-        // Validate the Alice in the database
-        List<Organization> organizationList = organizationRepository.findAll();
-        assertThat(organizationList).hasSize(databaseSizeBeforeCreate);
+        // Check that the size of the database has not changes
+        assertThat(organizationRepository.findAll()).isEqualTo(previousState);
     }
 
     @Test
-    @Transactional
-    public void checkNameIsRequired() throws Exception {
-        int databaseSizeBeforeTest = organizationRepository.findAll().size();
-        // set the field null
-        organization.setName(null);
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
+    public void creationFailWhenNameIsMissing() throws Exception {
+        List<Organization> previousState = organizationRepository.findAll();
 
         // Create the Organization, which fails.
-        OrganizationDTO organizationDTO = organizationMapper.toDto(organization);
+        OrganizationDTO organizationDTO = organizationMapper.toDto(anonymousOrganization());
 
         restOrganizationMockMvc.perform(post("/api/organizations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(organizationDTO)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.fieldErrors[0].field").value("name"))
+            .andExpect(jsonPath("$.fieldErrors[0].message").value("NotNull"));
 
-        List<Organization> organizationList = organizationRepository.findAll();
-        assertThat(organizationList).hasSize(databaseSizeBeforeTest);
+
+        // Validate the Organization in the database
+        assertThat(organizationRepository.findAll()).isEqualTo(previousState);
     }
 
     @Test
-    @Transactional
     public void getAllOrganizations() throws Exception {
-        // Initialize the database
-        organizationRepository.saveAndFlush(organization);
+        Organization persistedOrganization = organizationRepository.saveAndFlush(organization());
 
         // Get all the organizationList
         restOrganizationMockMvc.perform(get("/api/organizations?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(organization.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(persistedOrganization.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)));
     }
 
     @Test
-    @Transactional
-    public void getOrganization() throws Exception {
-        // Initialize the database
-        organizationRepository.saveAndFlush(organization);
+    public void getAnOrganization() throws Exception {
+        Organization persistedOrganization = organizationRepository.saveAndFlush(organization());
 
         // Get the organization
-        restOrganizationMockMvc.perform(get("/api/organizations/{id}", organization.getId()))
+        restOrganizationMockMvc.perform(get("/api/organizations/{id}", persistedOrganization.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(organization.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()));
+            .andExpect(jsonPath("$.id").value(persistedOrganization.getId().intValue()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE));
     }
 
     @Test
-    @Transactional
     public void getNonExistingOrganization() throws Exception {
+        organizationRepository.saveAndFlush(organization());
+        long id = organizationRepository.findAll().stream().map(Organization::getId).max(Long::compare).orElse(0L) + 1;
+
         // Get the organization
-        restOrganizationMockMvc.perform(get("/api/organizations/{id}", Long.MAX_VALUE))
+        restOrganizationMockMvc.perform(get("/api/organizations/{id}", id))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    @Transactional
-    public void updateOrganization() throws Exception {
-        // Initialize the database
-        organizationRepository.saveAndFlush(organization);
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
+    public void basicUpdateWorks() throws Exception {
+        Organization persistedOrganization = organizationRepository.saveAndFlush(organization());
+        linkOrganizationToLoggedUser(persistedOrganization);
         int databaseSizeBeforeUpdate = organizationRepository.findAll().size();
 
         // Update the organization
-        Organization updatedOrganization = organizationRepository.findOne(organization.getId());
-        updatedOrganization
+        persistedOrganization
             .name(UPDATED_NAME)
             .title(UPDATED_TITLE);
-        OrganizationDTO organizationDTO = organizationMapper.toDto(updatedOrganization);
+        OrganizationDTO organizationDTO = organizationMapper.toDto(persistedOrganization);
 
-        restOrganizationMockMvc.perform(put("/api/organizations")
+        restOrganizationMockMvc.perform(put("/api/organizations/{id}", persistedOrganization.getId())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(organizationDTO)))
             .andExpect(status().isOk());
 
         // Validate the Organization in the database
-        List<Organization> organizationList = organizationRepository.findAll();
-        assertThat(organizationList).hasSize(databaseSizeBeforeUpdate);
-        Organization testOrganization = organizationList.get(organizationList.size() - 1);
-        assertThat(testOrganization.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testOrganization.getTitle()).isEqualTo(UPDATED_TITLE);
+        Organization organization = organizationRepository.findOne(persistedOrganization.getId());
+        assertThat(organization).isNotNull();
+        assertThat(organization.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(organization.getTitle()).isEqualTo(UPDATED_TITLE);
+
+        // Validate the Organization in the database
+        assertThat(organizationRepository.findAll()).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
-    @Transactional
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
     public void updateNonExistingOrganization() throws Exception {
-        int databaseSizeBeforeUpdate = organizationRepository.findAll().size();
+        List<Organization> previousState = organizationRepository.findAll();
 
         // Create the Organization
+        long id = previousState.stream().map(Organization::getId).max(Long::compare).orElse(0L) + 1;
+        Organization organization = organization(id);
         OrganizationDTO organizationDTO = organizationMapper.toDto(organization);
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
-        restOrganizationMockMvc.perform(put("/api/organizations")
+        restOrganizationMockMvc.perform(put("/api/organizations/{id}", id)
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(organizationDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isNotFound());
 
         // Validate the Organization in the database
-        List<Organization> organizationList = organizationRepository.findAll();
-        assertThat(organizationList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(organizationRepository.findAll()).isEqualTo(previousState);
     }
 
     @Test
-    @Transactional
-    public void deleteOrganization() throws Exception {
-        // Initialize the database
-        organizationRepository.saveAndFlush(organization);
-        int databaseSizeBeforeDelete = organizationRepository.findAll().size();
+    @WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
+    public void anAdminCanDeleteOrganization() throws Exception {
+        Organization persistedOrganization = organizationRepository.saveAndFlush(organization());
+        linkOrganizationToLoggedUser(persistedOrganization);
 
-        // Get the organization
-        restOrganizationMockMvc.perform(delete("/api/organizations/{id}", organization.getId())
+        // Delete the organization
+        restOrganizationMockMvc.perform(delete("/api/organizations/{id}", persistedOrganization.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
-        // Validate the database is empty
-        List<Organization> organizationList = organizationRepository.findAll();
-        assertThat(organizationList).hasSize(databaseSizeBeforeDelete - 1);
+        // Validate the database does not contains the key
+        assertThat(organizationRepository.findAll()).doesNotContain(persistedOrganization);
     }
 
     @Test
-    @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Organization.class);
         Organization organization1 = new Organization();
@@ -275,7 +256,6 @@ public class OrganizationResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(OrganizationDTO.class);
         OrganizationDTO organizationDTO1 = new OrganizationDTO();
@@ -291,7 +271,6 @@ public class OrganizationResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void testEntityFromId() {
         assertThat(organizationMapper.fromId(42L).getId()).isEqualTo(42);
         assertThat(organizationMapper.fromId(null)).isNull();

@@ -1,0 +1,25 @@
+id;namespace;title;public_namespace;renewal_policy;namespace_status;process_status;item_status;last_change_date;registration_date;method_type;source_type;endpoint_location;resolver_proxy_mode;max_num_request;owner_id;version_lock
+7;ES.IGN.SIGLIM.;Unidades Administrativas;0;MONTHLY;STOP;NONE;PENDING_VALIDATION;2018-02-26 07:43:40;2018-02-26 07:43:40;POST;WFS;http://www.ign.es/wfs-inspire/unidades-administrativas;0;0;1;0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

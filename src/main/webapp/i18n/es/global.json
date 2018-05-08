@@ -7,14 +7,15 @@
             "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
             "entities": {
                 "main": "Entidades",
-                "groupMember": "Group Member",
-                "group": "Group",
-                "namespace": "Namespace",
-                "task": "Task",
-                "change": "Change",
-                "persistentIdentifier": "Persistent Identifier",
-                "organization": "Organization",
-                "organizationMember": "Organization Member",
+                "groupMember": "Miembro del grupo",
+                "group": "Grupo",
+                "namespace": "Espacio de Nombres",
+                "task": "Tarea",
+                "change": "Cambio",
+                "persistentIdentifier": "Identificador Persistente",
+                "organization": "Organización",
+                "organizationMember": "Miembro de la Organización",
+                "feature": "Tipo de Objeto Espacial",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
@@ -23,7 +24,7 @@
                 "password": "Contraseña",
                 "sessions": "Sesiones",
                 "login": "Iniciar sesión",
-                "logout": "Cerrar la sesión",
+                "logout": "Cerrar sesión",
                 "register": "Crear una cuenta"
             },
             "admin": {
@@ -57,7 +58,7 @@
                 "register": "¿No tienes una cuenta todavía? <a class=\"alert-link\" href=\"\" ng-click=\"vm.register()\">Crea una cuenta</a>"
             },
             "error": {
-                "dontmatch" : "¡La contraseña y la confirmación de contraseña no coinciden!"
+                "dontmatch": "¡La contraseña y la confirmación de contraseña no coinciden!"
             },
             "validate": {
                 "newpassword": {
@@ -80,10 +81,10 @@
             }
         },
         "field": {
-            "id" : "ID"
+            "id": "ID"
         },
         "ribbon": {
-            "dev":"Development"
+            "dev": "Development"
         },
         "item-count": "Mostrando {{first}}..{{second}} de {{total}}"
     },
@@ -95,7 +96,7 @@
             "cancel": "Cancelar",
             "delete": "Eliminar",
             "edit": "Editar",
-            "open": "Open",
+            "open": "Abrir",
             "save": "Guardar",
             "view": "Vista"
         },
@@ -120,15 +121,73 @@
         }
     },
     "error": {
-        "internalServerError": "Internal server error",
+        "internalServerError": "Error interno en el servidor",
         "server.not.reachable": "Servidor no accesible",
-        "url.not.found": "Not found",
+        "url.not.found": "URL no encontrada",
         "NotNull": "¡El campo {{fieldName}} no puede estar vacío!",
         "Size": "¡El campo {{fieldName}} no cumple con los requisitos de tamaño mínimo/máximo!",
-        "userexists": "Login name already used!",
-        "emailexists": "Email is already in use!",
-        "idexists": "A new {{entityName}} cannot already have an ID"
-        "namespaceExist": "Exist other Namespace with the same namespace value"
+        "userexists": "El login ya está en uso!",
+        "emailexists": "Email ya está en uso!",
+        "idexists": "Un nuevo {{entityName}} no puede tener ya ID",
+        "namespaceExist": "Existe otro Namespace con el mismo atributo namespace",
+        "featureExist": "Existe otro Feature con el mismo atributo featureType y schemaPrefix",
+        "NamespaceNotExist": "El Namespace no existe",
+        "OrganizationNotExist": "La Organización no existe",
+        "notCapacityToAddNamespace": "Es necesario ser Administrador o Editor de la Organización para añadir un Namespace",
+        "notCapacityToModifyNamespace": "Es necesario ser Administrador o Editor de la Organización para modificar un Namespace",
+        "notCapacityToDeleteNamespace": "Es necesario ser Administrador o Editor de la Organización para borrar un Namespace",
+        "notCapacityToAddOrganizationMember": "Es necesario ser Administrador de la Organización para añádir capacidades a un usuario",
+        "notCapacityToModifyOrganizationMember": "Es necesario ser Administrador de la Organización para modificar la capacidades de un usuario",
+        "notCapacityToDeleteOrganizationMember": "Es necesario ser Administrador de la Organización para eliminar capacidades de un usuario",
+        "userIsMemberOfOrganization": "El usuario ya es parte de la Organizacion",
+        "notCapacityToModifyOrganization": "Es necesario ser Administrador de la Organización para modificar sus detalles",
+        "notCapacityToDeleteOrganization": "Es necesario ser Administrador de la Organización para poder borrarla",
+        "notCapacityToAddFeature": "Es necesario ser Administrador o Editor de la Organización del Namespace para añadir una Feature",
+        "notCapacityToModifyFeature": "Es necesario ser Administrador o Editor de la Organización del Namespace para modificar una Feature",
+        "notCapacityToDeleteFeature": "Es necesario ser Administrador o Editor de la Organización del Namespace para eleiminar una Feature",
+        "notCapacityToAddChange": "Es necesario ser Administrador o Editor de la Organización del Namespace para añadir un Cambio",
+        "notCapacityToModifyChange": "Es necesario ser Administrador o Editor de la Organización del Namespace para modificar un Cambio",
+        "notCapacityToDeleteChange": "Es necesario ser Administrador o Editor de la Organización del Namespace para borrar un Cambio",
+        "notCapacityToAddPersistentIdentifier": "Es necesario ser Administrado o Editor de la Organizacion para añadir un Identificador persistente",
+        "notCapacityToModifyPersistentIdentifier": "Es necesario ser Administrado o Editor de la Organizacion para modificar un Identificador persistente",
+        "notCapacityToDeletePersistentIdentifier": "Es necesario ser Administrado o Editor de la Organizacion para borrar un Identificador persistente",
+        "notCapacityToAddTask": "Acción no permitida",
+        "notCapacityToModifyTask": "Acción no permitida",
+        "notCapacityToDeleteTask": "Acción no permitida",
+        "notCapacityForCSVLoad": "Es necesario ser Administrador o Editor in la organización del Namespace para cargar datos CSV",
+        "notAuthenticated": "Debes estar autentificado para realizar esta acción",
+        "taskInExecuting": "El namespace tiene una tarea en ejecución"
     },
-    "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad de Zaragoza</a>"
+    "section": {
+        "description": "Descripción",
+        "source": "Fuente",
+        "registration": "Registro",
+        "identifier": "Identificador",
+        "resource": "Recurso identificado"
+    },
+    "registration": {
+        "processStatus": "Estado del proceso",
+        "itemStatus": "Estado del registro",
+        "lastChangeDate": "Fecha del último cambio",
+        "registrationDate": "Fecha de registro",
+        "lastRevisionDate": "Fecha de última revisión",
+        "nextRenewalDate": "Fecha de siguiente actualización",
+        "annullationDate": "Fecha de anulación"
+    },
+    "identifier": {
+        "namespace": "Espacio de nombres",
+        "localId": "Id Local",
+        "versionId": "Version",
+        "beginLifespanVersion": "Inicio de esta versión",
+        "endLifespanVersion": "Final de esta versión",
+        "alternateId": "Id Local alternativo"
+    },
+    "resource": {
+        "resourceType": "Tipo de recurso",
+        "locator": "Localizador"
+    },
+    "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad de Zaragoza</a>",
+    "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>",
+    "true": "Sí",
+    "false": "No"
 }

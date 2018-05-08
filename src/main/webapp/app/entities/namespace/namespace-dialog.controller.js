@@ -28,7 +28,7 @@
         function save () {
             vm.isSaving = true;
             if (vm.namespace.id !== null) {
-                Namespace.update(vm.namespace, onSaveSuccess, onSaveError);
+                Namespace.update({id : $stateParams.id},vm.namespace, onSaveSuccess, onSaveError);
             } else {
                 Namespace.save(vm.namespace, onSaveSuccess, onSaveError);
             }

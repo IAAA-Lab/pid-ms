@@ -2,9 +2,9 @@
     "pidmsApp": {
         "TaskStatus" : {
             "null": "",
-            "IN_QUEUE": "IN_QUEUE",
-            "EXECUTING": "EXECUTING",
-            "DONE": "DONE",
+            "IN_QUEUE": "EN COLA",
+            "EXECUTING": "EJECUTANDO",
+            "DONE": "EJECUTADA",
             "ERROR": "ERROR"
         }
     }

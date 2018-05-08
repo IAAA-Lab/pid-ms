@@ -1,8 +1,11 @@
 package es.unizar.iaaa.pid.harvester.tasks;
 
+import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.domain.PersistentIdentifier;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
+import es.unizar.iaaa.pid.domain.enumeration.SourceType;
 import es.unizar.iaaa.pid.harvester.connectors.ValidatorById;
+import es.unizar.iaaa.pid.service.FeatureService;
 import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.PersistentIdentifierService;
 import es.unizar.iaaa.pid.service.TaskService;
@@ -20,35 +23,48 @@ public class ValidationByIdTask extends AbstractTaskRunner {
     protected ApplicationContext context;
 
     private PersistentIdentifierService persistentIdentifierService;
+    private FeatureService featureService;
 
     @Autowired
     public ValidationByIdTask(NamespaceService namespaceService, TaskService taskService,
                               PersistentIdentifierService persistentIdentifierService,
-                              ApplicationContext context) {
+                              FeatureService featureService, ApplicationContext context) {
         super(namespaceService, taskService);
         this.persistentIdentifierService = persistentIdentifierService;
+        this.featureService = featureService;
         this.context = context;
     }
+
     @Override
     protected void doTask() {
+
+    	//En el caso de que se trate de un fuente SHP no se hace validacion
+    	if(task.getNamespace().getSource().getSourceType() == SourceType.SHP){
+    		return;
+    	}
+
         ValidatorById validatorById = getValidatorById();
 
-        for(PersistentIdentifier pid: persistentIdentifierService.findByNamespaceLapsed(task.getNamespace())) {
-        	try{
-        		if(task.getNamespace().getSource().getMaxNumRequest() != 0){
-        			int timeSleep = 1000/task.getNamespace().getSource().getMaxNumRequest();
-        			log("Esperando {} milisegundos para realizar la siguiente peticion", timeSleep);
-        			Thread.sleep(timeSleep);
-        		}
+        //get all features of the Namespaces
+        for(Feature feature : featureService.findAllByNamespace(task.getNamespace())){
+        	//get all identifier for each feature
+        	for(PersistentIdentifier pid : persistentIdentifierService.findByFeatureAndNamespaceLapsed(feature, task.getNamespace())){
+        		try{
+            		if(task.getNamespace().getSource().getMaxNumRequest() != 0){
+            			int timeSleep = 1000/task.getNamespace().getSource().getMaxNumRequest();
+            			log("Esperando {} milisegundos para realizar la siguiente peticion", timeSleep);
+            			Thread.sleep(timeSleep);
+            		}
 
-        	}catch(Exception e){
-        		log("Error al esperar para hacer la siguiente petición");
+            	}catch(Exception e){
+            		log("Error al esperar para hacer la siguiente petición");
+            	}
+
+            	int isValid = validatorById.validateGmlId(pid.getFeature(), pid.getIdentifier());
+                if(isValid == -1){
+                    task.setNumErrors(task.getNumErrors() + 1);
+                }
         	}
-
-        	int isValid = validatorById.validateGmlId(pid.getFeature(),pid.getIdentifier());
-            if(isValid == -1){
-                task.setNumErrors(task.getNumErrors() + 1);
-            }
         }
     }
 

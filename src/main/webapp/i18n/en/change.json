@@ -15,15 +15,9 @@
             "detail": {
                 "title": "Change"
             },
-            "changeTimestamp": "Change Timestamp",
+            "changeTimestamp": "Timestamp",
             "action": "Action",
-            "feature": "Feature",
-            "namespace": "Namespace",
-            "localId": "Local Id",
-            "versionId": "Version Id",
-            "beginLifespanVersion": "Begin Lifespan Version",
-            "endLifespanVersion": "End Lifespan Version",
-            "alternateId": "Alternate Id",
+            "featureType": "Feature Type",
             "resourceType": "Resource Type",
             "locator": "Locator",
             "task": "Task"

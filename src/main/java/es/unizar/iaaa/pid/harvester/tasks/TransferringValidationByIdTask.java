@@ -1,6 +1,7 @@
 package es.unizar.iaaa.pid.harvester.tasks;
 
 import es.unizar.iaaa.pid.domain.*;
+import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
 import es.unizar.iaaa.pid.service.ChangeService;
 import es.unizar.iaaa.pid.service.NamespaceService;
@@ -42,15 +43,28 @@ public class TransferringValidationByIdTask extends AbstractTaskRunner {
             UUID uuid = PersistentIdentifier.computeSurrogateFromIdentifier(id);
             PersistentIdentifier pid = persistentIdentifierService.findByUUID(uuid);
 
+            Registration registration = pid.getRegistration();
+            registration.setLastRevisionDate(change.getChangeTimestamp());
+            registration.setLastChangeDate(change.getChangeTimestamp());
+            registration.setProcessStatus(PENDING_VALIDATION_END);
+
             switch (change.getAction()) {
                 case UNCHANGED:
-                    Registration registration = pid.getRegistration();
                     registration.setItemStatus(VALIDATED);
-                    registration.setLastRevisionDate(change.getChangeTimestamp());
-                    registration.setLastChangeDate(change.getChangeTimestamp());
-                    registration.setProcessStatus(PENDING_VALIDATION_END);
                     persistentIdentifierService.save(pid);
                     log("{} is VALIDATED", pid.getExternalUrn());
+                    break;
+                case NOT_FOUND:
+                	registration.setItemStatus(ItemStatus.ANNULLED);
+                	persistentIdentifierService.save(pid);
+                    log("{} is ANNULLED", pid.getExternalUrn());
+                    break;
+                case CANCELLED:
+                	registration.setItemStatus(ItemStatus.RETIRED);
+                	persistentIdentifierService.save(pid);
+                    log("{} is RETIRED", pid.getExternalUrn());
+                    break;
+                default:
             }
         }
     }

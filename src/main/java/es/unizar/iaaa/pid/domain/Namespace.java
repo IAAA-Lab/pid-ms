@@ -195,11 +195,8 @@ public class Namespace implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Namespace namespace = (Namespace) o;
-        if (namespace.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), namespace.getId());
+        Namespace ns = (Namespace) o;
+        return ns.getId() != null && getId() != null && Objects.equals(getId(), ns.getId());
     }
 
     @Override

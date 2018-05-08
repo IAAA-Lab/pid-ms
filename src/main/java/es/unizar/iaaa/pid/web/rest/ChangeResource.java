@@ -1,26 +1,27 @@
 package es.unizar.iaaa.pid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.service.ChangeDTOService;
+import es.unizar.iaaa.pid.service.FeatureDTOService;
+import es.unizar.iaaa.pid.service.NamespaceDTOService;
+import es.unizar.iaaa.pid.service.OrganizationMemberDTOService;
 import es.unizar.iaaa.pid.service.dto.ChangeDTO;
-import es.unizar.iaaa.pid.web.rest.util.HeaderUtil;
-import es.unizar.iaaa.pid.web.rest.util.PaginationUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import es.unizar.iaaa.pid.service.dto.FeatureDTO;
+import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
+import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;
+import es.unizar.iaaa.pid.web.rest.util.ControllerUtil;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * REST controller for managing Change.
@@ -34,51 +35,50 @@ public class ChangeResource {
     private static final String ENTITY_NAME = "change";
 
     private final ChangeDTOService changeService;
+    private final FeatureDTOService featureService;
+    private final NamespaceDTOService namespaceService;
+    private final OrganizationMemberDTOService organizationMemberService;
 
-    public ChangeResource(ChangeDTOService changeService) {
+    public ChangeResource(ChangeDTOService changeService, FeatureDTOService featureService,
+    		NamespaceDTOService namespaceService, OrganizationMemberDTOService organizationMemberService) {
         this.changeService = changeService;
+        this.featureService = featureService;
+        this.namespaceService = namespaceService;
+        this.organizationMemberService = organizationMemberService;
     }
 
     /**
      * POST  /changes : Create a new change.
      *
      * @param changeDTO the changeDTO to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new changeDTO, or with status 400 (Bad Request) if the change has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @return the ResponseEntity with status 201 (Created) and with body the new changeDTO,
+     *          or with status 400 (Bad Request) if the change contains an ID
      */
     @PostMapping("/changes")
     @Timed
-    public ResponseEntity<ChangeDTO> createChange(@Valid @RequestBody ChangeDTO changeDTO) throws URISyntaxException {
+    public ResponseEntity<ChangeDTO> createChange(UriComponentsBuilder uriBuilder, @Valid @RequestBody ChangeDTO changeDTO) {
         log.debug("REST request to save Change : {}", changeDTO);
-        if (changeDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new change cannot already have an ID")).body(null);
-        }
-        ChangeDTO result = changeService.save(changeDTO);
-        return ResponseEntity.created(new URI("/api/changes/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        return ControllerUtil
+            .with(ENTITY_NAME, uriBuilder.path("/api/changes/{id}"), changeService)
+            .forbidWhen(notAdminOrEditor(changeDTO))
+            .doPost(changeDTO);
     }
 
     /**
-     * PUT  /changes : Updates an existing change.
+     * PUT  /changes/:id : modify the "id" chan ge.
      *
      * @param changeDTO the changeDTO to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated changeDTO,
-     * or with status 400 (Bad Request) if the changeDTO is not valid,
-     * or with status 500 (Internal Server Error) if the changeDTO couldn't be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * or with status 404 (Not Found) if the changeDTO is not valid,
      */
-    @PutMapping("/changes")
+    @PutMapping("/changes/{id}")
     @Timed
-    public ResponseEntity<ChangeDTO> updateChange(@Valid @RequestBody ChangeDTO changeDTO) throws URISyntaxException {
+    public ResponseEntity<ChangeDTO> updateChange(@PathVariable Long id, @Valid @RequestBody ChangeDTO changeDTO) {
         log.debug("REST request to update Change : {}", changeDTO);
-        if (changeDTO.getId() == null) {
-            return createChange(changeDTO);
-        }
-        ChangeDTO result = changeService.save(changeDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, changeDTO.getId().toString()))
-            .body(result);
+        return ControllerUtil
+            .with(ENTITY_NAME, changeService)
+            .forbidWhen(notAdminOrEditor(id))
+            .doPut(id, changeDTO);
     }
 
     /**
@@ -89,11 +89,13 @@ public class ChangeResource {
      */
     @GetMapping("/changes")
     @Timed
-    public ResponseEntity<List<ChangeDTO>> getAllChanges(@ApiParam Pageable pageable) {
+    public ResponseEntity<List<ChangeDTO>> getAllChanges(UriComponentsBuilder uriBuilder, @ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Changes");
-        Page<ChangeDTO> page = changeService.findAllInPrincipalOrganizations(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/changes");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ControllerUtil
+            .with(uriBuilder.path("/api/changes"), changeService)
+            .list(changeService::findAllPublicOrganizations)
+            .listAuthenticated(changeService::findAllInPrincipalOrganizations)
+            .doGet(pageable);
     }
 
     /**
@@ -106,8 +108,11 @@ public class ChangeResource {
     @Timed
     public ResponseEntity<ChangeDTO> getChange(@PathVariable Long id) {
         log.debug("REST request to get Change : {}", id);
-        ChangeDTO changeDTO = changeService.findOneInPrincipalOrganizations(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(changeDTO));
+        return ControllerUtil
+            .with(changeService)
+            .get(changeService::findOnePublic)
+            .getAuthenticated(changeService::findOneInPrincipalOrganizations)
+            .doGet(id);
     }
 
     /**
@@ -120,7 +125,27 @@ public class ChangeResource {
     @Timed
     public ResponseEntity<Void> deleteChange(@PathVariable Long id) {
         log.debug("REST request to delete Change : {}", id);
-        changeService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ControllerUtil
+            .with(ENTITY_NAME, changeService)
+            .forbidWhen(notAdminOrEditor(id))
+            .doDelete(id);
+    }
+
+    private Supplier<Boolean> notAdminOrEditor(ChangeDTO target) {
+        return () -> {
+        	FeatureDTO feature = featureService.findOne(target.getFeatureId());
+        	NamespaceDTO namespace = namespaceService.findOne(feature.getNamespaceId());
+            OrganizationMemberDTO organizationMember = organizationMemberService.findOneByOrganizationInPrincipal(namespace.getOwnerId());
+            return organizationMember == null ||
+            		(organizationMember.getCapacity() != Capacity.ADMIN &&
+            		organizationMember.getCapacity() != Capacity.EDITOR);
+        };
+    }
+
+    private Supplier<Boolean> notAdminOrEditor(Long id) {
+        return () -> {
+        	ChangeDTO change = changeService.findOne(id);
+        	return notAdminOrEditor(change).get();
+        };
     }
 }

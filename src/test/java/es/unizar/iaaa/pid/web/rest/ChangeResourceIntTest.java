@@ -2,18 +2,17 @@ package es.unizar.iaaa.pid.web.rest;
 
 import es.unizar.iaaa.pid.PidmsApp;
 import es.unizar.iaaa.pid.domain.Change;
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.Resource;
-import es.unizar.iaaa.pid.domain.User;
-import es.unizar.iaaa.pid.domain.enumeration.ChangeAction;
-import es.unizar.iaaa.pid.domain.enumeration.ResourceType;
-import es.unizar.iaaa.pid.repository.ChangeRepository;
-import es.unizar.iaaa.pid.service.ChangeDTOService;
+import es.unizar.iaaa.pid.domain.Feature;
+import es.unizar.iaaa.pid.domain.Namespace;
+import es.unizar.iaaa.pid.domain.Task;
+import es.unizar.iaaa.pid.service.*;
 import es.unizar.iaaa.pid.service.dto.ChangeDTO;
-import es.unizar.iaaa.pid.service.mapper.ChangeMapper;
+import es.unizar.iaaa.pid.service.mapper.*;
 import es.unizar.iaaa.pid.web.rest.errors.ExceptionTranslator;
+import es.unizar.iaaa.pid.web.rest.util.MvcResultUtils;
+import es.unizar.iaaa.pid.web.rest.util.TestUtil;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -22,26 +21,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
+import static es.unizar.iaaa.pid.web.rest.util.HeaderUtil.ERROR_ID_ALREADY_EXIST;
+import static es.unizar.iaaa.pid.web.rest.util.ResourceFixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 /**
  * Test class for the ChangeResource REST controller.
  *
@@ -49,43 +42,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PidmsApp.class)
-public class ChangeResourceIntTest {
-
-    private static final Instant DEFAULT_CHANGE_TIMESTAMP = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_CHANGE_TIMESTAMP = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
-    private static final ChangeAction DEFAULT_ACTION = ChangeAction.ISSUED;
-    private static final ChangeAction UPDATED_ACTION = ChangeAction.CANCELLED;
-
-    private static final String DEFAULT_FEATURE = "AAAAAAAAAA";
-    private static final String UPDATED_FEATURE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_NAMESPACE = "AAAAAAAAAA";
-    private static final String UPDATED_NAMESPACE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_LOCAL_ID = "AAAAAAAAAA";
-    private static final String UPDATED_LOCAL_ID = "BBBBBBBBBB";
-
-    private static final String DEFAULT_VERSION_ID = "AAAAAAAAAA";
-    private static final String UPDATED_VERSION_ID = "BBBBBBBBBB";
-
-    private static final Instant DEFAULT_BEGIN_LIFESPAN_VERSION = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_BEGIN_LIFESPAN_VERSION = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
-    private static final Instant DEFAULT_END_LIFESPAN_VERSION = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_END_LIFESPAN_VERSION = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
-    private static final String DEFAULT_ALTERNATE_ID = "AAAAAAAAAA";
-    private static final String UPDATED_ALTERNATE_ID = "BBBBBBBBBB";
-
-    private static final ResourceType DEFAULT_RESOURCE_TYPE = ResourceType.DATASET;
-    private static final ResourceType UPDATED_RESOURCE_TYPE = ResourceType.SPATIAL_OBJECT;
-
-    private static final String DEFAULT_LOCATOR = "AAAAAAAAAA";
-    private static final String UPDATED_LOCATOR = "BBBBBBBBBB";
+@Transactional
+@WithMockUser(username=UserResourceIntTest.DEFAULT_LOGIN,password=UserResourceIntTest.DEFAULT_PASSWORD)
+public class ChangeResourceIntTest extends LoggedUser {
 
     @Autowired
-    private ChangeRepository changeRepository;
+    private TaskMapper taskMapper;
+
+    @Autowired
+    private TaskDTOService taskDTOService;
+
+    @Autowired
+    private FeatureDTOService featureDTOService;
+
+    @Autowired
+    private FeatureMapper featureMapper;
+
+    @Autowired
+    private OrganizationDTOService organizationDTOService;
+
+    @Autowired
+    private OrganizationMemberDTOService organizationMemberDTOService;
+
+    @Autowired
+    private OrganizationMapper organizationMapper;
+
+    @Autowired
+    private NamespaceDTOService namespaceDTOService;
+
+    @Autowired
+    private NamespaceMapper namespaceMapper;
 
     @Autowired
     private ChangeMapper changeMapper;
@@ -102,9 +88,6 @@ public class ChangeResourceIntTest {
     @Autowired
     private ExceptionTranslator exceptionTranslator;
 
-    @Autowired
-    private EntityManager em;
-
     private MockMvc restChangeMockMvc;
 
     private Change change;
@@ -112,66 +95,54 @@ public class ChangeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ChangeResource changeResource = new ChangeResource(changeService);
+        ChangeResource changeResource = new ChangeResource(changeService, featureDTOService,
+        		namespaceDTOService, organizationMemberDTOService);
         this.restChangeMockMvc = MockMvcBuilders.standaloneSetup(changeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Change createEntity(EntityManager em) {
-        Resource resource = new Resource()
-            .resourceType(DEFAULT_RESOURCE_TYPE)
-            .locator(DEFAULT_LOCATOR);
-
-        Identifier identifier = new Identifier()
-            .namespace(DEFAULT_NAMESPACE)
-            .localId(DEFAULT_LOCAL_ID)
-            .versionId(DEFAULT_VERSION_ID)
-            .beginLifespanVersion(DEFAULT_BEGIN_LIFESPAN_VERSION)
-            .endLifespanVersion(DEFAULT_END_LIFESPAN_VERSION)
-            .alternateId(DEFAULT_ALTERNATE_ID);
-
-        Change change = new Change()
-            .changeTimestamp(DEFAULT_CHANGE_TIMESTAMP)
-            .action(DEFAULT_ACTION)
-            .feature(DEFAULT_FEATURE)
-            .identifier(identifier)
-            .resource(resource);
-
-        return change;
-    }
-
     @Before
     public void initTest() {
-        change = createEntity(em);
+        Namespace namespace = namespace();
+        Long organizationId = organizationDTOService.save(organizationMapper.toDto(namespace.getOwner())).getId();
+
+        namespace.getOwner().setId(organizationId);
+
+        Long namespaceId = namespaceDTOService.save(namespaceMapper.toDto(namespace)).getId();
+        namespace.setId(namespaceId);
+
+        Feature feature = feature(namespace);
+        Long featureId = featureDTOService.save(featureMapper.toDto(feature)).getId();
+        feature.setId(featureId);
+
+        Task task = task(namespace);
+        Long taskId = taskDTOService.save(taskMapper.toDto(task)).getId();
+        task.setId(taskId);
+
+        change = change(task, feature);
     }
 
     @Test
-    @Transactional
     public void createChange() throws Exception {
-        int databaseSizeBeforeCreate = changeRepository.findAll().size();
-
         // Create the Change
         ChangeDTO changeDTO = changeMapper.toDto(change);
-        restChangeMockMvc.perform(post("/api/changes")
+
+        // Create the Change
+        MvcResult result = restChangeMockMvc.perform(post("/api/changes")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(changeDTO)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated()).andReturn();
 
-        // Validate the Change in the database
-        List<Change> changeList = changeRepository.findAll();
-        assertThat(changeList).hasSize(databaseSizeBeforeCreate + 1);
-        Change testChange = changeList.get(changeList.size() - 1);
+        // Extract current id from Location
+        Long id = MvcResultUtils.extractIdFromLocation(result);
+
+        // Validate the Task in the database
+        Change testChange = changeMapper.toEntity(changeService.findOne(id));
         assertThat(testChange.getChangeTimestamp()).isEqualTo(DEFAULT_CHANGE_TIMESTAMP);
         assertThat(testChange.getAction()).isEqualTo(DEFAULT_ACTION);
-        assertThat(testChange.getFeature()).isEqualTo(DEFAULT_FEATURE);
+        assertThat(testChange.getFeature().getId()).isEqualTo(changeDTO.getFeatureId());
         assertThat(testChange.getIdentifier().getNamespace()).isEqualTo(DEFAULT_NAMESPACE);
         assertThat(testChange.getIdentifier().getLocalId()).isEqualTo(DEFAULT_LOCAL_ID);
         assertThat(testChange.getIdentifier().getVersionId()).isEqualTo(DEFAULT_VERSION_ID);
@@ -183,113 +154,91 @@ public class ChangeResourceIntTest {
     }
 
     @Test
-    @Transactional
-    public void createChangeWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = changeRepository.findAll().size();
-
-        // Create the Change with an existing ID
-        change.setId(1L);
+    public void createChangeWithIdMustFail() throws Exception {
+        // Create the Change
         ChangeDTO changeDTO = changeMapper.toDto(change);
+        changeDTO.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restChangeMockMvc.perform(post("/api/changes")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(changeDTO)))
-            .andExpect(status().isBadRequest());
-
-        // Validate the Alice in the database
-        List<Change> changeList = changeRepository.findAll();
-        assertThat(changeList).hasSize(databaseSizeBeforeCreate);
+            .andExpect(status().isBadRequest())
+            .andExpect(header().string(ERROR_HEADER,ERROR_ID_ALREADY_EXIST));
     }
 
     @Test
-    @Transactional
     public void checkNamespaceIsRequired() throws Exception {
-        int databaseSizeBeforeTest = changeRepository.findAll().size();
-        // set the field null
-        change.getIdentifier().setNamespace(null);
-
-        // Create the Change, which fails.
+        // Create the Change
         ChangeDTO changeDTO = changeMapper.toDto(change);
+        changeDTO.setNamespace(null);
 
         restChangeMockMvc.perform(post("/api/changes")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(changeDTO)))
             .andExpect(status().isBadRequest());
-
-        List<Change> changeList = changeRepository.findAll();
-        assertThat(changeList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
-    @Transactional
     public void checkLocalIdIsRequired() throws Exception {
-        int databaseSizeBeforeTest = changeRepository.findAll().size();
-        // set the field null
+        // Create the Change
         change.getIdentifier().setLocalId(null);
-
-        // Create the Change, which fails.
         ChangeDTO changeDTO = changeMapper.toDto(change);
 
         restChangeMockMvc.perform(post("/api/changes")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(changeDTO)))
             .andExpect(status().isBadRequest());
-
-        List<Change> changeList = changeRepository.findAll();
-        assertThat(changeList).hasSize(databaseSizeBeforeTest);
     }
 
-    @Ignore
-    @Transactional
+
+    @Test
     public void getAllChanges() throws Exception {
         // Initialize the database
-        changeRepository.saveAndFlush(change);
+        ChangeDTO changeDTO = changeService.save(changeMapper.toDto(change));
 
         // Get all the changeList
         restChangeMockMvc.perform(get("/api/changes?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(change.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(changeDTO.getId().intValue())))
             .andExpect(jsonPath("$.[*].changeTimestamp").value(hasItem(DEFAULT_CHANGE_TIMESTAMP.toString())))
             .andExpect(jsonPath("$.[*].action").value(hasItem(DEFAULT_ACTION.toString())))
-            .andExpect(jsonPath("$.[*].feature").value(hasItem(DEFAULT_FEATURE.toString())))
-            .andExpect(jsonPath("$.[*].namespace").value(hasItem(DEFAULT_NAMESPACE.toString())))
-            .andExpect(jsonPath("$.[*].localId").value(hasItem(DEFAULT_LOCAL_ID.toString())))
-            .andExpect(jsonPath("$.[*].versionId").value(hasItem(DEFAULT_VERSION_ID.toString())))
+            .andExpect(jsonPath("$.[*].featureId").value(hasItem(changeDTO.getFeatureId().intValue())))
+            .andExpect(jsonPath("$.[*].namespace").value(hasItem(DEFAULT_NAMESPACE)))
+            .andExpect(jsonPath("$.[*].localId").value(hasItem(DEFAULT_LOCAL_ID)))
+            .andExpect(jsonPath("$.[*].versionId").value(hasItem(DEFAULT_VERSION_ID)))
             .andExpect(jsonPath("$.[*].beginLifespanVersion").value(hasItem(DEFAULT_BEGIN_LIFESPAN_VERSION.toString())))
             .andExpect(jsonPath("$.[*].endLifespanVersion").value(hasItem(DEFAULT_END_LIFESPAN_VERSION.toString())))
-            .andExpect(jsonPath("$.[*].alternateId").value(hasItem(DEFAULT_ALTERNATE_ID.toString())))
+            .andExpect(jsonPath("$.[*].alternateId").value(hasItem(DEFAULT_ALTERNATE_ID)))
             .andExpect(jsonPath("$.[*].resourceType").value(hasItem(DEFAULT_RESOURCE_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].locator").value(hasItem(DEFAULT_LOCATOR.toString())));
+            .andExpect(jsonPath("$.[*].locator").value(hasItem(DEFAULT_LOCATOR)));
     }
 
-    @Ignore
-    @Transactional
+    @Test
     public void getChange() throws Exception {
         // Initialize the database
-        changeRepository.saveAndFlush(change);
+        ChangeDTO changeDTO = changeService.save(changeMapper.toDto(change));
 
         // Get the change
-        restChangeMockMvc.perform(get("/api/changes/{id}", change.getId()))
+        restChangeMockMvc.perform(get("/api/changes/{id}", changeDTO.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(change.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(changeDTO.getId().intValue()))
             .andExpect(jsonPath("$.changeTimestamp").value(DEFAULT_CHANGE_TIMESTAMP.toString()))
             .andExpect(jsonPath("$.action").value(DEFAULT_ACTION.toString()))
-            .andExpect(jsonPath("$.feature").value(DEFAULT_FEATURE.toString()))
-            .andExpect(jsonPath("$.namespace").value(DEFAULT_NAMESPACE.toString()))
-            .andExpect(jsonPath("$.localId").value(DEFAULT_LOCAL_ID.toString()))
-            .andExpect(jsonPath("$.versionId").value(DEFAULT_VERSION_ID.toString()))
+            .andExpect(jsonPath("$.featureId").value(changeDTO.getFeatureId()))
+            .andExpect(jsonPath("$.namespace").value(DEFAULT_NAMESPACE))
+            .andExpect(jsonPath("$.localId").value(DEFAULT_LOCAL_ID))
+            .andExpect(jsonPath("$.versionId").value(DEFAULT_VERSION_ID))
             .andExpect(jsonPath("$.beginLifespanVersion").value(DEFAULT_BEGIN_LIFESPAN_VERSION.toString()))
             .andExpect(jsonPath("$.endLifespanVersion").value(DEFAULT_END_LIFESPAN_VERSION.toString()))
-            .andExpect(jsonPath("$.alternateId").value(DEFAULT_ALTERNATE_ID.toString()))
+            .andExpect(jsonPath("$.alternateId").value(DEFAULT_ALTERNATE_ID))
             .andExpect(jsonPath("$.resourceType").value(DEFAULT_RESOURCE_TYPE.toString()))
-            .andExpect(jsonPath("$.locator").value(DEFAULT_LOCATOR.toString()));
+            .andExpect(jsonPath("$.locator").value(DEFAULT_LOCATOR));
     }
 
-    @Ignore
-    @Transactional
+    @Test
     public void getNonExistingChange() throws Exception {
         // Get the change
         restChangeMockMvc.perform(get("/api/changes/{id}", Long.MAX_VALUE))
@@ -297,18 +246,15 @@ public class ChangeResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void updateChange() throws Exception {
         // Initialize the database
-        changeRepository.saveAndFlush(change);
-        int databaseSizeBeforeUpdate = changeRepository.findAll().size();
+        ChangeDTO changeDTO = changeService.save(changeMapper.toDto(change));
 
         // Update the change
-        Change updatedChange = changeRepository.findOne(change.getId());
+        Change updatedChange = changeMapper.toEntity(changeService.findOne(changeDTO.getId()));
         updatedChange
             .changeTimestamp(UPDATED_CHANGE_TIMESTAMP)
             .action(UPDATED_ACTION)
-            .feature(UPDATED_FEATURE)
             .getResource()
             .resourceType(UPDATED_RESOURCE_TYPE)
             .locator(UPDATED_LOCATOR);
@@ -322,68 +268,62 @@ public class ChangeResourceIntTest {
             .endLifespanVersion(UPDATED_END_LIFESPAN_VERSION)
             .alternateId(UPDATED_ALTERNATE_ID);
 
-        ChangeDTO changeDTO = changeMapper.toDto(updatedChange);
+        ChangeDTO updatedChangeDTO = changeMapper.toDto(updatedChange);
 
-        restChangeMockMvc.perform(put("/api/changes")
+        restChangeMockMvc.perform(put("/api/changes/{id}", changeDTO.getId())
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(changeDTO)))
+            .content(TestUtil.convertObjectToJsonBytes(updatedChangeDTO)))
             .andExpect(status().isOk());
 
-        // Validate the Change in the database
-        List<Change> changeList = changeRepository.findAll();
-        assertThat(changeList).hasSize(databaseSizeBeforeUpdate);
-        Change testChange = changeList.get(changeList.size() - 1);
-        assertThat(testChange.getChangeTimestamp()).isEqualTo(UPDATED_CHANGE_TIMESTAMP);
-        assertThat(testChange.getAction()).isEqualTo(UPDATED_ACTION);
-        assertThat(testChange.getFeature()).isEqualTo(UPDATED_FEATURE);
-        assertThat(testChange.getIdentifier().getNamespace()).isEqualTo(UPDATED_NAMESPACE);
-        assertThat(testChange.getIdentifier().getLocalId()).isEqualTo(UPDATED_LOCAL_ID);
-        assertThat(testChange.getIdentifier().getVersionId()).isEqualTo(UPDATED_VERSION_ID);
-        assertThat(testChange.getIdentifier().getBeginLifespanVersion()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION);
-        assertThat(testChange.getIdentifier().getEndLifespanVersion()).isEqualTo(UPDATED_END_LIFESPAN_VERSION);
-        assertThat(testChange.getIdentifier().getAlternateId()).isEqualTo(UPDATED_ALTERNATE_ID);
-        assertThat(testChange.getResource().getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
-        assertThat(testChange.getResource().getLocator()).isEqualTo(UPDATED_LOCATOR);
+        // Collect all failed assertions of the change
+        Change testChange = changeMapper.toEntity(changeService.findOne(changeDTO.getId()));
+        SoftAssertions softly = new SoftAssertions();
+        softly.assertThat(testChange.getChangeTimestamp()).isEqualTo(UPDATED_CHANGE_TIMESTAMP);
+        softly.assertThat(testChange.getAction()).isEqualTo(UPDATED_ACTION);
+        softly.assertThat(testChange.getIdentifier().getNamespace()).isEqualTo(UPDATED_NAMESPACE);
+        softly.assertThat(testChange.getIdentifier().getLocalId()).isEqualTo(UPDATED_LOCAL_ID);
+        softly.assertThat(testChange.getIdentifier().getVersionId()).isEqualTo(UPDATED_VERSION_ID);
+        softly.assertThat(testChange.getIdentifier().getBeginLifespanVersion()).isEqualTo(UPDATED_BEGIN_LIFESPAN_VERSION);
+        softly.assertThat(testChange.getIdentifier().getEndLifespanVersion()).isEqualTo(UPDATED_END_LIFESPAN_VERSION);
+        softly.assertThat(testChange.getIdentifier().getAlternateId()).isEqualTo(UPDATED_ALTERNATE_ID);
+        softly.assertThat(testChange.getResource().getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
+        softly.assertThat(testChange.getResource().getLocator()).isEqualTo(UPDATED_LOCATOR);
+        softly.assertAll();
     }
 
     @Test
-    @Transactional
-    public void updateNonExistingChange() throws Exception {
-        int databaseSizeBeforeUpdate = changeRepository.findAll().size();
-
+    public void updateNonExistingChangeFails() throws Exception {
         // Create the Change
         ChangeDTO changeDTO = changeMapper.toDto(change);
+        Long id = Long.MAX_VALUE;
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
-        restChangeMockMvc.perform(put("/api/changes")
+        // Update it
+        restChangeMockMvc.perform(put("/api/changes/{id}", id)
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(changeDTO)))
-            .andExpect(status().isCreated());
-
-        // Validate the Change in the database
-        List<Change> changeList = changeRepository.findAll();
-        assertThat(changeList).hasSize(databaseSizeBeforeUpdate + 1);
+            .andExpect(status().isNotFound());
     }
 
     @Test
-    @Transactional
     public void deleteChange() throws Exception {
         // Initialize the database
-        changeRepository.saveAndFlush(change);
-        int databaseSizeBeforeDelete = changeRepository.findAll().size();
+        ChangeDTO changeDTO = changeService.save(changeMapper.toDto(change));
 
-        // Get the change
-        restChangeMockMvc.perform(delete("/api/changes/{id}", change.getId())
+        restChangeMockMvc.perform(get("/api/changes/{id}", changeDTO.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
-        // Validate the database is empty
-        List<Change> changeList = changeRepository.findAll();
-        assertThat(changeList).hasSize(databaseSizeBeforeDelete - 1);
+        restChangeMockMvc.perform(delete("/api/changes/{id}", changeDTO.getId())
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
+
+        restChangeMockMvc.perform(get("/api/changes/{id}", changeDTO.getId())
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isNotFound());
+
     }
 
     @Test
-    @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Change.class);
         Change change1 = new Change();
@@ -398,7 +338,6 @@ public class ChangeResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(ChangeDTO.class);
         ChangeDTO changeDTO1 = new ChangeDTO();
@@ -414,7 +353,6 @@ public class ChangeResourceIntTest {
     }
 
     @Test
-    @Transactional
     public void testEntityFromId() {
         assertThat(changeMapper.fromId(42L).getId()).isEqualTo(42);
         assertThat(changeMapper.fromId(null)).isNull();

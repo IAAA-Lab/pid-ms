@@ -20,7 +20,7 @@ public class ChangeDTO implements Serializable {
 
     private ChangeAction action;
 
-    private String feature;
+    private Long featureId;
 
     @NotNull
     private String namespace;
@@ -41,6 +41,8 @@ public class ChangeDTO implements Serializable {
     private String locator;
 
     private Long taskId;
+
+    private String featureType;
 
     public Long getId() {
         return id;
@@ -66,15 +68,23 @@ public class ChangeDTO implements Serializable {
         this.action = action;
     }
 
-    public String getFeature() {
-        return feature;
+    public Long getFeatureId() {
+		return featureId;
+	}
+
+	public void setFeatureId(Long featureId) {
+		this.featureId = featureId;
+	}
+
+    public String getFeatureType() {
+        return featureType;
     }
 
-    public void setFeature(String feature) {
-        this.feature = feature;
+    public void setFeatureType(String featureType) {
+        this.featureType = featureType;
     }
 
-    public String getNamespace() {
+	public String getNamespace() {
         return namespace;
     }
 
@@ -156,10 +166,7 @@ public class ChangeDTO implements Serializable {
         }
 
         ChangeDTO changeDTO = (ChangeDTO) o;
-        if(changeDTO.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), changeDTO.getId());
+        return changeDTO.getId() != null && getId() != null && Objects.equals(getId(), changeDTO.getId());
     }
 
     @Override
@@ -173,7 +180,8 @@ public class ChangeDTO implements Serializable {
             "id=" + getId() +
             ", changeTimestamp='" + getChangeTimestamp() + "'" +
             ", action='" + getAction() + "'" +
-            ", feature='" + getFeature() + "'" +
+            ", feature='" + getFeatureId() + "'" +
+            ", featureType='" + getFeatureType() + "'" +
             ", namespace='" + getNamespace() + "'" +
             ", localId='" + getLocalId() + "'" +
             ", versionId='" + getVersionId() + "'" +

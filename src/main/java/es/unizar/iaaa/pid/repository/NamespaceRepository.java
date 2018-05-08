@@ -44,4 +44,7 @@ public interface NamespaceRepository extends JpaRepository<Namespace, Long> {
 
     @Query("select ns from Namespace ns where ns.id = ?1 and (ns.publicNamespace = true  or ns.owner in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username}))")
     Namespace findByIdAndPublicOrBelongsToPrincipalOrganizations(Long id);
+    
+    @Query("select ns from Namespace ns where ns.id in (select ns2.id from Namespace ns2 where ns2.owner.id = ?1)")
+    List<Namespace> findAllByOrganizationId(Long organizationId);
 }

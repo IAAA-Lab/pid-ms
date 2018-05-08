@@ -1,7 +1,6 @@
 package es.unizar.iaaa.pid.config;
 
 import io.github.jhipster.config.locale.AngularCookieLocaleResolver;
-
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

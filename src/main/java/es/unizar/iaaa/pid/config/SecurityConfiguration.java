@@ -1,10 +1,9 @@
 package es.unizar.iaaa.pid.config;
 
-import es.unizar.iaaa.pid.security.*;
-import es.unizar.iaaa.pid.security.jwt.*;
-
-import io.github.jhipster.security.*;
-
+import es.unizar.iaaa.pid.security.AuthoritiesConstants;
+import es.unizar.iaaa.pid.security.jwt.JWTConfigurer;
+import es.unizar.iaaa.pid.security.jwt.TokenProvider;
+import io.github.jhipster.security.Http401UnauthorizedEntryPoint;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -78,8 +77,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/i18n/**")
             .antMatchers("/content/**")
             .antMatchers("/swagger-ui/index.html")
-            .antMatchers("/test/**")
-            .antMatchers("/h2-console/**");
+            .antMatchers("/test/**");
     }
 
     @Override
@@ -109,6 +107,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/api/tasks/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/persistent-identifiers").permitAll()
             .antMatchers(HttpMethod.GET, "/api/persistent-identifiers/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/features").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/features/**").permitAll()
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/authenticate").permitAll()

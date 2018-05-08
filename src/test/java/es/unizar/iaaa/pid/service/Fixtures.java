@@ -11,12 +11,7 @@ public class Fixtures {
         Source source = new Source();
         source.setSourceType(SourceType.WFS);
         source.setEndpointLocation("http://www.ign.es/wfs-inspire/ngbe");
-        source.setSchemaUri("http://inspire.ec.europa.eu/schemas/gn/4.0");
-        source.setSchemaPrefix("gn");
-        source.setFeatureType("NamedPlace");
-        source.setGeometryProperty("geometry");
-        source.setFeaturesThreshold(10000);
-
+        
         Instant now = Instant.now();
         Registration registration = new Registration();
         registration.setRegistrationDate(now);
@@ -31,6 +26,14 @@ public class Fixtures {
         namespace.setSource(source);
         namespace.setRegistration(registration);
         namespace.setRenewalPolicy(RenewalPolicy.ONE_MINUTE);
+        
+        Feature feature = new Feature();
+        feature.setSchemaUri("http://inspire.ec.europa.eu/schemas/gn/4.0");
+        feature.setSchemaPrefix("gn");
+        feature.setFeatureType("NamedPlace");
+        feature.setGeometryProperty("geometry");
+        feature.setFeaturesThreshold(10000);
+        feature.setNamespace(namespace);
 
         return namespace;
     }

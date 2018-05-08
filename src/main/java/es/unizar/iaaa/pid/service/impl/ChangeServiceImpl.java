@@ -1,6 +1,7 @@
 package es.unizar.iaaa.pid.service.impl;
 
 import es.unizar.iaaa.pid.domain.Change;
+import es.unizar.iaaa.pid.domain.Feature;
 import es.unizar.iaaa.pid.repository.ChangeRepository;
 import es.unizar.iaaa.pid.service.ChangeDTOService;
 import es.unizar.iaaa.pid.service.dto.ChangeDTO;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
 
 
 /**
@@ -26,9 +29,12 @@ public class ChangeServiceImpl implements ChangeDTOService {
 
     private final ChangeMapper changeMapper;
 
-    public ChangeServiceImpl(ChangeRepository changeRepository, ChangeMapper changeMapper) {
+    private final EntityManager entityManager;
+
+    public ChangeServiceImpl(ChangeRepository changeRepository, ChangeMapper changeMapper, EntityManager entityManager) {
         this.changeRepository = changeRepository;
         this.changeMapper = changeMapper;
+        this.entityManager = entityManager;
     }
 
     /**
@@ -41,6 +47,7 @@ public class ChangeServiceImpl implements ChangeDTOService {
     public ChangeDTO save(ChangeDTO changeDTO) {
         log.debug("Request to save Change : {}", changeDTO);
         Change change = changeMapper.toEntity(changeDTO);
+        change.setFeature(entityManager.getReference(Feature.class, change.getFeature().getId()));
         change = changeRepository.save(change);
         return changeMapper.toDto(change);
     }
@@ -99,6 +106,20 @@ public class ChangeServiceImpl implements ChangeDTOService {
     }
 
     /**
+     * Get all the change that Namespace is public
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ChangeDTO> findAllPublicOrganizations(Pageable pageable){
+    	log.debug("Request to get all the change of a public Namespace");
+    	return changeRepository.findAllPublic(changeMapper.toPage(pageable))
+    			.map(changeMapper::toDto);
+    }
+
+    /**
      *  Get the "id" change that belongs to an organization where the Principal is a member.
      *
      *  @param id the id of the entity
@@ -111,5 +132,41 @@ public class ChangeServiceImpl implements ChangeDTOService {
         Change change = changeRepository.findOneInPrincipalOrganizations(id);
         return changeMapper.toDto(change);
     }
+
+    /**
+     * Get the "id" change that belong a public namespace
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public ChangeDTO findOnePublic(Long id){
+    	log.debug("Request to get Task : {}", id);
+    	Change change = changeRepository.findOnePublic(id);
+    	return changeMapper.toDto(change);
+    }
+
+    /**
+     * Delete all change associated with the task
+     *
+     * @param taskId the id of the associate Task
+     */
+	@Override
+	public void deleteAllByTaskId(Long taskId) {
+		log.debug("Request to delete all Task associate with taskId : {}",taskId);
+		changeRepository.deleteAllByTaskId(taskId);
+	}
+
+	/**
+     * Delete all change associated with the Feature
+     *
+     * @param featureId the id of the associate Feature
+     */
+	@Override
+    public void deleteAllByFeatureId(Long featureId){
+		log.debug("Request to delete all Task associate with featureId: {}",featureId);
+		changeRepository.deleteByFeatureId(featureId);
+	}
 
 }

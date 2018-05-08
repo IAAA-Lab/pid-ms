@@ -1,0 +1,43 @@
+{
+    "pidmsApp": {
+        "feature" : {
+            "home": {
+                "title": "Tipos de Objetos Espaciales",
+                "createLabel": "Crear nuevo Tipo de Objeto Espacial",
+                "editLabel": "Editar un Tipo de Objeto Espacial"
+            },
+            "created": "Un nuevo Tipo de Objeto Espacial ha sido creado con identificador {{ param }}",
+            "updated": "El Tipo de Objeto Espacial ha sido actualizado con el identificador {{ param }}",
+            "deleted": "El Tipo de Objeto Espacial ha sido borrado con el identificador {{ param }}",
+            "delete": {
+                "question": "¿Seguro que quiere eliminar el Tipo de Objeto Espacial {{ id }}?"
+            },
+            "detail": {
+                "title": "Tipo de Objeto Espacial"
+            },
+            "featureType": "Nombre",
+            "schemaPrefix": "Prefijo del Espacio de Nombres",
+            "schemaUri": "Espacio de Nombres",
+            "namespace": "Parte de",
+            "technicalSection": "Detalles Técnicos",
+            "namespaceMappings": "Correspondencia de Espacios de Nombres",
+            "schemaUriGML": "GML",
+            "schemaUriBase": "INSPIRE",
+            "xpath": "WFS",
+            "attributeMappings": "Correspondencia de Atributos",
+            "geometryProperty": "INSPIRE Geometry",
+            "beginLifespanVersionProperty": "INSPIRE BeginLifespanVersion",
+            "nameItem": "WFS member",
+            "harvestSection": "Estrategia de Recolección",
+            "featuresThreshold": "Límite Para Teselar Próxima Petición",
+            "srsName": "CRS",
+            "hitsRequest": "Usar Petición Hits",
+            "factorK": "Ratio de Telesado",
+            "boundingBoxSection": "Caja",
+            "minX": "MinX",
+            "minY": "MinY",
+            "maxX": "MaxX",
+            "maxY": "MaxY"
+        }
+    }
+}

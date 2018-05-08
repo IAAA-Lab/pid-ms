@@ -29,7 +29,16 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("select t1 from Task t1 where t1.namespace.owner in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username})")
     Page<Task> findAllInPrincipalOrganizations(Pageable pageable);
+    
+    @Query("select t1 from Task t1 where t1.namespace.publicNamespace = true")
+    Page<Task> findAllPublic(Pageable pageable);
 
     @Query("select t1 from Task t1 where t1.id = ?1 and t1.namespace.owner in (select om.organization from OrganizationMember om where om.user.login = ?#{principal.username})")
     Task findOneInPrincipalOrganizations(Long id);
+    
+    @Query("select t1 from Task t1 where t1.id = ?1 and t1.namespace.publicNamespace = true")
+    Task findOnePublic(Long id);
+    
+    @Query("select t1 from Task t1 where t1.namespace.id = ?1")
+    List<Task> findAllByNamespaceId(Long namespaceId);
 }

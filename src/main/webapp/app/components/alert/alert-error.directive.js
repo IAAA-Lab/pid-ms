@@ -46,7 +46,7 @@
             case 0:
                 addErrorAlert('Server not reachable','error.server.not.reachable');
                 break;
-
+            case 403:
             case 400:
                 var headers = Object.keys(httpResponse.headers()).filter(function (header) {
                     return header.indexOf('app-error', header.length - 'app-error'.length) !== -1 || header.indexOf('app-params', header.length - 'app-params'.length) !== -1;

@@ -3,12 +3,12 @@
         "task" : {
             "home": {
                 "title": "Tareas",
-                "createLabel": "Crear nueva Tarea",
-                "createOrEditLabel": "Crear o editar Tarea"
+                "createLabel": "Crear una nueva Tarea",
+                "editLabel": "Editar una Tarea"
             },
             "created": "Una nueva Tarea con el identificador {{ param }} ha sido creada",
-            "updated": "Una Tarea con el identificador {{ param }} ha sido actualizado",
-            "deleted": "Una Tarea con el identificador {{ param }} ha sido eliminada ",
+            "updated": "La Tarea con el identificador {{ param }} ha sido actualizado",
+            "deleted": "La Tarea con el identificador {{ param }} ha sido eliminada ",
             "delete": {
                 "question": "¿Seguro que quiere eliminar la Tarea {{ id }}?"
             },

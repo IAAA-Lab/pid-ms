@@ -24,12 +24,16 @@ public interface ChangeMapper extends EntityMapper <ChangeDTO, Change> {
         @Mapping(source = "identifier.beginLifespanVersion", target = "beginLifespanVersion"),
         @Mapping(source = "identifier.endLifespanVersion", target = "endLifespanVersion"),
         @Mapping(source = "identifier.alternateId", target = "alternateId"),
-    @Mapping(source = "task.id", target = "taskId")
+        @Mapping(source = "feature.id", target = "featureId"),
+        @Mapping(source = "feature.featureType", target = "featureType"),
+        @Mapping(source = "task.id", target = "taskId")
     })
     ChangeDTO toDto(Change change);
 
     @Mappings({
-        @Mapping(source = "taskId", target = "task"),
+        @Mapping(source = "taskId", target = "task.id"),
+        @Mapping(source = "featureId", target = "feature.id"),
+        @Mapping(source = "featureType", target = "feature.featureType"),
         @Mapping(source = "resourceType", target = "resource.resourceType"),
         @Mapping(source = "locator", target = "resource.locator"),
         @Mapping(source = "namespace", target = "identifier.namespace"),
@@ -37,7 +41,7 @@ public interface ChangeMapper extends EntityMapper <ChangeDTO, Change> {
         @Mapping(source = "versionId", target = "identifier.versionId"),
         @Mapping(source = "beginLifespanVersion", target = "identifier.beginLifespanVersion"),
         @Mapping(source = "endLifespanVersion", target = "identifier.endLifespanVersion"),
-        @Mapping(source = "alternateId", target = "identifier.alternateId")
+        @Mapping(source = "alternateId", target = "identifier.alternateId"),
     })
     Change toEntity(ChangeDTO changeDTO);
 
@@ -51,6 +55,8 @@ public interface ChangeMapper extends EntityMapper <ChangeDTO, Change> {
     }
 
     Map<String, String> conversions = ImmutableMap.<String, String>builder().
+    	put("taskId","task.id").
+    	put("featureId","feature.id").
         put("resourceType", "resource.resourceType").
         put("locator", "resource.locator").
         put("namespace", "identifier.namespace").

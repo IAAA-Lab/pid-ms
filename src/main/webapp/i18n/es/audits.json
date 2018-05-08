@@ -3,13 +3,13 @@
         "title": "Auditorías",
         "filter": {
             "title": "Filtrar por fecha",
-            "from": "desde",
-            "to": "hasta",
+            "from": "Desde",
+            "to": "Hasta",
             "button": {
                 "weeks": "Semanas",
-                "today": "hoy",
-                "clear": "limpiar",
-                "close": "cerrar"
+                "today": "Hoy",
+                "clear": "Limpiar",
+                "close": "Cerrar"
             }
         },
         "table": {

@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 
 import java.time.Instant;
@@ -20,7 +19,7 @@ import java.util.List;
 
 
 abstract class AbstractAction implements Action<States,Events> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HarvestAction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAction.class);
 
     protected final NamespaceService namespaceService;
 
@@ -33,8 +32,6 @@ abstract class AbstractAction implements Action<States,Events> {
         this.executor = executor;
         this.namespaceService = namespaceService;
     }
-
-    public abstract void execute(StateContext<States, Events> context);
 
     void doNextTask(List<Namespace> list, ProcessStatus nextStatus, String taskName, Instant now) {
         for(Namespace namespace : list) {

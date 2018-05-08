@@ -1,11 +1,12 @@
 package es.unizar.iaaa.pid.harvester.connectors.wfs;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.SocketTimeoutException;
-
+import com.ximpleware.ParseException;
+import com.ximpleware.VTDGen;
+import es.unizar.iaaa.pid.domain.BoundingBox;
+import es.unizar.iaaa.pid.domain.Feature;
+import es.unizar.iaaa.pid.domain.Identifier;
+import es.unizar.iaaa.pid.domain.Source;
+import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSResponse.ResponseStatus;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -20,101 +21,93 @@ import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ximpleware.ParseException;
-import com.ximpleware.VTDGen;
-
-import es.unizar.iaaa.pid.domain.BoundingBox;
-import es.unizar.iaaa.pid.domain.Identifier;
-import es.unizar.iaaa.pid.domain.Source;
-import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSResponse.ResponseStatus;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.SocketTimeoutException;
 
 public class WFSClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(WFSClient.class);
+
+    private WFSClient(){
+    }
 
     static String createWfsGetFeatureById(Source source, Identifier identifier) {
         return source.getEndpointLocation() + "?service=WFS&version=2.0.0&request=GetFeature&"
                 + "STOREDQUERY_ID=urn:ogc:def:query:OGC-WFS::GetFeatureById&ID=" + identifier.getAlternateId();
     }
 
-    static String createWfsGetFeatureRequestBodyPost(String feature,Source source, BoundingBox boundingBox, String type) {
+    static String createWfsGetFeatureRequestBodyPost(Feature feature, BoundingBox boundingBox, String type) {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<wfs:GetFeature xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
                 + "xsi:schemaLocation=\"http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd\" "
                 + "xmlns:wfs=\"http://www.opengis.net/wfs/2.0\" xmlns:fes=\"http://www.opengis.net/fes/2.0\" "
-                + "xmlns:"+source.getSchemaPrefix()+"=\""+source.getSchemaUri()+"\" xmlns:gml=\""+source.getSchemaUriGML()+"\" "
+                + "xmlns:"+feature.getSchemaPrefix()+"=\""+feature.getSchemaUri()+"\" xmlns:gml=\""+feature.getSchemaUriGML()+"\" "
                 + "xmlns:xlink=\"http://www.w3.org/1999/xlink\"	service=\"WFS\" version=\"2.0.0\" resultType=\"" + type + "\" "
-                + "startIndex=\"0\" count=\"" + source.getFeaturesThreshold() + "\">"
-                + "<wfs:Query typeNames=\"" + source.getSchemaPrefix() + ":" + feature + "\">"
-                + "<fes:Filter><fes:Intersects><fes:ValueReference>" + source.getGeometryProperty() + "</fes:ValueReference>"
-                + "<gml:Envelope srsName=\""+source.getSrsName()+"\"><gml:lowerCorner>" + boundingBox.getMinY() + " " + boundingBox.getMinX() + "</gml:lowerCorner>"
+                + "startIndex=\"0\" count=\"" + feature.getFeaturesThreshold() + "\">"
+                + "<wfs:Query typeNames=\"" + feature.getSchemaPrefix() + ":" + feature.getFeatureType() + "\">"
+                + "<fes:Filter><fes:Intersects><fes:ValueReference>" + feature.getGeometryProperty() + "</fes:ValueReference>"
+                + "<gml:Envelope srsName=\""+feature.getSrsName()+"\"><gml:lowerCorner>" + boundingBox.getMinY() + " " + boundingBox.getMinX() + "</gml:lowerCorner>"
                 + "<gml:upperCorner>" + boundingBox.getMaxY() + " " + boundingBox.getMaxX() + "</gml:upperCorner></gml:Envelope></fes:Intersects></fes:Filter>"
                 + "</wfs:Query></wfs:GetFeature>";
     }
 
-    static String createWfsGetFeatureRequestGet(String feature, Source source, BoundingBox boundingBox, String type){
-    	return source.getEndpointLocation() + "?request=GetFeature&service=WFS&typeNames=" 
-    			+ source.getSchemaPrefix() + ":" + feature + "&resultType=" + type +"&version=2.0.0&srsName=" 
-    			+ source.getSrsName() +"&BBOX="+ boundingBox.getMinX() +","+ boundingBox.getMinY() 
-    			+ "," + boundingBox.getMaxX() + ","+ boundingBox.getMaxY() + "&startIndex=0&count=" 
-    			+ source.getFeaturesThreshold();
+    static String createWfsGetFeatureRequestGet(Feature feature,Source source, BoundingBox boundingBox, String type){
+    	return source.getEndpointLocation() + "?request=GetFeature&service=WFS&typeNames="
+    			+ feature.getSchemaPrefix() + ":" + feature.getFeatureType()  + "&resultType=" + type +"&version=2.0.0&srsName="
+    			+ feature.getSrsName() +"&BBOX="+ boundingBox.getMinY() +","+ boundingBox.getMinX()
+    			+ "," + boundingBox.getMaxY() + ","+ boundingBox.getMaxX() + "&startIndex=0&count="
+    			+ feature.getFeaturesThreshold();
     }
 
     public static WFSResponse executeRequestPOST(String endpoint, String body) {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpEntity entity = new StringEntity(body, ContentType.APPLICATION_XML);
-        try{
-        	HttpContext httpContext = new BasicHttpContext();
-            httpContext.setAttribute(HttpClientContext.REQUEST_CONFIG,RequestConfig.custom().setSocketTimeout(45000).build());
-        	CloseableHttpResponse response = httpclient.execute(RequestBuilder.post(endpoint).setEntity(entity).build(),httpContext);
-        	
-        	WFSResponse wfsResponse = extractEntity(endpoint, response);
-        	response.close();
-            return wfsResponse;
+        HttpContext httpContext = new BasicHttpContext();
+        httpContext.setAttribute(HttpClientContext.REQUEST_CONFIG, RequestConfig.custom().setSocketTimeout(45000).build());
+
+        try (CloseableHttpClient httpclient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpclient.execute(RequestBuilder.post(endpoint).setEntity(entity).build(),httpContext)
+        ) {
+            return extractEntity(endpoint, response);
         } catch(SocketTimeoutException e){
         	return new WFSResponse(null,null,ResponseStatus.TIMEOUT);
         } catch (IOException e) {
-            LOGGER.error("Error for POST request {}", body, e);
-            return WFSResponse.FAIL;
-        } catch (ParseException e) {
             LOGGER.error("Error for POST request {}", body, e);
             return WFSResponse.FAIL;
         }
     }
 
     public static WFSResponse executeRequestGET(String uri) {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        try{
-        	CloseableHttpResponse response = httpclient.execute(RequestBuilder.get(uri).build());
-        	WFSResponse wfsResponse = extractEntity(uri, response);
-        	response.close();
-            return wfsResponse;
+        try (CloseableHttpClient httpclient = HttpClients.createDefault();
+             CloseableHttpResponse response = httpclient.execute(RequestBuilder.get(uri).build())) {
+            return extractEntity(uri, response);
         } catch (IOException e) {
-            return WFSResponse.FAIL;
-        } catch (ParseException e) {
             return WFSResponse.FAIL;
         }
     }
 
-    private static WFSResponse extractEntity(String endpoint, CloseableHttpResponse response) throws IOException, ParseException {
+    private static WFSResponse extractEntity(String endpoint, CloseableHttpResponse response) throws IOException {
     	if(response.getStatusLine().toString().contains("504")){
 			return new WFSResponse(null,null,ResponseStatus.TIMEOUT);
 		}
-		
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
 
         StringBuilder result = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
+		try(InputStreamReader isr = new InputStreamReader(response.getEntity().getContent());
+            BufferedReader rd = new BufferedReader(isr)) {
+
+            String line;
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
         }
         LOGGER.info("Retrieved {} bytes from {}", result.length(), endpoint);
 		VTDGen document = getDocument(result.toString());
 		return new WFSResponse(document, result.toString(), ResponseStatus.SUCCESS);
-		
+
     }
 
-    private static VTDGen getDocument(String s) throws ParseException {
+    private static VTDGen getDocument(String s) {
         byte[] bytes;
         try {
             bytes = s.getBytes("UTF-8");
@@ -130,25 +123,4 @@ public class WFSClient {
         }
         return vg;
     }
-
-//    private static Document getDocument(String results) {
-//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//        factory.setNamespaceAware(true);
-//        DocumentBuilder builder;
-//        try {
-//            builder = factory.newDocumentBuilder();
-//        } catch (ParserConfigurationException e) {
-//            LOGGER.info("Fallo por no configuración en DocumentBuilderFactory");
-//            return null;
-//        }
-//        try {
-//            return builder.parse(new InputSource(new StringReader(results)));
-//        } catch (SAXException e) {
-//            LOGGER.info("Fallo por al procesar la entidad");
-//            return null;
-//        } catch ( IOException e1){
-//        	LOGGER.info("Fallo por al procesar la entidad");
-//            return null;
-//        }
-//    }
 }

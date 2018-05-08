@@ -15,6 +15,7 @@
                 "persistentIdentifier": "Persistent Identifier",
                 "organization": "Organization",
                 "organizationMember": "Organization Member",
+                "feature": "Feature Type",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
@@ -128,7 +129,65 @@
         "userexists": "Login name already used!",
         "emailexists": "Email is already in use!",
         "idexists": "A new {{ entityName }} cannot already have an ID",
-        "namespaceExist": "Exist other Namespace with the same namespace value"
+        "namespaceExist": "Exist other Namespace with the same namespace value",
+        "featureExist": "Exist other Feature with the same featureType and schemaPrefix",
+        "NamespaceNotExist": "The Namespace does not exist",
+        "OrganizationNotExist": "The Organization does not exit",
+        "notCapacityToAddNamespace": "It is necessary to be Admin or Editor in the Organization to add a new Namespace",
+        "notCapacityToModifyNamespace": "It is necessary to be Admin or Editor in the Organization to modify a Namespace",
+        "notCapacityToDeleteNamespace": "It is necessary to be Admin or Editor in the Organization to delete a Namespace",
+        "notCapacityToAddOrganizationMember": "It is necessary to be Admin in the Organization to add user's capacities",
+        "notCapacityToModifyOrganizationMember": "It is necessary to be Admin in the Organization to modify user's capacities",
+        "notCapacityToDeleteOrganizationMember": "It is necessary to be Admin in the Organization to remove User's capacities",
+        "userIsMemberOfOrganization": "User is already part of the organization",
+        "notCapacityToModifyOrganization": "It is necessary to be Admin in the Oganization to modify its details",
+        "notCapacityToDeleteOrganization": "It is necessary to be Admin in the Organization to delete it",
+        "notCapacityToAddFeature": "It is necessary to be Admin or Editor in the Organization of its Namespace to add a Feature",
+        "notCapacityToModifyFeature": "It is necessary to be Admin or Editor in the Organization of its Namespace to modify a Feature",
+        "notCapacityToDeleteFeature": "It is necessary to be Admin or Editor in the Organization of its Namespace to delete a Feature",
+        "notCapacityToAddChange": "It is necessary to be Admin or Editor in the Organization of its Namespace to add a Change",
+        "notCapacityToModifyChange": "It is necessary to be Admin or Editor in the Organization of its Namespace to modify a Change",
+        "notCapacityToDeleteChange": "It is necessary to be Admin or Editor in the Organization of its Namespace to delete a Change",
+        "notCapacityToAddPersistentIdentifier": "It is necessary to be Admin or Editor in the Oragnization to add a new Persistent Identifier",
+        "notCapacityToModifyPersistentIdentifier": "It is necessary to be Admin or Editor in the Oragnization to modify a Persistent Identifier",
+        "notCapacityToDeletePersistentIdentifier": "It is necessary to be Admin or Editor in the Oragnization to delete a Persistent Identifier",
+        "notCapacityToAddTask": "Action not allowed",
+        "notCapacityToModifyTask": "Action not allowed",
+        "notCapacityToDeleteTask": "Action not allowed",
+        "notCapacityForCSVLoad": "It is necessary to be Admin or Editor in the Organization of its Namespace to load CSV",
+        "notAuthenticated": "You must be authenticated to do this action",
+        "taskInExecuting": "The namespace has a executing task"
     },
-    "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad Zaragoza</a>"
+    "section": {
+        "description": "Description",
+        "source": "Source",
+        "registration": "Registration",
+        "identifier": "Identifier",
+        "resource": "Identified resource"
+    },
+    "registration": {
+        "processStatus": "Process Status",
+        "itemStatus": "Item Status",
+        "lastChangeDate": "Last Change Date",
+        "registrationDate": "Registration Date",
+        "lastRevisionDate": "Last Revision Date",
+        "nextRenewalDate": "Next Renewal Date",
+        "annullationDate": "Annullation Date"
+    },
+    "identifier": {
+        "namespace": "Namespace",
+        "localId": "Local Id",
+        "versionId": "Version Id",
+        "beginLifespanVersion": "Begin Lifespan Version",
+        "endLifespanVersion": "End Lifespan Version",
+        "alternateId": "Alternate Local Id"
+    },
+    "resource": {
+        "resourceType": "Resource Type",
+        "locator": "Locator"
+    },
+    "footer": "© 2017 <a href='http://iaaa.es/'>Advanced Information Systems Laboratory</a> (<i>Grupo de Sistemas de Información Avanzados</i>), <a href='http://www.unizar.es'>Universidad Zaragoza</a>",
+    "footer2": "© 2017 <a href='http://www.geoslab.com/'>GeoSLab S.L.</a>",
+    "true": "Yes",
+    "false": "No"
 }
