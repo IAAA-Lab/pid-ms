@@ -1,0 +1,31 @@
+id,namespace,title,public_namespace,renewal_policy,namespace_status,process_status,item_status,last_change_date,registration_date,method_type,source_type,endpoint_location,resolver_proxy_mode,max_num_request,owner_id,version_lock
+1,ES.CNIG.CARTOCIUDAD,Direcciones de CartoCiudad,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2018-02-26 07:43:40,2018-02-26 07:43:40,POST,WFS,http://www.cartociudad.es/wfs-inspire/direcciones,0,0,1,0
+2,ES.IGN.HIDROGRAFIA,Hidrografía 1:100.000,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2017-09-05 07:43:40,2017-09-05 07:43:40,POST,WFS,http://www.ign.es/wfs-inspire/hidrografia-btn100,0,0,1,0
+3,ES_IGN_IGR_HI,Hidrografía,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2017-09-06 07:43:40,2017-09-06 07:43:40,POST,WFS,http://servicios.idee.es/wfs-inspire/hidrografia,0,0,1,0
+4,ES.IGN.NGBE,Nomenclátor Geográfico Básico de España,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2016-09-27 07:43:40,2016-09-27 07:43:40,POST,WFS,http://www.ign.es/wfs-inspire/ngbe,0,0,1,0
+5,ES.IGN.BTN100.,Redes de transporte 1:100.000,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2017-09-06 07:43:40,2017-09-06 07:43:40,POST,WFS,http://www.ign.es/wfs-inspire/transportes-btn100,0,0,1,0
+6,ES_IGN_IGR_RT,Redes de Transportes,0,MONTHLY,STOP,NONE,PENDING_VALIDATION,2017-09-06 07:43:40,2017-09-06 07:43:40,POST,WFS,http://servicios.idee.es/wfs-inspire/transportes,0,0,1,0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
