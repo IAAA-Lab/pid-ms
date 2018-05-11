@@ -525,5 +525,4 @@
                                  referencedColumnNames="id"
                                  referencedTableName="feature"/>
     </changeSet>
-
 </databaseChangeLog>
