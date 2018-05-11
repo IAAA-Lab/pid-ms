@@ -45,6 +45,8 @@ spring:
             enabled: false
     thymeleaf:
         mode: XHTML
+    main:
+      banner-mode: "off"
 
 security:
     basic:

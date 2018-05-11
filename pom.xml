@@ -11,7 +11,7 @@
 
     <groupId>es.unizar.iaaa.pid</groupId>
     <artifactId>pidms</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.3.1</version>
     <packaging>war</packaging>
     <name>Pidms</name>
 
@@ -55,6 +55,7 @@
         <!-- These remain empty unless the corresponding profile is active -->
         <profile.no-liquibase />
         <profile.swagger />
+        <profile.specific />
         <prometheus-simpleclient.version>0.0.20</prometheus-simpleclient.version>
         <!-- Sonar properties -->
         <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
@@ -762,7 +763,7 @@
                 <!-- log configuration -->
                 <logback.loglevel>DEBUG</logback.loglevel>
                 <!-- default Spring profiles -->
-                <spring.profiles.active>dev${profile.no-liquibase}</spring.profiles.active>
+                <spring.profiles.active>dev${profile.no-liquibase}${profile.specific}</spring.profiles.active>
             </properties>
         </profile>
         <profile>
@@ -866,7 +867,7 @@
                 <!-- log configuration -->
                 <logback.loglevel>INFO</logback.loglevel>
                 <!-- default Spring profiles -->
-                <spring.profiles.active>prod${profile.swagger}${profile.no-liquibase}</spring.profiles.active>
+                <spring.profiles.active>prod${profile.swagger}${profile.no-liquibase}${profile.specific}</spring.profiles.active>
             </properties>
         </profile>
         <profile>
@@ -950,6 +951,15 @@
                     <version>${mapstruct.version}</version>
                 </dependency>
             </dependencies>
+        </profile>
+        <profile>
+            <!--
+                Profile for applying ING-specific configuration.
+            -->
+            <id>ign</id>
+            <properties>
+                <profile.specific>,ign</profile.specific>
+            </properties>
         </profile>
     </profiles>
 </project>

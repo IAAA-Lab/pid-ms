@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/IAAA-Lab/pid-ms.png)](https://travis-ci.org/IAAA-Lab/pid-ms)
+[![License](https://img.shields.io/badge/license-EUPL%201.2-blue.svg)](#LICENSE)
 
 [ES](#sistema-de-gestión-de-pid-inspire), [EN](#inspire-pid-management-system) 
 

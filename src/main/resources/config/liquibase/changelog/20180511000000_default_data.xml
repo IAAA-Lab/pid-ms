@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20180511000000-1" author="fjlopez" context="!test">
+
+        <loadData
+            file="config/liquibase/users.csv"
+            tableName="jhi_user">
+            <column name="activated" type="boolean"/>
+            <column name="created_date" type="timestamp"/>
+        </loadData>
+        <loadData
+            file="config/liquibase/authorities.csv"
+            tableName="jhi_authority"/>
+        <loadData
+            file="config/liquibase/users_authorities.csv"
+            tableName="jhi_user_authority"/>
+        <loadData
+            file="config/liquibase/organizations.csv"
+            tableName="organization"/>
+        <loadData
+            file="config/liquibase/organizations_members.csv"
+            tableName="organization_member"/>
+        <loadData
+            file="config/liquibase/namespaces.csv"
+            tableName="namespace"/>
+        <loadData
+            file="config/liquibase/features.csv"
+            tableName="feature"/>
+    </changeSet>
+
+</databaseChangeLog>
