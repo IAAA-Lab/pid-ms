@@ -27,8 +27,8 @@ spring:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:postgresql://localhost:5432/pidms
-        username: 
-        password: 
+        username: pidms
+        password:
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
@@ -80,7 +80,7 @@ liquibase:
 #        keyAlias: pidms
 # ===================================================================
 server:
-    port: 9999
+    port: 8080
 
 # ===================================================================
 # JHipster specific properties
