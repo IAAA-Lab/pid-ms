@@ -191,6 +191,7 @@ public class ChangeResourceIntTest extends LoggedUser {
             .andExpect(status().isBadRequest());
     }
 
+
     @Test
     public void getAllChanges() throws Exception {
         // Initialize the database
