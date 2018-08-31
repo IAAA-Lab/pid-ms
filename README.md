@@ -5,6 +5,8 @@
 
 ---
 
+Novedad: [Implementación de Identificadores usando URI en INSPIRE](https://github.com/IAAA-Lab/pid-ms/wiki/Implementaci%C3%B3n-de-Identificadores-usando-URI-en-INSPIRE)
+
 # Sistema de Gestión de PID INSPIRE
 
 La implementación de **Identificadores Persistentes (PID)** para **Objetos Espaciales** es uno de los desafíos más inmediatos en la implementación de la Directiva INSPIRE.
