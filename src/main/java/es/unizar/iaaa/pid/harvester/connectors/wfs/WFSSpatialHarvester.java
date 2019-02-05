@@ -84,6 +84,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
             return Integer.parseInt(numResultString);
         } catch (NavException | XPathParseException | XPathEvalException e) {
             LOGGER.error("Can't parse numberMatched", e);
+            e.printStackTrace();
         }
         return null;
     }
@@ -106,6 +107,7 @@ public class WFSSpatialHarvester implements SpatialHarvester {
             return Optional.of(Integer.parseInt(numResultString));
         } catch (NavException | XPathParseException | XPathEvalException e) {
             LOGGER.error("Can't parse numberReturned", e);
+            e.printStackTrace();
         }
         return Optional.empty();
     }

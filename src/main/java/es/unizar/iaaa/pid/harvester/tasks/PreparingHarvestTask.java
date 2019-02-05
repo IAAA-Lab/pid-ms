@@ -12,10 +12,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
 
 import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.LAPSED;
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_HARVEST;
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_VALIDATION_END;
+import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.*;
 
 @Component
 @Scope("prototype")
@@ -31,7 +32,7 @@ public class PreparingHarvestTask extends AbstractTaskRunner {
     }
 
     @Override
-    protected void doTask() {
+    protected void runTask() {
         Namespace namespace = task.getNamespace();
         Instant now = Instant.now();
         for(PersistentIdentifier pid: persistentIdentifierService.findByNamespaceIssued(namespace)) {
@@ -48,5 +49,10 @@ public class PreparingHarvestTask extends AbstractTaskRunner {
     @Override
     protected ProcessStatus getNextStep() {
         return PENDING_HARVEST;
+    }
+
+    @Override
+    protected List<ProcessStatus> getPossibleCurrentSteps() {
+        return Collections.singletonList(PREPARING_HARVEST);
     }
 }

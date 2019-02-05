@@ -48,7 +48,11 @@ public class TaskService {
     }
 
     public List<Task> getExecutingTasksByNamespace(Namespace namespace) {
-        return taskRepository.findExecutingTaksByNamespace(namespace);
+        return taskRepository.findExecutingTasksByNamespace(namespace);
+    }
+
+    public List<Task> getExecutingTasksByType(ProcessStatus type) {
+        return taskRepository.findExecutingTasksByType(type);
     }
 
     public Task findMostRecentHarvestTask(Namespace namespace) {
@@ -90,4 +94,10 @@ public class TaskService {
         taskRepository.save(task);
     }
 
+    public void error(Task task, Instant now) {
+        log.debug("Change status of Task {} to Status {} at Instant ", task, TaskStatus.ERROR, now);
+        task.setStatus(TaskStatus.ERROR);
+        task.setTimestamp(now);
+        taskRepository.save(task);
+    }
 }

@@ -127,6 +127,7 @@ public class WFSValidatorById implements ValidatorById {
                 .alternateId(gmlId);
         } catch (Exception e) {
             LOGGER.error("Can't extract the identifier", e);
+            e.printStackTrace();
             response(ChangeAction.NOT_FOUND, identifier, feature);
             return -1;
         }

@@ -10,7 +10,7 @@ import es.unizar.iaaa.pid.harvester.connectors.FileHarvester;
 import es.unizar.iaaa.pid.harvester.connectors.SpatialHarvester;
 import es.unizar.iaaa.pid.harvester.connectors.shp.SHPHarvester;
 import es.unizar.iaaa.pid.harvester.connectors.wfs.WFSSpatialHarvester;
-import es.unizar.iaaa.pid.harvester.tasks.util.FileToolsUtil;
+import es.unizar.iaaa.pid.harvester.tasks.es.unizar.iaaa.pid.harvester.tasks.ext.FileToolsUtil;
 import es.unizar.iaaa.pid.service.FeatureService;
 import es.unizar.iaaa.pid.service.NamespaceService;
 import es.unizar.iaaa.pid.service.TaskService;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.util.*;
 
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_TRANSFERRING_HARVEST;
+import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.*;
 
 
 @Component
@@ -49,7 +49,7 @@ class HarvestTask extends AbstractTaskRunner {
     }
 
     @Override
-    protected void doTask() {
+    protected void runTask() {
     	//get what is the kind of harvert which is needed
     	switch (task.getNamespace().getSource().getSourceType()){
     	case WFS:
@@ -203,12 +203,12 @@ class HarvestTask extends AbstractTaskRunner {
         try{
             if(task.getNamespace().getSource().getMaxNumRequest() != 0){
                 int timeSleep = 1000/task.getNamespace().getSource().getMaxNumRequest();
-                log("Esperando {} milisegundos para realizar la siguiente peticion", timeSleep);
+                log("Waiting {} ms for next request", timeSleep);
                 Thread.sleep(timeSleep);
             }
 
         }catch(Exception e){
-            log("Error al esperar para hacer la siguiente petición");
+            error("Waiting next request", e);
         }
     }
 
@@ -236,7 +236,7 @@ class HarvestTask extends AbstractTaskRunner {
 
     	if(!FileToolsUtil.downloadFileHTTP(task.getNamespace().getSource().getEndpointLocation(), fileZipName)){
     		taskService.changeStatus(task, TaskStatus.ERROR);
-    		log("Error descargando fichero " + task.getNamespace().getSource().getEndpointLocation());
+    		log("Can't download the file {}", task.getNamespace().getSource().getEndpointLocation());
     		return;
     	}
 
@@ -244,7 +244,7 @@ class HarvestTask extends AbstractTaskRunner {
     	//descomprimo el zip
     	if(!FileToolsUtil.unzipFile(zipFile, tmpDirectory.getAbsolutePath())){
     		taskService.changeStatus(task, TaskStatus.ERROR);
-    		log("Error descomprimiendo fichero " + zipFile.getAbsolutePath());
+    		log("Can't unzip the file {}", zipFile.getAbsolutePath());
     		return;
     	}
     	//borro zip descargado
@@ -255,7 +255,7 @@ class HarvestTask extends AbstractTaskRunner {
 
 			if(featureTypeList.get(index).getFeatureType().split("#").length != 2){
 				incNumErrors(task);
-				log("Error, la feature no posee el formato correcto.");
+				log("Feature ignored due to errors.");
 				continue;
 			}
 
@@ -292,5 +292,10 @@ class HarvestTask extends AbstractTaskRunner {
     @Override
     protected ProcessStatus getNextStep() {
         return PENDING_TRANSFERRING_HARVEST;
+    }
+
+    @Override
+    protected List<ProcessStatus> getPossibleCurrentSteps() {
+        return Collections.singletonList(HARVEST);
     }
 }

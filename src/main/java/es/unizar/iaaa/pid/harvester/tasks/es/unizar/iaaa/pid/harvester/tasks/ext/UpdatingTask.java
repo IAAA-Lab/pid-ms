@@ -1,4 +1,4 @@
-package es.unizar.iaaa.pid.harvester.tasks;
+package es.unizar.iaaa.pid.harvester.tasks.es.unizar.iaaa.pid.harvester.tasks.ext;
 
 import es.unizar.iaaa.pid.domain.*;
 import es.unizar.iaaa.pid.domain.enumeration.ItemStatus;
@@ -81,7 +81,7 @@ public class UpdatingTask implements Runnable{
 
 			String action = parameters[0];
 			if(action.equalsIgnoreCase(DELETE_ACTION)){
-				if(!deteleAction(parameters,task)){
+				if(!deleteAction(parameters,task)){
 					task.setNumErrors(task.getNumErrors()+1);
 				}
 			}
@@ -98,14 +98,13 @@ public class UpdatingTask implements Runnable{
 			else{
 				error(task,"La accion {} no se encuentra entre las disponibles: add,delete,update",action);
 				task.setNumErrors(task.getNumErrors()+1);
-				continue;
 			}
 		}
 		scanner.close();
 		log(task,"Tarea de actualizacion de PIDs finalizada");
 	}
 
-	private boolean deteleAction(String[] parameters, Task task){
+	private boolean deleteAction(String[] parameters, Task task){
 		UUID identifier = UUID.fromString(parameters[1]);
 
 		//borro el PID con dicho identificador y dicho namespace
@@ -280,7 +279,7 @@ public class UpdatingTask implements Runnable{
 				return false;
 			}
 			String endLifeSpanVersion = parameters[3];
-			Instant endInstant = null;
+			Instant endInstant;
 			try{
 				// si es vacio se deja el valor existente en el pid
 				if(endLifeSpanVersion.equals("") || endLifeSpanVersion.equals("#")){

@@ -89,26 +89,32 @@ public class NamespaceService {
     }
 
     public Task nextTask(Long id, ProcessStatus status, Instant now) {
-        Namespace namespace = namespaceRepository.getOne(id);
-        Registration registration = namespace.getRegistration();
-        registration.setProcessStatus(status);
-        registration.setLastChangeDate(now);
+        Namespace namespace = updateNamespace(id, status, now);
         namespaceRepository.save(namespace);
         log.debug("Namespace {} updated ProcessStatus to {} at {}", id, status, now);
         Task task = taskService.createTask(namespace, status, now);
         return task;
     }
 
-    public void doneTaskAndSetNextStep(Task task, ProcessStatus status, Instant now) {
-        Namespace namespace = namespaceRepository.getOne(task.getNamespace().getId());
+    private Namespace updateNamespace(Long id, ProcessStatus status, Instant now) {
+        Namespace namespace = namespaceRepository.getOne(id);
         Registration registration = namespace.getRegistration();
         registration.setProcessStatus(status);
         registration.setLastChangeDate(now);
-        namespaceRepository.save(namespace);
+        return namespace;
+    }
+
+    public void doneTaskAndSetNextStep(Task task, ProcessStatus status, Instant now) {
+        Namespace namespace = updateNamespace(task.getNamespace().getId(), status, now);
         log.debug("Namespace {} updated ProcessStatus to {} at {}", namespace.getId(), status, now);
         taskService.done(task, now);
     }
 
+    public void errorTaskAndSetNextStep(Task task, ProcessStatus status, Instant now) {
+        Namespace namespace = updateNamespace(task.getNamespace().getId(), status, now);
+        log.debug("Namespace {} updated ProcessStatus to {} at {}", namespace.getId(), status, now);
+        taskService.error(task, now);
+    }
 
     public void updateToDone(Task task, Instant now, Instant next) {
         Namespace namespace = namespaceRepository.getOne(task.getNamespace().getId());

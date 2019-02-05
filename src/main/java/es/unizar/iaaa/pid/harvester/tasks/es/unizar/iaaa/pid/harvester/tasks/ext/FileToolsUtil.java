@@ -1,4 +1,4 @@
-package es.unizar.iaaa.pid.harvester.tasks.util;
+package es.unizar.iaaa.pid.harvester.tasks.es.unizar.iaaa.pid.harvester.tasks.ext;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;

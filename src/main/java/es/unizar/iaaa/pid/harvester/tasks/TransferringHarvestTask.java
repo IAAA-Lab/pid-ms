@@ -16,11 +16,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.*;
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_VALIDATION_BY_ID;
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_VALIDATION_END;
+import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.*;
 
 
 @Component
@@ -42,7 +43,7 @@ public class TransferringHarvestTask extends AbstractTaskRunner {
     }
 
     @Override
-    protected void doTask() {
+    protected void runTask() {
         Namespace namespace = task.getNamespace();
         Task previousTask = taskService.findMostRecentHarvestTask(namespace);
         log("previousTask=\"{}:{}\"", previousTask.getType(), previousTask.getId());
@@ -66,7 +67,7 @@ public class TransferringHarvestTask extends AbstractTaskRunner {
 				}
 	        }
         }catch(Exception e){
-        	log("Transferring Harvest Task", e);
+        	error("Transferring Harvest Task", e);
         }
     }
 
@@ -119,5 +120,10 @@ public class TransferringHarvestTask extends AbstractTaskRunner {
         else
             // LAPSED
             return PENDING_VALIDATION_BY_ID;
+    }
+
+    @Override
+    protected List<ProcessStatus> getPossibleCurrentSteps() {
+        return Collections.singletonList(TRANSFERRING_HARVEST);
     }
 }

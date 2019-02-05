@@ -3,7 +3,7 @@ package es.unizar.iaaa.pid.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import es.unizar.iaaa.pid.domain.enumeration.Capacity;
 import es.unizar.iaaa.pid.domain.enumeration.ProcessStatus;
-import es.unizar.iaaa.pid.harvester.tasks.UpdatingTask;
+import es.unizar.iaaa.pid.harvester.tasks.es.unizar.iaaa.pid.harvester.tasks.ext.UpdatingTask;
 import es.unizar.iaaa.pid.service.*;
 import es.unizar.iaaa.pid.service.dto.NamespaceDTO;
 import es.unizar.iaaa.pid.service.dto.OrganizationMemberDTO;

@@ -16,9 +16,11 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.List;
 
 import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.ISSUED;
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.NONE;
+import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.*;
 import static java.time.Instant.now;
 
 @Component
@@ -37,7 +39,7 @@ public class ValidationEndTask extends AbstractTaskRunner {
     }
 
     @Override
-    protected void doTask() {
+    protected void runTask() {
         Namespace namespace = task.getNamespace();
         now = now();
         switch(namespace.getRenewalPolicy()) {
@@ -80,7 +82,7 @@ public class ValidationEndTask extends AbstractTaskRunner {
             }
         }
 	    catch(Exception e){
-	    	log("Transferring Harvest Task", e);
+	    	error("Transferring Harvest Task", e);
 	    }
     }
 
@@ -101,7 +103,7 @@ public class ValidationEndTask extends AbstractTaskRunner {
             namespaceService.updateToDone(task, now, renewal);
             log("done");
         } catch (Exception e) {
-            error(e);
+            error("DONE", e);
         }
     }
 
@@ -109,5 +111,11 @@ public class ValidationEndTask extends AbstractTaskRunner {
     protected ProcessStatus getNextStep() {
         return NONE;
     }
+
+    @Override
+    protected List<ProcessStatus> getPossibleCurrentSteps() {
+        return Collections.singletonList(VALIDATION_END);
+    }
+
 }
 

@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static es.unizar.iaaa.pid.domain.enumeration.ItemStatus.VALIDATED;
-import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.PENDING_VALIDATION_END;
+import static es.unizar.iaaa.pid.domain.enumeration.ProcessStatus.*;
 
 @Component
 @Scope("prototype")
@@ -33,7 +35,7 @@ public class TransferringValidationByIdTask extends AbstractTaskRunner {
     }
 
     @Override
-    protected void doTask() {
+    protected void runTask() {
         Namespace namespace = task.getNamespace();
         Task previousTask = taskService.findMostRecentValidationByIdTask(namespace);
         log("previousTask=\"{}:{}\"", previousTask.getType(), previousTask.getId());
@@ -72,5 +74,10 @@ public class TransferringValidationByIdTask extends AbstractTaskRunner {
     @Override
     protected ProcessStatus getNextStep() {
         return PENDING_VALIDATION_END;
+    }
+
+    @Override
+    protected List<ProcessStatus> getPossibleCurrentSteps() {
+        return Collections.singletonList(TRANSFERRING_VALIDATION_BY_ID);
     }
 }
