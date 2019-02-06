@@ -66,23 +66,27 @@ public class WFSClient {
         HttpContext httpContext = new BasicHttpContext();
         httpContext.setAttribute(HttpClientContext.REQUEST_CONFIG, RequestConfig.custom().setSocketTimeout(45000).build());
 
-        try (CloseableHttpClient httpclient = HttpClients.createDefault();
+        try (CloseableHttpClient httpclient = HttpClients.createSystem();
              CloseableHttpResponse response = httpclient.execute(RequestBuilder.post(endpoint).setEntity(entity).build(),httpContext)
         ) {
             return extractEntity(endpoint, response);
         } catch(SocketTimeoutException e){
         	return new WFSResponse(null,null,ResponseStatus.TIMEOUT);
-        } catch (IOException e) {
+        } catch (Throwable e) {
             LOGGER.error("Error for POST request {}", body, e);
             return WFSResponse.FAIL;
         }
     }
 
     public static WFSResponse executeRequestGET(String uri) {
-        try (CloseableHttpClient httpclient = HttpClients.createDefault();
+
+        try (CloseableHttpClient httpclient = HttpClients.createSystem();
              CloseableHttpResponse response = httpclient.execute(RequestBuilder.get(uri).build())) {
             return extractEntity(uri, response);
-        } catch (IOException e) {
+        } catch(SocketTimeoutException e){
+            return new WFSResponse(null,null,ResponseStatus.TIMEOUT);
+        } catch (Throwable e) {
+            LOGGER.error("Error for GET request {}", uri, e);
             return WFSResponse.FAIL;
         }
     }

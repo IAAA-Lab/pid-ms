@@ -36,8 +36,9 @@ public class FileToolsUtil {
 
 		HttpGet request = new HttpGet(url);
 		request.setConfig(config);
-        CloseableHttpClient client = HttpClients.createDefault();
-        try(CloseableHttpResponse response = client.execute(request)){
+        try(
+            CloseableHttpClient client = HttpClients.createSystem();
+            CloseableHttpResponse response = client.execute(request)){
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 try(FileOutputStream fos = new FileOutputStream(pathFile);
