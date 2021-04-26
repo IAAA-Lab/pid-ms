@@ -20,7 +20,7 @@
         <assertj.version>3.6.2</assertj.version>
         <statemachine.version>1.2.6.RELEASE</statemachine.version>
         <awaitility.version>2.0.0</awaitility.version>
-        <commons-io.version>2.5</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-lang.version>3.5</commons-lang.version>
         <http-client.version>4.5.2</http-client.version>
         <vtd-version>2.13</vtd-version>
