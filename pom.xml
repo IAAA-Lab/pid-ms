@@ -22,7 +22,7 @@
         <awaitility.version>2.0.0</awaitility.version>
         <commons-io.version>2.5</commons-io.version>
         <commons-lang.version>3.5</commons-lang.version>
-        <http-client.version>4.5.2</http-client.version>
+        <http-client.version>4.5.13</http-client.version>
         <vtd-version>2.13</vtd-version>
         <cucumber.version>1.2.4</cucumber.version>
         <docker-maven-plugin.version>0.4.13</docker-maven-plugin.version>
